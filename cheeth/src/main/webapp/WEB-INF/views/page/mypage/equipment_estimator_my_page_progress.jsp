@@ -19,6 +19,7 @@
 </script>
 </c:if>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
+<link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
 
 <script>
 
@@ -94,7 +95,14 @@
     fnSetPageInfo('${PAGE}', '${DATA.TOTAL_CNT}', 10);
 
   });
-  
+  var reviewWritingModal;
+  $(document).ready(function() {
+    
+    reviewWritingModal = new bootstrap.Modal(document.getElementById('reviewWritingModal'));
+    
+    
+  });
+
 </script>
 <style>
 .equipment_estimator_my_page_progress_step_arrow {
@@ -118,7 +126,6 @@
 }
 </style>
 <jsp:include page="/WEB-INF/views/page/talk/common_send.jsp" flush="true"/>
-<jsp:include page="/WEB-INF/views/dialog/cad_estimator_dialog.jsp" flush="true"/>
 
 <form:form id="searchForm" name="searchForm" action="/${api}/mypage/equipment_estimator_my_page_progress" method="GET">
   <div class="equipment_estimator_header">
@@ -217,6 +224,20 @@
           </div>
           <div class="equipment_estimator_my_page_progress_list_container">
             <c:forEach var="item" items="${DATA.LIST}" varStatus="status">
+            <jsp:include page="/WEB-INF/views/dialog/cad_estimator_dialog.jsp" flush="true"/>
+    <jsp:include page="/WEB-INF/views/dialog/review_writing_dialog.jsp" flush="true">
+      <jsp:param name="WR_NO" value="${item.WR_NO}" />
+      <jsp:param name="PROJECT_NO" value="${item.PROJECT_NO}" />
+      <jsp:param name="PROJECT_NM" value="${item.PROJECT_NM}" />
+    </jsp:include>
+    <script>
+    console.log("${item.WR_NO}");
+    console.log("${item.PROJECT_NO}");
+    console.log("${item.PROJECT_NM}");
+    function gotoreview(){
+  	  location.href = ('api/mypage/receive_file?PROJECT_NO=${item.PROJECT_NO}');
+    }
+    </script>
               <div class="equipment_estimator_my_page_progress_list">
                 <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_current">
                   <div class="equipment_estimator_my_page_progress_completed">
@@ -473,9 +494,9 @@
                         </div>
                       </div>
                     </div>
-                    <div class="dropbox_my_page_progress_pop_up_item invisible" style="width: 150px;">
+                    <div class="dropbox_my_page_progress_pop_up_item <c:if test="${item.FILE_RECEIVE_YN eq 'N' and item.REVIEW_CNT eq 0}">invisible</c:if>" style="width: 150px;margin-left:250px;">
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
-                      <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:alert('후기쓰기')" style="cursor: pointer;">
+                      <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:location.href=('receive_file?PROJECT_NO=${item.PROJECT_NO}&reviewbool=1')" style="cursor: pointer;border-radius:0 0 10px 10px">
                         <div class="dropbox_my_page_progress_pop_up_typo_container">
                           <p class="dropbox_my_page_progress_pop_up_typo">후기쓰기</p>
                         </div>
@@ -527,4 +548,7 @@
       </div>
     </div>
   </div>
+  <script>
+
+  </script>
 </form:form>

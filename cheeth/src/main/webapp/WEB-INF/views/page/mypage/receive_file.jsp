@@ -12,6 +12,13 @@
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
      }
 </script>
+<%
+String reviewbool = "";
+if(request.getParameter("reviewbool") != null){
+	reviewbool = request.getParameter("reviewbool");
+}
+
+%>
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -188,7 +195,7 @@
     <div class="receive_file_button_container">
       <c:if test="${DATA.FILE_RECEIVE_YN eq 'Y'}">
 	      <c:if test="${DATA.REVIEW_CNT eq 0}">
-		      <a href="javascript:reviewWritingModal.show();" class="receive_file_button_white">
+		      <a href="javascript:reviewWritingModal.show();" id="receive_btn" class="receive_file_button_white">
 		        <p class="receive_file_button_white_typo">후기쓰기</p>
 		      </a>
 	      </c:if>
@@ -201,6 +208,30 @@
 	        <p class="receive_file_button_blue_typo">파일 수령확인</p>
 	      </a>
       </c:if>
+      <%if(reviewbool.equals("1")){ %>
+            <c:if test="${DATA.FILE_RECEIVE_YN eq 'Y'}">
+            <c:choose>
+            	<c:when test="${DATA.REVIEW_CNT eq 0}">
+            			      	<script>
+		      	$(document).ready(function(){
+			      	$("#receive_btn").trigger("click");	
+			      	console.log("gg");
+			      	reviewWritingModal.show()
+		      	});
+
+	      		</script>
+            	</c:when>
+            	<c:otherwise>
+            	<script>
+            		alert("리뷰를 작성하셨습니다.");
+            	</script>
+            	</c:otherwise>
+            </c:choose>
+	      <c:if test="${DATA.REVIEW_CNT eq 0}">
+
+	      </c:if>
+      	</c:if>
+	<%} %>
     </div>
   </div>
 </div>

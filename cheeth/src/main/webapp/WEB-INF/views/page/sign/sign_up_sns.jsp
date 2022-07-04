@@ -631,19 +631,79 @@
 						<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
 					</div>
 				</div>
-				<div id="BANK_CD_DIV_2" class="dropbox_select_button_item_container hidden codebox2" style="cursor: pointer;">
-					<div class="dropbox_select_button_item">
-						<p class="dropbox_select_button_item_typo" onclick="fnSelect('BK001', '국민')" data-div="BANK_CD">국민</p>
-					</div>
-					<div class="dropbox_select_button_item">
-						<p class="dropbox_select_button_item_typo" onclick="fnSelect('BK002', '신한')" data-div="BANK_CD">신한</p>
-					</div>
-					<div class="dropbox_select_button_item">
-						<p class="dropbox_select_button_item_typo" onclick="fnSelect('BK003', '농협')" data-div="BANK_CD">농협</p>
-					</div>
-					<div class="dropbox_select_button_item">
-						<p class="dropbox_select_button_item_typo" onclick="fnSelect('BK004', '우리')" data-div="BANK_CD">우리</p>
-					</div>
+				<div id="BANK_CD_DIV_2" class="dropbox_select_button_item_container hidden codebox2" style="cursor: pointer;width:30%;height: 500px;overflow: auto;">
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0003', '기업')" data-div="BANK_CD">기업</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0004', '국민')" data-div="BANK_CD">국민</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0011', '농협')" data-div="BANK_CD">농협</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0020', '우리')" data-div="BANK_CD">우리</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0081', '하나')" data-div="BANK_CD">하나</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0088', '신한')" data-div="BANK_CD">신한</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0090', '카카오뱅크')" data-div="BANK_CD">카카오뱅크</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0027', '한국시티은행')" data-div="BANK_CD">한국시티은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0023', 'SC제일은행')" data-div="BANK_CD">SC제일은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0039', '경남은행')" data-div="BANK_CD">경남은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0034', '광주은행')" data-div="BANK_CD">광주은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0031', '대구은행')" data-div="BANK_CD">대구은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0032', '부산은행')" data-div="BANK_CD">부산은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0037', '전북은행')" data-div="BANK_CD">전북은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0035', '제주은행')" data-div="BANK_CD">제주은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0011', '농협은행')" data-div="BANK_CD">농협은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0012', '지역농축협')" data-div="BANK_CD">지역농축협</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0007', '수협은행')" data-div="BANK_CD">수협은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0002', '산업은행')" data-div="BANK_CD">산업은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0071', '우체국')" data-div="BANK_CD">우체국</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0045', '새마을금고')" data-div="BANK_CD">새마을금고</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0050', 'SBI저축은행')" data-div="BANK_CD">저축은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0089', '케이뱅크')" data-div="BANK_CD">케이뱅크</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0098', '토스뱅크')" data-div="BANK_CD">토스뱅크</p>
+						</div>
 				</div>
 			</div>
 		</div>

@@ -439,6 +439,8 @@
         </div>
         <div class="electronic_contract_button_container right">
           <c:choose>
+          <c:when test="${DATA.PROGRESS_CD eq 'PC005'}">
+          </c:when>
             <c:when test="${empty DATA.CONTRACT_NO}"> <!-- 최초 -->
               <button type="button" class="electronic_contract_button white" onclick="fnCancel();">
                 <p class="electronic_contract_button_typo white_typo">계약취소</p>
