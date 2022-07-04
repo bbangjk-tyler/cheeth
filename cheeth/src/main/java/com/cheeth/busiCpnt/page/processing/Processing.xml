@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="processing">
+
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* processing.getCnt01 */
+  ]]>
+    SELECT COUNT(A.PROG_NO) AS CNT
+      FROM TB_PROG A
+     WHERE 1=1
+     <if test="isNotEmpty(AREA_CD)">
+       AND A.AREA_CD = #{AREA_CD}
+     </if>
+     <if test="isNotEmpty(SEARCH_TXT)">
+       AND A.CENTER_NM LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test="isNotEmpty(SEARCH_CD)">
+       AND A.PROG_NO IN ( SELECT PROG_NO
+                            FROM TB_PROG_WORK_ITEM
+                           WHERE WORK_ITEM_CD IN <foreach collection="SEARCH_CD" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+                        )
+     </if>
+  </select>
+  
+  <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* processing.getCnt02 */
+    SELECT COUNT(PROG_NO) AS CNT
+      FROM TB_PROG
+     WHERE PROG_NO = #{PROG_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+
+  <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* processing.getList01 */
+  ]]>
+    SELECT A.PROG_NO
+         , A.AREA_CD
+         , A.CENTER_NM 
+         , A.INTRO 
+         , A.SERVICE_DESC
+         , ( SELECT GROUP_CONCAT(WORK_ITEM_NM ORDER BY WORK_ITEM_NM SEPARATOR ', ') AS WORK_ITEM_NM 
+               FROM TB_PROG_WORK_ITEM
+              WHERE PROG_NO = A.PROG_NO ) AS WORK_ITEM_NM
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'AREA_CD'
+                AND CODE_CD = A.AREA_CD ) AS AREA_NM
+      FROM TB_PROG A
+     WHERE 1=1
+     <if test="isNotEmpty(AREA_CD)">
+       AND A.AREA_CD = #{AREA_CD}
+     </if>
+     <if test="isNotEmpty(SEARCH_TXT)">
+       AND A.CENTER_NM LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test="isNotEmpty(SEARCH_CD)">
+       AND A.PROG_NO IN ( SELECT PROG_NO
+                            FROM TB_PROG_WORK_ITEM
+                           WHERE WORK_ITEM_CD IN <foreach collection="SEARCH_CD" item="item" index="index" open="(" close=")" separator=",">#{item}</foreach>
+                        )
+     </if>
+     ORDER BY A.PROG_NO DESC
+   <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 9
+   </if>
+  </select>
+  
+  <select id="getProgWorkItem" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* processing.getProgWorkItem */
+    SELECT A.PROG_NO
+         , A.DTL_NO
+         , A.WORK_ITEM_CD
+         , A.WORK_ITEM_NM
+      FROM TB_PROG_WORK_ITEM A
+     WHERE A.PROG_NO = #{PROG_NO}
+     ORDER BY A.DTL_NO
+  ]]>
+  </select>
+  
+  <select id="getData01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* processing.getData01 */
+    SELECT A.PROG_NO
+         , A.AREA_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'AREA_CD'
+                AND CODE_CD = A.AREA_CD ) AS AREA_NM
+         , A.CENTER_NM
+         , A.INTRO
+         , A.SERVICE_DESC
+         , A.PROFILE_FILE_CD
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , B.FILE_NM AS PROFILE_FILE_NM
+         , B.FILE_ORIGIN_NM AS PROFILE_FILE_ORIGIN_NM
+         , REPLACE(B.FILE_DIRECTORY, '\\', '/') AS PROFILE_FILE_DIRECTORY
+      FROM TB_PROG A
+      LEFT OUTER JOIN TB_FILE_INFO B
+        ON A.PROFILE_FILE_CD = B.FILE_CD
+       AND B.FILE_NO = 1
+     WHERE A.PROG_NO = #{PROG_NO}
+  ]]>
+  </select>
+  
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* processing.insert01 */
+    INSERT INTO TB_PROG (
+      AREA_CD
+    , CENTER_NM
+    , INTRO
+    , SERVICE_DESC
+    , PROFILE_FILE_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{AREA_CD}
+    , #{CENTER_NM}
+    , #{INTRO}
+    , #{SERVICE_DESC}
+    , #{PROFILE_FILE_CD}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert02" parameterType="map">
+  <![CDATA[
+    /* processing.insert02 */
+    INSERT INTO TB_PROG_WORK_ITEM (
+      PROG_NO
+    , DTL_NO
+    , WORK_ITEM_CD
+    , WORK_ITEM_NM
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{PROG_NO}
+    , ( SELECT *
+          FROM ( SELECT IFNULL(MAX(DTL_NO)+1,1)
+                   FROM TB_PROG_WORK_ITEM
+                  WHERE PROG_NO = #{PROG_NO} ) AS DTL_NO
+      )
+    , #{WORK_ITEM_CD}
+    , #{WORK_ITEM_NM}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* processing.update01 */
+    UPDATE TB_PROG
+       SET AREA_CD = #{AREA_CD}
+         , CENTER_NM = #{CENTER_NM}
+         , INTRO = #{INTRO}
+         , SERVICE_DESC = #{SERVICE_DESC}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE PROG_NO = #{PROG_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </update>
+  
+  <update id="update02" parameterType="map">
+  <![CDATA[
+    /* processing.update02 */
+    UPDATE TB_PROG
+       SET PROFILE_FILE_CD = #{PROFILE_FILE_CD}
+     WHERE PROG_NO = #{PROG_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </update>
+  
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* processing.delete01 */
+    DELETE FROM TB_PROG
+     WHERE PROG_NO = #{PROG_NO}
+  ]]>
+  </delete>
+  
+  <delete id="delete02" parameterType="map">
+  <![CDATA[
+    /* processing.delete02 */
+    DELETE FROM TB_PROG_WORK_ITEM
+     WHERE PROG_NO = #{PROG_NO}
+  ]]>
+  </delete>
+  
+</mapper>

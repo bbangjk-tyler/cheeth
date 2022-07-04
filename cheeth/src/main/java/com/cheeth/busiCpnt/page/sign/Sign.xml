@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sign">
+
+	<select id="getSnsInfo" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* sign.getInfo */
+    SELECT A.USER_ID
+      FROM TB_USER_INFO A
+     WHERE A.USER_ID = #{SNS_ID}
+       AND A.USER_PW = #{SNS_ID}
+       AND A.SNS_YN = 'Y'
+  ]]>
+  </select>
+
+	<insert id="save01" parameterType="map">
+		/* sign.save01 */
+		INSERT INTO TB_USER_INFO
+		(
+		    USER_ID
+		  , USER_PW
+		  , USER_TYPE_CD
+		  , USER_NM
+		  , USER_PHONE
+		  , AUTH_NO
+		  , USER_ZIP_CD
+		  , USER_ADDRESS
+		  , USER_ADDRESS_DTL
+		  , USER_NICK_NAME
+		  , COMP_GROUP_NM
+		  , COMP_GROUP_CD
+		  , COMP_NO
+		  , COMP_NAME
+		  , COMP_ZIP_CD
+		  , COMP_ADDRESS
+		  , COMP_ADDRESS_DTL
+		  , COMP_FILE_CD
+		  , CREATE_ID
+		  , CREATE_DATE
+		  , UPDATE_ID
+		  , UPDATE_DATE
+		  , SNS_YN
+		  , SNS_DVSN
+		<if test='"2".equals(USER_TYPE_CD) or "3".equals(USER_TYPE_CD)'>   <!-- 의뢰인 OR 치위생사 -->
+			, JOB_CD
+			, LICENSE_NO
+			, LICENSE_FILE_CD
+			<if test='"3".equals(USER_TYPE_CD)'>   <!-- 치위생사 -->
+				, BANK_CD
+				, ACCOUNT_NM
+				, ACCOUNT_NO
+			</if>
+		</if>
+		)
+		VALUES
+		(
+		    #{USER_ID}
+		  , #{USER_PW}
+		  , #{USER_TYPE_CD}
+		  , #{USER_NM}
+		  , #{USER_PHONE}
+		  , #{AUTH_NO}
+		  , #{USER_ZIP_CD}
+		  , #{USER_ADDRESS}
+		  , #{USER_ADDRESS_DTL}
+		  , #{USER_NICK_NAME}
+		  , #{COMP_GROUP_NM}
+		  , #{COMP_GROUP_CD}
+		  , #{COMP_NO}
+		  , #{COMP_NAME}
+		  , #{COMP_ZIP_CD}
+		  , #{COMP_ADDRESS}
+		  , #{COMP_ADDRESS_DTL}
+		  , #{COMP_FILE_CD}
+		  , #{CREATE_ID}
+		  , NOW()
+		  , #{CREATE_ID}
+		  , NOW()
+		  , #{SNS_YN}
+		  , #{SNS_DVSN}
+		<if test='"2".equals(USER_TYPE_CD) or "3".equals(USER_TYPE_CD)'>   <!-- 의뢰인 OR 치위생사 -->
+			, #{JOB_CD}
+			, #{LICENSE_NO}
+			, #{LICENSE_FILE_CD}
+			<if test='"3".equals(USER_TYPE_CD)'>   <!-- 치위생사 -->
+				, #{BANK_CD}
+				, #{ACCOUNT_NM}
+				, #{ACCOUNT_NO}
+			</if>
+		</if>
+		)
+	</insert>
+	
+	<insert id="insertFile" parameterType="map">
+	<![CDATA[
+		/* sign.insertFile */
+		INSERT INTO TB_FILE_INFO
+    (
+        FILE_CD
+      , FILE_NO
+      , FILE_NM
+      , FILE_ORIGIN_NM
+      , FILE_DIRECTORY
+      , FILE_TYPE
+      , FILE_SIZE
+      , CREATE_ID
+      , CREATE_DATE
+      , UPDATE_ID
+      , UPDATE_DATE
+    )
+    VALUES
+    (
+        #{FILE_CD}
+      , #{FILE_NO}
+      , #{FILE_NM}
+      , #{FILE_ORIGIN_NM}
+      , #{FILE_DIRECTORY}
+      , #{FILE_TYPE}
+      , #{FILE_SIZE}
+      , #{CREATE_ID}
+      , NOW()
+      , #{CREATE_ID}
+      , NOW()
+    )
+	]]>
+	</insert>
+
+
+</mapper>

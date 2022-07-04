@@ -1,0 +1,7 @@
+
+.note_box_txt_line {
+  width: 541px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

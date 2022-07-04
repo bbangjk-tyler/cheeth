@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<select id="getList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* board.getList */
+  ]]>
+  	SELECT B.*
+  	  FROM (
+					   SELECT CAST(FORMAT(@ROWNUM := @ROWNUM + 1, 0) AS UNSIGNED) AS RN
+					        , A.BOARD_SEQ
+					        , A.BOARD_GROUP_ID
+					        , A.BOARD_LEVEL
+					        , A.BOARD_GROUP_ORDR
+					        , A.UP_BOARD_SEQ
+					        , A.BOARD_TYPE 
+					        , A.BOARD_TITLE 
+					        , A.BOARD_CONTENT
+					        , A.IMG_FILE_CD
+					        , A.HITS_COUNT
+					        , DATE_FORMAT(A.CREATE_DATE, '%Y.%m.%d') CREATE_DATE
+					        , DATE_FORMAT(A.UPDATE_DATE, '%Y.%m.%d') UPDATE_DATE
+					     FROM TB_BOARD A
+					        , (SELECT @ROWNUM := 0) RN_TB
+					    WHERE 1 = 1
+					    <if test="isNotEmpty(BOARD_TYPE)">
+					      AND A.BOARD_TYPE = #{BOARD_TYPE}
+					    </if>
+					    <if test="isNotEmpty(SEARCH_TXT)">
+					      AND (A.BOARD_TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR
+					      		 A.BOARD_CONTENT LIKE CONCAT('%', #{SEARCH_TXT}, '%'))
+					    </if>
+					    ORDER BY A.BOARD_GROUP_ID
+					           , A.BOARD_LEVEL DESC
+					           , A.BOARD_GROUP_ORDR DESC
+					 ) B
+		 ORDER BY RN DESC
+	  <if test="isNotEmpty(PAGE)">
+	   LIMIT #{PAGE}, 10
+	  </if>
+  </select>
+  
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* board.getCnt01 */
+  ]]>
+    SELECT COUNT(BOARD_SEQ) AS CNT
+      FROM TB_BOARD
+     WHERE 1 = 1
+     <if test="isNotEmpty(BOARD_TYPE)">
+       AND BOARD_TYPE = #{BOARD_TYPE}
+     </if>
+     <if test="isNotEmpty(SEARCH_TXT)">
+       AND (BOARD_TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR
+       			BOARD_CONTENT LIKE CONCAT('%', #{SEARCH_TXT}, '%'))
+     </if>
+  </select>
+  
+  <select id="getBoard" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* board.getBoard */
+  	SELECT A.BOARD_SEQ       
+  	     , A.BOARD_GROUP_ID  
+  	     , A.BOARD_LEVEL     
+  	     , A.BOARD_GROUP_ORDR
+  	     , A.UP_BOARD_SEQ    
+  	     , A.BOARD_TYPE      
+  	     , A.BOARD_TITLE     
+  	     , A.BOARD_CONTENT   
+  	     , A.IMG_FILE_CD     
+  	     , A.HITS_COUNT      
+  	     , A.CREATE_ID
+  	     , DATE_FORMAT(A.CREATE_DATE, '%Y.%m.%d. %H:%i') CREATE_DATE
+  	     , A.UPDATE_ID
+  	     , DATE_FORMAT(A.UPDATE_DATE, '%Y.%m.%d. %H:%i') UPDATE_DATE
+  	  FROM TB_BOARD A
+  	 WHERE A.BOARD_TYPE = #{BOARD_TYPE}
+  	   AND A.BOARD_SEQ = #{BOARD_SEQ}
+  ]]>
+  </select>
+  
+  <select id="getReply" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* board.getReply */
+  	SELECT A.BOARD_SEQ
+  	     , A.BOARD_GROUP_ID
+  	     , A.BOARD_LEVEL
+  	     , A.BOARD_GROUP_ORDR
+  	     , A.UP_BOARD_SEQ
+  	     , A.BOARD_TYPE
+  	     , A.BOARD_TITLE
+  	     , A.BOARD_CONTENT
+  	     , A.IMG_FILE_CD
+  	     , A.HITS_COUNT
+  	     , A.CREATE_ID
+         , DATE_FORMAT(A.CREATE_DATE, '%Y.%m.%d.') CREATE_DATE
+         , A.UPDATE_ID
+         , DATE_FORMAT(A.UPDATE_DATE, '%Y.%m.%d.') UPDATE_DATE
+      FROM TB_BOARD A
+     WHERE A.UP_BOARD_SEQ = #{UP_BOARD_SEQ}
+     ORDER BY A.BOARD_GROUP_ORDR
+  ]]>
+  </select>
+  
+  <update id="updateHits" parameterType="map">
+  <![CDATA[
+  	/* board.updateHits */
+  	UPDATE TB_BOARD
+  	   SET HITS_COUNT = IFNULL(HITS_COUNT, 0) + 1
+  	 WHERE BOARD_TYPE = #{BOARD_TYPE}
+  	   AND BOARD_SEQ = #{BOARD_SEQ}
+  ]]>
+  </update>
+
+	<insert id="insert01" parameterType="map">
+		
+		<selectKey keyProperty="BOARD_GROUP_ID" resultType="integer" order="BEFORE">
+			<if test="isEmpty(BOARD_GROUP_ID)">
+				SELECT IFNULL(MAX(BOARD_GROUP_ID), 0) + 1
+				  FROM TB_BOARD
+				 WHERE BOARD_TYPE = #{BOARD_TYPE}
+			</if>
+			<if test="isNotEmpty(BOARD_GROUP_ID)">
+				SELECT #{BOARD_GROUP_ID} FROM DUAL
+			</if>
+		</selectKey>
+	  
+	  <![CDATA[
+	    /* board.insert01 */
+	  ]]>
+	    INSERT INTO TB_BOARD (
+	      BOARD_GROUP_ID
+	    , BOARD_LEVEL
+	    , BOARD_GROUP_ORDR
+	    , UP_BOARD_SEQ
+	    , BOARD_TYPE
+	    , BOARD_TITLE
+	    , BOARD_CONTENT
+	    , IMG_FILE_CD
+	    , CREATE_ID
+	    , CREATE_DATE
+	    , UPDATE_ID
+	    , UPDATE_DATE
+	  ) VALUES (
+	  		#{BOARD_GROUP_ID}
+	  	, #{BOARD_LEVEL}
+	  	, #{BOARD_GROUP_ORDR}
+	    , #{UP_BOARD_SEQ}
+	    , #{BOARD_TYPE}
+	    , #{BOARD_TITLE}
+	    , #{BOARD_CONTENT}
+	    , #{IMG_FILE_CD}
+	    , #{CREATE_ID}
+	    , NOW()
+	    , #{UPDATE_ID}
+	    , NOW()
+	  )
+  </insert>
+</mapper>

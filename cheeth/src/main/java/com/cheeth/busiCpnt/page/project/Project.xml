@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project">
+
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* project.getCnt01 */
+  ]]>
+    SELECT COUNT(A.PROJECT_NO) AS CNT
+      FROM TB_PROJECT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+     WHERE 1=1
+   <if test="isNotEmpty(SEARCH_OPTION_1)">
+     <if test='"Y".equals(SEARCH_OPTION_1)'>
+       AND A.CREATE_ID = #{CREATE_ID}
+     </if>
+   </if>
+   <if test="isNotEmpty(SEARCH_OPTION_2)">
+     <if test='"Y".equals(SEARCH_OPTION_2)'>
+       AND ( SELECT COUNT(PROJECT_NO)
+               FROM TB_ESTIMATOR
+              WHERE PROJECT_NO = A.PROJECT_NO
+                AND MATCHING_YN= 'Y' ) = 0
+     </if>
+   </if>
+     <if test="isNotEmpty(SEARCH_PROJECT_CD)">
+       AND A.PROJECT_CD = #{SEARCH_PROJECT_CD}
+     </if>
+   <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+     <if test='"ALL".equals(SEARCH_TYPE)'>
+       AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+     </if>
+     <if test='"TITLE".equals(SEARCH_TYPE)'>
+       AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test='"NICK".equals(SEARCH_TYPE)'>
+       AND B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+   </if>
+  </select>
+  
+  <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+  	/* project.getCnt02 */
+  	SELECT COUNT(A.ESTIMATOR_NO) AS CNT
+  	  FROM TB_ESTIMATOR A
+  	 WHERE A.PROJECT_NO = #{PROJECT_NO}
+  	   AND A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt03" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* project.getCnt03 */
+    SELECT COUNT(A.ESTIMATOR_NO) AS CNT
+      FROM TB_ESTIMATOR A
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND A.CLIENT_DEL_YN = 'N'
+       AND A.MATCHING_YN = 'Y'
+  ]]>
+  </select>
+  
+  <select id="getCnt04" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* project.getCnt04 */
+    SELECT COUNT(A.ESTIMATOR_NO) AS CNT
+      FROM TB_ESTIMATOR A
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND A.MATCHING_YN = 'Y'
+  ]]>
+  </select>
+  
+  <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getList01 */
+  ]]>
+    SELECT A.PROJECT_NO
+         , A.PROJECT_CD
+         , A.PUBLIC_CD
+         , A.TITLE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%y-%m-%d %H:%i') AS PROJECT_EXP_DATE
+         , A.DELIVERY_EXP_DATE
+         , A.PREFER_CD_1
+         , A.PREFER_NM_1
+         , A.PREFER_CD_2
+         , A.PREFER_NM_2
+         , A.PREFER_CD_3
+         , A.PREFER_NM_3
+         , A.PREFER_CD_4
+         , A.PREFER_NM_4
+         , A.ADD_CONTENT
+         , A.HITS_COUNT
+         , B.USER_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%y-%m-%d %H:%i') AS CREATE_DATE
+         , ( SELECT COUNT(PROJECT_NO)
+               FROM TB_ESTIMATOR
+              WHERE PROJECT_NO = A.PROJECT_NO
+           ) AS PROJECT_CNT /* 견적수 */
+         , CAST(FORMAT(@ROWNUM := @ROWNUM + 1 + #{PAGE}, 0) AS UNSIGNED) AS RN
+         , ( CASE WHEN C.CONTRACT_NO IS NULL 
+                  THEN '견적 요청 중'
+                  WHEN ( C.PROGRESS_CD = 'PC001' OR C.PROGRESS_CD = 'PC002' OR C.PROGRESS_CD = 'PC003' OR C.PROGRESS_CD = 'PC004' )
+                  THEN '계약 진행 중'
+                  WHEN C.PROGRESS_CD = 'PC005'
+                  THEN '계약완료'
+                   END 
+           ) AS PROGRESS_NM
+      FROM TB_PROJECT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+      LEFT OUTER JOIN TB_ELECTRONIC_CONTRACT C
+        ON A.PROJECT_NO = C.PROJECT_NO
+         , (SELECT @ROWNUM := 0) C
+     WHERE 1=1
+   <if test="isNotEmpty(SEARCH_OPTION_1)">
+     <if test='"Y".equals(SEARCH_OPTION_1)'>
+       AND A.CREATE_ID = #{CREATE_ID}
+     </if>
+   </if>
+   <if test="isNotEmpty(SEARCH_OPTION_2)">
+     <if test='"Y".equals(SEARCH_OPTION_2)'>
+       AND ( SELECT COUNT(PROJECT_NO)
+               FROM TB_ESTIMATOR
+              WHERE PROJECT_NO = A.PROJECT_NO
+                AND MATCHING_YN= 'Y' ) = 0
+     </if>
+   </if>
+     <if test="isNotEmpty(SEARCH_PROJECT_CD)">
+       AND A.PROJECT_CD = #{SEARCH_PROJECT_CD}
+     </if>
+   <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+     <if test='"ALL".equals(SEARCH_TYPE)'>
+       AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+     </if>
+     <if test='"TITLE".equals(SEARCH_TYPE)'>
+       AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test='"NICK".equals(SEARCH_TYPE)'>
+       AND B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+   </if>
+     <choose>
+       <when test="isNotEmpty(SEARCH_ORDER)">
+         <if test='"A".equals(SEARCH_ORDER)'>
+     ORDER BY A.PROJECT_NO DESC
+         </if>
+         <if test='"B".equals(SEARCH_ORDER)'>
+     ORDER BY A.PROJECT_EXP_DATE DESC
+         </if>
+       </when>
+       <otherwise>
+     ORDER BY A.PROJECT_NO DESC
+       </otherwise>
+     </choose>
+   <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+   </if>
+  </select>
+  
+  <select id="getData01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getData01 */
+    SELECT A.PROJECT_NO
+         , A.PROJECT_CD 
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PROJECT_CD
+                AND GROUP_CD = 'PROJECT_CD'
+           ) AS PROJECT_NM
+         , A.PUBLIC_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PUBLIC_CD
+                AND GROUP_CD = 'PUBLIC_CD' 
+           ) AS PUBLIC_NM
+         , A.TITLE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y%m%d%H%i') AS PROJECT_EXP_DATE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS PROJECT_EXP_DATE2
+         , A.DELIVERY_EXP_DATE
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y-%m-%d') AS DELIVERY_EXP_DATE2
+         , IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간') AS DELIVERY_EXP_DATE3
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_EXP_DATE4
+         , A.PREFER_CD_1
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_1
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_1
+         , A.PREFER_NM_1
+         , A.PREFER_CD_2
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_2
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_2
+         , A.PREFER_NM_2
+         , A.PREFER_CD_3
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_3
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_3
+         , A.PREFER_NM_3
+         , A.PREFER_CD_4
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_4
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_4
+         , A.PREFER_NM_4
+         , A.ADD_CONTENT
+         , A.HITS_COUNT
+         , ( SELECT GROUP_CONCAT(DISTINCT GROUP_CD SEPARATOR 'l')
+               FROM TB_PROJECT_DTL
+              WHERE PROJECT_NO = A.PROJECT_NO
+           ) AS GCS
+         , ( SELECT GROUP_CONCAT(RQST_NO SEPARATOR 'l')
+               FROM TB_PROJECT_DTL
+              WHERE PROJECT_NO = A.PROJECT_NO 
+           ) AS REQS
+         , A.CREATE_ID
+         , DATE_FORMAT(A.CREATE_DATE, '%Y년 %m월 %d일 %H시 %i분') AS CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , ( SELECT GROUP_CONCAT(SB.USER_NICK_NAME SEPARATOR ',')
+               FROM TB_PROJECT_APPOINT SA
+               JOIN TB_USER_INFO SB
+                 ON SA.USER_ID = SB.USER_ID
+              WHERE SA.PROJECT_NO = A.PROJECT_NO ) AS APPOINT_USER
+      FROM TB_PROJECT A
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getData02" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getData02 */
+    SELECT A.PROJECT_NO
+         , A.PROJECT_CD 
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PROJECT_CD
+                AND GROUP_CD = 'PROJECT_CD'
+           ) AS PROJECT_NM
+         , A.PUBLIC_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PUBLIC_CD
+                AND GROUP_CD = 'PUBLIC_CD' 
+           ) AS PUBLIC_NM
+         , A.TITLE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y%m%d%H%i') AS PROJECT_EXP_DATE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS PROJECT_EXP_DATE2
+         , A.DELIVERY_EXP_DATE
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y-%m-%d') AS DELIVERY_EXP_DATE2
+         , IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간') AS DELIVERY_EXP_DATE3
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_EXP_DATE4
+         , A.PREFER_CD_1
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_1
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_1
+         , A.PREFER_NM_1
+         , A.PREFER_CD_2
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_2
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_2
+         , A.PREFER_NM_2
+         , A.PREFER_CD_3
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_3
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_3
+         , A.PREFER_NM_3
+         , A.PREFER_CD_4
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_4
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_4
+         , A.PREFER_NM_4
+         , A.ADD_CONTENT
+         , A.HITS_COUNT
+         , ( SELECT GROUP_CONCAT(DISTINCT GROUP_CD SEPARATOR 'l')
+               FROM TB_PROJECT_DTL
+              WHERE PROJECT_NO = A.PROJECT_NO
+           ) AS GCS
+         , ( SELECT GROUP_CONCAT(RQST_NO SEPARATOR 'l')
+               FROM TB_PROJECT_DTL
+              WHERE PROJECT_NO = A.PROJECT_NO 
+           ) AS REQS
+         , A.CREATE_ID
+         , ( SELECT USER_NICK_NAME
+               FROM TB_USER_INFO
+              WHERE USER_ID = A.CREATE_ID
+           ) AS CREATE_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%Y년 %m월 %d일 %H시 %i분') AS CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , ( SELECT GROUP_CONCAT(USER_ID SEPARATOR ',')
+               FROM TB_PROJECT_APPOINT
+              WHERE PROJECT_NO = A.PROJECT_NO ) AS APPOINT_USER
+      FROM TB_PROJECT A
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </select>
+  
+  <select id="getData03" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getData03 */
+    SELECT A.ESTIMATOR_NO
+         , A.PROJECT_NO
+         , DATE_FORMAT(A.DELIVERY_POS_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_POS_DATE
+         , A.ESTIMATOR_DEL_YN
+         , A.CLIENT_DEL_YN
+         , A.MATCHING_YN
+         , A.FILE_CD
+         , A.CADSW_CD_1
+         , A.CADSW_NM_1
+         , A.CADSW_CD_2
+         , A.CADSW_NM_2
+         , A.CADSW_CD_3
+         , A.CADSW_NM_3
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , B.USER_NM
+         , B.USER_NICK_NAME
+      FROM TB_ESTIMATOR A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+      JOIN TB_PROJECT C
+        ON A.PROJECT_NO = C.PROJECT_NO
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND A.CLIENT_DEL_YN = 'N'
+       AND A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getData04" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getData04 */
+    SELECT A.ESTIMATOR_NO
+         , A.PROJECT_NO
+         , DATE_FORMAT(A.DELIVERY_POS_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_POS_DATE
+         , A.ESTIMATOR_DEL_YN
+         , A.CLIENT_DEL_YN
+         , A.MATCHING_YN
+         , A.FILE_CD
+         , A.CADSW_CD_1
+         , A.CADSW_NM_1
+         , A.CADSW_CD_2
+         , A.CADSW_NM_2
+         , A.CADSW_CD_3
+         , A.CADSW_NM_3
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , B.USER_NM
+         , B.USER_NICK_NAME
+      FROM TB_ESTIMATOR A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+      JOIN TB_ELECTRONIC_CONTRACT C
+        ON A.PROJECT_NO = C.PROJECT_NO
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND A.MATCHING_YN = 'Y'
+       AND ( C.CREATE_ID = #{CREATE_ID} OR C.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getEstimatorList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getEstimatorList */
+    SELECT A.ESTIMATOR_NO
+         , A.PROJECT_NO
+         , DATE_FORMAT(A.DELIVERY_POS_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_POS_DATE
+         , A.ESTIMATOR_DEL_YN
+         , A.CLIENT_DEL_YN
+         , A.MATCHING_YN
+         , A.FILE_CD
+         , A.CADSW_CD_1
+         , A.CADSW_NM_1
+         , A.CADSW_CD_2
+         , A.CADSW_NM_2
+         , A.CADSW_CD_3
+         , A.CADSW_NM_3
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , B.USER_NM
+         , B.USER_NICK_NAME
+         , @ESTIMATOR_CNT := ( SELECT COUNT(ESTIMATOR_NO)
+                                 FROM TB_ESTIMATOR
+                                WHERE CREATE_ID = B.USER_ID
+                             ) AS ESTIMATOR_CNT
+         , @COMPLETE_CNT := ( SELECT COUNT(WR_NO)
+                                FROM TB_WRITTEN_REQUEST
+                               WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                                        FROM TB_ELECTRONIC_CONTRACT
+                                                       WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                                 FROM TB_ESTIMATOR
+                                                                                WHERE CREATE_ID = B.USER_ID ) )
+                                 AND FILE_RECEIVE_YN = 'Y'
+                            ) AS COMPLETE_CNT
+         , ( SELECT FORMAT(IFNULL(SUM(LAST_AMOUNT), 0), 0)
+               FROM TB_WRITTEN_REQUEST
+              WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                       FROM TB_ELECTRONIC_CONTRACT
+                                      WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                FROM TB_ESTIMATOR
+                                                               WHERE CREATE_ID = B.USER_ID ) )
+                AND FILE_RECEIVE_YN = 'Y'
+           ) AS COMPLETE_AMOUNT
+         , IFNULL(ROUND((@COMPLETE_CNT / @ESTIMATOR_CNT * 100 )), 0) AS COMPLETE_RATIO
+         , ( SELECT IFNULL(ROUND(SUM(SCORE)/COUNT(1)),0) AS SOCRE_AVG
+               FROM TB_REVIEW
+              WHERE PROJECT_NO IN ( SELECT PROJECT_NO
+                                      FROM TB_ELECTRONIC_CONTRACT
+                                     WHERE CHEESIGNER_ID  = B.USER_ID ) ) AS SCORE_AVG
+         , IFNULL(C.TAX_BILL_YN, 'N') AS TAX_BILL_YN
+      FROM TB_ESTIMATOR A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+      LEFT OUTER JOIN TB_USER_INFO_DTL C
+        ON A.CREATE_ID = C.USER_ID
+        , (SELECT @ESTIMATOR_CNT := 0, @COMPLETE_CNT := 0) V_TB
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND A.CLIENT_DEL_YN = 'N'
+  ]]>
+  </select>
+  
+  <select id="getEstimatorDtlInfo" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* project.getEstimatorDtlInfo */
+  	SELECT A.ESTIMATOR_NO
+  	     , A.ESTIMATOR_DTL_NO
+  	     , A.SUPP_CD_1
+  	     , A.SUPP_CD_2
+  	     , A.SUPP_CD_3
+  	     , A.SUPP_CD_4
+  	     , A.UNIT_PRICE
+  	     , A.AMOUNT
+  	     , A.SUM_AMOUNT
+  	     , A.CREATE_ID
+  	     , A.CREATE_DATE
+  	     , A.UPDATE_ID
+  	     , A.UPDATE_DATE
+  	  FROM TB_ESTIMATOR_DTL A
+  	 WHERE A.ESTIMATOR_NO = #{ESTIMATOR_NO}
+  ]]>
+  </select>
+  
+  <select id="getReqList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* project.getReqList */
+  	SELECT C.GROUP_CD
+         , C.PANT_NM
+         , C.TOTAL_CNT
+         , GROUP_CONCAT(DISTINCT(C.RQST_NO) SEPARATOR ',') AS RQST_NO_STR
+         , GROUP_CONCAT(DISTINCT(C.SUPP_CD) SEPARATOR ',') AS SUPP_CD_STR
+         , GROUP_CONCAT(DISTINCT(C.SUPP_NM) SEPARATOR ',') AS SUPP_NM_STR
+         , GROUP_CONCAT(CAST(C.CNT AS CHAR) SEPARATOR ',') AS CNT_STR
+      FROM (
+						 SELECT B.RQST_NO
+						      , B.GROUP_CD
+						      , B.PANT_NM
+						      , SUM(B.TOOTH_CNT) AS CNT
+						      , B.TOTAL_CNT
+						      , B.SUPP_CD
+						      , B.SUPP_NM
+						   FROM (
+										 SELECT A.RQST_NO
+						              , A.GROUP_CD
+						              , A.PANT_NM
+						              , (SELECT COUNT(RQST_NO)
+						                   FROM TB_TRIBUTE_DTL DTL
+						                  WHERE DTL.GROUP_CD = A.GROUP_CD
+						                    AND DTL.RQST_NO = A.RQST_NO
+						                    AND DTL.TAB_NO = A.TAB_NO) AS TOOTH_CNT
+						              , (SELECT COUNT(RQST_NO)
+						                   FROM TB_TRIBUTE_DTL DTL
+						                  WHERE DTL.GROUP_CD = A.GROUP_CD) AS TOTAL_CNT
+						              , A.SUPP_CD_1 AS SUPP_CD
+						              , A.SUPP_NM_1 AS SUPP_NM
+						           FROM TB_TRIBUTE A
+						          WHERE A.GROUP_CD IN (SELECT GROUP_CD FROM TB_PROJECT_DTL P WHERE PROJECT_NO = #{PROJECT_NO} GROUP BY P.GROUP_CD)
+						        ) B
+						  GROUP BY B.GROUP_CD, B.SUPP_CD
+					 ) C
+     GROUP BY C.GROUP_CD
+     ORDER BY C.GROUP_CD, C.RQST_NO, C.SUPP_CD
+  ]]>
+  </select>
+  
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* project.insert01 */
+    INSERT INTO TB_PROJECT (
+      PROJECT_CD
+    , PUBLIC_CD
+    , TITLE
+    , PROJECT_EXP_DATE
+    , DELIVERY_EXP_DATE
+    , PREFER_CD_1
+    , PREFER_NM_1
+    , PREFER_CD_2
+    , PREFER_NM_2
+    , PREFER_CD_3
+    , PREFER_NM_3
+    , PREFER_CD_4
+    , PREFER_NM_4
+    , ADD_CONTENT
+    , HITS_COUNT
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{PROJECT_CD}
+    , #{PUBLIC_CD}
+    , #{TITLE}
+    , ( SELECT STR_TO_DATE(REPLACE(#{PROJECT_EXP_DATE}, '-', ''), '%Y%m%d%H%i%s')
+          FROM DUAL )
+    , ( SELECT STR_TO_DATE(REPLACE(#{DELIVERY_EXP_DATE}, '-', ''), '%Y%m%d%H%i%s')
+          FROM DUAL )
+    , #{PREFER_CD_1}
+    , #{PREFER_NM_1}
+    , #{PREFER_CD_2}
+    , #{PREFER_NM_2}
+    , #{PREFER_CD_3}
+    , #{PREFER_NM_3}
+    , #{PREFER_CD_4}
+    , #{PREFER_NM_4}
+    , #{ADD_CONTENT}
+    , 0
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert02" parameterType="map">
+  <![CDATA[
+    /* project.insert02 */
+    INSERT INTO TB_ESTIMATOR (
+      PROJECT_NO
+    , DELIVERY_POS_DATE
+    , FILE_CD
+    , CADSW_CD_1
+    , CADSW_NM_1
+    , CADSW_CD_2
+    , CADSW_NM_2
+    , CADSW_CD_3
+    , CADSW_NM_3
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{PROJECT_NO}
+    , #{DELIVERY_POS_DATE}
+    , #{FILE_CD}
+    , #{CADSW_CD_1}
+    , #{CADSW_NM_1}
+    , #{CADSW_CD_2}
+    , #{CADSW_NM_2}
+    , #{CADSW_CD_3}
+    , #{CADSW_NM_3}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert03" parameterType="map">
+  <![CDATA[
+    /* project.insert03 */
+    INSERT INTO TB_ESTIMATOR_DTL (
+      ESTIMATOR_NO
+    , ESTIMATOR_DTL_NO
+    , SUPP_CD_1
+    , SUPP_CD_2
+    , SUPP_CD_3
+    , SUPP_CD_4
+    , UNIT_PRICE
+    , AMOUNT
+    , SUM_AMOUNT
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{ESTIMATOR_NO}
+    , ( SELECT IFNULL(MAX(A.ESTIMATOR_DTL_NO), 0) + 1
+          FROM TB_ESTIMATOR_DTL A
+         WHERE A.ESTIMATOR_NO = #{ESTIMATOR_NO} )
+    , #{SUPP_CD_1}
+    , #{SUPP_CD_2}
+    , #{SUPP_CD_3}
+    , #{SUPP_CD_4}
+    , #{UNIT_PRICE}
+    , #{AMOUNT}
+    , CAST(#{UNIT_PRICE} AS INTEGER) * CAST(#{AMOUNT} AS INTEGER)
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert04" parameterType="map">
+  <![CDATA[
+    /* project.insert04 */
+    INSERT INTO TB_PROJECT_DTL (
+      PROJECT_NO
+    , RQST_NO
+    , GROUP_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{PROJECT_NO}
+    , #{RQST_NO}
+    , ( SELECT MAX(GROUP_CD)
+          FROM TB_TRIBUTE
+         WHERE RQST_NO = #{RQST_NO} )
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert05" parameterType="map">
+  <![CDATA[
+    /* project.insert05 */
+    INSERT INTO TB_PROJECT_APPOINT (
+      PROJECT_NO
+    , USER_ID
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{PROJECT_NO}
+    , #{USER_ID}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* project.update01 */
+    UPDATE TB_PROJECT
+       SET PROJECT_CD = #{PROJECT_CD}
+         , PUBLIC_CD = #{PUBLIC_CD}
+         , TITLE = #{TITLE}
+         , PROJECT_EXP_DATE = ( SELECT STR_TO_DATE(REPLACE(#{PROJECT_EXP_DATE}, '-', ''), '%Y%m%d%H%i%s') FROM DUAL )
+         , DELIVERY_EXP_DATE = ( SELECT STR_TO_DATE(REPLACE(#{DELIVERY_EXP_DATE}, '-', ''), '%Y%m%d%H%i%s') FROM DUAL )
+         , PREFER_CD_1 = #{PREFER_CD_1}
+         , PREFER_NM_1 = #{PREFER_NM_1}
+         , PREFER_CD_2 = #{PREFER_CD_2}
+         , PREFER_NM_2 = #{PREFER_NM_2}
+         , PREFER_CD_3 = #{PREFER_CD_3}
+         , PREFER_NM_3 = #{PREFER_NM_3}
+         , PREFER_CD_4 = #{PREFER_CD_4}
+         , PREFER_NM_4 = #{PREFER_NM_4}
+         , ADD_CONTENT = #{ADD_CONTENT}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE PROJECT_NO = #{PROJECT_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </update>
+  
+  <update id="update02" parameterType="map">
+  <![CDATA[
+    /* project.update02 */
+    UPDATE TB_PROJECT
+       SET HITS_COUNT = HITS_COUNT + 1
+     WHERE PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </update>
+  
+  <update id="update03" parameterType="map">
+  <![CDATA[
+  	/* project.update03 */
+  	UPDATE TB_ESTIMATOR
+  	   SET CLIENT_DEL_YN = 'Y'
+  	 WHERE ESTIMATOR_NO = #{ESTIMATOR_NO}
+  ]]>
+  </update>
+
+  <update id="update04" parameterType="map">
+  <![CDATA[
+  	/* project.update04 */
+  	UPDATE TB_ESTIMATOR
+  	   SET MATCHING_YN = 'Y'
+  	 WHERE ESTIMATOR_NO = #{ESTIMATOR_NO}
+  ]]>
+  </update>
+  
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* project.delete01 */
+    DELETE FROM TB_PROJECT
+     WHERE PROJECT_NO = #{PROJECT_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </delete>
+  
+  <delete id="delete02" parameterType="map">
+  <![CDATA[
+    /* project.delete02 */
+    DELETE FROM TB_PROJECT_DTL
+     WHERE PROJECT_NO = #{PROJECT_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </delete>
+  
+  <delete id="delete03" parameterType="map">
+  <![CDATA[
+    /* project.delete03 */
+    DELETE FROM TB_PROJECT_APPOINT
+     WHERE PROJECT_NO = #{PROJECT_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </delete>
+  
+  <select id="getSuppInfoList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getSuppInfoList */
+    SELECT B.RQST_NO
+         , B.GROUP_CD
+         , B.PANT_NM
+         , SUM(B.TOOTH_CNT) AS CNT
+         , B.TOTAL_CNT
+         , B.SUPP_CD
+         , B.SUPP_NM
+         , ( SELECT FILE_CD
+               FROM TB_TRIBUTE
+              WHERE RQST_NO = B.RQST_NO
+                AND GROUP_CD = B.GROUP_CD
+           ) AS FILE_CD
+      FROM ( SELECT A.RQST_NO
+                  , A.GROUP_CD
+                  , A.PANT_NM
+                  , ( SELECT COUNT(RQST_NO)
+                        FROM TB_TRIBUTE_DTL DTL
+                       WHERE DTL.GROUP_CD = A.GROUP_CD
+                         AND DTL.RQST_NO = A.RQST_NO
+                         AND DTL.TAB_NO = A.TAB_NO) AS TOOTH_CNT
+                  , ( SELECT COUNT(RQST_NO)
+                        FROM TB_TRIBUTE_DTL DTL
+                       WHERE DTL.GROUP_CD = A.GROUP_CD) AS TOTAL_CNT
+                  , A.SUPP_CD_1 AS SUPP_CD
+                  , A.SUPP_NM_1 AS SUPP_NM
+               FROM TB_TRIBUTE A
+              WHERE A.GROUP_CD = #{GROUP_CD}
+           ) B
+     GROUP BY B.SUPP_CD
+  ]]>  
+  </select>
+  
+</mapper>

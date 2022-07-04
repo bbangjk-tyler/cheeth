@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="login.login">
+
+  <select id="getInfo" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* login.login.getInfo */
+    SELECT A.USER_ID
+         , A.USER_PW
+         , A.USER_TYPE_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'USER_TYPE'
+                AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
+         , A.USER_NM
+         , A.USER_PHONE
+         , A.AUTH_NO
+         , A.USER_ZIP_CD
+         , A.USER_ADDRESS
+         , A.USER_ADDRESS_DTL
+         , A.USER_NICK_NAME
+         , A.COMP_GROUP_NM
+         , A.COMP_GROUP_CD
+         , A.COMP_NO
+         , A.COMP_NAME
+         , A.COMP_ZIP_CD
+         , A.COMP_ADDRESS
+         , A.COMP_ADDRESS_DTL
+         , A.COMP_FILE_CD
+         , A.JOB_CD
+         , A.LICENSE_NO
+         , A.LICENSE_FILE_CD
+         , A.BANK_CD
+         , A.ACCOUNT_NM
+         , A.ACCOUNT_NO
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+      FROM TB_USER_INFO A
+     WHERE A.USER_ID = #{id}
+       AND A.USER_PW = #{pw}
+  ]]>
+  </select>
+  
+  <select id="getInfoRefresh" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* login.login.getInfoRefresh */
+    SELECT A.USER_ID
+         , A.USER_PW
+         , A.USER_TYPE_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'USER_TYPE'
+                AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
+         , A.USER_NM
+         , A.USER_PHONE
+         , A.AUTH_NO
+         , A.USER_ZIP_CD
+         , A.USER_ADDRESS
+         , A.USER_ADDRESS_DTL
+         , A.USER_NICK_NAME
+         , A.COMP_GROUP_NM
+         , A.COMP_GROUP_CD
+         , A.COMP_NO
+         , A.COMP_NAME
+         , A.COMP_ZIP_CD
+         , A.COMP_ADDRESS
+         , A.COMP_ADDRESS_DTL
+         , A.COMP_FILE_CD
+         , A.JOB_CD
+         , A.LICENSE_NO
+         , A.LICENSE_FILE_CD
+         , A.BANK_CD
+         , A.ACCOUNT_NM
+         , A.ACCOUNT_NO
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+      FROM TB_USER_INFO A
+     WHERE A.USER_ID = #{USER_ID}
+  ]]>
+  </select>
+ 
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* sam.sam0127.insert01 */
+    INSERT INTO SCO_TEST_TABLE (
+      TEST_ID
+    , TEST_01
+    , TEST_02
+    , TEST_03
+    , TEST_04
+    , TEST_05
+    , TEST_06
+    , TEST_07
+    , TEST_YN
+    , REGR_ID
+    , REGR_IP
+    , REG_DTTM
+    , UPTR_ID
+    , UPTR_IP
+    , UPDT_DTTM
+  ) VALUES (
+      ( SELECT NVL(MAX(TEST_ID)+1,1)
+          FROM SCO_TEST_TABLE
+      )
+    , #{TEST_01}
+    , #{TEST_02}
+    , #{TEST_03}
+    , #{TEST_04}
+    , #{TEST_05}
+    , #{TEST_06}
+    , #{TEST_07}
+    , NVL(#{TEST_YN}, 'N')
+    , #{REGR_ID}
+    , #{REGR_IP}
+    , SYSDATE
+    , #{UPTR_ID}
+    , #{UPTR_IP}
+    , SYSDATE
+  )
+  ]]>
+  </insert>
+
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* sam.sam0127.update01 */
+    UPDATE SCO_TEST_TABLE
+       SET TEST_01 = #{TEST_01}
+         , TEST_02 = #{TEST_02}
+         , TEST_03 = #{TEST_03}
+         , TEST_04 = #{TEST_04}
+         , TEST_05 = #{TEST_05}
+         , TEST_06 = #{TEST_06}
+         , TEST_07 = #{TEST_07}
+         , TEST_YN = NVL(#{TEST_YN}, 'N')
+         , UPTR_ID = #{UPTR_ID}
+         , UPTR_IP = #{UPTR_IP}
+         , UPDT_DTTM = SYSDATE
+     WHERE TEST_ID = #{TEST_ID}
+  ]]>
+  </update>
+
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* sam.sam0126.delete01 */
+    DELETE FROM SCO_TEST_TABLE
+     WHERE TEST_ID = #{TEST_ID}
+  ]]>
+  </delete>
+
+</mapper>

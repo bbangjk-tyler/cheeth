@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sam.sam0101">
+
+  <select id="getList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* sam.sam0101.getList */
+    SELECT A.GROUP_CD
+         , A.CODE_CD
+         , A.CODE_NM 
+      FROM TB_CODE A
+     ORDER BY A.GROUP_CD
+  ]]>
+  </select>
+ 
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* sam.sam0127.insert01 */
+    INSERT INTO SCO_TEST_TABLE (
+      TEST_ID
+    , TEST_01
+    , TEST_02
+    , TEST_03
+    , TEST_04
+    , TEST_05
+    , TEST_06
+    , TEST_07
+    , TEST_YN
+    , REGR_ID
+    , REGR_IP
+    , REG_DTTM
+    , UPTR_ID
+    , UPTR_IP
+    , UPDT_DTTM
+  ) VALUES (
+      ( SELECT NVL(MAX(TEST_ID)+1,1)
+          FROM SCO_TEST_TABLE
+      )
+    , #{TEST_01}
+    , #{TEST_02}
+    , #{TEST_03}
+    , #{TEST_04}
+    , #{TEST_05}
+    , #{TEST_06}
+    , #{TEST_07}
+    , NVL(#{TEST_YN}, 'N')
+    , #{REGR_ID}
+    , #{REGR_IP}
+    , SYSDATE
+    , #{UPTR_ID}
+    , #{UPTR_IP}
+    , SYSDATE
+  )
+  ]]>
+  </insert>
+
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* sam.sam0127.update01 */
+    UPDATE SCO_TEST_TABLE
+       SET TEST_01 = #{TEST_01}
+         , TEST_02 = #{TEST_02}
+         , TEST_03 = #{TEST_03}
+         , TEST_04 = #{TEST_04}
+         , TEST_05 = #{TEST_05}
+         , TEST_06 = #{TEST_06}
+         , TEST_07 = #{TEST_07}
+         , TEST_YN = NVL(#{TEST_YN}, 'N')
+         , UPTR_ID = #{UPTR_ID}
+         , UPTR_IP = #{UPTR_IP}
+         , UPDT_DTTM = SYSDATE
+     WHERE TEST_ID = #{TEST_ID}
+  ]]>
+  </update>
+
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* sam.sam0126.delete01 */
+    DELETE FROM SCO_TEST_TABLE
+     WHERE TEST_ID = #{TEST_ID}
+  ]]>
+  </delete>
+
+</mapper>

@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="equipment">
+
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* equipment.getCnt01 */
+  ]]>
+    SELECT COUNT(A.EQ_NO) AS CNT
+      FROM TB_EQUIPMENT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+     WHERE 1=1
+   <if test="isNotEmpty(SEARCH_OPTION_1)">
+     <if test='"Y".equals(SEARCH_OPTION_1)'>
+       AND A.CREATE_ID = #{CREATE_ID}
+     </if>
+   </if>
+   <if test="isNotEmpty(SEARCH_OPTION_2)">
+     <if test='"Y".equals(SEARCH_OPTION_2)'>
+       AND ( SELECT COUNT(EQ_NO)
+               FROM TB_EQUIPMENT_MATCHING
+              WHERE EQ_NO = A.EQ_NO
+                AND MATCHING_YN= 'Y' ) = 0
+     </if>
+   </if>
+     <if test="isNotEmpty(SEARCH_EQ_CD)">
+       AND A.EQ_CD = #{SEARCH_EQ_CD}
+     </if>
+   <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+     <if test='"ALL".equals(SEARCH_TYPE)'>
+       AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+     </if>
+     <if test='"TITLE".equals(SEARCH_TYPE)'>
+       AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test='"NICK".equals(SEARCH_TYPE)'>
+       AND B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+   </if>
+  </select>
+  
+  <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+  	/* equipment.getCnt02 */
+  	SELECT COUNT(A.EQ_NO) AS CNT
+  	  FROM TB_EQUIPMENT_MATCHING A
+  	 WHERE A.EQ_NO = #{EQ_NO}
+  	   AND A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt03" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* equipment.getCnt03 */
+    SELECT COUNT(A.EQ_NO) AS CNT
+      FROM TB_EQUIPMENT_MATCHING A
+     WHERE A.EQ_NO = #{EQ_NO}
+       AND A.CLIENT_DEL_YN = 'N'
+       AND A.MATCHING_YN = 'Y'
+  ]]>
+  </select>
+  
+  <select id="getCnt04" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* equipment.getCnt04 */
+    SELECT COUNT(A.EQ_NO) AS CNT
+      FROM TB_EQUIPMENT_MATCHING A
+     WHERE A.EQ_NO = #{EQ_NO}
+       AND A.MATCHING_YN = 'Y'
+  ]]>
+  </select>
+
+  <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* equipment.getList01 */
+  ]]>
+    SELECT A.EQ_NO
+         , A.EQ_CD
+         , A.AREA_CD
+         , ( SELECT CODE_NM 
+         			 FROM TB_CODE 
+         			WHERE GROUP_CD = 'AREA_CD' 
+         			  AND CODE_CD = A.AREA_CD
+         	 ) AS AREA_NM
+         , A.TITLE
+         , DATE_FORMAT(A.EQ_EXP_DATE, '%y-%m-%d %H:%i') AS EQ_EXP_DATE
+         , A.DELIVERY_EXP_DATE
+         , A.BRAND_NM
+         , A.EQ_NM
+         , A.ADD_CONTENT
+         , A.FILE_CD
+         , A.HITS_COUNT
+         , B.USER_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%y-%m-%d %H:%i') AS CREATE_DATE
+         , ( SELECT COUNT(EQ_NO)
+               FROM TB_EQUIPMENT_MATCHING
+              WHERE EQ_NO = A.EQ_NO
+           ) AS EQ_CNT /* 견적수 */
+         , CAST(FORMAT(@ROWNUM := @ROWNUM + 1 + #{PAGE}, 0) AS UNSIGNED) AS RN
+      FROM TB_EQUIPMENT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+         , (SELECT @ROWNUM := 0) C
+     WHERE 1=1
+   <if test="isNotEmpty(SEARCH_OPTION_1)">
+     <if test='"Y".equals(SEARCH_OPTION_1)'>
+       AND A.CREATE_ID = #{CREATE_ID}
+     </if>
+   </if>
+   <if test="isNotEmpty(SEARCH_OPTION_2)">
+     <if test='"Y".equals(SEARCH_OPTION_2)'>
+       AND ( SELECT COUNT(EQ_NO)
+               FROM TB_EQUIPMENT_MATCHING
+              WHERE EQ_NO = A.EQ_NO
+                AND MATCHING_YN = 'Y' ) = 0
+     </if>
+   </if>
+     <if test="isNotEmpty(SEARCH_EQ_CD)">
+       AND A.EQ_CD = #{SEARCH_EQ_CD}
+     </if>
+   <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+     <if test='"ALL".equals(SEARCH_TYPE)'>
+       AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+     </if>
+     <if test='"TITLE".equals(SEARCH_TYPE)'>
+       AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test='"NICK".equals(SEARCH_TYPE)'>
+       AND B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+   </if>
+     <choose>
+       <when test="isNotEmpty(SEARCH_ORDER)">
+         <if test='"A".equals(SEARCH_ORDER)'>
+     ORDER BY A.EQ_NO DESC
+         </if>
+         <if test='"B".equals(SEARCH_ORDER)'>
+     ORDER BY A.EQ_EXP_DATE DESC
+         </if>
+       </when>
+       <otherwise>
+     ORDER BY A.EQ_NO DESC
+       </otherwise>
+     </choose>
+   <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+   </if>
+  </select>
+  
+  <select id="getList02" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* equipment.getList02 */
+  	SELECT A.MATCHING_NO
+  	     , A.EQ_NO
+  	     , DATE_FORMAT(A.DELIVERY_POS_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_POS_DATE
+  	     , A.AS_INFO
+  	     , A.DTL_CONTENT
+  	     , A.FILE_CD
+  	     , A.DEL_YN
+  	     , A.CLIENT_DEL_YN
+  	     , A.MATCHING_YN
+  	     , A.CREATE_ID
+  	     , A.CREATE_DATE
+  	     , A.UPDATE_ID
+  	     , A.UPDATE_DATE
+  	     , B.USER_NM
+  	     , B.USER_NICK_NAME
+  	     , B.COMP_NAME
+  	     , B.USER_PHONE
+  	  FROM TB_EQUIPMENT_MATCHING A
+  	  JOIN TB_USER_INFO B
+  	    ON A.CREATE_ID = B.USER_ID
+  	 WHERE A.EQ_NO = #{EQ_NO}
+  	   AND A.CLIENT_DEL_YN = 'N'
+  ]]>
+  </select>
+  
+  <select id="getList03" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* equipment.getList03 */
+  	SELECT A.MATCHING_NO
+  	     , A.MATCHING_DTL_NO
+  	     , A.EQ_NO
+  	     , A.ARTICLE_NM
+  	     , A.UNIT_PRICE
+  	     , A.AMOUNT
+  	     , A.SUM_AMOUNT
+  	     , A.CREATE_ID
+  	     , A.CREATE_DATE
+  	     , A.UPDATE_ID
+  	     , A.UPDATE_DATE
+  	  FROM TB_EQUIPMENT_MATCHING_DTL A
+  	 WHERE A.MATCHING_NO = #{MATCHING_NO}
+  ]]>
+  </select>
+  
+  <select id="getData01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* equipment.getData01 */
+  	SELECT A.EQ_NO
+  			 , A.EQ_CD
+  			 , ( SELECT CODE_NM 
+         			 FROM TB_CODE 
+         			WHERE GROUP_CD = 'EQ_CD' 
+         			  AND CODE_CD = A.EQ_CD
+         	 ) AS EQ_CD_NM
+         , ( SELECT CODE_NM 
+         			 FROM TB_CODE 
+         			WHERE GROUP_CD = 'AREA_CD' 
+         			  AND CODE_CD = A.AREA_CD
+         	 ) AS AREA_NM
+         , A.TITLE
+         , DATE_FORMAT(A.EQ_EXP_DATE, '%Y.%m.%d %H:%i') AS EQ_EXP_DATE
+         , A.DELIVERY_EXP_DATE
+         , A.BRAND_NM
+         , A.EQ_NM
+         , A.ADD_CONTENT
+         , A.FILE_CD
+         , A.HITS_COUNT
+         , A.CREATE_ID
+         , DATE_FORMAT(A.CREATE_DATE, '%Y.%m.%d %H:%i') AS CREATE_DATE
+         , ( SELECT COUNT(EQ_NO)
+               FROM TB_EQUIPMENT_MATCHING
+              WHERE EQ_NO = A.EQ_NO
+           ) AS EQ_CNT
+      FROM TB_EQUIPMENT A
+     WHERE A.EQ_NO = #{EQ_NO}
+  ]]>
+  </select>
+  
+  <select id="getData02" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* equipment.getData02 */
+  	SELECT A.MATCHING_NO
+  	     , A.EQ_NO
+  	     , DATE_FORMAT(A.DELIVERY_POS_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_POS_DATE
+  	     , A.AS_INFO
+  	     , A.DTL_CONTENT
+  	     , A.FILE_CD
+  	     , A.DEL_YN
+  	     , A.CLIENT_DEL_YN
+  	     , A.MATCHING_YN
+  	     , A.CREATE_ID
+  	     , A.CREATE_DATE
+  	     , A.UPDATE_ID
+  	     , A.UPDATE_DATE
+  	     , C.USER_ID AS CLIENT_ID
+  	     , C.USER_NM AS CLIENT_NM
+  	     , C.USER_NICK_NAME AS CLIENT_NICK_NAME
+  	     , C.COMP_NAME AS CLIENT_COMP_NAME
+  	     , C.USER_PHONE AS CLIENT_PHONE
+  	  FROM TB_EQUIPMENT_MATCHING A
+  	  JOIN TB_EQUIPMENT B
+  	    ON B.EQ_NO = A.EQ_NO
+  	  JOIN TB_USER_INFO C
+  	    ON C.USER_ID = B.CREATE_ID 
+  	 WHERE A.EQ_NO = #{EQ_NO}
+  	   AND A.CLIENT_DEL_YN = 'N'
+  	   AND A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* equipment.insert01 */
+    INSERT INTO TB_EQUIPMENT (
+      EQ_CD
+    , AREA_CD
+    , TITLE
+    , EQ_EXP_DATE
+    , DELIVERY_EXP_DATE
+    , BRAND_NM
+    , EQ_NM
+    , ADD_CONTENT
+    , FILE_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{EQ_CD}
+    , #{AREA_CD}
+    , #{TITLE}
+    , ( SELECT STR_TO_DATE(REPLACE(#{EQ_EXP_DATE}, '-', ''), '%Y%m%d%H%i%s')
+          FROM DUAL )
+    , ( SELECT STR_TO_DATE(REPLACE(#{DELIVERY_EXP_DATE}, '-', ''), '%Y%m%d%H%i%s')
+          FROM DUAL )
+    , #{BRAND_NM}
+    , #{EQ_NM}
+    , #{ADD_CONTENT}
+    , #{FILE_CD}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert02" parameterType="map">
+  <![CDATA[
+    /* equipment.insert02 */
+    INSERT INTO TB_EQUIPMENT_MATCHING
+    (  EQ_NO
+	   , DELIVERY_POS_DATE
+	   , AS_INFO
+	   , DTL_CONTENT
+	   , FILE_CD
+	   , CREATE_ID
+	   , CREATE_DATE
+	   , UPDATE_ID
+	   , UPDATE_DATE
+    ) VALUES (
+	     #{EQ_NO}
+	   , #{DELIVERY_POS_DATE}
+	   , #{AS_INFO}
+	   , #{DTL_CONTENT}
+	   , #{FILE_CD}
+	   , #{CREATE_ID}
+	   , NOW()
+	   , #{UPDATE_ID}
+	   , NOW()
+    )
+  ]]>
+  </insert>
+  
+  <insert id="insert03" parameterType="map">
+  <![CDATA[
+    /* equipment.insert03 */
+    INSERT INTO TB_EQUIPMENT_MATCHING_DTL
+    (  MATCHING_NO
+	   , MATCHING_DTL_NO
+	   , EQ_NO
+	   , ARTICLE_NM
+	   , UNIT_PRICE
+	   , AMOUNT
+	   , SUM_AMOUNT
+	   , CREATE_ID
+	   , CREATE_DATE
+	   , UPDATE_ID
+	   , UPDATE_DATE
+    ) VALUES (
+	     #{MATCHING_NO}
+	   , ( SELECT IFNULL(MAX(A.MATCHING_DTL_NO), 0) + 1
+  	       FROM TB_EQUIPMENT_MATCHING_DTL A
+  	      WHERE A.MATCHING_NO = #{MATCHING_NO} )
+	   , #{EQ_NO}
+	   , #{ARTICLE_NM}
+	   , #{UNIT_PRICE}
+	   , #{AMOUNT}
+	   , #{SUM_AMOUNT}
+	   , #{CREATE_ID}
+	   , NOW()
+	   , #{UPDATE_ID}
+	   , NOW()
+    )
+  ]]>
+  </insert>
+
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* processing.update01 */
+    UPDATE SCO_TEST_TABLE
+       SET TEST_01 = #{TEST_01}
+         , TEST_02 = #{TEST_02}
+         , TEST_03 = #{TEST_03}
+         , TEST_04 = #{TEST_04}
+         , TEST_05 = #{TEST_05}
+         , TEST_06 = #{TEST_06}
+         , TEST_07 = #{TEST_07}
+         , TEST_YN = NVL(#{TEST_YN}, 'N')
+         , UPTR_ID = #{UPTR_ID}
+         , UPTR_IP = #{UPTR_IP}
+         , UPDT_DTTM = SYSDATE
+     WHERE TEST_ID = #{TEST_ID}
+  ]]>
+  </update>
+  
+  <update id="update02" parameterType="map">
+  <![CDATA[
+    /* equipment.update02 */
+    UPDATE TB_EQUIPMENT
+       SET HITS_COUNT = IFNULL(HITS_COUNT, 0) + 1
+     WHERE EQ_NO = #{EQ_NO}
+  ]]>
+  </update>
+  
+  <update id="update03" parameterType="map">
+  <![CDATA[
+  	/* equipment.update03 */
+  	UPDATE TB_EQUIPMENT_MATCHING
+  	   SET CLIENT_DEL_YN = 'Y'
+  	 WHERE MATCHING_NO = #{MATCHING_NO}
+  ]]>
+  </update>
+  
+  <update id="update04" parameterType="map">
+  <![CDATA[
+  	/* equipment.update04 */
+  	UPDATE TB_EQUIPMENT_MATCHING
+  	   SET MATCHING_YN = 'Y'
+  	 WHERE MATCHING_NO = #{MATCHING_NO}
+  ]]>
+  </update>
+  
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+  	/* equipment.delete01 */
+  ]]>
+  	DELETE 
+  	  FROM A, B
+  	 USING TB_EQUIPMENT AS A
+      LEFT JOIN TB_FILE_INFO AS B ON B.FILE_CD = A.FILE_CD 
+  	 WHERE A.EQ_NO = #{EQ_NO}
+  	   AND A.CREATE_ID = #{CREATE_ID}
+  </delete>
+  
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="file.file">
+
+  <select id="getFileInfo" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* file.file.getFileInfo */
+    SELECT A.FILE_CD
+         , A.FILE_NO
+         , A.FILE_NM
+         , A.FILE_ORIGIN_NM
+         , A.FILE_DIRECTORY
+         , A.FILE_TYPE
+         , A.FILE_SIZE
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+      FROM TB_FILE_INFO A
+     WHERE A.FILE_CD = #{FILE_CD}
+       AND A.FILE_NO = #{FILE_NO}
+  ]]>
+  </select>
+  
+  <select id="getFileList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* file.file.getFileList */
+    SELECT A.FILE_CD
+         , A.FILE_NO
+         , A.FILE_NM
+         , A.FILE_ORIGIN_NM
+         , A.FILE_DIRECTORY
+         , A.FILE_TYPE
+         , A.FILE_SIZE
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+      FROM TB_FILE_INFO A
+     WHERE A.FILE_CD = #{FILE_CD}
+  ]]>
+  </select>
+
+</mapper>

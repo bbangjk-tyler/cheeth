@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cheesigner">
+
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* cheesigner.getCnt01 */
+  ]]>
+    SELECT COUNT(A.USER_ID) AS CNT
+      FROM TB_USER_INFO A
+      LEFT OUTER JOIN TB_USER_INFO_DTL B
+        ON A.USER_ID = B.USER_ID
+     WHERE A.USER_TYPE_CD = '3'
+     <if test="isNotEmpty(SEARCH_PROJECT_CD)">
+       AND ( B.PROJECT_CD_1 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_2 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_3 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_4 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_5 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_6 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_7 = #{SEARCH_PROJECT_CD} OR
+             B.PROJECT_CD_8 = #{SEARCH_PROJECT_CD} )
+     </if>
+     <if test="isNotEmpty(SEARCH_TXT)">
+       AND A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+  </select>
+
+  <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* cheesigner.getList01 */
+  ]]>
+    SELECT B.*
+      FROM ( SELECT CAST(FORMAT(@ROWNUM := @ROWNUM + 1, 0) AS UNSIGNED) AS RN
+                  , A.USER_ID
+                  , A.USER_NM
+                  , A.USER_NICK_NAME
+                  , @ESTIMATOR_CNT := ( SELECT COUNT(ESTIMATOR_NO)
+                                          FROM TB_ESTIMATOR
+                                         WHERE CREATE_ID = A.USER_ID
+                                      ) AS ESTIMATOR_CNT
+                  , @COMPLETE_CNT := ( SELECT COUNT(WR_NO)
+                                         FROM TB_WRITTEN_REQUEST
+                                        WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                                                 FROM TB_ELECTRONIC_CONTRACT
+                                                                WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                                          FROM TB_ESTIMATOR
+                                                                                         WHERE CREATE_ID = A.USER_ID ) )
+                                          AND FILE_RECEIVE_YN = 'Y'
+                                     ) AS COMPLETE_CNT
+                  , ( SELECT FORMAT(IFNULL(SUM(LAST_AMOUNT), 0), 0)
+                        FROM TB_WRITTEN_REQUEST
+                       WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                                FROM TB_ELECTRONIC_CONTRACT
+                                               WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                         FROM TB_ESTIMATOR
+                                                                        WHERE CREATE_ID = A.USER_ID ) )
+                         AND FILE_RECEIVE_YN = 'Y'
+                    ) AS COMPLETE_AMOUNT
+                  , IFNULL(ROUND((@COMPLETE_CNT / @ESTIMATOR_CNT * 100 )), 0) AS COMPLETE_RATIO
+                  , ( SELECT IFNULL(ROUND(SUM(SCORE)/COUNT(1)),0) AS SOCRE_AVG
+                        FROM TB_REVIEW
+                       WHERE PROJECT_NO IN ( SELECT PROJECT_NO
+                                               FROM TB_ELECTRONIC_CONTRACT
+                                              WHERE CHEESIGNER_ID  = A.USER_ID ) ) AS SCORE_AVG
+               FROM TB_USER_INFO A
+               LEFT OUTER JOIN TB_USER_INFO_DTL B
+                 ON A.USER_ID = B.USER_ID
+                  , (SELECT @ESTIMATOR_CNT := 0, @COMPLETE_CNT := 0) V_TB
+                  , (SELECT @ROWNUM := 0) RN_TB
+              WHERE A.USER_TYPE_CD = '3'
+              <if test="isNotEmpty(SEARCH_PROJECT_CD)">
+                AND ( B.PROJECT_CD_1 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_2 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_3 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_4 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_5 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_6 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_7 = #{SEARCH_PROJECT_CD} OR
+                      B.PROJECT_CD_8 = #{SEARCH_PROJECT_CD} )
+              </if>
+              <if test="isNotEmpty(SEARCH_TXT)">
+                AND A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+              </if>
+              ORDER BY A.USER_NICK_NAME DESC
+           ) B
+     ORDER BY RN DESC
+   <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+   </if>
+  </select>
+  
+</mapper>

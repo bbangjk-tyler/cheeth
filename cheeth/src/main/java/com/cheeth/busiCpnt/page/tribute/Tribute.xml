@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tribute">
+
+  <select id="getOftenWordList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* tribute.getOftenWordList */
+    SELECT A.USER_ID
+         , A.MNG_NO
+         , A.WORD_TXT
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+      FROM TB_OFTEN_WORD_MNG A
+     WHERE A.USER_ID = #{USER_ID}
+  ]]>
+  </select>
+  
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* tribute.insert01 */
+  ]]>
+  <selectKey keyProperty="MNG_NO" resultType="integer" order="BEFORE">
+    SELECT IFNULL(MAX(MNG_NO), 0) + 1
+      FROM TB_OFTEN_WORD_MNG
+     WHERE USER_ID = #{USER_ID}
+  </selectKey>
+  <![CDATA[
+    INSERT INTO TB_OFTEN_WORD_MNG (
+      USER_ID
+    , MNG_NO
+    , WORD_TXT
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{USER_ID}
+    , #{MNG_NO}
+    , #{WORD_TXT}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <select id="getGroupCd" parameterType="map" resultType="java.lang.String">
+  <![CDATA[
+    /* tribute.getGroupCd */
+    SELECT IFNULL(MAX(CAST(GROUP_CD AS UNSIGNED)), 0) + 1
+      FROM TB_TRIBUTE
+  ]]>
+  </select>
+  
+  <insert id="insert02" parameterType="map">
+  <![CDATA[
+    /* tribute.insert02 */
+    INSERT INTO TB_TRIBUTE (
+      GROUP_CD
+    , TAB_NO
+    , PANT_NM
+    , SUPP_CD_1
+    , SUPP_NM_1
+    , SUPP_CD_2
+    , SUPP_NM_2
+    , SUPP_CD_3
+    , SUPP_NM_3
+    , SUPP_CD_4
+    , SUPP_NM_4
+    , PRO_METH_CD
+    , PRO_METH_ETC
+    , SHADE_CD
+    , SHADE_ETC
+    , DTL_TXT
+    , FILE_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{GROUP_CD}
+    , #{TAB_NO}
+    , #{PANT_NM}
+    , #{SUPP_CD_1}
+    , #{SUPP_NM_1}
+    , #{SUPP_CD_2}
+    , #{SUPP_NM_2}
+    , #{SUPP_CD_3}
+    , #{SUPP_NM_3}
+    , #{SUPP_CD_4}
+    , #{SUPP_NM_4}
+    , #{PRO_METH_CD}
+    , #{PRO_METH_ETC}
+    , #{SHADE_CD}
+    , #{SHADE_ETC}
+    , #{DTL_TXT}
+    , #{FILE_CD}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert03" parameterType="map">
+  <![CDATA[
+    /* tribute.insert03 */
+    INSERT INTO TB_TRIBUTE_DTL (
+      RQST_NO
+    , GROUP_CD
+    , TOOTH_NO
+    , TAB_NO
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{RQST_NO}
+    , #{GROUP_CD}
+    , #{TOOTH_NO}
+    , #{TAB_NO}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert04" parameterType="map">
+  <![CDATA[
+    /* tribute.insert04 */
+    INSERT INTO TB_TRIBUTE_BRIDGE (
+      RQST_NO
+    , GROUP_CD
+    , BRIDGE
+    , TAB_NO
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{RQST_NO}
+    , #{GROUP_CD}
+    , #{BRIDGE}
+    , #{TAB_NO}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* tribute.delete01 */
+    DELETE FROM TB_OFTEN_WORD_MNG
+     WHERE USER_ID = #{USER_ID}
+       AND MNG_NO = #{MNG_NO}
+  ]]>
+  </delete>
+  
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* tribute.getCnt01 */
+    SELECT COUNT(A.RQST_NO) AS CNT
+      FROM ( SELECT RQST_NO
+               FROM TB_TRIBUTE
+              WHERE CREATE_ID = #{USER_ID}
+              GROUP BY GROUP_CD ) A
+  ]]>
+  </select>
+  
+  <select id="getRequestBasketList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* tribute.getRequestBasketList */
+  	SELECT CAST(FORMAT(@ROWNUM := @ROWNUM + 1, 0) AS UNSIGNED ) AS RN
+  	     , B.* 
+      FROM (
+					  SELECT A.GROUP_CD
+							   , (SELECT COUNT(*)
+							        FROM TB_TRIBUTE_DTL DTL
+							       WHERE DTL.GROUP_CD = A.GROUP_CD) AS TOOTH_CNT
+							   , A.PANT_NM
+						     , GROUP_CONCAT(DISTINCT(A.SUPP_NM_1) SEPARATOR ', ') AS SUPP_NM_STR
+							   , A.FILE_CD
+							   , (SELECT COUNT(*) FROM TB_FILE_INFO F WHERE F.FILE_CD = A.FILE_CD) AS FILE_CNT
+						  FROM TB_TRIBUTE A
+						 WHERE A.CREATE_ID = #{USER_ID}
+						 GROUP BY A.GROUP_CD
+						 ORDER BY CAST(A.GROUP_CD AS UNSIGNED)
+					 ) B
+				 , (SELECT @ROWNUM := 0) RN_TB
+     ORDER BY RN DESC
+  ]]>
+  	<if test="isNotEmpty(PAGE)">
+	   LIMIT #{PAGE}, 5
+	  </if>
+  </select>
+  
+  <select id="getRqstNoList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* tribute.getRqstNoList */
+  	SELECT A.RQST_NO
+  	     , A.GROUP_CD
+  	  FROM TB_TRIBUTE A
+  	 WHERE A.GROUP_CD = #{GROUP_CD}
+  ]]>
+  </select>
+  
+  <select id="getReqInfoList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* tribute.getReqInfoList */
+		SELECT (
+						SELECT SUM(B.TOOTH_CNT)
+						  FROM ( 
+								  	SELECT C.RQST_NO
+							           , C.GROUP_CD
+							           , (SELECT COUNT(RQST_NO)
+							                FROM TB_TRIBUTE_DTL DTL
+							               WHERE DTL.GROUP_CD = C.GROUP_CD
+							                 AND DTL.RQST_NO = C.RQST_NO
+							                 AND DTL.TAB_NO = C.TAB_NO
+							             ) AS TOOTH_CNT
+							           , C.SUPP_CD_1
+							           , C.SUPP_NM_1
+							        FROM TB_TRIBUTE C
+							     ) B
+						   WHERE B.SUPP_CD_1 = A.SUPP_CD_1
+						     AND B.GROUP_CD = A.GROUP_CD
+					 ) AS SUPP_GROUP_CNT
+				 , A.RQST_NO
+         , A.GROUP_CD
+         , A.TAB_NO
+         , A.PANT_NM
+         , ( SELECT COUNT(RQST_NO)
+               FROM TB_TRIBUTE_DTL DTL
+              WHERE DTL.GROUP_CD = A.GROUP_CD
+                AND DTL.RQST_NO = A.RQST_NO
+                AND DTL.TAB_NO = A.TAB_NO
+           ) AS CNT
+         , ( SELECT COUNT(RQST_NO)
+               FROM TB_TRIBUTE_DTL DTL
+              WHERE DTL.GROUP_CD = A.GROUP_CD
+           ) AS TOTAL_CNT
+         , A.SUPP_CD_1
+         , A.SUPP_NM_1
+         , A.SUPP_CD_2
+         , A.SUPP_NM_2
+         , A.SUPP_CD_3
+         , A.SUPP_NM_3
+         , A.SUPP_CD_4
+         , A.SUPP_NM_4
+         , A.PRO_METH_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PRO_METH_CD'
+                AND CODE_CD = A.PRO_METH_CD
+         ) AS PRO_METH_NM
+         , A.PRO_METH_ETC
+         , A.SHADE_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'SHADE_CD'
+                AND CODE_CD = A.SHADE_CD
+         ) AS SHADE_NM
+         , A.SHADE_ETC
+         , A.DTL_TXT
+      FROM TB_TRIBUTE A
+     WHERE A.GROUP_CD = #{GROUP_CD}
+  ]]>
+  </select>
+  
+  <select id="getReqDtlInfoList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* tribute.getReqDtlInfoList */
+    SELECT A.RQST_NO
+         , A.GROUP_CD
+         , A.TOOTH_NO
+         , A.TAB_NO
+      FROM TB_TRIBUTE_DTL A
+     WHERE A.RQST_NO = #{RQST_NO}
+  ]]>
+  </select>
+  
+  <select id="getExceptionBridgeList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* tribute.getBridgeList */
+    SELECT A.RQST_NO
+         , A.GROUP_CD
+         , A.BRIDGE
+         , A.TAB_NO
+      FROM TB_TRIBUTE_BRIDGE A
+     WHERE A.RQST_NO = #{RQST_NO}
+       AND A.GROUP_CD = #{GROUP_CD}
+  ]]>
+  </select>
+  
+  <select id="getSuppInfoList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* tribute.getSuppInfoList */
+  ]]>
+  	SELECT SUM(B.TOOTH_CNT) AS CNT
+		     , GROUP_CONCAT(DISTINCT(B.GROUP_CD) SEPARATOR '|') AS GROUP_CD_STR
+         , GROUP_CONCAT(DISTINCT(B.RQST_NO) SEPARATOR '|') AS RQST_NO_STR
+         , CONCAT_WS('|', IF(B.SUPP_CD_1 = '', NULL, B.SUPP_CD_1)
+         								, IF(B.SUPP_CD_2 = '', NULL, B.SUPP_CD_2)
+         								, IF(B.SUPP_CD_3 = '', NULL, B.SUPP_CD_3)
+         								, IF(B.SUPP_CD_4 = '', NULL, B.SUPP_CD_4)) SUPP_CD_STR
+		     , CONCAT_WS(' - ', IF(B.SUPP_NM_1 = '', NULL, B.SUPP_NM_1)
+		                      , IF(B.SUPP_NM_2 = '', NULL, B.SUPP_NM_2)
+		                      , IF(B.SUPP_NM_3 = '', NULL, B.SUPP_NM_3)
+		                      , IF(B.SUPP_NM_4 = '', NULL, B.SUPP_NM_4)) SUPP_NM_STR
+      FROM (
+      			SELECT A.GROUP_CD
+						     , A.RQST_NO
+						     , A.SUPP_CD_1
+						     , A.SUPP_NM_1
+						     , A.SUPP_CD_2
+							   , A.SUPP_NM_2
+						     , A.SUPP_CD_3
+						     , A.SUPP_NM_3
+						     , A.SUPP_CD_4
+						     , A.SUPP_NM_4
+						     , (SELECT COUNT(DTL.RQST_NO)
+									    FROM TB_TRIBUTE_DTL DTL
+									   WHERE DTL.GROUP_CD = A.GROUP_CD
+									     AND DTL.RQST_NO = A.RQST_NO
+									     AND DTL.TAB_NO = A.TAB_NO
+									 ) AS TOOTH_CNT
+						  FROM TB_TRIBUTE A
+						 WHERE A.SUPP_CD_1 != 'SP109'
+						   AND A.GROUP_CD IN
+							<foreach collection="GROUP_CD_LIST" item="item" index="index" open="(" close=")" separator=",">
+					   		#{item}
+					   	</foreach>
+					 ) B
+     GROUP BY B.SUPP_CD_1, B.SUPP_CD_2, B.SUPP_CD_3, B.SUPP_CD_4
+ 
+    UNION ALL
+ 
+    SELECT SUM(B.TOOTH_CNT) AS CNT
+		     , GROUP_CONCAT(DISTINCT(B.GROUP_CD) SEPARATOR '|') AS GROUP_CD_STR
+         , GROUP_CONCAT(DISTINCT(B.RQST_NO) SEPARATOR '|') AS RQST_NO_STR
+         , CONCAT_WS('|', IF(B.SUPP_CD_1 = '', NULL, B.SUPP_CD_1)
+         								, IF(B.SUPP_CD_2 = '', NULL, B.SUPP_CD_2)
+         								, IF(B.SUPP_CD_3 = '', NULL, B.SUPP_CD_3)
+         								, IF(B.SUPP_CD_4 = '', NULL, B.SUPP_CD_4)) SUPP_CD_STR
+		     , CONCAT_WS(' - ', IF(B.SUPP_NM_1 = '', NULL, B.SUPP_NM_1)
+		                      , IF(B.SUPP_NM_2 = '', NULL, B.SUPP_NM_2)
+		                      , IF(B.SUPP_NM_3 = '', NULL, B.SUPP_NM_3)
+		                      , IF(B.SUPP_NM_4 = '', NULL, B.SUPP_NM_4)) SUPP_NM_STR
+      FROM (
+						SELECT A.GROUP_CD
+						     , A.RQST_NO
+						     , A.PANT_NM
+						     , A.SUPP_CD_1
+						     , A.SUPP_NM_1
+						     , A.SUPP_CD_2
+							   , A.SUPP_NM_2
+						     , A.SUPP_CD_3
+						     , A.SUPP_NM_3
+						     , A.SUPP_CD_4
+						     , A.SUPP_NM_4
+						     , (SELECT COUNT(DTL.RQST_NO)
+									    FROM TB_TRIBUTE_DTL DTL
+									   WHERE DTL.GROUP_CD = A.GROUP_CD
+									     AND DTL.RQST_NO = A.RQST_NO
+									     AND DTL.TAB_NO = A.TAB_NO
+									 ) AS TOOTH_CNT
+						  FROM TB_TRIBUTE A
+						 WHERE A.SUPP_CD_1 = 'SP109'
+						   AND A.GROUP_CD IN
+						  <foreach collection="GROUP_CD_LIST" item="item" index="index" open="(" close=")" separator=",">
+					   		#{item}
+					   	</foreach>
+					 ) B
+     GROUP BY B.SUPP_NM_1, B.SUPP_NM_2, B.SUPP_NM_3, B.SUPP_NM_4
+  </select>
+  
+  <delete id="delete02" parameterType="map">
+  <![CDATA[
+    /* tribute.delete02 */
+  ]]>
+    DELETE 
+      FROM A, B, C
+     USING TB_TRIBUTE AS A
+      LEFT JOIN TB_TRIBUTE_DTL AS B ON B.GROUP_CD = A.GROUP_CD
+      LEFT JOIN TB_FILE_INFO AS C ON C.FILE_CD = A.FILE_CD 
+     WHERE A.GROUP_CD IN
+   <foreach collection="GROUP_CD_LIST" item="item" index="index" open="(" close=")" separator=",">
+     #{item}
+   </foreach>
+  </delete>
+  
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* tribute.update01 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_CD_1 = NULL
+     WHERE SUPP_CD_1 = ''
+  ]]>
+  </update>
+  
+  <update id="update02" parameterType="map">
+  <![CDATA[
+    /* tribute.update02 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_CD_2 = NULL
+     WHERE SUPP_CD_2 = ''
+  ]]>
+  </update>
+  
+  <update id="update03" parameterType="map">
+  <![CDATA[
+    /* tribute.update03 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_CD_3 = NULL
+     WHERE SUPP_CD_3 = ''
+  ]]>
+  </update>
+  
+  <update id="update04" parameterType="map">
+  <![CDATA[
+    /* tribute.update04 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_CD_4 = NULL
+     WHERE SUPP_CD_4 = ''
+  ]]>
+  </update>
+  
+  <update id="update05" parameterType="map">
+  <![CDATA[
+    /* tribute.update05 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_NM_1 = NULL
+     WHERE SUPP_NM_1 = ''
+  ]]>
+  </update>
+  
+  <update id="update06" parameterType="map">
+  <![CDATA[
+    /* tribute.update06 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_NM_2 = NULL
+     WHERE SUPP_NM_2 = ''
+  ]]>
+  </update>
+  
+  <update id="update07" parameterType="map">
+  <![CDATA[
+    /* tribute.update07 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_NM_3 = NULL
+     WHERE SUPP_NM_3 = ''
+  ]]>
+  </update>
+  
+  <update id="update08" parameterType="map">
+  <![CDATA[
+    /* tribute.update08 */
+    UPDATE TB_TRIBUTE
+       SET SUPP_NM_4 = NULL
+     WHERE SUPP_NM_4 = ''
+  ]]>
+  </update>
+  
+</mapper>

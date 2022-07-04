@@ -1,0 +1,1153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mypage">
+
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt01 */
+  ]]>
+    SELECT SUM(A.PROJECT_NO)
+      FROM ( SELECT COUNT(A.PROJECT_NO) AS PROJECT_NO
+               FROM TB_PROJECT A
+               JOIN TB_USER_INFO B
+                 ON A.CREATE_ID = B.USER_ID
+               JOIN TB_ELECTRONIC_CONTRACT C
+                 ON A.PROJECT_NO = C.PROJECT_NO
+               LEFT OUTER JOIN TB_WRITTEN_REQUEST D
+                 ON C.CONTRACT_NO = D.CONTRACT_NO
+              WHERE A.CREATE_ID = #{CREATE_ID} /* 의뢰자 */
+            <if test="isNotEmpty(SEARCH_OPTION)">
+              <if test='"ING".equals(SEARCH_OPTION)'>
+                AND ( D.WR_NO IS NULL OR D.FILE_RECEIVE_YN = 'N' )
+              </if>
+              <if test='"CLEAR".equals(SEARCH_OPTION)'>
+                AND D.FILE_RECEIVE_YN = 'Y'
+              </if>
+            </if>
+            <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+              <if test='"ALL".equals(SEARCH_TYPE)'>
+                AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.CHEESIGNER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+              </if>
+              <if test='"TITLE".equals(SEARCH_TYPE)'>
+                AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+              </if>
+              <if test='"NICK".equals(SEARCH_TYPE)'>
+                AND ( A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.CHEESIGNER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+              </if>
+            </if>
+              UNION ALL
+             SELECT COUNT(A.PROJECT_NO) AS PROJECT_NO
+               FROM TB_PROJECT A
+               JOIN TB_USER_INFO B
+                 ON A.CREATE_ID = B.USER_ID
+               JOIN TB_ELECTRONIC_CONTRACT C
+                 ON A.PROJECT_NO = C.PROJECT_NO
+               LEFT OUTER JOIN TB_WRITTEN_REQUEST D
+                 ON C.CONTRACT_NO = D.CONTRACT_NO
+              WHERE C.CHEESIGNER_ID = #{CREATE_ID} /* 치자이너 */
+            <if test="isNotEmpty(SEARCH_OPTION)">
+              <if test='"ING".equals(SEARCH_OPTION)'>
+                AND ( D.WR_NO IS NULL OR D.FILE_RECEIVE_YN = 'N' )
+              </if>
+              <if test='"CLEAR".equals(SEARCH_OPTION)'>
+                AND D.FILE_RECEIVE_YN = 'Y'
+              </if>
+            </if>
+            <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+              <if test='"ALL".equals(SEARCH_TYPE)'>
+                AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.CHEESIGNER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+              </if>
+              <if test='"TITLE".equals(SEARCH_TYPE)'>
+                AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+              </if>
+              <if test='"NICK".equals(SEARCH_TYPE)'>
+                AND ( A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.CHEESIGNER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+              </if>
+            </if>
+           ) A
+  </select>
+  
+  <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt02 */
+    SELECT COUNT(A.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND B.PROGRESS_CD = 'PC005' /* 계약완료 */
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getCnt03" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt03 */
+    SELECT COUNT(A.EQ_NO) AS CNT
+      FROM TB_EQUIPMENT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+     WHERE A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt04" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt04 */
+    SELECT COUNT(A.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND B.PROGRESS_CD = 'PC005' /* 계약완료 */
+       AND A.RECEIVE_YN = 'Y' /* 수령여부 */
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getCnt05" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt05 */
+    SELECT COUNT(A.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST_FILE A
+     WHERE A.WR_NO = #{WR_NO}
+  ]]>
+  </select>
+  
+  <select id="getCnt06" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt06 */
+    SELECT COUNT(A.PROJECT_NO) AS CNT
+      FROM TB_PROJECT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+     WHERE A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt07" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt07 */
+    SELECT COUNT(C.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+      JOIN TB_WRITTEN_REQUEST_FILE C
+        ON A.WR_NO = C.WR_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getCnt08" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt08 */
+    SELECT COUNT(A.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+      JOIN TB_WRITTEN_REQUEST_FILE C
+        ON A.WR_NO = C.WR_NO
+     WHERE A.WR_NO = #{WR_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getCnt09" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt09 */
+    SELECT SUM(D.CNT)
+      FROM ( SELECT COUNT(A.EQ_NO) AS CNT
+               FROM TB_EQUIPMENT A
+              WHERE A.EQ_NO IN ( SELECT B.EQ_NO 
+                                   FROM TB_EQUIPMENT_MATCHING B
+                                   JOIN TB_USER_INFO C
+                                     ON B.CREATE_ID = C.USER_ID
+                                  WHERE B.CREATE_ID = #{CREATE_ID} )
+              UNION ALL
+             SELECT COUNT(A.PROJECT_NO) AS CNT
+               FROM TB_PROJECT A
+              WHERE A.PROJECT_NO IN ( SELECT B.PROJECT_NO
+                                        FROM TB_ESTIMATOR B
+                                        JOIN TB_USER_INFO C
+                                          ON B.CREATE_ID = C.USER_ID
+                                       WHERE B.CREATE_ID = #{CREATE_ID} )
+           ) D
+  ]]>
+  </select>
+  
+  <select id="getCnt10" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt10 */
+    SELECT COUNT(A.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST A
+     WHERE A.WR_NO = #{WR_NO}
+       AND A.FILE_RECEIVE_YN = 'Y'
+  ]]>
+  </select>
+  
+  <select id="getCnt11" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt11 */
+    SELECT COUNT(A.WR_NO) AS CNT
+      FROM TB_WRITTEN_REQUEST A
+     WHERE A.WR_NO = #{WR_NO}
+       AND A.PAYMENT_CD = 'PAY_003'
+  ]]>
+  </select>
+  
+  <select id="getCnt12" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt12 */
+    SELECT COUNT(USER_ID) AS CNT
+      FROM TB_USER_INFO
+     WHERE USER_NICK_NAME= #{USER_NICK_NAME}
+  ]]>
+  </select>
+  
+  <select id="getCnt13" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getCnt13 */
+    SELECT COUNT(USER_ID) AS CNT
+      FROM TB_USER_INFO_DTL
+     WHERE USER_ID= #{USER_ID}
+  ]]>
+  </select>
+  
+  <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getList01 */
+  ]]>
+    SELECT A.*
+      FROM ( SELECT 'A' AS DVSN_CD
+                  , A.PROJECT_NO
+                  , A.PROJECT_CD
+                  , ( SELECT CODE_NM
+                        FROM TB_CODE
+                       WHERE GROUP_CD = 'PROJECT_CD'
+                         AND CODE_CD = A.PROJECT_CD ) AS PROJECT_NM
+                  , A.PUBLIC_CD
+                  , A.TITLE
+                  , A.PROJECT_EXP_DATE
+                  , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%y-%m-%d %H:%i') AS DELIVERY_EXP_DATE
+                  , A.PREFER_CD_1
+                  , A.PREFER_NM_1
+                  , A.PREFER_CD_2
+                  , A.PREFER_NM_2
+                  , A.PREFER_CD_3
+                  , A.PREFER_NM_3
+                  , A.PREFER_CD_4
+                  , A.PREFER_NM_4
+                  , A.ADD_CONTENT
+                  , A.HITS_COUNT
+                  , C.PROGRESS_CD
+                  , ( CASE WHEN D.FILE_RECEIVE_YN = 'Y'
+                           THEN '완료'
+                           ELSE '진행중'
+                            END 
+                    ) AS PROGRESS_NM
+                  , B.USER_ID
+                  , B.USER_NICK_NAME
+                  , C.CHEESIGNER_ID
+                  , ( SELECT USER_NICK_NAME
+                        FROM TB_USER_INFO
+                       WHERE USER_ID = C.CHEESIGNER_ID ) AS CHEESIGNER_NICK_NAME
+                  , DATE_FORMAT(C.CREATE_DATE, '%y-%m-%d %H:%i') AS MATCHING_DATE
+                  , C.CONTRACT_NO
+                  , C.ESTIMATOR_NO
+                  , IFNULL(D.RECEIVE_YN, 'N') AS RECEIVE_YN
+                  , IFNULL(D.FILE_RECEIVE_YN, 'N') AS FILE_RECEIVE_YN
+                  , D.PAYMENT_CD
+                  , D.WR_NO
+               FROM TB_PROJECT A
+               JOIN TB_USER_INFO B
+                 ON A.CREATE_ID = B.USER_ID
+               JOIN TB_ELECTRONIC_CONTRACT C
+                 ON A.PROJECT_NO = C.PROJECT_NO
+               LEFT OUTER JOIN TB_WRITTEN_REQUEST D
+                 ON C.CONTRACT_NO = D.CONTRACT_NO
+              WHERE A.CREATE_ID = #{CREATE_ID} /* 의뢰자 */
+              UNION ALL
+             SELECT 'B' AS DVSN_CD
+                  , A.PROJECT_NO
+                  , A.PROJECT_CD
+                  , ( SELECT CODE_NM
+                        FROM TB_CODE
+                       WHERE GROUP_CD = 'PROJECT_CD'
+                         AND CODE_CD = A.PROJECT_CD ) AS PROJECT_NM
+                  , A.PUBLIC_CD
+                  , A.TITLE
+                  , A.PROJECT_EXP_DATE
+                  , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%y-%m-%d %H:%i') AS DELIVERY_EXP_DATE
+                  , A.PREFER_CD_1
+                  , A.PREFER_NM_1
+                  , A.PREFER_CD_2
+                  , A.PREFER_NM_2
+                  , A.PREFER_CD_3
+                  , A.PREFER_NM_3
+                  , A.PREFER_CD_4
+                  , A.PREFER_NM_4
+                  , A.ADD_CONTENT
+                  , A.HITS_COUNT
+                  , C.PROGRESS_CD
+                  , ( CASE WHEN D.FILE_RECEIVE_YN = 'Y'
+                           THEN '완료'
+                           ELSE '진행중'
+                            END 
+                    ) AS PROGRESS_NM
+                  , B.USER_ID
+                  , B.USER_NICK_NAME
+                  , C.CHEESIGNER_ID
+                  , ( SELECT USER_NICK_NAME
+                        FROM TB_USER_INFO
+                       WHERE USER_ID = C.CHEESIGNER_ID ) AS CHEESIGNER_NICK_NAME
+                  , DATE_FORMAT(C.CREATE_DATE, '%y-%m-%d %H:%i') AS MATCHING_DATE
+                  , C.CONTRACT_NO
+                  , C.ESTIMATOR_NO
+                  , IFNULL(D.RECEIVE_YN, 'N') AS RECEIVE_YN
+                  , IFNULL(D.FILE_RECEIVE_YN, 'N') AS FILE_RECEIVE_YN
+                  , D.PAYMENT_CD
+                  , D.WR_NO
+               FROM TB_PROJECT A
+               JOIN TB_USER_INFO B
+                 ON A.CREATE_ID = B.USER_ID
+               JOIN TB_ELECTRONIC_CONTRACT C
+                 ON A.PROJECT_NO = C.PROJECT_NO
+               LEFT OUTER JOIN TB_WRITTEN_REQUEST D
+                 ON C.CONTRACT_NO = D.CONTRACT_NO
+              WHERE C.CHEESIGNER_ID = #{CREATE_ID} /* 치자이너 */
+           ) A
+     WHERE 1=1
+   <if test="isNotEmpty(SEARCH_OPTION)">
+     <if test='"ING".equals(SEARCH_OPTION)'>
+       AND ( A.WR_NO IS NULL OR A.FILE_RECEIVE_YN = 'N' )
+     </if>
+     <if test='"CLEAR".equals(SEARCH_OPTION)'>
+       AND A.FILE_RECEIVE_YN = 'Y'
+     </if>
+   </if>
+   <if test="isNotEmpty(SEARCH_TXT) and isNotEmpty(SEARCH_TYPE)">
+     <if test='"ALL".equals(SEARCH_TYPE)'>
+       AND ( A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.CHEESIGNER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+     </if>
+     <if test='"TITLE".equals(SEARCH_TYPE)'>
+       AND A.TITLE LIKE CONCAT('%', #{SEARCH_TXT}, '%')
+     </if>
+     <if test='"NICK".equals(SEARCH_TYPE)'>
+       AND ( A.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') OR A.CHEESIGNER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%') )
+     </if>
+   </if>
+     ORDER BY A.PROJECT_NO DESC
+   <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+   </if> 
+  </select>
+  
+  <select id="getList02" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* mypage.getList02 */
+  ]]>
+  	SELECT A.EQ_NO
+  	     , A.EQ_CD
+  	     , ( SELECT CODE_NM
+  	           FROM TB_CODE
+  	          WHERE GROUP_CD = 'EQ_CD'
+  	            AND CODE_CD = A.EQ_CD
+  	       ) AS EQ_CD_NM
+  	     , ( SELECT COUNT(EQ_NO)
+               FROM TB_EQUIPMENT_MATCHING
+              WHERE EQ_NO = A.EQ_NO
+                AND CLIENT_DEL_YN = 'N'
+           ) AS EQ_CNT
+  	     , A.AREA_CD
+  	     , A.TITLE
+  	     , DATE_FORMAT(A.EQ_EXP_DATE, '%Y-%m-%d') AS EQ_EXP_DATE
+  	     , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+  	  FROM TB_EQUIPMENT A
+  	  JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+     WHERE A.CREATE_ID = #{CREATE_ID}
+     ORDER BY A.EQ_NO DESC
+  	<if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+   	</if>
+  </select>
+  
+  <select id="getList03" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getList03 */
+    SELECT A.PROJECT_NO
+         , A.PROJECT_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD
+           ) AS PROJECT_CD_NM
+         , ( SELECT COUNT(PROJECT_NO)
+               FROM TB_ESTIMATOR
+              WHERE PROJECT_NO = A.PROJECT_NO
+                AND CLIENT_DEL_YN = 'N'
+           ) AS PROJECT_CNT
+         , A.TITLE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y-%m-%d') AS PROJECT_EXP_DATE
+         , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+         , ( SELECT ESTIMATOR_NO
+               FROM TB_ESTIMATOR
+              WHERE PROJECT_NO = A.PROJECT_NO
+                AND MATCHING_YN = 'Y'
+           ) AS ESTIMATOR_NO
+         , ( SELECT COUNT(CONTRACT_NO)
+               FROM TB_ELECTRONIC_CONTRACT 
+              WHERE PROJECT_NO = A.PROJECT_NO
+           ) AS CONTRACT_CNT
+      FROM TB_PROJECT A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+     WHERE A.CREATE_ID = #{CREATE_ID}
+     ORDER BY A.PROJECT_NO DESC
+  ]]>
+    <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+    </if>
+  </select>
+  
+  <select id="getList04" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* mypage.getList04 */
+  ]]>
+  	SELECT 'EQ' AS REQ_TYPE
+         , A.EQ_NO AS REQ_NO
+  	     , A.EQ_CD AS REQ_CD
+  	     , ( SELECT CODE_NM
+  	           FROM TB_CODE
+  	          WHERE GROUP_CD = 'EQ_CD'
+  	            AND CODE_CD = A.EQ_CD
+  	       ) AS REQ_CD_NM
+  	     , ( SELECT COUNT(EQ_NO)
+               FROM TB_EQUIPMENT_MATCHING
+              WHERE EQ_NO = A.EQ_NO
+                AND CLIENT_DEL_YN = 'N'
+           ) AS REQ_CNT
+  	     , A.TITLE
+  	     , DATE_FORMAT(A.EQ_EXP_DATE, '%Y-%m-%d') AS EXP_DATE
+  	     , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+      FROM TB_EQUIPMENT A
+     WHERE A.EQ_NO IN (SELECT B.EQ_NO 
+                         FROM TB_EQUIPMENT_MATCHING B
+						             JOIN TB_USER_INFO C
+						               ON B.CREATE_ID = C.USER_ID
+						            WHERE B.CREATE_ID = #{CREATE_ID})
+						  
+    UNION ALL
+
+    SELECT 'PROJECT' AS REQ_TYPE
+         , A.PROJECT_NO AS REQ_NO
+	       , A.PROJECT_CD AS REQ_CD
+  	     , ( SELECT CODE_NM
+  	           FROM TB_CODE
+  	          WHERE GROUP_CD = 'PROJECT_CD'
+  	            AND CODE_CD = A.PROJECT_CD
+  	       ) AS REQ_CD_NM
+  	     , ( SELECT COUNT(PROJECT_NO)
+               FROM TB_ESTIMATOR
+              WHERE PROJECT_NO = A.PROJECT_NO
+                AND CLIENT_DEL_YN = 'N'
+           ) AS REQ_CNT
+         , A.TITLE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y-%m-%d') AS EXP_DATE
+  	     , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+      FROM TB_PROJECT A
+     WHERE A.PROJECT_NO IN (SELECT B.PROJECT_NO
+                              FROM TB_ESTIMATOR B
+                              JOIN TB_USER_INFO C
+                                ON B.CREATE_ID = C.USER_ID
+                             WHERE B.CREATE_ID = #{CREATE_ID})
+     ORDER BY REQ_TYPE, REQ_NO DESC
+    <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+   	</if>
+  </select>
+  
+  <select id="getData01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData01 */
+    SELECT A.WR_NO
+         , B.CONTRACT_NO
+         , B.ESTIMATOR_NO
+         , B.PROJECT_NO
+         , #{CREATE_ID} AS CREATE_ID
+         , #{UPDATE_ID} AS UPDATE_ID
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND B.PROGRESS_CD = 'PC005' /* 계약완료 */
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+       AND ( A.PAYMENT_CD IS NULL OR A.PAYMENT_CD = 'PAY_001' )
+  ]]>
+  </select>
+  
+  <select id="getData02" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData02 */
+    SELECT A.PROJECT_NO
+         , A.PROJECT_CD 
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PROJECT_CD
+                AND GROUP_CD = 'PROJECT_CD'
+           ) AS PROJECT_NM
+         , A.PUBLIC_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PUBLIC_CD
+                AND GROUP_CD = 'PUBLIC_CD' 
+           ) AS PUBLIC_NM
+         , A.TITLE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y%m%d%H%i') AS PROJECT_EXP_DATE
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS PROJECT_EXP_DATE2
+         , A.DELIVERY_EXP_DATE
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y-%m-%d') AS DELIVERY_EXP_DATE2
+         , IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간') AS DELIVERY_EXP_DATE3
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_EXP_DATE4
+         , A.PREFER_CD_1
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_1
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_1
+         , A.PREFER_NM_1
+         , A.PREFER_CD_2
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_2
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_2
+         , A.PREFER_NM_2
+         , A.PREFER_CD_3
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_3
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_3
+         , A.PREFER_NM_3
+         , A.PREFER_CD_4
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE CODE_CD = A.PREFER_CD_4
+                AND GROUP_CD = 'PREFER_CD' 
+           ) AS PREFER_CD_NM_4
+         , A.PREFER_NM_4
+         , A.ADD_CONTENT
+         , A.HITS_COUNT
+         , ( SELECT GROUP_CONCAT(DISTINCT GROUP_CD SEPARATOR 'l')
+               FROM TB_PROJECT_DTL
+              WHERE PROJECT_NO = A.PROJECT_NO
+           ) AS GCS
+         , ( SELECT GROUP_CONCAT(RQST_NO SEPARATOR 'l')
+               FROM TB_PROJECT_DTL
+              WHERE PROJECT_NO = A.PROJECT_NO 
+           ) AS REQS
+         , A.CREATE_ID
+         , DATE_FORMAT(A.CREATE_DATE, '%Y년 %m월 %d일 %H시 %i분') AS CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , ( SELECT GROUP_CONCAT(SB.USER_NICK_NAME SEPARATOR ',')
+               FROM TB_PROJECT_APPOINT SA
+               JOIN TB_USER_INFO SB
+                 ON SA.USER_ID = SB.USER_ID
+              WHERE SA.PROJECT_NO = A.PROJECT_NO ) AS APPOINT_USER
+         , C.WR_NO
+         , C.FILE_RECEIVE_YN
+         , ( SELECT COUNT(REVIEW_NO)
+               FROM TB_REVIEW
+              WHERE PROJECT_NO = A.PROJECT_NO
+           ) AS REVIEW_CNT
+      FROM TB_PROJECT A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      LEFT OUTER JOIN TB_WRITTEN_REQUEST C
+        ON C.CONTRACT_NO = B.CONTRACT_NO
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND ( A.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getData03" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData03 */
+    SELECT B.CONTRACT_NO
+         , C.BANK_CD
+         , C.ACCOUNT_NM
+         , C.ACCOUNT_NO
+         , ( SELECT SUM(SUM_AMOUNT) AS SUM_AMOUNT
+               FROM TB_ESTIMATOR_DTL
+              WHERE ESTIMATOR_NO = B.ESTIMATOR_NO ) AS ESTIMATE_AMOUNT
+         , ( SELECT SUM(SUM_AMOUNT) AS SUM_AMOUNT
+               FROM TB_ESTIMATOR_DTL
+              WHERE ESTIMATOR_NO = B.ESTIMATOR_NO ) AS LAST_AMOUNT
+         , #{CREATE_ID} AS CREATE_ID
+         , #{UPDATE_ID} AS UPDATE_ID
+      FROM TB_PROJECT A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      JOIN TB_USER_INFO C
+        ON B.CHEESIGNER_ID = C.USER_ID
+     WHERE A.PROJECT_NO = #{PROJECT_NO}
+       AND B.PROGRESS_CD = 'PC005' /* 계약완료 */
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getData04" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData04 */
+    SELECT A.WR_NO
+         , A.CONTRACT_NO
+         , A.RECEIVE_YN
+         , A.PAYMENT_CD
+         , A.FILE_RECEIVE_YN
+         , A.BANK_CD
+         , A.ACCOUNT_NM
+         , A.ACCOUNT_NO
+         , A.ESTIMATE_AMOUNT
+         , A.LAST_AMOUNT
+         , A.CHANGE_CAUSE
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'BANK_CD'
+                AND CODE_CD = A.BANK_CD ) AS BANK_NM
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  
+  <select id="getData05" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData05 */
+    SELECT A.WR_NO
+         , A.CONTRACT_NO
+         , A.RECEIVE_YN
+         , A.PAYMENT_CD
+         , A.FILE_RECEIVE_YN
+         , A.BANK_CD
+         , A.ACCOUNT_NM
+         , A.ACCOUNT_NO
+         , A.ESTIMATE_AMOUNT
+         , A.LAST_AMOUNT
+         , A.CHANGE_CAUSE
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'BANK_CD'
+                AND CODE_CD = A.BANK_CD ) AS BANK_NM
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+       AND 0 < ( SELECT COUNT(WR_NO)
+                   FROM TB_WRITTEN_REQUEST_FILE
+                  WHERE WR_NO = A.WR_NO )
+  ]]>
+  </select>
+  
+  <select id="getData06" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData06 */
+    SELECT A.USER_ID
+         , A.USER_NM
+         , A.USER_ADDRESS
+         , A.USER_ADDRESS_DTL
+         , A.USER_NICK_NAME
+         , A.COMP_GROUP_NM
+         , A.COMP_NO
+         , A.COMP_ADDRESS
+         , A.COMP_ADDRESS_DTL
+         , A.ACCOUNT_NO
+         , A.USER_TYPE_CD
+         , A.COMP_GROUP_CD
+         , A.COMP_GROUP_NM
+         , B.FILE_ORIGIN_NM
+      FROM TB_USER_INFO A
+      LEFT OUTER JOIN TB_FILE_INFO B
+        ON A.COMP_FILE_CD = B.FILE_CD
+     WHERE A.USER_ID = #{USER_ID}
+  ]]>
+  </select>
+  
+  <select id="getData07" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData07 */
+    SELECT A.USER_ID
+         , A.USER_NM
+         , A.USER_NICK_NAME
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'USER_TYPE'
+                AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
+         , A.USER_TYPE_CD
+      FROM TB_USER_INFO A
+     WHERE A.USER_ID = #{USER_ID}
+  ]]>
+  </select>
+  <select id="getData08" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData08 */
+    SELECT A.USER_ID
+         , A.TAX_BILL_YN
+         , A.INTRO_CONTENT
+         , A.PROFILE_FILE_CD
+         , A.IMAGE_FILE_CD
+         , A.CAREER_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'CAREER_CD'
+                AND CODE_CD = A.CAREER_CD ) AS CAREER_NM
+         , A.PROJECT_CD_1
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_1 ) AS PROJECT_NM_1
+         , A.PROJECT_CD_2
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_2 ) AS PROJECT_NM_2
+         , A.PROJECT_CD_3
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_3 ) AS PROJECT_NM_3
+         , A.PROJECT_CD_4
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_4 ) AS PROJECT_NM_4
+         , A.PROJECT_CD_5
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_5 ) AS PROJECT_NM_5
+         , A.PROJECT_CD_6
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_6 ) AS PROJECT_NM_6
+         , A.PROJECT_CD_7
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = A.PROJECT_CD_7 ) AS PROJECT_NM_7
+         , A.PROJECT_CD_8
+         , A.PROJECT_NM_8
+         , B.FILE_NM AS PROFILE_FILE_NM
+         , B.FILE_ORIGIN_NM AS PROFILE_FILE_ORIGIN_NM
+         , REPLACE(B.FILE_DIRECTORY, '\\', '/') AS PROFILE_FILE_DIRECTORY
+         , C.FILE_NM AS IMAGE_FILE_NM
+         , C.FILE_ORIGIN_NM AS IMAGE_FILE_ORIGIN_NM
+         , REPLACE(C.FILE_DIRECTORY, '\\', '/') AS IMAGE_FILE_DIRECTORY
+      FROM TB_USER_INFO_DTL A
+      LEFT OUTER JOIN TB_FILE_INFO B
+        ON A.PROFILE_FILE_CD = B.FILE_CD
+       AND B.FILE_NO = 1
+      LEFT OUTER JOIN TB_FILE_INFO C
+        ON A.IMAGE_FILE_CD = C.FILE_CD
+       AND C.FILE_NO = 1
+     WHERE A.USER_ID = #{USER_ID}
+  ]]>
+  </select>
+  
+  <select id="getData09" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData09 */
+    SELECT A.USER_ID
+         , A.USER_NM
+         , A.USER_NICK_NAME
+         , @ESTIMATOR_CNT := ( SELECT COUNT(ESTIMATOR_NO)
+                                 FROM TB_ESTIMATOR
+                                WHERE CREATE_ID = A.USER_ID
+                             ) AS ESTIMATOR_CNT
+         , @COMPLETE_CNT := ( SELECT COUNT(WR_NO)
+                                FROM TB_WRITTEN_REQUEST
+                               WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                                        FROM TB_ELECTRONIC_CONTRACT
+                                                       WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                                 FROM TB_ESTIMATOR
+                                                                                WHERE CREATE_ID = A.USER_ID ) )
+                                 AND FILE_RECEIVE_YN = 'Y'
+                            ) AS COMPLETE_CNT
+         , ( SELECT FORMAT(IFNULL(SUM(LAST_AMOUNT), 0), 0)
+               FROM TB_WRITTEN_REQUEST
+              WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                       FROM TB_ELECTRONIC_CONTRACT
+                                      WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                FROM TB_ESTIMATOR
+                                                               WHERE CREATE_ID = A.USER_ID ) )
+                AND FILE_RECEIVE_YN = 'Y'
+           ) AS COMPLETE_AMOUNT
+         , IFNULL(ROUND((@COMPLETE_CNT / @ESTIMATOR_CNT * 100 )), 0) AS COMPLETE_RATIO
+         , ( SELECT IFNULL(ROUND(SUM(SCORE)/COUNT(1)),0) AS SOCRE_AVG
+               FROM TB_REVIEW
+              WHERE PROJECT_NO IN ( SELECT PROJECT_NO
+                                      FROM TB_ELECTRONIC_CONTRACT
+                                     WHERE CHEESIGNER_ID  = A.USER_ID ) ) AS SCORE_AVG
+      FROM TB_USER_INFO A
+         , (SELECT @ESTIMATOR_CNT := 0, @COMPLETE_CNT := 0) V_TB
+     WHERE A.USER_ID = #{USER_ID}
+  ]]>
+  </select>
+  
+  <select id="getSuppInfo" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getSuppInfoList */
+    SELECT B.RQST_NO
+         , B.GROUP_CD
+         , B.PANT_NM
+         , SUM(B.TOOTH_CNT) AS CNT
+         , B.TOTAL_CNT
+         , B.SUPP_CD
+         , B.SUPP_NM
+         , ( SELECT FILE_CD
+               FROM TB_TRIBUTE
+              WHERE RQST_NO = B.RQST_NO
+                AND GROUP_CD = B.GROUP_CD
+           ) AS FILE_CD
+         , ( SELECT FILE_CD
+               FROM TB_WRITTEN_REQUEST_FILE
+              WHERE RQST_NO = B.RQST_NO
+                AND GROUP_CD = B.GROUP_CD
+           ) AS WR_FILE_CD
+      FROM ( SELECT A.RQST_NO
+                  , A.GROUP_CD
+                  , A.PANT_NM
+                  , ( SELECT COUNT(RQST_NO)
+                        FROM TB_TRIBUTE_DTL DTL
+                       WHERE DTL.GROUP_CD = A.GROUP_CD
+                         AND DTL.RQST_NO = A.RQST_NO
+                         AND DTL.TAB_NO = A.TAB_NO) AS TOOTH_CNT
+                  , ( SELECT COUNT(RQST_NO)
+                        FROM TB_TRIBUTE_DTL DTL
+                       WHERE DTL.GROUP_CD = A.GROUP_CD) AS TOTAL_CNT
+                  , A.SUPP_CD_1 AS SUPP_CD
+                  , A.SUPP_NM_1 AS SUPP_NM
+               FROM TB_TRIBUTE A
+              WHERE A.GROUP_CD = #{GROUP_CD}
+           ) B
+     GROUP BY B.SUPP_CD
+  ]]>  
+  </select>
+  
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* mypage.insert01 */
+    INSERT INTO TB_WRITTEN_REQUEST (
+      CONTRACT_NO
+    , RECEIVE_YN
+    , PAYMENT_CD
+    , FILE_RECEIVE_YN
+    , BANK_CD
+    , ACCOUNT_NM
+    , ACCOUNT_NO
+    , ESTIMATE_AMOUNT
+    , LAST_AMOUNT
+    , CHANGE_CAUSE
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{CONTRACT_NO}
+    , 'Y'
+    , 'PAY_001' /* 입금전 */
+    , 'N'
+    , #{BANK_CD}
+    , #{ACCOUNT_NM}
+    , #{ACCOUNT_NO}
+    , #{ESTIMATE_AMOUNT}
+    , #{LAST_AMOUNT}
+    , NULL
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert02" parameterType="map">
+  <![CDATA[
+    /* mypage.insert02 */
+    INSERT INTO TB_WRITTEN_REQUEST_FILE (
+      WR_NO
+    , FILE_CD
+    , FILE_NO
+    , RQST_NO
+    , GROUP_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{WR_NO}
+    , #{FILE_CD}
+    , 1
+    , #{RQST_NO}
+    , ( SELECT MAX(GROUP_CD)
+          FROM TB_TRIBUTE
+         WHERE RQST_NO = #{RQST_NO}
+      )
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert03" parameterType="map">
+  <![CDATA[
+    /* mypage.insert03 */
+  ]]>
+    INSERT INTO TB_USER_INFO_DTL (
+      USER_ID
+    , TAX_BILL_YN
+    , INTRO_CONTENT
+    , PROFILE_FILE_CD
+    , IMAGE_FILE_CD
+    , CAREER_CD
+    , PROJECT_CD_1
+    , PROJECT_CD_2
+    , PROJECT_CD_3
+    , PROJECT_CD_4
+    , PROJECT_CD_5
+    , PROJECT_CD_6
+    , PROJECT_CD_7
+    , PROJECT_CD_8
+  <if test="isNotEmpty(PROJECT_CD_8)">
+    , PROJECT_NM_8
+  </if>
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{USER_ID}
+    , #{TAX_BILL_YN}
+    , #{INTRO_CONTENT}
+    , #{PROFILE_FILE_CD}
+    , #{IMAGE_FILE_CD}
+    , #{CAREER_CD}
+    , #{PROJECT_CD_1}
+    , #{PROJECT_CD_2}
+    , #{PROJECT_CD_3}
+    , #{PROJECT_CD_4}
+    , #{PROJECT_CD_5}
+    , #{PROJECT_CD_6}
+    , #{PROJECT_CD_7}
+    , #{PROJECT_CD_8}
+  <if test="isNotEmpty(PROJECT_CD_8)">
+    , #{PROJECT_NM_8}
+  </if>
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  </insert>
+  
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* mypage.update01 */
+    UPDATE TB_WRITTEN_REQUEST
+       SET PAYMENT_CD = 'PAY_002'
+         , LAST_AMOUNT = #{LAST_AMOUNT}
+         , CHANGE_CAUSE = #{CHANGE_CAUSE}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </update>
+  
+  <update id="update02" parameterType="map">
+  <![CDATA[
+    /* mypage.update02 */
+    UPDATE TB_WRITTEN_REQUEST
+       SET FILE_RECEIVE_YN = 'Y'
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </update>
+  
+  <update id="update03" parameterType="map">
+  <![CDATA[
+    /* mypage.update03 */
+    UPDATE TB_ESTIMATOR
+       SET MATCHING_YN = 'N'
+         , CLIENT_DEL_YN = 'Y'
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE ESTIMATOR_NO = #{ESTIMATOR_NO}
+  ]]>
+  </update>
+  
+  <update id="update04" parameterType="map">
+  <![CDATA[
+    /* mypage.update04 */
+    UPDATE TB_WRITTEN_REQUEST
+       SET PAYMENT_CD = 'PAY_003'
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </update>
+  
+  <update id="update05" parameterType="map">
+  <![CDATA[
+    /* mypage.update05 */
+    UPDATE TB_WRITTEN_REQUEST
+       SET PAYMENT_CD = 'PAY_004'
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </update>
+  
+  <update id="update06" parameterType="map">
+  <![CDATA[
+    /* mypage.update06 */
+    UPDATE TB_USER_INFO
+       SET USER_PW = #{USER_PW}
+         , USER_ADDRESS = #{USER_ADDRESS}
+         , USER_ADDRESS_DTL = #{USER_ADDRESS_DTL}
+         , USER_NICK_NAME = #{USER_NICK_NAME}
+         , COMP_GROUP_CD = #{COMP_GROUP_CD}
+         , COMP_GROUP_NM = #{COMP_GROUP_NM}
+         , COMP_NO = #{COMP_NO}
+         , COMP_ADDRESS = #{COMP_ADDRESS}
+         , COMP_ADDRESS_DTL = #{COMP_ADDRESS_DTL}
+         , COMP_FILE_CD = #{COMP_FILE_CD}
+     WHERE USER_ID = #{CREATE_ID}
+  ]]>
+  </update>
+  
+  <update id="update07" parameterType="map">
+  <![CDATA[
+    /* mypage.update07 */
+    UPDATE TB_USER_INFO
+       SET USER_NICK_NAME = #{USER_NICK_NAME}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE USER_ID = #{USER_ID}
+  ]]>
+  </update>
+  
+  <update id="update08" parameterType="map">
+  <![CDATA[
+    /* mypage.update08 */
+  ]]>
+    UPDATE TB_USER_INFO_DTL
+       SET TAX_BILL_YN = #{TAX_BILL_YN}
+         , INTRO_CONTENT = #{INTRO_CONTENT}
+         , CAREER_CD = #{CAREER_CD}
+         , PROJECT_CD_1 = #{PROJECT_CD_1}
+         , PROJECT_CD_2 = #{PROJECT_CD_2}
+         , PROJECT_CD_3 = #{PROJECT_CD_3}
+         , PROJECT_CD_4 = #{PROJECT_CD_4}
+         , PROJECT_CD_5 = #{PROJECT_CD_5}
+         , PROJECT_CD_6 = #{PROJECT_CD_6}
+         , PROJECT_CD_7 = #{PROJECT_CD_7}
+         , PROJECT_CD_8 = #{PROJECT_CD_8}
+       <if test="isEmpty(PROJECT_CD_8)">
+         , PROJECT_NM_8 = NULL
+       </if>
+       <if test="isNotEmpty(PROJECT_CD_8)">
+         , PROJECT_NM_8 = #{PROJECT_NM_8}
+       </if>
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE USER_ID = #{USER_ID}
+  </update>
+  
+  <update id="update09" parameterType="map">
+  <![CDATA[
+    /* mypage.update09 */
+    UPDATE TB_USER_INFO_DTL
+       SET PROFILE_FILE_CD = #{PROFILE_FILE_CD}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE USER_ID = #{USER_ID}
+  ]]>
+  </update>
+  
+  <update id="update10" parameterType="map">
+  <![CDATA[
+    /* mypage.update10 */
+    UPDATE TB_USER_INFO_DTL
+       SET IMAGE_FILE_CD = #{IMAGE_FILE_CD}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE USER_ID = #{USER_ID}
+  ]]>
+  </update>
+  
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* mypage.delete01 */
+    DELETE TB_WRITTEN_REQUEST
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </delete>
+  
+  <delete id="delete02" parameterType="map">
+  <![CDATA[
+    /* mypage.delete02 */
+    DELETE TB_WRITTEN_REQUEST_FILE
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </delete>
+  
+  <delete id="delete03" parameterType="map">
+  <![CDATA[
+    /* mypage.delete03 */
+    DELETE TB_ELECTRONIC_CONTRACT
+     WHERE CONTRACT_NO = #{CONTRACT_NO}
+  ]]>
+  </delete>
+  
+  <insert id="insertFile" parameterType="map">
+  <![CDATA[
+    /* mypage.insertFile */
+    INSERT INTO TB_FILE_INFO (
+      FILE_CD
+    , FILE_NO
+    , FILE_NM
+    , FILE_ORIGIN_NM
+    , FILE_DIRECTORY
+    , FILE_TYPE
+    , FILE_SIZE
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{FILE_CD}
+    , #{FILE_NO}
+    , #{FILE_NM}
+    , #{FILE_ORIGIN_NM}
+    , #{FILE_DIRECTORY}
+    , #{FILE_TYPE}
+    , #{FILE_SIZE}
+    , #{CREATE_ID}
+    , NOW()
+    , #{CREATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+</mapper>

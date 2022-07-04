@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+
+  <select id="getLastInsertId" parameterType="map" resultType="java.lang.String">
+  <![CDATA[
+    /* common.getLastInsertId */
+    SELECT LAST_INSERT_ID()
+  ]]>
+  </select>
+  
+  <select id="getCode" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* common.getCode */
+    SELECT A.GROUP_CD
+         , A.CODE_CD
+         , A.CODE_NM 
+         , A.SORT
+      FROM TB_CODE A
+     WHERE A.GROUP_CD = #{GROUP_CD}
+     ORDER BY A.SORT
+  ]]>
+  </select>
+  
+  <select id="checkId" parameterType="map" resultType="integer">
+  <![CDATA[
+    /* common.checkId */
+    SELECT COUNT(A.USER_ID)
+      FROM TB_USER_INFO A
+     WHERE A.USER_ID = #{user_id}
+  ]]>
+  </select>
+  
+  <select id="checkSign" parameterType="map" resultType="integer">
+  <![CDATA[
+    /* common.checkSign */
+    SELECT COUNT(A.USER_ID)
+      FROM TB_USER_INFO A
+     WHERE A.USER_PHONE = #{user_phone}
+     AND A.USER_TYPE_CD = #{user_type_cd}
+  ]]>
+  </select>
+  
+  <select id="checkNickName" parameterType="map" resultType="integer">
+  <![CDATA[
+    /* common.checkNickName */
+    SELECT COUNT(A.USER_NICK_NAME)
+      FROM TB_USER_INFO A
+     WHERE A.USER_NICK_NAME = #{user_nick_name}
+  ]]>
+  </select>
+  
+  <insert id="insertFile" parameterType="map">
+  <![CDATA[
+    /* common.insertFile */
+    INSERT INTO TB_FILE_INFO (
+      FILE_CD
+    , FILE_NO
+    , FILE_NM
+    , FILE_ORIGIN_NM
+    , FILE_DIRECTORY
+    , FILE_TYPE
+    , FILE_SIZE
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{FILE_CD}
+    , #{FILE_NO}
+    , #{FILE_NM}
+    , #{FILE_ORIGIN_NM}
+    , #{FILE_DIRECTORY}
+    , #{FILE_TYPE}
+    , #{FILE_SIZE}
+    , #{CREATE_ID}
+    , NOW()
+    , #{CREATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <delete id="deleteFile" parameterType="map">
+  <![CDATA[
+    /* common.deleteFile */
+  ]]>
+    DELETE FROM TB_FILE_INFO
+     WHERE FILE_CD = #{FILE_CD}
+     <if test="isNotEmpty(FILE_NO)">
+       AND FILE_NO = #{FILE_NO}
+     </if>
+  </delete>
+	
+  <select id="getFileList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+  	/* common.getFileList */
+  ]]>
+  	SELECT A.FILE_CD
+  	     , A.FILE_NO
+  	     , A.FILE_NM
+  	     , A.FILE_ORIGIN_NM
+  	     , A.FILE_DIRECTORY
+  	     , A.FILE_TYPE
+  	     , A.FILE_SIZE
+  	     , A.CREATE_ID
+  	     , A.CREATE_DATE
+  	     , A.UPDATE_ID
+  	     , A.UPDATE_DATE
+  	  FROM TB_FILE_INFO A
+  	 WHERE A.FILE_CD = #{FILE_CD}
+  	 <if test="isNotEmpty(FILE_NO)">
+  	   AND A.FILE_NO = #{FILE_NO}
+  	 </if>
+  </select>
+
+</mapper>

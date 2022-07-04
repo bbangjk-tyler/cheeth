@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="main">
+
+  <select id="getPjtSummary" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* main.getPjtSummary */
+    SELECT (SELECT COUNT(1) FROM TB_USER_INFO) AS USER_CNT
+         , (SELECT COUNT(1) FROM TB_PROJECT) AS PJT_CNT
+         , (SELECT FORMAT(SUM(LAST_AMOUNT),0) FROM TB_WRITTEN_REQUEST) AS PJT_AMOUNT
+      FROM DUAL
+  ]]>
+  </select>
+  
+  <select id="getProgCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* main.getProgCnt */
+    SELECT COUNT(PROG_NO) AS CNT
+      FROM TB_PROG
+  ]]>
+  </select>
+  
+  <select id="getProgList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* main.getProgList01 */
+    SELECT A.PROG_NO
+         , A.AREA_CD
+         , A.CENTER_NM
+         , A.INTRO
+         , A.SERVICE_DESC
+         , A.PROFILE_FILE_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'AREA_CD'
+                AND CODE_CD = A.AREA_CD ) AS AREA_NM
+         , ( SELECT GROUP_CONCAT(WORK_ITEM_NM ORDER BY WORK_ITEM_NM SEPARATOR ', ') AS WORK_ITEM_NM
+               FROM TB_PROG_WORK_ITEM
+              WHERE PROG_NO = A.PROG_NO) AS WORK_ITEM_NM
+      FROM TB_PROG A
+     ORDER BY A.PROG_NO DESC
+     LIMIT #{PROG_PAGE}, 4
+  ]]>
+  </select>
+  
+</mapper>

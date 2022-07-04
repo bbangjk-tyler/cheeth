@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="review">
+
+  <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt01 */
+    SELECT COUNT(A.REVIEW_NO)
+      FROM TB_REVIEW A
+      JOIN TB_PROJECT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+     WHERE B.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt02 */
+    SELECT COUNT(REVIEW_NO)
+      FROM TB_REVIEW
+     WHERE CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt03" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt03 */
+    SELECT COUNT(REVIEW_NO)
+      FROM TB_REVIEW
+     WHERE WR_NO = #{WR_NO}
+  ]]>
+  </select>
+  
+  <select id="getCnt04" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt04 */
+    SELECT COUNT(CONTRACT_NO)
+      FROM TB_ELECTRONIC_CONTRACT
+     WHERE PROJECT_NO = #{PROJECT_NO}
+       AND CHEESIGNER_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt05" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt05 */
+    SELECT COUNT(CONTRACT_NO)
+      FROM TB_ELECTRONIC_CONTRACT
+     WHERE PROJECT_NO = ( SELECT PROJECT_NO
+                            FROM TB_REVIEW
+                           WHERE REVIEW_NO = #{REVIEW_NO} )
+       AND CHEESIGNER_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt06" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt06 */
+    SELECT COUNT(REVIEW_NO)
+      FROM TB_REVIEW_REPLY
+     WHERE REVIEW_NO = #{REVIEW_NO}
+  ]]>
+  </select>
+  
+  <select id="getCnt07" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt07 */
+    SELECT COUNT(PROJECT_NO)
+      FROM TB_REVIEW
+     WHERE REVIEW_NO = #{REVIEW_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getCnt08" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* review.getCnt08 */
+    SELECT COUNT(PROJECT_NO)
+      FROM TB_PROJECT
+     WHERE PROJECT_NO = #{PROJECT_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getData01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* review.getData01 */
+    SELECT A.REVIEW_NO
+         , A.WR_NO
+         , A.PROJECT_NO
+         , A.SCORE
+         , A.REVIEW_CONTENT
+         , A.FILE_CD
+         , A.CREATE_ID
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = B.PROJECT_CD
+           ) AS PROJECT_CD_NM
+         , D.FILE_NM
+         , D.FILE_ORIGIN_NM
+         , REPLACE(D.FILE_DIRECTORY, '\\', '/') AS FILE_DIRECTORY
+         , ( SELECT COUNT(REVIEW_NO)
+               FROM TB_REVIEW_REPLY
+              WHERE REVIEW_NO = A.REVIEW_NO
+           ) AS REPLY_CNT
+      FROM TB_REVIEW A
+      JOIN TB_PROJECT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      LEFT OUTER JOIN TB_FILE_INFO D
+        ON A.FILE_CD = D.FILE_CD
+       AND D.FILE_NO = 1
+     WHERE A.REVIEW_NO = #{REVIEW_NO}
+       AND A.CREATE_ID = #{CREATE_ID}
+  ]]>
+  </select>
+  
+  <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* review.getList01 */
+    SELECT A.REVIEW_NO
+         , A.WR_NO
+         , A.PROJECT_NO
+         , A.SCORE
+         , A.REVIEW_CONTENT
+         , A.FILE_CD
+         , A.CREATE_ID
+         , ( SELECT USER_NICK_NAME
+               FROM TB_USER_INFO
+              WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+         , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = B.PROJECT_CD
+           ) AS PROJECT_CD_NM
+         , D.FILE_NM
+         , D.FILE_ORIGIN_NM
+         , REPLACE(D.FILE_DIRECTORY, '\\', '/') AS FILE_DIRECTORY
+         , ( SELECT REPLY_CONTENT
+               FROM TB_REVIEW_REPLY
+              WHERE REVIEW_NO = A.REVIEW_NO
+                AND REPLY_NO = 1
+           ) AS REPLY_CONTENT
+         , C.CHEESIGNER_ID
+         , B.TITLE
+      FROM TB_REVIEW A
+      JOIN TB_PROJECT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      JOIN TB_ELECTRONIC_CONTRACT C
+        ON A.PROJECT_NO = C.PROJECT_NO
+      LEFT OUTER JOIN TB_FILE_INFO D
+        ON A.FILE_CD = D.FILE_CD
+       AND D.FILE_NO = 1
+     WHERE C.CHEESIGNER_ID = #{CREATE_ID} /* 치자이너 */
+     ORDER BY A.REVIEW_NO DESC
+  ]]>
+    <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+    </if>
+  </select>
+  
+  <select id="getList02" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* review.getList02 */
+    SELECT A.REVIEW_NO
+         , A.WR_NO
+         , A.PROJECT_NO
+         , A.SCORE
+         , A.REVIEW_CONTENT
+         , A.FILE_CD
+         , A.CREATE_ID
+         , ( SELECT USER_NICK_NAME
+               FROM TB_USER_INFO
+              WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+         , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = B.PROJECT_CD
+           ) AS PROJECT_CD_NM
+         , C.FILE_NM
+         , C.FILE_ORIGIN_NM
+         , REPLACE(C.FILE_DIRECTORY, '\\', '/') AS FILE_DIRECTORY
+         , D.REPLY_NO
+         , D.REPLY_CONTENT
+         , ( SELECT USER_NICK_NAME
+               FROM TB_USER_INFO
+              WHERE USER_ID = D.CREATE_ID ) AS REPLY_NICK_NAME
+         , DATE_FORMAT(D.CREATE_DATE, '%Y-%m-%d') AS REPLY_CREATE_DATE
+         , DATE_FORMAT(D.UPDATE_DATE, '%Y-%m-%d') AS REPLY_UPDATE_DATE
+         , B.TITLE
+      FROM TB_REVIEW A
+      JOIN TB_PROJECT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      LEFT OUTER JOIN TB_FILE_INFO C
+        ON A.FILE_CD = C.FILE_CD
+       AND C.FILE_NO = 1
+      LEFT OUTER JOIN TB_REVIEW_REPLY D
+        ON A.REVIEW_NO = D.REVIEW_NO
+       AND D.REPLY_NO = 1
+     WHERE A.CREATE_ID = #{CREATE_ID} /* 리뷰 작성자 */
+     ORDER BY A.REVIEW_NO DESC
+  ]]>
+    <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+    </if>
+  </select>
+  
+  <insert id="insert01" parameterType="map">
+  <![CDATA[
+    /* review.insert01 */
+    INSERT INTO TB_REVIEW (
+      WR_NO
+    , PROJECT_NO
+    , SCORE
+    , REVIEW_CONTENT
+    , FILE_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{WR_NO}
+    , #{PROJECT_NO}
+    , #{SCORE}
+    , #{REVIEW_CONTENT}
+    , #{FILE_CD}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <insert id="insert02" parameterType="map">
+  <![CDATA[
+    /* review.insert02 */
+    INSERT INTO TB_REVIEW_REPLY (
+      REVIEW_NO
+    , REPLY_NO
+    , REPLY_CONTENT
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{REVIEW_NO}
+    , 1
+    , #{REPLY_CONTENT}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
+  
+  <update id="update01" parameterType="map">
+  <![CDATA[
+    /* review.update01 */
+    UPDATE TB_REVIEW
+       SET SCORE = #{SCORE}
+         , REVIEW_CONTENT = #{REVIEW_CONTENT}
+         , FILE_CD = #{FILE_CD}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE REVIEW_NO = #{REVIEW_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </update>
+  
+  <update id="update02" parameterType="map">
+  <![CDATA[
+    /* review.update02 */
+    UPDATE TB_REVIEW_REPLY
+       SET REPLY_CONTENT = #{REPLY_CONTENT}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE REVIEW_NO = #{REVIEW_NO}
+       AND REPLY_NO = 1
+  ]]>
+  </update>
+  
+  <update id="update03" parameterType="map">
+  <![CDATA[
+    /* review.update03 */
+    UPDATE TB_REVIEW
+       SET SCORE = #{SCORE}
+         , REVIEW_CONTENT = #{REVIEW_CONTENT}
+         , UPDATE_ID = #{UPDATE_ID}
+         , UPDATE_DATE = NOW()
+     WHERE REVIEW_NO = #{REVIEW_NO}
+       AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </update>
+  
+  <delete id="delete01" parameterType="map">
+  <![CDATA[
+    /* review.delete01 */
+    DELETE FROM TB_REVIEW
+     WHERE REVIEW_NO = #{REVIEW_NO}
+  ]]>
+  </delete>
+  
+  <delete id="delete02" parameterType="map">
+  <![CDATA[
+    /* review.delete02 */
+    DELETE FROM TB_REVIEW_REPLY
+     WHERE REVIEW_NO = #{REVIEW_NO}
+  ]]>
+  </delete>
+  
+</mapper>
