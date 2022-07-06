@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   	var locations = document.location.href;
   	locations += ""; 
   	if (locations.includes('http://www.')) {
@@ -11,7 +11,7 @@
      }else if(locations.includes('https://www.')){
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
      }
-</script>
+</script> -->
 <script>
 
   function fnLogOut() {
@@ -48,14 +48,28 @@
           <!-- 로그인계정 -->
           <p class="header_right_menu_user_info_typo user">
             <img src="/public/assets/images/user.png" alt="${sessionInfo.user.USER_NICK_NAME}">
-            <span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_equipment'">${sessionInfo.user.USER_NICK_NAME}</span>
             
             <c:choose>
-          	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2 or sessionInfo.user.USER_TYPE_CD eq 3}">
-          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_progress'">${sessionInfo.user.USER_TYPE_NM}</span>
+          	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 1}">
+          		<span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_equipment'">${sessionInfo.user.USER_NICK_NAME}</span>
+          	</c:when>
+          	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2}">
+          		<span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_cad'">${sessionInfo.user.USER_NICK_NAME}</span>
           	</c:when>
           	<c:otherwise>
-          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_equipment'">일반</span>
+          		<span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_sent'">${sessionInfo.user.USER_NICK_NAME}</span>
+          	</c:otherwise>
+          </c:choose>
+p
+            <c:choose>
+          	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
+          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management_cheesigner'">${sessionInfo.user.USER_TYPE_NM}</span>
+          	</c:when>
+          	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2}">
+          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">${sessionInfo.user.USER_TYPE_NM}</span>
+          	</c:when>
+          	<c:otherwise>
+          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">일반</span>
           	</c:otherwise>
           </c:choose>
             <span class="username_blue" onclick="javascript:location.href='/${api}/talk/send'">쪽지함</span>
@@ -65,7 +79,7 @@
         </c:otherwise>
       </c:choose>
       <div class="header_left_menu_etc_container">
-        <p class="header_left_menu_etc_typo" onclick="javascript:window('https://www.youtube.com/channel/UCKtPCLapHeXqhfYW_IyFQug')"><img src="/public/assets/images/youtube-icon.png" style="width: 80px;"></p>
+        <p class="header_left_menu_etc_typo" onclick="javascript:window('https://www.youtube.com/channel/UCKtPCLapHeXqhfYW_IyFQug')"><img src="/public/assets/images/youtube-icon.png" style="width:60px;"></p>
 <!--         <p class="header_left_menu_etc_typo" onclick="javascript:alert('Language');">Language</p> -->
       </div>
     </div>

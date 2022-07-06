@@ -12,6 +12,13 @@
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
      }
 </script>
+<%
+	String alreadychk = "0";
+	if(request.getParameter("alreadychk") != null){
+		alreadychk = request.getParameter("alreadychk");
+	}
+%>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -30,7 +37,12 @@
     fnPreview(groupCd);
     requestPreviewModal.show();
   }
-  
+  var alreaychk = <%=alreadychk %>;
+  $(document).ready(function(){
+	  if(alreaychk == 1){
+		  $(".cad_completed_send_button").css("display", "none");
+	  }
+  });
   function fnSend() {
     
     var isConfirm = window.confirm('결제를 완료하셨습니까?');

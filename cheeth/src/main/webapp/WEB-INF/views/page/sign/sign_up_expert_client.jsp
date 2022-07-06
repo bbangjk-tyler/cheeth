@@ -102,7 +102,7 @@
     }
   }
   function confirmModal() {
-	  if (window.confirm("\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 추가 정보를 입력하시겠습니까?")) {
+	  if (window.confirm("\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 가입을 진행하시겠습니까?")) {
 		  var formData = new FormData(document.getElementById('sign_up_form'));
 		 	for(var key of formData.keys()) {
 		 		formData.set(key, JSON.stringify(formData.get(key)));

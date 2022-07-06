@@ -47,11 +47,14 @@ public class ContractController extends BaseController {
     Integer cnt02 = Integer.parseInt(data.get("CNT02").toString());
     Integer cnt04 = Integer.parseInt(data.get("CNT04").toString());
     
-    if(cnt01 == 0 && cnt02 == 0) {
-      mv.setViewName("redirect:/");
-    } else if(cnt04 > 0) {
-      mv.setViewName("redirect:/");
-    }
+//    if(cnt01 == 0 && cnt02 == 0) {
+//      mv.setViewName("redirect:/");
+//    } else if(cnt04 > 0) {
+//      mv.setViewName("redirect:/");
+//    }
+//    if(cnt01 == 0 && cnt02 == 0) {
+//        mv.setViewName("redirect:/");
+//      }
     
     mv.addObject("ESTIMATOR_NO", parameter.get("ESTIMATOR_NO"));
     mv.addObject("MY_PAGE", parameter.get("MY_PAGE"));

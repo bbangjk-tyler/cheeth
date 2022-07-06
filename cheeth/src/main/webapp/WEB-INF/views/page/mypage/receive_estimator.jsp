@@ -20,7 +20,12 @@
 </c:if>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
-
+<%
+String alreadychk = "0";
+if(request.getParameter("alreadychk") != null){
+	alreadychk = request.getParameter("alreadychk");
+}
+%>
 <script>
   
   var fileModal;
@@ -31,7 +36,13 @@
     fnPreview(groupCd);
     requestPreviewModal.show();
   }
-  
+  var alreaychk = <%=alreadychk %>;
+  $(document).ready(function(){
+	  if(alreaychk == 1){
+		  $(".receive_estimator_confirm_button").css("display", "none");
+	  }
+  });
+
   function fnReceive() {
     
     var isConfirm = window.confirm('수령확인 하시겠습니까?');

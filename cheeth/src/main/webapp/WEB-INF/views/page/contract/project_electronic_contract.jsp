@@ -322,11 +322,7 @@
 	      </a>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
-	        <p class="project_connection_location_typo">프로젝트 보기</p>
-	      </div>
-	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
-	      <div class="project_connection_location">
-	        <p class="project_connection_location_typo">프로젝트 의뢰하기</p>
+	        <p class="project_connection_location_typo">마이페이지</p>
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
@@ -398,7 +394,7 @@
 	    <div class="main_container_divider"></div>
 	    <div class="special_contract">
 	      <p class="special_contract_title">특수 계약조건</p>
-	      <textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요">${DATA.SPECIAL_CONDITION}</textarea>
+	      <textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" <c:if test="${DATA.PROGRESS_CD eq 'PC005'}">disabled</c:if>>${DATA.SPECIAL_CONDITION}</textarea>
 	      <textarea style="display: none;" id="SPECIAL_CONDITION_TEMP" name="SPECIAL_CONDITION_TEMP">${DATA.SPECIAL_CONDITION}</textarea>
 	    </div>
 	    <c:if test="${not empty DATA.SPECIAL_CONDITION}">

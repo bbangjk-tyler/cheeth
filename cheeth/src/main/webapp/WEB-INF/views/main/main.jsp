@@ -34,9 +34,19 @@ function getCookie(name) {
     if (cookieCheck != "N")
         window.open(url, '', 'width=450,height=750,left=0,top=0')
 } */
+var popupbool = 0;
+function checkPopupbye(){
+	if(popupbool == 0){
+		popupbool = 1;
+	}else{
+		popupbool = 0;
+	}
+}
 function closePopup() {
-       setCookie("popupYN", "N", 1);
-       console.log("아앙?");
+	if(popupbool == 1){
+	       setCookie("popupYN", "N", 1);		
+	}
+
 } 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -210,10 +220,10 @@ $(document).ready(function(){
         </c:otherwise>
       </c:choose>
       
-      <a href="/${api}/cheesigner/cheesigner_view_all" class="main_main_banner_button main_main_banner_button_02">
-        <p class="main_main_banner_button_typo">치자이너 전체보기</p>
+      <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="main_main_banner_button main_main_banner_button_02">
+        <p class="main_main_banner_button_typo">진행내역</p>
       </a>
-      <c:choose>
+<%--       <c:choose>
         <c:when test="${empty sessionInfo.user}">
           <a href="javascript:alert('로그인 후 이용해 주시기 바랍니다.');" class="main_main_banner_button main_main_banner_button_03">
             <p class="main_main_banner_button_typo">전자치과기공물 <br/>의뢰서 작성하기</p>
@@ -224,7 +234,10 @@ $(document).ready(function(){
             <p class="main_main_banner_button_typo">전자치과기공물 <br/>의뢰서 작성하기</p>
           </a>
         </c:otherwise>
-      </c:choose>
+      </c:choose> --%>
+          <a href="/${api}/tribute/tribute_request" class="main_main_banner_button main_main_banner_button_03">
+            <p class="main_main_banner_button_typo">전자치과기공물 <br/>의뢰서 작성하기</p>
+          </a>
     </div>
   </div>
   <div class="main_main_menu_list_container">
@@ -466,7 +479,12 @@ $(document).ready(function(){
       	<p class="main_footer_body_header_see_all">모두보기 ></p>
       </a>
     </div>
+    <c:if test="${empty sessionInfo.user}">
+    <div class="main_footer_body_item_container" style="filter: blur(4px);">
+    </c:if>
+    <c:if test="${!empty sessionInfo.user}">
     <div class="main_footer_body_item_container">
+    </c:if>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E001" class="main_footer_body_item">
         <p class="main_footer_body_item_typo">3D프린터</p>
       </a>
@@ -483,7 +501,12 @@ $(document).ready(function(){
         <p class="main_footer_body_item_typo">폴리싱장비</p>
       </a>  
     </div>
+    <c:if test="${empty sessionInfo.user}">
+    <div class="main_footer_body_item_container" style="filter: blur(4px);">
+    </c:if>
+    <c:if test="${!empty sessionInfo.user}">
     <div class="main_footer_body_item_container">
+    </c:if>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E006" class="main_footer_body_item">
         <p class="main_footer_body_item_typo">S/W</p>
       </a>
@@ -544,13 +567,25 @@ $(document).ready(function(){
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-body">
-        <img style="width:100%;" src="/public/assets/images/popup.png">
+      <div class="modal-body" style="padding:0">
+        <img style="width:100%;" src="/public/assets/images/popup.jpg">
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closePopup()" data-bs-dismiss="modal" style="color:white!important">오늘 하루 열지 않기</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="color:white!important">확인</button>
+      <div class="modal-footer" style="background-color:#FFF3F4;justify-content:normal;height: 49px;">
+      <div class="form-check" style="margin-top: -7px;">
+		  <input class="form-check-input" type="checkbox" value="" onclick="checkPopupbye()" id="flexCheckDefault" style="margin-top:3px;margin-left:-2px;">
+		  <label class="form-check-label" for="flexCheckDefault">
+		   	 오늘하루 열지 않기
+		  </label>
+		</div>
+ 
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color:black!important;backtround-color:#FFF3F4;">오늘하루 열지 않기</button> --><!-- onclick="closePopup()" -->
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="closePopup()" style="margin-top: -7px;color:black!important;background-color:#FFF3F4!important;float:right;margin-left:204px;border-color:#FFF3F4!important;">닫기 X</button>
       </div>
     </div>
   </div>
 </div>
+<style>
+.form-check-input:checked[type=checkbox]{
+	background-image:none;
+}
+</style>

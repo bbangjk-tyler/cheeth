@@ -14,7 +14,7 @@
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <link rel="icon" type="image/x-icon" href="/public/assets/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/public/assets/images/favicon.png">
     
     <link type="text/css" rel="stylesheet" href="/public/assets/css/bootstrap/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="/public/assets/css/default.css"/>

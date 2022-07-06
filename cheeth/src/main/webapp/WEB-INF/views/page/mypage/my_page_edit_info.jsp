@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <script type="text/javascript">
   	var locations = document.location.href;
@@ -26,7 +27,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
-
+var pwbool = 0;
 isValidNickname = null;
 var compFile;
 
@@ -310,20 +311,29 @@ $(document).ready(function() {
                         <p class="equipment_estimator_edit_info_item_title">이메일(ID겸용)</p>
                         <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_ID}</p>
                     </div>
-                    <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">비밀번호</p>
-                        <input class="equipment_estimator_edit_info_item_blank required" type="password" name="USER_PW" id="USER_PW" data-field="비밀번호" />
-                    </div>
-                    <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">비밀번호 확인</p>
-                        <input class="equipment_estimator_edit_info_item_blank required" type="password" name="USER_PW_CHK" id="USER_PW_CHK" />
-                    </div>
+                    <c:choose>
+	                    <c:when test="${fn:contains(DATA.USER_ID, '@')}">
+	                    <div class="equipment_estimator_edit_info_item">
+	                        <p class="equipment_estimator_edit_info_item_title">비밀번호</p>
+	                        <input class="equipment_estimator_edit_info_item_blank required" type="password" name="USER_PW" id="USER_PW" data-field="비밀번호" />
+	                    </div>
+	                    <div class="equipment_estimator_edit_info_item">
+	                        <p class="equipment_estimator_edit_info_item_title">비밀번호 확인</p>
+	                        <input class="equipment_estimator_edit_info_item_blank required" type="password" name="USER_PW_CHK" id="USER_PW_CHK" />
+	                    </div>
+	                    </c:when>
+	                    <c:otherwise>
+	                    <script>pwbool = 1;</script>
+	                    <input class="equipment_estimator_edit_info_item_blank required" type="hidden" name="USER_PW" id="USER_PW" data-field="비밀번호" value="${DATA.USER_ID}"/>
+	                     <input class="equipment_estimator_edit_info_item_blank required" type="hidden" name="USER_PW_CHK" id="USER_PW_CHK" value="${DATA.USER_ID}"/>
+	                    </c:otherwise>
+                    </c:choose>
                 </div>
                 <div class="equipment_estimator_edit_info_divider"></div>
                 <div class="equipment_estimator_edit_info_container">
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">이름</p>
-                        <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_NM}</p>
+                        <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_ㅑㅇ}</p>
                     </div>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">주소</p>

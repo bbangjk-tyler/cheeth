@@ -117,7 +117,7 @@
 		    }
 		  }
 		}
-	  
+	  var cheebool = 0;
 	function selectIndividual() {
 		$('#type_individual_button').addClass('active');
 		$('#type_expert_button').removeClass('active');
@@ -129,6 +129,10 @@
 		$('input[id=JOB_CD]').val('');
 		$('#JOB_CD_DIV_2_CHEESIGNER, #JOB_CD_DIV_2_CLIENT').addClass('hidden');
 		$('#JOB_CD_DIV_1_CHEESIGNER, #JOB_CD_DIV_1_CLIENT').find('p').html('선택');
+		$(".sign_up_info_item_blank_with_button").removeClass('required');	
+		$(".sign_up_info_item_blank").removeClass('required');	
+		cheebool = 0;
+		type = 1;
 	}
 	
 	function selectExpertType(target) {
@@ -136,7 +140,8 @@
 		$('#type_individual_button').removeClass('active');
 		$target.addClass('selected');
 		if($target.attr('id') == 'expertClient') {
-			
+			$(".sign_up_info_item_blank_with_button").removeClass('required');	
+			$(".sign_up_info_item_blank").removeClass('required');	
 			$('#expertCheesigner').removeClass('selected');
 			$('#cheesigner_info_container').hide();
 			$('input[id=USER_TYPE_CD]').val('2');
@@ -145,7 +150,8 @@
 			$('#cheesigner_job_container').hide();
 			$('#JOB_CD_DIV_2_CHEESIGNER').addClass('hidden');
 			$('#JOB_CD_DIV_1_CHEESIGNER').find('p').html('선택');
-			
+			cheebool = 0;
+			type = 2;
 		} else if($target.attr('id') == 'expertCheesigner') {
 			
 			$('#expertClient').removeClass('selected');
@@ -156,6 +162,10 @@
 			$('#client_job_container').hide();
 			$('#JOB_CD_DIV_2_CLIENT').addClass('hidden');
 			$('#JOB_CD_DIV_1_CLIENT').find('p').html('선택');
+			$(".sign_up_info_item_blank_with_button").addClass('required');	
+			$(".sign_up_info_item_blank").addClass('required');	
+			cheebool = 1;
+			type = 3;
 			
 		}
 		$('input[id=JOB_CD]').val('');
@@ -279,6 +289,7 @@
 				return;
 			}
 		}
+		if(cheebool == 1){
 		if(isEmpty(isValidAccount)){
     		alert('계좌 본인 인증이 되지 않았습니다.');
 			$('input[id=ACCOUNT_NM]').focus();
@@ -289,6 +300,7 @@
 				$('input[id=USER_NICK_NAME]').focus();
 				return;
 			}
+		}
 		}
 		if(isEmpty(isValidPhone)) {
             alert('휴대폰 인증이 되지 않았습니다.');
@@ -301,6 +313,12 @@
                 return;
             }
         }
+		var type = 1;
+        if(!checkSign($('input[id=USER_PHONE]').val(), type)) {
+    		alert('이미 가입된 휴대폰 번호 입니다.');
+    	  $('input[id=USER_PHONE]').focus();
+    	  return;
+    	}
 		
 	  if(validate()) {
 	    if(confirm('가입하시겠습니까?')) {
@@ -341,7 +359,7 @@
 	  }
 	}
 	  function confirmModal() {
-		  if (window.confirm("\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 추가 정보를 입력하시겠습니까?")) {
+		  if (window.confirm("\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 가입을 진행하시겠습니까?")) {
 			  var formData = new FormData(document.getElementById('sign_up_form'));
 			 	for(var key of formData.keys()) {
 			 		formData.set(key, JSON.stringify(formData.get(key)));
@@ -631,7 +649,7 @@
 						<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
 					</div>
 				</div>
-				<div id="BANK_CD_DIV_2" class="dropbox_select_button_item_container hidden codebox2" style="cursor: pointer;width:30%;height: 500px;overflow: auto;">
+				<div id="BANK_CD_DIV_2" class="dropbox_select_button_item_container hidden codebox2" style="cursor: pointer;width:171px;height: 500px;overflow: auto;">
 						<div class="dropbox_select_button_item">
 							<p class="dropbox_select_button_item_typo" onclick="fnSelect('0003', '기업')" data-div="BANK_CD">기업</p>
 						</div>

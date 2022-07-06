@@ -190,7 +190,7 @@
 		 	formData.set('ADD_CONTENT', JSON.stringify(content));
 			realUploadImgArr.map(m => { formData.append('files', m.FILE); });
 			formData.append('fileDiv', JSON.stringify('EQUIPMENT'));
-			
+			if(okbool == 1){
 		 	$.ajax({
 		    url: '/' + API + '/equipment/save01',
 		    type: 'POST',
@@ -210,6 +210,9 @@
 		      
 		    }
 		  });
+			}else{
+				alert('미래시간을 입력하세요.');
+			}
 		}
 	}
 	
@@ -334,9 +337,43 @@
         <input type="hidden" id="EQ_NO" name="EQ_NO" value="${DATA.EQ_NO}">
         <input type="hidden" id="EQ_EXP_DATE" name="EQ_EXP_DATE" class="required" value="${DATA.EQ_EXP_DATE}" title="견적요청 만료시간">
         <input type="hidden" id="DELIVERY_EXP_DATE" name="DELIVERY_EXP_DATE" value="${DATA.DELIVERY_EXP_DATE}">
-		    <input type="hidden" id="DELIVERY_EXP_DATE_1" class="required" name="DELIVERY_EXP_DATE_1" value="" title="납품 마감 날짜">
+		    <input type="hidden" id="DELIVERY_EXP_DATE_1" class="required" onchange="CheckDate()" name="DELIVERY_EXP_DATE_1" value="" title="납품 마감 날짜">
 		    <input type="hidden" id="DELIVERY_EXP_DATE_2" class="required" name="DELIVERY_EXP_DATE_2" value="" title="납품 마감 시간">
-        
+        <script>
+        var okbool = 0;
+        $('#datepickerInput').change( function() {
+            alert('Change!');
+            CheckDate();
+
+        });
+        function CheckDate(){
+      	  var args = $("#DELIVERY_EXP_DATE_1").val();
+      	  alert('hh');
+      	  var today = new Date();
+      	  var year = today.getFullYear();
+      	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      	  var day = ('0' + today.getDate()).slice(-2);
+      	  var toDayStr = year + month + day;
+      	  console.log(args);
+      	  if(args <= toDayStr){
+      		 okbool =0;
+      		 alert('미래시간을 선택해주세요.');
+      	    return false;
+      	  }
+      	  okbool = 1;
+      	  return true;
+      	}
+        var picdate = "";
+       $(".datepicker-picker").click(function(){
+    	   alert('gg');
+    	   var curpicdate = $("#DELIVERY_EXP_DATE_1").val();
+    	   if(curpicdate != picdate){
+    		   picdate = curpicdate;
+    		   CheckDate()
+    	   }
+       });
+
+        </script>
         <div class="equipment_estimator_main_container">
             <div class="equipment_estimator_connection_location_container" style="margin-bottom: 44px;">
                 <a href="./main.html" class="equipment_estimator_connection_location_typo">
@@ -420,7 +457,7 @@
                             <div class="equipment_estimator_writing_info_select_button_container">
 							                <div class="dropbox_project_request_calendar">
 							                  <div id="datepickerContainer" class="dropbox_select_button">
-							                    <input id="datepickerInput" type="text" placeholder="날짜선택" style="cursor: pointer;" autocomplete="off">
+							                    <input id="datepickerInput" type="text" placeholder="날짜선택"  style="cursor: pointer;" autocomplete="off">
 							                    <img class="equipment_estimator_calendar_image" src="/public/assets/images/calendar_image.svg" style="cursor: pointer;"/>
 							                  </div>
 							                </div>

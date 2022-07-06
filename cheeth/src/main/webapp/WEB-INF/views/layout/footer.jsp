@@ -15,10 +15,10 @@
     <p class="footer_menu_typo" onclick="javascript:window.open('https://www.dentner.co.kr/static/덴트너_이용가이드_치자이너편.pdf')">
       치자이너 이용가이드
     </p>
-    <p class="footer_menu_typo" onclick="javascript:window.open('https://www.dentner.co.kr/static/덴트너_개인정보처리방침.hwp')">
+    <p class="footer_menu_typo" onclick="javascript:window.open('https://www.dentner.co.kr/static/덴트너_개인정보처리방침.pdf')">
       개인정보처리방침
     </p>
-    <p class="footer_menu_typo" onclick="javascript:window.open('https://www.dentner.co.kr/static/덴트너_이용약관.hwp')">
+    <p class="footer_menu_typo" onclick="javascript:window.open('https://www.dentner.co.kr/static/덴트너_이용약관.pdf')">
       이용약관
     </p>
     <p class="footer_menu_typo">

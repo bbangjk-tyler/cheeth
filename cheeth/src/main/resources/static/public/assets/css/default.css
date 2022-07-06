@@ -1025,7 +1025,10 @@ select option[disabled] {
   font-size: 13px;
   font-weight: 400;
 }
-
+.login_platform_button_kakao_typo:hover {
+  color: black;
+  font-weight: 800;
+}
 .login_platform_button_naver {
   background: #19ce60;
 }
@@ -1035,7 +1038,9 @@ select option[disabled] {
   font-size: 13px;
   font-weight: 400;
 }
-
+.login_platform_button_naver_typo:hover {
+  font-weight: 800;
+}
 .login_platform_button_google {
   box-sizing: border-box;
   border: 1px solid #cccccc;
@@ -1045,6 +1050,10 @@ select option[disabled] {
   color: #222;
   font-size: 13px;
   font-weight: 400;
+}
+.login_platform_button_google_typo:hover {
+  color: #black;
+  font-weight: 800;
 }
 
 .accept_conditions_sign_up_container {
@@ -1266,13 +1275,19 @@ select option[disabled] {
   background: #0083e8;
   border: 1px solid #0083e8;
 }
-
+.membership_type_normal_button_typo:hover {
+  color: yellow;
+  font-weight: 800;
+}
 .membership_type_normal_button_typo {
   color: #fff;
   font-size: 13px;
   font-weight: 700;
 }
-
+.membership_type_normal_button_typo:hover {
+  color: yellow;
+  font-weight: 800;
+}
 .membership_type_expert_button {
   width: 100%;
   height: 42px;
@@ -1283,13 +1298,19 @@ select option[disabled] {
   border: 1px solid #005fa8;
   margin-left: -1px;
 }
-
+.membership_type_expert_button:hover {
+  color: yellow;
+  font-weight: 800;
+}
 .membership_type_expert_button_typo {
   color: #fff;
   font-size: 13px;
   font-weight: 700;
 }
-
+.membership_type_expert_button_typo:hover {
+  color: yellow;
+  font-weight: 800;
+}
 .sign_up_popover {
   display: flex;
   justify-content: center;
@@ -1313,6 +1334,10 @@ select option[disabled] {
 .sign_up_popover_item{
   width:50%;
 }
+.sign_up_popover_item:hover{
+  background-color:#0083e880;
+}
+
 .sign_up_popover_item a {
   cursor: pointer;
   font-size: 13px;
@@ -1320,6 +1345,12 @@ select option[disabled] {
   position: relative;
   display: block;
   color: #333;
+}
+.sign_up_popover_item a:hover {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight:800;
+  color: white;
 }
 .sign_up_popover_item:first-child a:after {
     position: absolute;
@@ -1644,7 +1675,7 @@ font-size: 14px;
 .notice_header_typo,
 .review_management_header_typo
 {
-  width: 1920px;
+  width: 100%;
   text-align: center;
   color: #fff;
   font-size: 28px;
@@ -10500,6 +10531,14 @@ font-size: 14px;
   font-weight: 400;
   box-sizing: border-box;
   padding: 0 9px;
+}
+.dropbox_sign_up_membership_type_select_item_typo#expertClient:hover {
+  color: #3baaff;
+  font-weight: 800;
+}
+.dropbox_sign_up_membership_type_select_item_typo#expertCheesigner:hover {
+  color: #3baaff;
+  font-weight: 800;
 }
 
 .dropbox_sign_up_membership_type_select_item_selected_typo_client {

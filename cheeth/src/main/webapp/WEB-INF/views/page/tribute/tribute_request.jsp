@@ -809,6 +809,8 @@ function confirmModal() {
 			justonebool = 1;
 		}else{
 			justonebool = 0;
+			$("#bottom_div").css("display", "none");
+			$("#top_div").css("display", "none");
 		}
 		closeSuppModal();
 	}
@@ -1335,7 +1337,7 @@ function confirmModal() {
   </div>
   
   <!-- 파일 첨부 modal -->
-  <div class="modal fade" id="fileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="fileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="z-index:9999;">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content" style="width: fit-content;">
 				<div class="dialog_tribute_request_container">
