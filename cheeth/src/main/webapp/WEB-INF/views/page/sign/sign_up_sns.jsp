@@ -145,7 +145,8 @@
 			$('#expertCheesigner').removeClass('selected');
 			$('#cheesigner_info_container').hide();
 			$('input[id=USER_TYPE_CD]').val('2');
-			
+			$target.addClass("active");
+			$("#expertCheesigner").removeClass("active");
 			$('#client_job_container').show();
 			$('#cheesigner_job_container').hide();
 			$('#JOB_CD_DIV_2_CHEESIGNER').addClass('hidden');
@@ -158,6 +159,9 @@
 			$('#cheesigner_info_container').show();
 			$('input[id=USER_TYPE_CD]').val('3');
 			
+			$target.addClass("active");
+			$("#expertClient").removeClass("active");
+			
 			$('#cheesigner_job_container').show();
 			$('#client_job_container').hide();
 			$('#JOB_CD_DIV_2_CLIENT').addClass('hidden');
@@ -166,7 +170,6 @@
 			$(".sign_up_info_item_blank").addClass('required');	
 			cheebool = 1;
 			type = 3;
-			
 		}
 		$('input[id=JOB_CD]').val('');
 		$('#expert_type_dropbox').addClass('selected');
@@ -358,6 +361,7 @@
 	    }
 	  }
 	}
+	
 	  function confirmModal() {
 		  if (window.confirm("\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 가입을 진행하시겠습니까?")) {
 			  var formData = new FormData(document.getElementById('sign_up_form'));
@@ -459,7 +463,12 @@
 	}
   }
 </script>
-
+<style>
+.dropbox_sign_up_membership_type_select_item_typo.active{
+	color:#3baaff;
+	font-weight:800;
+}
+</style>
 <div class="sign_up_sign_up_container">
   <div class="sign_up_sign_up_typo_container">
     <p class="sign_up_sign_up_typo">회원가입</p>

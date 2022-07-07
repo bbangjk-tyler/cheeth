@@ -186,5 +186,11 @@ public class TalkController extends BaseController {
     Map<String, Object> resultMap = service.getData04(parameter);
     return resultMap;
   }
-
+  //안읽은 메시지
+  @GetMapping(value="/getUnreadCnt2")
+  public Map<?, ?> getUnreadCnt2(HttpServletRequest request) throws Exception {
+	    Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+	    Map<String, Object> resultMap = service.getUnreadCnt2(parameter);
+	    return resultMap;
+	  }
 }

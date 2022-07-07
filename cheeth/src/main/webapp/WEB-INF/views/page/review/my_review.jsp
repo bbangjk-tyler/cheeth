@@ -130,7 +130,7 @@
       </a>
       <img class="profile_management_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="profile_management_connection_location">
-        <p class="profile_management_connection_location_typo">견적·의뢰내역</p>
+        <p class="profile_management_connection_location_typo">마이페이지</p>
       </div>
       <img class="profile_management_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="profile_management_connection_location">

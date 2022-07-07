@@ -249,6 +249,8 @@
 	  datepickerEl.addEventListener('changeDate', function(e) {
 	    var date = datepicker.getDate('yyyy-mm-dd');
 	    $('input[id=DELIVERY_EXP_DATE_1]').val(date);
+	    $("#date_for_chk").text(date);
+	    CheckDate();
 	  });
 	  
 	  if(isNotEmpty('${DATA.PROJECT_NO}')) {
@@ -333,7 +335,7 @@
             </c:forEach>
         </div>
         <form:form id="saveForm" name="saveForm">
-        
+        <div id="date_for_chk" onchange="CheckDate()" style="opacity:0;position:absolute;z-index:-1;"></div>
         <input type="hidden" id="EQ_NO" name="EQ_NO" value="${DATA.EQ_NO}">
         <input type="hidden" id="EQ_EXP_DATE" name="EQ_EXP_DATE" class="required" value="${DATA.EQ_EXP_DATE}" title="견적요청 만료시간">
         <input type="hidden" id="DELIVERY_EXP_DATE" name="DELIVERY_EXP_DATE" value="${DATA.DELIVERY_EXP_DATE}">
@@ -346,9 +348,11 @@
             CheckDate();
 
         });
+
         function CheckDate(){
       	  var args = $("#DELIVERY_EXP_DATE_1").val();
-      	  alert('hh');
+      	args = args.replaceAll("-", "");
+      	  
       	  var today = new Date();
       	  var year = today.getFullYear();
       	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
@@ -364,12 +368,12 @@
       	  return true;
       	}
         var picdate = "";
-       $(".datepicker-picker").click(function(){
+       $(".datepicker-grid").click(function(){
     	   alert('gg');
     	   var curpicdate = $("#DELIVERY_EXP_DATE_1").val();
     	   if(curpicdate != picdate){
     		   picdate = curpicdate;
-    		   CheckDate()
+    		   CheckDate();
     	   }
        });
 

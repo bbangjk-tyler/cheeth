@@ -326,6 +326,10 @@
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
+	        <p class="project_connection_location_typo">진행내역</p>
+	      </div>
+	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
+	      <div class="project_connection_location">
 	        <p class="project_connection_location_typo_bold">전자계약서</p>
 	      </div>
 	    </div>

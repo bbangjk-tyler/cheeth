@@ -1,6 +1,9 @@
 package com.cheeth.busiCpnt.page.project;
 
 import java.io.File;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cheeth.comAbrt.service.AbstractService;
 import com.cheeth.comUtils.ParameterUtil;
 import com.cheeth.comUtils.file.FileUtil;
+import com.cheeth.busiCpnt.page.talk.TalkService;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 @Service("ProjectService")
 public class ProjectService extends AbstractService {
   
@@ -62,6 +66,7 @@ public class ProjectService extends AbstractService {
     
     Map<String, String> rtnMap = new HashMap<String, String>();
     rtnMap.put("result", "Y");
+    rtnMap.put("PROJECT_NO", projectNo);
     
     if(ObjectUtils.isEmpty(projectNo)) {
       if(ObjectUtils.isEmpty(reqs)) {
@@ -95,6 +100,7 @@ public class ProjectService extends AbstractService {
           insertMap.put("CREATE_ID", userId);
           insertMap.put("UPDATE_ID", userId);
           insert("insert04", insertMap);
+
         }
       }
     }
@@ -117,9 +123,28 @@ public class ProjectService extends AbstractService {
         insertMap.put("USER_ID", receiveId);
         insertMap.put("CREATE_ID", userId);
         insertMap.put("UPDATE_ID", userId);
+        
         insert("insert05", insertMap);
+        
+        
+
+//		URL url = new URL("https://www.daum.net");
+//		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+//		conn.setRequestMethod("POST");
+//		conn.setRequestProperty("my-name", "aaaa");
+//		conn.setDoOutput(true);
+//		OutputStream out = conn.getOutputStream();
+//		out.write("id=a&pass=1234".getBytes("utf-8"));
+//		out.close();
       }
+   // talk/save01 넣기(메시지 전송)
+      TalkService TalkService = new TalkService();
+      Map<String, Object> rtnMap2 = new HashMap<String, Object>();
+      rtnMap2.put("RECEIVE_ID", jsonElement);
+      rtnMap2.put("projectNo", projectNo);
+      TalkService.save05(rtnMap2);
     }
+    
     
     return rtnMap;
   }

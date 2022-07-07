@@ -213,7 +213,7 @@ $(document).ready(function(){
           </a>
 		  </c:if>
 		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1 && empty sessionInfo.user.COMP_FILE_CD}">
-          <a href="/${api}/mypage/my_page_edit_info" class="main_main_banner_button main_main_banner_button_01">
+          <a href="javascript:alert('추가정보 입력 시 이용이 가능합니다.');location.href=('/${api}/mypage/my_page_edit_info')" class="main_main_banner_button main_main_banner_button_01">
             <p class="main_main_banner_button_typo">나의 견적 / 의뢰 내역</p>
           </a>
 		  </c:if>

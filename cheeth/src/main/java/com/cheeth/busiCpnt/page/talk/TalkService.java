@@ -79,7 +79,44 @@ public class TalkService extends AbstractService {
     
     return rtnMap;
   }
-  
+  public  Map<String, Object> getUnreadCnt(Map<String, Object> parameter) {
+	  Map<String, Object> rtnMap = new HashMap<String, Object>();
+	  try {
+		rtnMap.put("TOTAL_CNT", integer("getCnt04", parameter));
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
+	  return rtnMap;
+  }
+  public  Map<String, Object> getUnreadCnt2(Map<String, Object> parameter) {
+	    Map<String, String> user = getUserInfo();
+	    String userId = user.get("USER_ID").toString();
+	    parameter.put("RECEIVE_ID", userId);
+	    Map<String, Object> rtnMap = new HashMap<String, Object>();
+	  try {
+		rtnMap.put("TOTAL_CNT", integer("getCnt05", parameter));
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  return rtnMap;
+  }
+//  public  Map<String, String> getUnreadCnt2(String userID) {
+//	    Map<String, String> user = getUserInfo();
+//	    
+//	    Map<String, String> parameter = new HashMap<String, String>();
+//	    parameter.put("SEND_ID", userID);
+//	    Map<String, String> rtnMap = new HashMap<String, String>();
+//	  try {
+//		  rtnMap.put("TOTAL_CNT", integer("getCnt04", parameter));
+//	} catch (Exception e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	  return rtnMap;
+//}
   public Map<String, Object> getData02(Map<String, Object> parameter) throws Exception {
     
     Map<String, Object> rtnMap = new HashMap<String, Object>();
@@ -202,6 +239,32 @@ public class TalkService extends AbstractService {
       if(ObjectUtils.isEmpty(parameter.get("FILE_CD"))) {
         parameter.put("FILE_CD", fileUtil.createFileCd());
       }
+      
+      JsonElement jsonElement = JsonParser.parseString(receiveIdList);
+      for(int i=0; i<jsonElement.getAsJsonArray().size(); i++) {
+        JsonObject object = new JsonObject();
+        object = (JsonObject) jsonElement.getAsJsonArray().get(i);
+        String userId = object.get("USER_ID").getAsString();
+        parameter.put("RECEIVE_ID", userId);
+        insert("insert01", parameter);
+      }
+    }
+    
+    rtnMap.put("result", "Y");
+
+    return rtnMap;
+  }
+  @Transactional(propagation=Propagation.REQUIRED)
+  public Map<String, String> save05(Map<String, Object> parameter) throws Exception {
+    
+    Map<String, String> rtnMap = new HashMap<String, String>();
+    Map<String, String> user = getUserInfo();
+    
+    String receiveIdList = ObjectUtils.isEmpty(parameter.get("RECEIVE_ID_LIST")) ? "" : ParameterUtil.reverseCleanXSS(parameter.get("RECEIVE_ID_LIST").toString()); // 받는사람
+    if(!ObjectUtils.isEmpty(receiveIdList)) {
+      List<MultipartFile> multipartFileList = (List<MultipartFile>) parameter.get("files");
+      
+      parameter.put("SEND_ID", "관리자");
       
       JsonElement jsonElement = JsonParser.parseString(receiveIdList);
       for(int i=0; i<jsonElement.getAsJsonArray().size(); i++) {

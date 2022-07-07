@@ -126,7 +126,7 @@
 	  $('.request_basket_total_prosthetics_info_container_wrapper').html(suppHtml);
 		
 	}
-	
+
 	function fnSelectReq() {
 		var groupCd = arguments[0];
 		var pantNm;
@@ -169,7 +169,7 @@
 	        html = html.substring(0, html.lastIndexOf(','));
 	        html += '	</p>';
 	        html += '	<p class="request_basket_request_count">' + (isEmpty(totalCnt) ? rtnArray[0]['TOTAL_CNT'] : totalCnt) + '개</p>';
-	        html += ` <img class="request_basket_request_close_button" src="/public/assets/images/request_close_button.svg" style="cursor: pointer;" onclick="removeReqEl('` + groupCd + `');"/>`;
+	        html += ` <img class="request_basket_request_close_button" src="/public/assets/images/request_close_button.svg" style="cursor: pointer;" id="` + groupCd + `" onclick="removeReqEl('` + groupCd + `');"/>`;
 	        html += '</div>';
 			    
 			    $('.request_basket_request_container').append(html);
@@ -389,10 +389,63 @@
                 <p class="request_basket_list_data_type_typo">첨부파일</p>
               </div>
             </div>
+            <script>
+            function chkboxChange(obj){
+            	var chkboxbool = $(obj).attr("chkboxbool");
+            	var chkid = $(obj).attr("chkid");
+            	
+            	console.log("chkboxbool " + chkboxbool);
+            	
+            	if(chkboxbool == "0"){
+            		console.log("1");
+            		fnSelectReq(chkid);
+            		$(obj).attr("chkboxbool", "1");
+            	}
+            	if(chkboxbool == "1"){
+            		console.log("2");
+            		removeReqEl2(chkid);
+            		$(obj).attr("chkboxbool", "0");
+            	}
+            }
+            function removeReqEl2(k){
+        		var groupCd = k;
+        		var $div = $("#"+groupCd).parent();
+        		$div.remove();
+
+        		if($('.request_basket_request_container').find('div').length == 0) {
+        			$('.request_basket_context_typo').removeClass('hidden');
+        		}
+        		
+        		suppInfo = suppInfo.map((m, i) => {
+        			if(m.GROUP_CD_LIST.includes(groupCd)) {
+        				reqArr.map(m2 => {
+        					if((m2.GROUP_CD == groupCd) && 
+        							(m.SUPP_CD_LIST.includes(m2.SUPP_CD_1)) && (m.RQST_NO_LIST.includes(m2.RQST_NO.toString()))) {
+        						m.CNT = +m.CNT - +m2.CNT;
+        					}
+        				});
+        			}
+        			return m;
+        		})
+        		.filter(f => f.CNT > 0);
+        		
+        		reqArr = reqArr.filter(f => f.GROUP_CD != groupCd);
+        		rqstNoArr = rqstNoArr.filter(f => f.GROUP_CD != groupCd);
+        		
+        		var suppHtml = '';
+        	  suppInfo.map(m => {
+        			suppHtml += '<div class="request_basket_total_prosthetics_info_container">';
+        		  suppHtml += '	<p class="request_basket_total_prosthetics_info">' + m.SUPP_NM_STR + '</p>';
+              suppHtml += ' <p class="request_basket_total_prosthetics_info">' + m.CNT + '</p>';
+              suppHtml += '</div>';
+        	  });
+        	  $('.request_basket_total_prosthetics_info_container_wrapper').html(suppHtml);
+            }
+            </script>
               <c:forEach items="${LIST}" var="item">
 	              <div class="list_divider"></div>
 	              <div class="request_basket_list">
-	                <input class="request_basket_checkbox" type="checkbox" id="REQ_CHECK_${item.GROUP_CD}" value="${item.GROUP_CD}"/>
+	                <input class="request_basket_checkbox" type="checkbox" chkboxbool="0" chkid="${item.GROUP_CD}" onclick="chkboxChange(this)" id="REQ_CHECK_${item.GROUP_CD}" value="${item.GROUP_CD}"/>
 	                <div class="request_basket_list request_basket_order">
 	                  <p class="request_basket_list_order_typo">${item.RN}</p>
 	                </div>

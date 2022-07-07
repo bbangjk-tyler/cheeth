@@ -59,7 +59,16 @@
        AND RECEIVE_DATE IS NULL
   ]]>
   </select>
-  
+    <select id="getCnt05" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* talk.getCnt05 */
+    SELECT COUNT(*) AS CNT
+      FROM TB_TALK
+     WHERE RECEIVE_ID = #{RECEIVE_ID}
+       AND RECEIVE_DEL_YN = 'N'
+       AND RECEIVE_DATE IS NULL
+  ]]>
+  </select>
   <select id="getList01" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* talk.getList01 */

@@ -54,25 +54,24 @@
           		<span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_equipment'">${sessionInfo.user.USER_NICK_NAME}</span>
           	</c:when>
           	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2}">
-          		<span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_cad'">${sessionInfo.user.USER_NICK_NAME}</span>
+          		<span class="username" onclick="javascript:location.href='/${api}/tribute/request_basket'">${sessionInfo.user.USER_NICK_NAME}</span>
           	</c:when>
           	<c:otherwise>
           		<span class="username" onclick="javascript:location.href='/${api}/mypage/equipment_estimator_my_page_sent'">${sessionInfo.user.USER_NICK_NAME}</span>
           	</c:otherwise>
           </c:choose>
-p
             <c:choose>
           	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
           		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management_cheesigner'">${sessionInfo.user.USER_TYPE_NM}</span>
           	</c:when>
           	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2}">
-          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">${sessionInfo.user.USER_TYPE_NM}</span>
+          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">의뢰인</span>
           	</c:when>
           	<c:otherwise>
           		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">일반</span>
           	</c:otherwise>
           </c:choose>
-            <span class="username_blue" onclick="javascript:location.href='/${api}/talk/send'">쪽지함</span>
+            <span class="username_blue" onclick="javascript:location.href='/${api}/talk/send'">쪽지함<img id="unread" src="/public/assets/images/notification_alert.svg" style="position:absolute;display:none;right:-18px;top:0px;width:15px;height:15px;"></span>
           </p>
           <!-- //로그인계정 -->
           <p class="header_right_menu_user_info_typo logout" onclick="fnLogOut();">로그아웃</p>
@@ -85,5 +84,41 @@ p
     </div>
   </div>
 </div>
+<script>
+function showUnread(result) {
+	if(result != 0){
+		$("#unread").css("display", "block");		
+	}else{
+		$("#unread").css("display", "none");
+	}
 
+}
+$(document).ready(function(){
+	getInfiniteUnread();
+});
+function getUnread(){
+	$.ajax({
+		type: "GET",
+		url: "/api/talk/getUnreadCnt2",
+		/* data: { userID: encodeURIComponent( '${sessionInfo.user.USER}' ) }, */
+		data: {  },
+		success: function(result){
+			console.log("result.TOTAL_CNT1 " + result.TOTAL_CNT);
+			console.log("result.TOTAL_CNT2 " + result);
+			if(result.TOTAL_CNT >= 1) {
+				showUnread(result);
+			}else {
+				showUnread(0);
+			}
+		}
+	});
+}
+
+function getInfiniteUnread() {
+	setInterval(function(){
+		getUnread();
+	}, 2000);
+}
+
+</script>
 <form:form id="logoutForm" nmame="logoutForm" action="/${api}/logout/logout" method="post"></form:form>

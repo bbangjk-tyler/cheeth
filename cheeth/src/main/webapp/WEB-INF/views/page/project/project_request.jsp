@@ -172,6 +172,8 @@
       cache: false,
       async: false,
       success: function(data) {
+    	console.log("projectNo " + data.projectNo);
+    	console.log("result " + data.result);
         fnAllView();
       }, complete: function() {
       }, error: function() {

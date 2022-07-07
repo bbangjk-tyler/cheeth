@@ -25,6 +25,19 @@
    history.back();
 </script>
 </c:if>
+
+	<c:if test="${DATA.PUBLIC_CD eq 'U001'}"> <!-- 지정견적 -->
+	  <c:when test="${fn:contains(DATA.APPOINT_USER, sessionInfo.user.USER_ID) or DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
+	    
+	  </c:when>
+	  <c:otherwise>
+	  <script>
+	  	alert("작성자 혹은 지정 견적 요청자만 열람할 수 있습니다.");
+	  	history.back();
+	  </script>
+	  </c:otherwise>
+	</c:if>
+	
 <link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
 

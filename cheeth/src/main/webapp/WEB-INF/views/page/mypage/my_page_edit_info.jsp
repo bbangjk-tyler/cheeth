@@ -239,7 +239,7 @@ $(document).ready(function() {
 
 <div class="equipment_estimator_header">
         <p class="equipment_estimator_header_typo">
-            마이페이지
+            내 정보 수정
         </p>
     </div>
     <div class="equipment_estimator_body">
@@ -333,7 +333,8 @@ $(document).ready(function() {
                 <div class="equipment_estimator_edit_info_container">
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">이름</p>
-                        <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_ㅑㅇ}</p>
+                        <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_NM}</p>
+                        
                     </div>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">주소</p>
