@@ -30,8 +30,14 @@
     if(div.hasClass('hidden')) {
       div.removeClass('hidden');
     }
+	$(".send_note_receiver_button").css("display", "flex");
   }
-  
+  function fnOpenTalk2() {
+	    var div = $('#sendDiv');
+	    if(div.hasClass('hidden')) {
+	      div.removeClass('hidden');
+	    }
+	  }
   function fnAddFile() {
     $('#ADD_FILE').click();
   }
@@ -55,12 +61,27 @@
         html += `<div class="send_note_attatchment">`;
         html += `<img class="send_note_attatchment_icon" src="/public/assets/images/note_box_attatchment.svg"/>`;
         html += `<p class="send_note_attatchment_typo">` + fileNm + `</p>`;
+        html += '<img  src="https://cdn-icons-png.flaticon.com/512/458/458594.png" id="'+obj.IDX+'"style="right:0px;width:15px;height:15px;margin-left:10px;;cursor:pointer;" onclick="removeFile(this)">';
         html += `</div>`;
         div.html(html);
       }
     }
   }
-  
+  function removeFile(obj){
+	 
+	  var id = $(obj).attr("id");
+	  id = id -1;
+	  console.log("id :: " + id);
+	  console.log("fileArray1 :: " + fileArray.length);
+	  fileArray.splice(id, 1);
+	  console.log("fileArray2 :: " + fileArray.length);
+	  $(obj).parent().remove();
+	  var list = $(".send_note_attatchment_container").find(".send_note_attatchment").get();
+	  if(list.length == 0){
+		  $(".send_note_attatchment_container").addClass('hidden');
+	  }
+	  
+  }
   function fnOpenAdress() {
     fnDialogClose();
     var div = $('#adressDiv');
@@ -173,6 +194,7 @@
         $('#dtl_r_nm').html(data.info.RECEIVE_NM);
         $('#dtl_s_date').html(data.info.SEND_DATE);
         $('#dtl_content').html(data.info.CONTENT);
+        $('#dtl_SEND_ID').val(data.info.SEND_ID);
         var dtlContent = $('#dtl_content')[0].outerHTML;
         var fileCnt = data.info.FILE_CNT ?? 0;
         if(fileCnt > 0) {
@@ -394,7 +416,7 @@
     </a>
     <a href="javascript:fnOpenAdress();" class="note_box_side_menu_list_sub">
       <img class="note_box_side_menu_list_sub_icon" src="/public/assets/images/view_address_list.svg"/>
-      <p class="note_box_side_menu_list_sub_typo_title">주소록 보기</p>
+      <p class="note_box_side_menu_list_sub_typo_title" style="margin-right: 14px;">주소록 보기</p>
       <p class="note_box_side_menu_list_sub_typo_context"></p>
     </a>
     <a href="/${api}/talk/send" class="note_box_side_menu_list_sub">
@@ -404,7 +426,7 @@
     </a>
   </div>
   <div class="note_box_main_container">
-    <div class="note_box_button_wrapper">
+    <div class="note_box_button_wrapper" style="padding-left:24px;">
       <div class="note_box_button_container" style="cursor: pointer;">
         <div class="note_box_button" onclick="fnDelete();">
           <img class="note_box_delete_button_icon" src="/public/assets/images/note_box_delete_button_icon.svg"/> 
@@ -454,16 +476,34 @@
           <div class="note_box_list">
             <input type="checkbox" data-talk-no="${item.TALK_NO}" onchange="fnCheck(this, 'dataListDiv');">
             <div class="note_box_list_receiver">
+            <!-- 220710수정 start -->
+              <c:choose>
+              <c:when test="${empty item.SEND_NM}">
+              <p class="note_box_list_receiver_typo">운영자</p>
+              </c:when>
+              <c:otherwise>
               <p class="note_box_list_receiver_typo">${item.SEND_NM}</p>
+              </c:otherwise>
+              </c:choose>
+            <!-- 220710수정 end -->
             </div>
             <c:if test="${item.FILE_CNT gt 0}">
               <div class="note_box_attatchment">
                 <img class="note_box_attatchment" src="/public/assets/images/note_box_attatchment.svg"/>
               </div>
             </c:if>
-            <a href="javascript:fnDtlView('${item.TALK_NO}');" class="note_box_list_context">
-              <p class="note_box_list_context_typo note_box_txt_line">${item.CONTENT}</p>
-            </a>
+              <c:choose>
+              <c:when test="${empty item.SEND_NM}">
+              ${item.CONTENT}
+              </c:when>
+              <c:otherwise>
+	            <a href="javascript:fnDtlView('${item.TALK_NO}');" class="note_box_list_context">
+	              <p class="note_box_list_context_typo note_box_txt_line">${item.CONTENT}</p>
+	            </a>
+              </c:otherwise>
+              </c:choose>
+              
+
             <div class="note_box_list_date_sent">
               <p class="note_box_list_date_typo">${item.SEND_DATE}</p>
             </div>
@@ -487,22 +527,39 @@
         <img class="received_note_header_close_button" src="/public/assets/images/received_note_close_button.svg"/>
       </a>
     </div>
+    <script>
+    function fnOpenTalk_Reply(){
+    	var nm = $("#dtl_r_nm").text();
+    	var sendid = $("#dtl_SEND_ID").val();
+    	console.log("nm :: " + nm);
+    	console.log("sendid :: " + sendid);
+    	
+    	fnOpenTalk2();
+    	var text = '[{"USER_ID":"' +sendid+ '","USER_NICK_NAME":"'+nm+'"}]';
+    	sendUserList.push({USER_ID: sendid, USER_NICK_NAME: nm});
+    	$("#RECEIVE_ID_LIST").val(text);
+    	$(".send_note_receiver_blank_typo").text(nm);
+    	$(".send_note_receiver_button").css("display", "none");
+    	
+    }
+    </script>
     <div class="received_note_body">
       <div class="received_note_button_wrapper">
-        <a href="javascript:fnOneDelete();" class="received_note_button_delete">
-          <p class="received_note_button_delete_typo">삭제</p>
+        <a href="javascript:fnOpenTalk_Reply();" class="received_note_button_delete">
+          <p class="received_note_button_delete_typo">답장</p>
         </a>
       </div>
       <div class="main_container_divider without_margin"></div>
       <div class="received_note_info_container">
         <div class="received_note_info">
-          <p class="received_note_info_title">받는사람</p>
+          <p class="received_note_info_title">보낸사람</p>
           <p class="received_note_info_context" id="dtl_r_nm"></p>
         </div>
         <div class="received_note_info">
           <p class="received_note_info_title">보낸시간</p>
           <p class="received_note_info_context" id="dtl_s_date"></p>
         </div>
+        <input type="hidden" id="dtl_SEND_ID">
       </div>
       <div class="main_container_divider without_margin"></div>
       <div class="received_note_context">

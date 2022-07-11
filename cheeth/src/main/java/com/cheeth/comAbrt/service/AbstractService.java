@@ -73,6 +73,7 @@ public class AbstractService implements ServiceInterface {
     return rtnMap;
   }
 
+  
   @Override
   public List<?> list(String name, Object parameter) throws Exception {
     chkDao();

@@ -362,6 +362,14 @@
       	  if(args <= toDayStr){
       		 okbool =0;
       		 alert('미래시간을 선택해주세요.');
+      		var div = $(".datepicker-cell.day.selected.focused");
+      		console.log("div.length " + div.length);
+      		setTimeout(function(){
+          		$(div).removeClass("selected");
+          		$(div).removeClass("focused");      			
+      		}, 100);
+
+      		$("#datepickerInput").val("");
       	    return false;
       	  }
       	  okbool = 1;
@@ -374,6 +382,7 @@
     	   if(curpicdate != picdate){
     		   picdate = curpicdate;
     		   CheckDate();
+    		   
     	   }
        });
 

@@ -62,6 +62,12 @@
 		        <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
 		        <c:if test="${item.CODE_CD eq param.SEARCH_PROJECT_CD}">
 			        <p class="side_menu_list_typo_blue">${item.CODE_NM}</p>
+			        <script>
+			        var Cateogry = "${item.CODE_NM}";
+			        $(document).ready(function(){
+			        	$("#Category").text(Category);
+			        });
+			        </script>
 		        </c:if>
 		        <c:if test="${item.CODE_CD ne param.SEARCH_PROJECT_CD}">
 			        <p class="side_menu_list_typo">${item.CODE_NM}</p>
@@ -80,7 +86,11 @@
 				</div> -->
 				<img class="cheesigner_view_all_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 				<div class="cheesigner_view_all_connection_location">
-					<p class="cheesigner_view_all_connection_location_typo_bold" style="cursor: pointer;" onclick="fnAllView();">치자이너 전체보기</p>
+					<p class="cheesigner_view_all_connection_location_typo" style="cursor: pointer;" onclick="fnAllView();">치자이너 전체보기</p>
+				</div>
+				<img class="cheesigner_view_all_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
+				<div class="cheesigner_view_all_connection_location">
+					<p class="cheesigner_view_all_connection_location_typo_bold" id="Category" style="cursor: pointer;"></p>
 				</div>
 		  </div>
 		  <div class="cheesigner_view_all_list_filter_container hidden">

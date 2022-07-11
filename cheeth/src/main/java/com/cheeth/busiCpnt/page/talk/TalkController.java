@@ -102,6 +102,21 @@ public class TalkController extends BaseController {
 
     return resultMap;
   }
+  @PostMapping(value="/save05")
+  public Map<?, ?> save05(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getMultipartParameterMap(request);
+    Map<String, String> resultMap = new HashMap<String, String>();
+
+    try {
+      resultMap = service.save05(parameter);
+    } catch(Exception e) {
+      resultMap.put("result", "N");
+      logger.error(e.getMessage());
+    }
+
+    return resultMap;
+  }
   
   // 받은쪽지 삭제
   @PostMapping(value="/delete01")

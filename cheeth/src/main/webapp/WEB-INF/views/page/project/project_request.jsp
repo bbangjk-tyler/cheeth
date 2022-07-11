@@ -172,8 +172,9 @@
       cache: false,
       async: false,
       success: function(data) {
-    	console.log("projectNo " + data.projectNo);
+    	console.log("projectNo ${DATA.PROJECT_NO}");
     	console.log("result " + data.result);
+    	
         fnAllView();
       }, complete: function() {
       }, error: function() {
@@ -273,6 +274,7 @@
       location.href = url;
     } else {
       var isConfirm = window.confirm('의뢰서 바구니로 이동 됩니다. 계속 하시겠습니까?\n저장되지 않는 데이터는 사라집니다.');
+      
       if(!isConfirm) return;
       location.href = url;
     }
@@ -282,7 +284,7 @@
     var gsc = '${GCS}';
     if(isEmpty(gsc)) {
       setTimeout(() => {
-        alert('의뢰서 바구니가 비어 있어 페이지가 이동 됩니다.');
+        alert('견적요청할 의뢰서를 선택하기 위해 의뢰서바구니로 이동됩니다.');
         setTimeout(() => {
           fnMoveBasket();
         }, 1000);
@@ -456,6 +458,8 @@
     datepickerEl.addEventListener('changeDate', function(e) {
       var date = datepicker.getDate('yyyy-mm-dd');
       $('input[id=DELIVERY_EXP_DATE_1]').val(date);
+      $("#date_for_chk").text(date);
+      CheckDate();
     });
     
     if(isNotEmpty('${DATA.PROJECT_NO}')) {
@@ -489,7 +493,52 @@
   });
   
 </script>
+<div id="date_for_chk" onchange="CheckDate()" style="opacity:0;position:absolute;z-index:-1;"></div>
+        <script>
+        var okbool = 0;
+        $('#datepickerInput').change( function() {
+            alert('Change!');
+            CheckDate();
 
+        });
+
+        function CheckDate(){
+           var args = $("#DELIVERY_EXP_DATE_1").val();
+         args = args.replaceAll("-", "");
+           
+           var today = new Date();
+           var year = today.getFullYear();
+           var month = ('0' + (today.getMonth() + 1)).slice(-2);
+           var day = ('0' + today.getDate()).slice(-2);
+           var toDayStr = year + month + day;
+           console.log(args);
+           if(args <= toDayStr){
+             okbool =0;
+             alert('미래시간을 선택해주세요.');
+            var div = $(".datepicker-cell.day.selected.focused");
+            console.log("div.length " + div.length);
+            setTimeout(function(){
+                $(div).removeClass("selected");
+                $(div).removeClass("focused");               
+            }, 100);
+
+            $("#datepickerInput").val("");
+             return false;
+           }
+           okbool = 1;
+           return true;
+         }
+        var picdate = "";
+       $(".datepicker-grid").click(function(){
+          alert('gg');
+          var curpicdate = $("#DELIVERY_EXP_DATE_1").val();
+          if(curpicdate != picdate){
+             picdate = curpicdate;
+             CheckDate();
+             
+          }
+       });
+        </script>
 <div class="project_header">
   <p class="project_header_typo">프로젝트 작성하기</p>
 </div>

@@ -141,6 +141,10 @@
        AND B.USER_NICK_NAME LIKE CONCAT('%', #{SEARCH_TXT}, '%')
      </if>
    </if>
+   	 <!-- 수정 -->
+   	 AND A.PROJECT_EXP_DATE >= NOW()
+   	 
+     
      <choose>
        <when test="isNotEmpty(SEARCH_ORDER)">
          <if test='"A".equals(SEARCH_ORDER)'>
@@ -151,14 +155,14 @@
          </if>
        </when>
        <otherwise>
-     ORDER BY A.PROJECT_NO DESC
+	ORDER BY A.PROJECT_EXP_DATE ASC  
        </otherwise>
-     </choose>
+     </choose> 
    <if test="isNotEmpty(PAGE)">
      LIMIT #{PAGE}, 10
    </if>
   </select>
-  
+   
   <select id="getData01" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* project.getData01 */
@@ -669,7 +673,38 @@
   )
   ]]>
   </insert>
-
+  <insert id="insert06" parameterType="map">
+  <![CDATA[
+    /* talk.insert06 */
+    INSERT INTO TB_TALK (
+      SEND_ID
+    , SEND_DATE
+    , SEND_DEL_YN
+    , RECEIVE_ID
+    , RECEIVE_DATE
+    , RECEIVE_DEL_YN
+    , CONTENT
+    , FILE_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+  ) VALUES (
+      #{SEND_ID}
+    , NOW()
+    , 'N'
+    , #{RECEIVE_ID}
+    , NULL
+    , 'N'
+    , #{CONTENT}
+    , #{FILE_CD}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+  )
+  ]]>
+  </insert>
   <update id="update01" parameterType="map">
   <![CDATA[
     /* project.update01 */

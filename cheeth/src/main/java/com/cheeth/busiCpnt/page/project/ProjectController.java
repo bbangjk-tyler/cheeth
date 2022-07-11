@@ -197,6 +197,13 @@ public class ProjectController extends BaseController {
   public List<Map<String, Object>> getReqInfo(HttpServletRequest request) throws Exception {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getReqList", parameter);
+    
+    for(Map<String, Object> m:list) {
+    	String name = m.get("SUPP_NM_STR").toString();
+        if (name.contains("Frame") || name.contains("Splint") || name.contains("의치") || name.contains("교정") || name.contains("트레이")) {
+            m.put("CNT", "1");
+        }
+    }
     return list;
   }
   

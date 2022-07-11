@@ -258,24 +258,12 @@ public class TalkService extends AbstractService {
   public Map<String, String> save05(Map<String, Object> parameter) throws Exception {
     
     Map<String, String> rtnMap = new HashMap<String, String>();
-    Map<String, String> user = getUserInfo();
     
-    String receiveIdList = ObjectUtils.isEmpty(parameter.get("RECEIVE_ID_LIST")) ? "" : ParameterUtil.reverseCleanXSS(parameter.get("RECEIVE_ID_LIST").toString()); // 받는사람
-    if(!ObjectUtils.isEmpty(receiveIdList)) {
-      List<MultipartFile> multipartFileList = (List<MultipartFile>) parameter.get("files");
-      
-      parameter.put("SEND_ID", "관리자");
-      
-      JsonElement jsonElement = JsonParser.parseString(receiveIdList);
-      for(int i=0; i<jsonElement.getAsJsonArray().size(); i++) {
-        JsonObject object = new JsonObject();
-        object = (JsonObject) jsonElement.getAsJsonArray().get(i);
-        String userId = object.get("USER_ID").getAsString();
-        parameter.put("RECEIVE_ID", userId);
-        insert("insert01", parameter);
-      }
-    }
-    
+    parameter.put("SEND_ID", "관리자");
+    parameter.put("RECEIVE_ID", parameter.get("RECEIVE_ID"));
+    parameter.put("CONTENT", parameter.get("CONTENT"));
+    insert("insert01", parameter);
+
     rtnMap.put("result", "Y");
 
     return rtnMap;

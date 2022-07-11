@@ -66,7 +66,6 @@ public class ProjectService extends AbstractService {
     
     Map<String, String> rtnMap = new HashMap<String, String>();
     rtnMap.put("result", "Y");
-    rtnMap.put("PROJECT_NO", projectNo);
     
     if(ObjectUtils.isEmpty(projectNo)) {
       if(ObjectUtils.isEmpty(reqs)) {
@@ -104,11 +103,14 @@ public class ProjectService extends AbstractService {
         }
       }
     }
-    
+    System.out.println("들어옴1");
+    System.out.println("projectNo : " + projectNo);
+    rtnMap.put("projectNo", projectNo);
     // 지정견적자 등록
     String publicCd = ObjectUtils.isEmpty(parameter.get("PUBLIC_CD")) ? "" : parameter.get("PUBLIC_CD").toString();
     String receiveIdList = ObjectUtils.isEmpty(parameter.get("RECEIVE_ID_LIST")) ? "" : ParameterUtil.reverseCleanXSS(parameter.get("RECEIVE_ID_LIST").toString());
     if(!ObjectUtils.isEmpty(projectNo) && publicCd.equals("U001") && !ObjectUtils.isEmpty(receiveIdList)) {
+       System.out.println("들어옴2");
       JsonElement jsonElement = JsonParser.parseString(receiveIdList);
       if(jsonElement != null && jsonElement.getAsJsonArray().size() > 0) {
         parameter.put("PROJECT_NO", projectNo);
@@ -116,6 +118,7 @@ public class ProjectService extends AbstractService {
       }
       for(int i=0; i<jsonElement.getAsJsonArray().size(); i++) {
         JsonObject object = new JsonObject();
+        System.out.println("들어옴3");
         object = (JsonObject) jsonElement.getAsJsonArray().get(i);
         String receiveId = object.get("USER_ID").getAsString();
         Map<String, String> insertMap = new HashMap<String, String>();
@@ -126,23 +129,22 @@ public class ProjectService extends AbstractService {
         
         insert("insert05", insertMap);
         
+        // talk/save01 넣기(메시지 전송)
+        Map<String, String> rtnMap2 = new HashMap<String, String>();
+       
+        rtnMap2.put("SEND_ID", "관리자");
+        rtnMap2.put("RECEIVE_ID", receiveId);
+        String CONTENT = "<a class=\"note_box_list_context\" href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'>귀하에게 견적 문의가 들어왔습니다.</a>"; 
+        rtnMap2.put("CONTENT", CONTENT);
+        rtnMap2.put("FILE_CD", fileUtil.createFileCd());
+        rtnMap2.put("CREATE_ID", "관리자");
+        rtnMap2.put("UPDATE_ID", "관리자");
+        System.out.println("CONTENT" + CONTENT);
+        System.out.println("FILE_CD" + fileUtil.createFileCd());
+        System.out.println("projectNo" + projectNo);
         
-
-//		URL url = new URL("https://www.daum.net");
-//		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-//		conn.setRequestMethod("POST");
-//		conn.setRequestProperty("my-name", "aaaa");
-//		conn.setDoOutput(true);
-//		OutputStream out = conn.getOutputStream();
-//		out.write("id=a&pass=1234".getBytes("utf-8"));
-//		out.close();
+        insert("insert06", rtnMap2);
       }
-   // talk/save01 넣기(메시지 전송)
-      TalkService TalkService = new TalkService();
-      Map<String, Object> rtnMap2 = new HashMap<String, Object>();
-      rtnMap2.put("RECEIVE_ID", jsonElement);
-      rtnMap2.put("projectNo", projectNo);
-      TalkService.save05(rtnMap2);
     }
     
     

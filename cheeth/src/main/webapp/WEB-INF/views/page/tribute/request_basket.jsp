@@ -283,9 +283,27 @@
 		}
 	}
 	
-	function fnCheckAll() {
+	function fnCheckAll(obj) {
 		var checked = event.target.checked;
 		[...document.querySelectorAll('input[id^=REQ_CHECK]')].map(m => { m.checked = checked; });
+		
+        var chkboxbool = $(obj).attr("chkboxbool");
+        console.log("chkboxbool " + chkboxbool);
+        var list = $(".request_basket_list_container").find(".request_basket_list").find(".request_basket_checkbox").get();
+		console.log("list.length :: " + list.length);
+        if(chkboxbool == "0"){
+            for(var i = 0;i < list.length;i++){
+                $(list[i]).attr("chkboxbool", "1");
+                var chkid = $(list[i]).attr("chkid");
+                fnSelectReq(chkid);
+            }
+        }else{
+            for(var i = 0;i < list.length;i++){
+                $(list[i]).attr("chkboxbool", "0");
+                var chkid = $(list[i]).attr("chkid");
+                fnSelectReq(chkid);
+            }
+        }
 	}
 	
 </script>
@@ -371,7 +389,7 @@
           </div>
           <div class="request_basket_list_container">
             <div class="request_basket_list_data_type_container">
-              <input class="request_basket_checkbox" type="checkbox" id="REQ_ALL_CHECK" onchange="fnCheckAll();" />
+              <input class="request_basket_checkbox" type="checkbox" id="REQ_ALL_CHECK" chkboxbool="0" onchange="fnCheckAll(this);" />
               <div class="request_basket_list_data_type request_basket_order">
                 <p class="request_basket_list_data_type_typo">NO</p>
               </div>

@@ -47,13 +47,28 @@
     } else {
       target.addClass('hidden');
     }
-    
+	  var today = new Date();
+  	  var year3 = today.getFullYear() + "년";
+  	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  	  var day = ('0' + today.getDate()).slice(-2);
+  	  console.log("codeNm :: " + codeNm);
+  	console.log("year3 :: " + year3);
+  	  if(year3 == codeNm){
+  		DateInit();
+  	  }else{
+  	  	  for(var i = 0;i < 12; i++){
+  	  		  var j = i+1;
+  	  		  j *= 1;
+  	  		  $("#Month_" + j).removeClass("hidden");
+  	  		  console.log();
+  	  	  }
+  	  }
     if(isNotEmpty(code)) {
       $('#YYYY_DIV_1').find('p').html(codeNm);
       $('#DIALOG_YYYY').val(code);
     }
   }
-  
+  var curmonth = 0;
   function fnDateDialogSelect_2() {
     var code = arguments[0];
     var codeNm = arguments[1];
@@ -81,8 +96,33 @@
           }
         }
         var html = ``;
-        for(var i=0; i<cnt; i++) {
+        
+  	  var today = new Date();
+  	  var year3 = today.getFullYear();
+  	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  	  var day = ('0' + today.getDate()).slice(-2);
+  	  if(year3 == yaer){
+  		DateInit();
+  		
+  	  }else{
+  	  	  for(var i = 0;i < 12; i++){
+  	  		  var j = i+1;
+  	  		  $("#Month_" + j).removeClass("hidden");
+  	  	  }
+
+  	  }
+        var k = 0;
+        console.log("month " + month);
+        console.log("code " + code);
+        console.log("day " + day);
+        if(month == code){
+        	k = day;
+        	k = k - 1;
+        	curbool = 1;
+        }
+        for(var i=k; i<cnt; i++) {
           if(i < 9) {
+        	i *= 1;
             var code = ('0' + (i+1));
             var codeNm = ('0' + (i+1)) + '일';
             html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
@@ -99,7 +139,9 @@
       }
     }
   }
-  
+  $(document).ready(function(){
+	  DateInit();  
+  })
   function fnDateDialogSelect_3() {
     var code = arguments[0];
     var codeNm = arguments[1];
@@ -113,6 +155,36 @@
     if(isNotEmpty(code)) {
       $('#DD_DIV_1').find('p').html(codeNm);
       $('#DIALOG_DD').val(code);
+    }
+    var today = new Date();
+    var day = ('0' + today.getDate()).slice(-2);
+    var dayNM = day+"일"
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    if(curbool == 1){
+    	if(dayNM == codeNm){
+    	minutes *= 1;
+    	if(minutes >= 0 && minutes < 30){
+    		minutes = "30";
+    	}else {
+    		minutes = "00";
+    		hours += 1;
+    	}
+    	if(hours.length == 1){
+    		hours = "0" + hours;
+    	}
+    	
+    	var hourid = hours + "" + minutes;
+    	console.log("hours " + hours);
+    	console.log("minutes " + minutes);
+    	console.log("hourid " + hourid);
+    	
+    	var index = $("#"+hourid).index;
+    	
+    	$("#TTMM_DIV_2").find("div:lt(" + index + ")").addClass("hidden");
+    	}
+    }else{
+    	$("#TTMM_DIV_2").removeClass("hidden");
     }
   }
   
@@ -146,7 +218,7 @@
           html += `<p class="dropbox_select_button_item_typo">` + data[i].CODE_NM + `</p>`;
           html += `</div>`;
         }
-        $('#YYYY_DIV_2').html(html);
+        $('#YYYY_DIV_2').html(html);	
       }
     });
   }
@@ -179,7 +251,24 @@
     fnDateDialogSearch();
     
   });
-  
+  var curbool = 0;
+  function DateInit(){
+	  var today = new Date();
+  	  var year = today.getFullYear();
+  	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  	  var day = ('0' + today.getDate()).slice(-2);
+  	  var toDayStr = year + month + day;
+  	  var num = ('0' + (today.getMonth() + 1)).slice(-2);
+  	  if(num != "10"){
+  		num = num.replace("0", ""); 
+  	  }
+  	  num *=1;
+  	  for(var i = 0;i < num-1; i++){
+  		    var j = i+1;
+  		    j *= 1;
+  		  $("#Month_" + j).addClass("hidden");
+  	  }
+  }
 </script>
 
 <div id="dateDialogDiv" class="sample_dialog_root hidden">
@@ -209,40 +298,40 @@
             </div>
           </div>
           <div id="MM_DIV_2" class="dropbox_select_button_item_container_month hidden" style="cursor: pointer;">
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('01', '01월')">
+            <div class="dropbox_select_button_item_small" id="Month_1" onclick="fnDateDialogSelect_2('01', '01월')">
               <p class="dropbox_select_button_item_typo">01월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('02', '02월')">
+            <div class="dropbox_select_button_item_small" id="Month_2" onclick="fnDateDialogSelect_2('02', '02월')">
               <p class="dropbox_select_button_item_typo">02월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('03', '03월')">
+            <div class="dropbox_select_button_item_small" id="Month_3" onclick="fnDateDialogSelect_2('03', '03월')">
               <p class="dropbox_select_button_item_typo">03월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('04', '04월')">
+            <div class="dropbox_select_button_item_small" id="Month_4" onclick="fnDateDialogSelect_2('04', '04월')">
               <p class="dropbox_select_button_item_typo">04월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('05', '05월')">
+            <div class="dropbox_select_button_item_small" id="Month_5" onclick="fnDateDialogSelect_2('05', '05월')">
               <p class="dropbox_select_button_item_typo">05월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('06', '06월')">
+            <div class="dropbox_select_button_item_small" id="Month_6" onclick="fnDateDialogSelect_2('06', '06월')">
               <p class="dropbox_select_button_item_typo">06월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('07', '07월')">
+            <div class="dropbox_select_button_item_small" id="Month_7" onclick="fnDateDialogSelect_2('07', '07월')">
               <p class="dropbox_select_button_item_typo">07월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('08', '08월')">
+            <div class="dropbox_select_button_item_small" id="Month_8" onclick="fnDateDialogSelect_2('08', '08월')">
               <p class="dropbox_select_button_item_typo">08월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('09', '09월')">
+            <div class="dropbox_select_button_item_small" id="Month_9" onclick="fnDateDialogSelect_2('09', '09월')">
               <p class="dropbox_select_button_item_typo">09월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('10', '10월')">
+            <div class="dropbox_select_button_item_small" id="Month_10" onclick="fnDateDialogSelect_2('10', '10월')">
               <p class="dropbox_select_button_item_typo">10월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('11', '11월')">
+            <div class="dropbox_select_button_item_small" id="Month_11" onclick="fnDateDialogSelect_2('11', '11월')">
               <p class="dropbox_select_button_item_typo">11월</p>
             </div>
-            <div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_2('12', '12월')">
+            <div class="dropbox_select_button_item_small" id="Month_12" onclick="fnDateDialogSelect_2('12', '12월')">
               <p class="dropbox_select_button_item_typo">12월</p>
             </div>
           </div>
@@ -264,94 +353,94 @@
           </div>
         </div>
         <div id="TTMM_DIV_2" class="dropbox_select_button_item_container_time hidden" style="cursor: pointer;">
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('0900', '09:00')">
+          <div class="dropbox_select_button_item_small" id="0900" onclick="fnDateDialogSelect_4('0900', '09:00')">
             <p class="dropbox_select_button_item_typo">09:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('0930', '09:30')">
+          <div class="dropbox_select_button_item_small" id="0930" onclick="fnDateDialogSelect_4('0930', '09:30')">
             <p class="dropbox_select_button_item_typo">09:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1000', '10:00')">
+          <div class="dropbox_select_button_item_small" id="1000" onclick="fnDateDialogSelect_4('1000', '10:00')">
             <p class="dropbox_select_button_item_typo">10:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1030', '10:30')">
+          <div class="dropbox_select_button_item_small"id="1030" onclick="fnDateDialogSelect_4('1030', '10:30')">
             <p class="dropbox_select_button_item_typo">10:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1100', '11:00')">
+          <div class="dropbox_select_button_item_small" id="1100" onclick="fnDateDialogSelect_4('1100', '11:00')">
             <p class="dropbox_select_button_item_typo">11:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1130', '11:30')">
+          <div class="dropbox_select_button_item_small" id="1130" onclick="fnDateDialogSelect_4('1130', '11:30')">
             <p class="dropbox_select_button_item_typo">11:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1200', '12:00')">
+          <div class="dropbox_select_button_item_small" id="1200" onclick="fnDateDialogSelect_4('1200', '12:00')">
             <p class="dropbox_select_button_item_typo">12:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1230', '12:30')">
+          <div class="dropbox_select_button_item_small" id="1230" onclick="fnDateDialogSelect_4('1230', '12:30')">
             <p class="dropbox_select_button_item_typo">12:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1300', '13:00')">
+          <div class="dropbox_select_button_item_small" id="1300" onclick="fnDateDialogSelect_4('1300', '13:00')">
             <p class="dropbox_select_button_item_typo">13:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1330', '13:30')">
+          <div class="dropbox_select_button_item_small" id="1330" onclick="fnDateDialogSelect_4('1330', '13:30')">
             <p class="dropbox_select_button_item_typo">13:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1400', '14:00')">
+          <div class="dropbox_select_button_item_small" id="1400" onclick="fnDateDialogSelect_4('1400', '14:00')">
             <p class="dropbox_select_button_item_typo">14:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1430', '14:30')">
+          <div class="dropbox_select_button_item_small" id="1430" onclick="fnDateDialogSelect_4('1430', '14:30')">
             <p class="dropbox_select_button_item_typo">14:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1500', '15:00')">
+          <div class="dropbox_select_button_item_small" id="1500" onclick="fnDateDialogSelect_4('1500', '15:00')">
             <p class="dropbox_select_button_item_typo">15:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1530', '15:30')">
+          <div class="dropbox_select_button_item_small" id="1530" onclick="fnDateDialogSelect_4('1530', '15:30')">
             <p class="dropbox_select_button_item_typo">15:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1600', '16:00')">
+          <div class="dropbox_select_button_item_small" id="1600"onclick="fnDateDialogSelect_4('1600', '16:00')">
             <p class="dropbox_select_button_item_typo">16:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1630', '16:30')">
+          <div class="dropbox_select_button_item_small" id="1630" onclick="fnDateDialogSelect_4('1630', '16:30')">
             <p class="dropbox_select_button_item_typo">16:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1700', '17:00')">
+          <div class="dropbox_select_button_item_small" id="1700" onclick="fnDateDialogSelect_4('1700', '17:00')">
             <p class="dropbox_select_button_item_typo">17:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1730', '17:30')">
+          <div class="dropbox_select_button_item_small" id="1730" onclick="fnDateDialogSelect_4('1730', '17:30')">
             <p class="dropbox_select_button_item_typo">17:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1800', '18:00')">
+          <div class="dropbox_select_button_item_small" id="1800" onclick="fnDateDialogSelect_4('1800', '18:00')">
             <p class="dropbox_select_button_item_typo">18:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1830', '18:30')">
+          <div class="dropbox_select_button_item_small" id="1830" onclick="fnDateDialogSelect_4('1830', '18:30')">
             <p class="dropbox_select_button_item_typo">18:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1900', '19:00')">
+          <div class="dropbox_select_button_item_small" id="1900" onclick="fnDateDialogSelect_4('1900', '19:00')">
             <p class="dropbox_select_button_item_typo">19:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('1930', '19:30')">
+          <div class="dropbox_select_button_item_small" id="1930" onclick="fnDateDialogSelect_4('1930', '19:30')">
             <p class="dropbox_select_button_item_typo">19:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2000', '20:00')">
+          <div class="dropbox_select_button_item_small" id="2000" onclick="fnDateDialogSelect_4('2000', '20:00')">
             <p class="dropbox_select_button_item_typo">20:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2030', '20:30')">
+          <div class="dropbox_select_button_item_small" id="2030" onclick="fnDateDialogSelect_4('2030', '20:30')">
             <p class="dropbox_select_button_item_typo">20:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2100', '21:00')">
+          <div class="dropbox_select_button_item_small" id="2100" onclick="fnDateDialogSelect_4('2100', '21:00')">
             <p class="dropbox_select_button_item_typo">21:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2130', '21:30')">
+          <div class="dropbox_select_button_item_small" id="2130" onclick="fnDateDialogSelect_4('2130', '21:30')">
             <p class="dropbox_select_button_item_typo">21:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2200', '22:00')">
+          <div class="dropbox_select_button_item_small" id="2200" onclick="fnDateDialogSelect_4('2200', '22:00')">
             <p class="dropbox_select_button_item_typo">22:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2230', '22:30')">
+          <div class="dropbox_select_button_item_small" id="2230" onclick="fnDateDialogSelect_4('2230', '22:30')">
             <p class="dropbox_select_button_item_typo">22:30</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2300', '23:00')">
+          <div class="dropbox_select_button_item_small" id="2300" onclick="fnDateDialogSelect_4('2300', '23:00')">
             <p class="dropbox_select_button_item_typo">23:00</p>
           </div>
-          <div class="dropbox_select_button_item_small"onclick="fnDateDialogSelect_4('2330', '23:30')">
+          <div class="dropbox_select_button_item_small" id="2330" onclick="fnDateDialogSelect_4('2330', '23:30')">
             <p class="dropbox_select_button_item_typo">23:30</p>
           </div>
         </div>
@@ -365,7 +454,11 @@
     </div>
   </div>
 </div>
-
+<style>
+.hidden{
+	display:none;
+}
+</style>
 <input type="hidden" id="DIALOG_YYYY">
 <input type="hidden" id="DIALOG_MM">
 <input type="hidden" id="DIALOG_DD">

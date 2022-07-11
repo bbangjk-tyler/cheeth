@@ -289,11 +289,7 @@
             </div>
             <div class="equipment_estimator_my_page_request_history_wrapper">
                 <div class="equipment_estimator_my_page_request_history_chip_container">
-                    <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="equipment_estimator_my_page_request_history_chip">
-                        <p class="equipment_estimator_my_page_request_history_chip_selected_typo">
-                            장비 견적함
-                        </p>
-                    </a>
+
                     <a href="/${api}/mypage/equipment_estimator_my_page_cad" class="equipment_estimator_my_page_request_history_chip">
                         <p class="equipment_estimator_my_page_request_history_chip_typo">
                             CAD 견적함
@@ -302,6 +298,11 @@
                     <a href="/${api}/mypage/equipment_estimator_my_page_sent" class="equipment_estimator_my_page_request_history_chip">
                         <p class="equipment_estimator_my_page_request_history_chip_typo">
                             내가 보낸 견적
+                        </p>
+                    </a>
+                    <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="equipment_estimator_my_page_request_history_chip">
+                        <p class="equipment_estimator_my_page_request_history_chip_selected_typo">
+                            장비 견적함
                         </p>
                     </a>
                 </div>

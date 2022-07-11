@@ -25,9 +25,12 @@
    history.back();
 </script>
 </c:if>
-
 	<c:if test="${DATA.PUBLIC_CD eq 'U001'}"> <!-- 지정견적 -->
-	  <c:when test="${fn:contains(DATA.APPOINT_USER, sessionInfo.user.USER_ID) or DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
+	<c:choose>
+	  <c:when test="${fn:contains(DATA.APPOINT_USER, sessionInfo.user.USER_ID)}">
+	    
+	  </c:when>
+	  <c:when test="${DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
 	    
 	  </c:when>
 	  <c:otherwise>
@@ -36,7 +39,9 @@
 	  	history.back();
 	  </script>
 	  </c:otherwise>
+	  </c:choose>
 	</c:if>
+
 	
 <link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
@@ -962,6 +967,7 @@
 			</div>
 		</div>
 		<div class="connection_location_divider"></div>
+
 		<div class="project_request_reading_info_wrapper">
 			<div class="project_request_reading_info_sub_container">
 				<div class="project_request_reading_info_title">
@@ -1144,8 +1150,29 @@
 												  <p class="electronic_estimator_dialog_item_button_typo">내일</p>
 												</div>
 				              </div>
+				              <script>
+				               var deliverlyDate = "${DATA.DELIVERY_EXP_DATE4}";
+				               deliverlyDate = deliverlyDate.replaceAll(" ", "");
+				               
+				               var year = deliverlyDate.split("년")[0];
+				               var month = deliverlyDate.split("년")[1].split("월")[0];
+				               var day = deliverlyDate.split("년")[1].split("월")[1].split("일")[0];
+				               var Hours = deliverlyDate.split("년")[1].split("월")[1].split("일")[1].split("시")[0];
+				               var minutes = deliverlyDate.split("년")[1].split("월")[1].split("일")[1].split("시")[1].split("분")[0];
+				               var Time = Hours + minutes;
+				               $(document).ready(function(){
+				            	   $("#DIALOG_YYYY").val(year);
+				            	   $("#DIALOG_MM").val(month);
+				            	   $("#DIALOG_DD").val(day);
+				            	   $("#DIALOG_TTMM").val(Time);
+				            	   $("#YYYY_DIV_1").find(".dropbox_select_button_typo").text(year +"년");
+				            	   $("#MM_DIV_1").find(".dropbox_select_button_typo").text(month +"월");
+				            	   $("#DD_DIV_1").find(".dropbox_select_button_typo").text(day +"일");
+				            	   $("#TTMM_DIV_1").find(".dropbox_select_button_typo").text(Hours +":" + minutes);
+				               });
+				              </script>
 				              <div class="electronic_estimator_select_button_container" style="height: 38px;">
-				              	<input type="hidden" id="DIALOG_YYYY">
+				              					<input type="hidden" id="DIALOG_YYYY">
 												<input type="hidden" id="DIALOG_MM">
 												<input type="hidden" id="DIALOG_DD">
 												<input type="hidden" id="DIALOG_TTMM">

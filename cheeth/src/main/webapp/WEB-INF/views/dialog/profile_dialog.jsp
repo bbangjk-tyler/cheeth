@@ -201,7 +201,7 @@
                 <div class="profile_management_profile_info_sub_info_container">
                   <p class="profile_management_profile_info_sub_info_title">회원구분</p>
                   <p id="PROFILE_USER_TYPE_NM" class="profile_management_profile_info_sub_info_context">기업회원</p>
-                  <p class="profile_management_profile_info_sub_info_title hidden">세금계산서 발행가능 유뮤</p>
+                  <p class="profile_management_profile_info_sub_info_title hidden">세금계산서 발행가능 유무</p>
                   <p id="PROFILE_TAX_BILL_YN" class="profile_management_profile_info_sub_info_context hidden"></p>
                 </div>
               </div>

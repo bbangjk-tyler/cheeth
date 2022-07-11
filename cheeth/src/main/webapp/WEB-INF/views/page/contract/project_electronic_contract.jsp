@@ -398,7 +398,21 @@
 	    <div class="main_container_divider"></div>
 	    <div class="special_contract">
 	      <p class="special_contract_title">특수 계약조건</p>
-	      <textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" <c:if test="${DATA.PROGRESS_CD eq 'PC005'}">disabled</c:if>>${DATA.SPECIAL_CONDITION}</textarea>
+        <c:choose>
+            <c:when test="${CNT02 gt 0 and (DATA.PROGRESS_CD eq 'PC002' or DATA.PROGRESS_CD eq 'PC004')}"> <!-- 의뢰자 기준 치자이너가 승인, 수정 요청 한 경우 -->
+				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
+            </c:when>
+            <c:when test="${CNT01 gt 0 and (DATA.PROGRESS_CD eq 'PC001' or DATA.PROGRESS_CD eq 'PC003')}"> <!-- 치자이너 기준 의뢰자가 승인, 수정 요청 한 경우 -->
+				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
+            </c:when>
+            <c:when test="${DATA.PROGRESS_CD eq 'PC005'}">
+            	<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
+            </c:when>
+            <c:otherwise>
+            	<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요">${DATA.SPECIAL_CONDITION}</textarea>
+            </c:otherwise>
+       </c:choose>
+     
 	      <textarea style="display: none;" id="SPECIAL_CONDITION_TEMP" name="SPECIAL_CONDITION_TEMP">${DATA.SPECIAL_CONDITION}</textarea>
 	    </div>
 	    <c:if test="${not empty DATA.SPECIAL_CONDITION}">

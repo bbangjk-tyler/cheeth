@@ -664,7 +664,7 @@ function fnIsCheckDate(){
   var month = ('0' + (today.getMonth() + 1)).slice(-2);
   var day = ('0' + today.getDate()).slice(-2);
   var toDayStr = year + month + day;
-  if(args <= toDayStr){
+  if(args < toDayStr){
     return false;
   }
   return true;

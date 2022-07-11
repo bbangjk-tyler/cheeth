@@ -71,7 +71,7 @@
           		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">일반</span>
           	</c:otherwise>
           </c:choose>
-            <span class="username_blue" onclick="javascript:location.href='/${api}/talk/send'">쪽지함<img id="unread" src="/public/assets/images/notification_alert.svg" style="position:absolute;display:none;right:-18px;top:0px;width:15px;height:15px;"></span>
+            <span class="username_blue" onclick="javascript:location.href='/${api}/talk/receive'">쪽지함<img id="unread" src="/public/assets/images/notification_alert.svg" style="position:absolute;display:none;right:-18px;top:0px;width:15px;height:15px;"></span>
           </p>
           <!-- //로그인계정 -->
           <p class="header_right_menu_user_info_typo logout" onclick="fnLogOut();">로그아웃</p>
@@ -94,6 +94,7 @@ function showUnread(result) {
 
 }
 $(document).ready(function(){
+	getUnread();
 	getInfiniteUnread();
 });
 function getUnread(){

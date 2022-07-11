@@ -111,7 +111,10 @@ function confirmModal() {
     fnSetPageInfo('${PAGE}', '${TOTAL_CNT}', 10);
     
   });
-  
+  $(document).ready(function(){
+	 $("#ProjectCategory").text(CategoryName); 
+	 console.log(CategoryName);
+  });
 </script>
 
 <form:form id="searchForm" name="searchForm" action="/${api}/project/project_view_all" method="GET">
@@ -136,6 +139,9 @@ function confirmModal() {
 	        <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
 	        <c:if test="${item.CODE_CD eq param.SEARCH_PROJECT_CD}">
 		        <p class="side_menu_list_typo_blue">${item.CODE_NM}</p>
+		        <script>
+		        var CategoryName ="${item.CODE_NM}";
+		        </script>
 	        </c:if>
 	        <c:if test="${item.CODE_CD ne param.SEARCH_PROJECT_CD}">
 		        <p class="side_menu_list_typo">${item.CODE_NM}</p>
@@ -154,7 +160,11 @@ function confirmModal() {
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location" style="cursor: pointer;" onclick="fnAllView();">
-	        <p class="project_connection_location_typo_bold">프로젝트 전체보기</p>
+	        <p class="project_connection_location_typo">프로젝트 전체보기</p>
+	      </div>
+	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
+	      <div class="project_connection_location" style="cursor: pointer;" onclick="fnAllView();">
+	        <p class="project_connection_location_typo_bold" id="ProjectCategory"></p>
 	      </div>
 	    </div>
 	    <div class="project_filter_container">
