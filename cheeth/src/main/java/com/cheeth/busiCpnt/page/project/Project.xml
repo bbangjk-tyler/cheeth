@@ -12,6 +12,8 @@
       JOIN TB_USER_INFO B
         ON A.CREATE_ID = B.USER_ID
      WHERE 1=1
+        	 <!-- 수정 -->
+   	 AND A.PROJECT_EXP_DATE >= NOW()
    <if test="isNotEmpty(SEARCH_OPTION_1)">
      <if test='"Y".equals(SEARCH_OPTION_1)'>
        AND A.CREATE_ID = #{CREATE_ID}

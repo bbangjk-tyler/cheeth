@@ -338,7 +338,7 @@ $(document).ready(function() {
                     </div>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">주소</p>
-                        <input class="equipment_estimator_edit_info_item_blank required" type="text" name="USER_ADDRESS" id="USER_ADDRESS" data-field="주소" readonly value="${DATA.USER_ADDRESS}"/>
+                        <input class="equipment_estimator_edit_info_item_blank required" style="margin-left: 37px;" type="text" name="USER_ADDRESS" id="USER_ADDRESS" data-field="주소" readonly value="${DATA.USER_ADDRESS}"/>
 						<input class="equipment_estimator_edit_info_item_blank required" type="text" name="USER_ADDRESS_DTL" id="USER_ADDRESS_DTL" data-field="주소 상세" value="${DATA.USER_ADDRESS_DTL}"/>
                     </div>
                     <div class="equipment_estimator_edit_info_item">
@@ -395,7 +395,7 @@ $(document).ready(function() {
                     </div>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">사업장 주소</p>
-                        <input class="equipment_estimator_edit_info_item_blank" type="text" name="COMP_ADDRESS" id="COMP_ADDRESS" data-field="사업장 주소"  readonly value="${DATA.COMP_ADDRESS}"/>
+                        <input class="equipment_estimator_edit_info_item_blank" style="margin-left: 37px;" type="text" name="COMP_ADDRESS" id="COMP_ADDRESS" data-field="사업장 주소"  readonly value="${DATA.COMP_ADDRESS}"/>
                         <input class="equipment_estimator_edit_info_item_blank" type="text" name="COMP_ADDRESS_DTL" id="COMP_ADDRESS_DTL" data-field="사업장 주소 상세"  value="${DATA.COMP_ADDRESS_DTL}"/>
                     </div>
                     

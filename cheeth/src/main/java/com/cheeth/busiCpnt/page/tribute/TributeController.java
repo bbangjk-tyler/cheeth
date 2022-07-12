@@ -43,7 +43,6 @@ public class TributeController extends BaseController {
   public ModelAndView tribute_request(HttpServletRequest request) throws Exception {
       
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
-      
     ModelAndView mv = new ModelAndView("page/tribute/tribute_request");
     if(isSession()) {
       parameter.put("GROUP_CD", "PRO_METH_CD");
@@ -86,10 +85,10 @@ public class TributeController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     Map<String, Object> resultMap = new HashMap<>();
     
-    try {
+    try{
       parameter.put("USER_ID", parameter.get("CREATE_ID"));
       service.delete("delete01", parameter);
-    } catch (Exception e) {
+    }catch (Exception e) {
       resultMap.put("result", "N");
       logger.error(e.getMessage());
     }
@@ -202,5 +201,4 @@ public class TributeController extends BaseController {
 	
 	return rtnMap;
   }
-
 }

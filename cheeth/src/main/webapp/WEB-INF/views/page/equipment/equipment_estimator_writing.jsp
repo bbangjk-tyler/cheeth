@@ -544,6 +544,7 @@
 						            <div class="qna_pic_attachment_body">
 						                <p class="qna_pic_attachment_title">사진 업로드</p>
 						                <p class="qna_pic_attachment_sub_title">최대 10장까지 업로드 가능합니다.</p>
+						                <font style="margin-left:10px;display: block;margin-bottom: 20px;margin-top: -10px;">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font>
 						                <div class="qna_pic_attatchment_pic_upload_container">
 						                  <div class="qna_pic_attatchment_main_pic_upload_wrapper">
 						                    <img class="qna_pic_attatchment_main_pic_upload" id="mainPicImage" src="/public/assets/images/profile_image.svg"/>

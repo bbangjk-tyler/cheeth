@@ -1,6 +1,7 @@
 package com.cheeth.busiCpnt.page.project;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -198,11 +199,24 @@ public class ProjectController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getReqList", parameter);
     
+    
     for(Map<String, Object> m:list) {
+    	int bool = 0;
+    	Iterator<String> keys = m.keySet().iterator();
+    	while (keys.hasNext()){
+            String name = keys.next();
+            if (name.contains("Frame") || name.contains("Splint") || name.contains("의치") || name.contains("교정") || name.contains("트레이")) {
+            	bool = 1;
+            	break;
+            }
+            if(bool == 1) {
+            	m.replace(name, "1");
+            }
+    	}
+    	
     	String name = m.get("SUPP_NM_STR").toString();
-        if (name.contains("Frame") || name.contains("Splint") || name.contains("의치") || name.contains("교정") || name.contains("트레이")) {
+        
             m.put("CNT", "1");
-        }
     }
     return list;
   }

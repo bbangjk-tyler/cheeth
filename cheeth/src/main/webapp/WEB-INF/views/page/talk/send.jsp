@@ -21,7 +21,6 @@
 <link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
 
 <script>
-
   var fileArray = new Array();
   var sendUserList = new Array();
   
@@ -47,7 +46,6 @@
       });
       $('#findNickName').val('');
       $('.address_list_name_container > p').show();
-    
     }
   }
  
@@ -77,13 +75,14 @@
       }
       var html = ``;
       for(var i=0; i<fileArray.length; i++) {
-        var fileNm = fileArray[i].FILE.name;
-        html += `<div class="send_note_attatchment">`;
-        html += `<img class="send_note_attatchment_icon" src="/public/assets/images/note_box_attatchment.svg"/>`;
-        html += `<p class="send_note_attatchment_typo">` + fileNm + `</p>`;
-        html += `</div>`;
-        div.html(html);
-      }
+          var fileNm = fileArray[i].FILE.name;
+          html += `<div class="send_note_attatchment" style="display:inline-block;">`;
+          html += `<img class="send_note_attatchment_icon" src="/public/assets/images/note_box_attatchment.svg" style="margin-top: 4px;float:left;"/>`;
+          html += `<p class="send_note_attatchment_typo" style="float:left;">` + fileNm + `</p>`;
+          html += '<img  src="/public/assets/images/closebtn1.png" id="'+obj.IDX+'"style="margin-top:4px;float:right;width:11px;height:9px;cursor:pointer;" onclick="removeFile(this)">';
+          html += `</div>`;
+          div.html(html);
+        }
     }
   }
   
@@ -384,10 +383,21 @@
     }
   }
   
-  $(document).ready(function() {
-	  fnSetPageInfo('${PAGE}', '${TOTAL_CNT}', 10);
-  });
-  
+  function removeFile(obj){
+		 
+	  var id = $(obj).attr("id");
+	  id = id -1;
+	  console.log("id :: " + id);
+	  console.log("fileArray1 :: " + fileArray.length);
+	  fileArray.splice(id, 1);
+	  console.log("fileArray2 :: " + fileArray.length);
+	  $(obj).parent().remove();
+	  var list = $(".send_note_attatchment_container").find(".send_note_attatchment").get();
+	  if(list.length == 0){
+		  $(".send_note_attatchment_container").addClass('hidden');
+	  }
+	  
+  }
 </script>
 
 <input type="hidden" id="TALK_CD" name="TALK_CD" value="">
@@ -414,7 +424,7 @@
       <p class="note_box_side_menu_list_sub_typo_context"></p>
     </a>
     <a href="javascript:fnOpenAdress();" class="note_box_side_menu_list_sub">
-      <img class="note_box_side_menu_list_sub_icon" src="/public/assets/images/view_address_list.svg"/>
+      <img class="note_box_side_menu_list_sub_icon" src="/public/assets/images/view_address_list.svg" style="margin-right: 14px;"/>
       <p class="note_box_side_menu_list_sub_typo_title">주소록 보기</p>
       <p class="note_box_side_menu_list_sub_typo_context"></p>
     </a>
@@ -570,6 +580,7 @@
           <a href="javascript:void(0);" class="send_note_attatch_button" onclick="fnAddFile();">
             <p class="send_note_attatch_button_typo">파일첨부</p>
           </a>
+          <font style="margin-left:10px;display: block;font-size:10px;">※ 파일 최대 용량 500MB<br>(zip 형식의 압축파일을 권장합니다.) </font>
         </div>
         <div class="send_note_attatchment_container hidden"></div>
         <div class="main_container_divider without_margin"></div>

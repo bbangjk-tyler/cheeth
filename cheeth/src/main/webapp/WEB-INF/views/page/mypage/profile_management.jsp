@@ -231,7 +231,15 @@
               <div class="main_container_divider without_margin"></div>
               <div class="profile_management_writing_basic_info">
                 <p class="profile_management_writing_basic_info_title">회원구분</p>
+                <c:choose>
+                <c:when test="${DATA.DATA_01.USER_TYPE_NM eq '의뢰자'}">
+                <p class="profile_management_writing_basic_info_context">의뢰인</p>
+                </c:when>
+                <c:otherwise>
                 <p class="profile_management_writing_basic_info_context">${DATA.DATA_01.USER_TYPE_NM}</p>
+                </c:otherwise>
+                </c:choose>
+                <%-- <p class="profile_management_writing_basic_info_context">${DATA.DATA_01.USER_TYPE_NM}</p> --%>
               </div>
             </div>
           </div>

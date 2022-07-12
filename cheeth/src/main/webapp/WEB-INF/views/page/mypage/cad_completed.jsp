@@ -254,6 +254,7 @@ if(request.getParameter("alreadychk") !=null){
 	  <div class="receive_estimator_main_container">
 	    <div class="receive_estimator_item">
 	      <p class="receive_estimator_title">의뢰서</p>
+	      <font style="margin-left:10px;float:right;display: block;">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font><br style="clear:both">
 	      <div class="receive_estimator_context">
 	        <div class="receive_estimator_request_wrapper"></div>
 	      </div>

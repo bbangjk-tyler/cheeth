@@ -63,7 +63,7 @@
 		        <c:if test="${item.CODE_CD eq param.SEARCH_PROJECT_CD}">
 			        <p class="side_menu_list_typo_blue">${item.CODE_NM}</p>
 			        <script>
-			        var Cateogry = "${item.CODE_NM}";
+			        var Category = "${item.CODE_NM}";
 			        $(document).ready(function(){
 			        	$("#Category").text(Category);
 			        });

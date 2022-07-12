@@ -91,7 +91,6 @@ function showUnread(result) {
 	}else{
 		$("#unread").css("display", "none");
 	}
-
 }
 $(document).ready(function(){
 	getUnread();

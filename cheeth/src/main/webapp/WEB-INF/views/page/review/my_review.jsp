@@ -105,7 +105,7 @@
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
       <p class="side_menu_list_typo">진행내역</p>
     </a>
-    <a href="javascript:alert('프로필 관리');" class="side_menu_list">
+    <a href="/${api}/mypage/profile_management" class="side_menu_list">
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
       <p class="side_menu_list_typo">프로필 관리</p>
     </a>

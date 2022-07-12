@@ -1348,6 +1348,7 @@ function confirmModal() {
             </a>
           </div>
           <div class="dialog_tribute_request_body">
+          <font style="margin-left:10px">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font>
           	<div class="dialog_tribute_request_table">
 							<div class="dialog_tribute_request_table_data_type_container">
 								<div class="dialog_tribute_request_table_data_type_order">

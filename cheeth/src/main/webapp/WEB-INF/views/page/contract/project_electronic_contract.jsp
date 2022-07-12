@@ -339,7 +339,8 @@
 	          <div class="electronic_contract_condition">
 	            <div class="electronic_contract_condition_typo_container">
 	              <p class="electronic_contract_condition_typo">용역 일반 계약서 동의</p>
-	              <a href="javascript:alert('용역 일반 계약서 동의 바로가기');" class="electronic_contract_condition_typo short_cut">바로가기</a>
+	              <!-- 수정필요 -->
+	              <a href="javascript:window.open('https://www.dentner.co.kr/static/.pdf')" class="electronic_contract_condition_typo short_cut">바로가기</a>
 	            </div>
 	            <label class="checkbox_large">
                 <input type="checkbox" id="AGREEMENT_YN_1" name="AGREEMENT_YN_1" value="${DATA.AGREEMENT_YN_1}" onchange="fnChangeCheck(this);">
@@ -347,7 +348,7 @@
 	          </div>
 	          <div class="electronic_contract_condition">
 	            <div class="electronic_contract_condition_typo_container">
-	              <p class="electronic_contract_condition_typo">Remake는 14일 이내에 같은 스캔파일인 무료로 가능하며, 그 외의 내용은 상호협의 하에 해결한다.<br/>공급자의 태만과 불성실한 태도로 발생한 문제는 용역 일반계약서 제 7조 3항에 따른다.</p>
+	              <p class="electronic_contract_condition_typo">Remake는 7일 이내에 같은 스캔파일인 무료로 가능하며, 그 외의 내용은 상호협의 하에 해결한다.<br/>공급자의 태만과 불성실한 태도로 발생한 문제는 용역 일반계약서 제 7조 3항에 따른다.</p>
 	            </div>
 	            <label class="checkbox_large">
                 <input type="checkbox" id="AGREEMENT_YN_2" name="AGREEMENT_YN_2" value="${DATA.AGREEMENT_YN_2}" onchange="fnChangeCheck(this);">
@@ -355,8 +356,9 @@
 	        </div>
 	        <div class="electronic_contract_condition">
 	          <div class="electronic_contract_condition_typo_container">
+	          <!-- 수정필요 -->
 	            <p class="electronic_contract_condition_typo">전자견적서 이행</p>
-	            <a href="javascript:alert('전자견적서 이행 바로가기');" class="electronic_contract_condition_typo short_cut">바로가기</a>
+	            <a href="javascript:window.open('https://www.dentner.co.kr/static/.pdf');" class="electronic_contract_condition_typo short_cut">바로가기</a>
 	          </div>
 	          <label class="checkbox_large">
               <input type="checkbox" id="AGREEMENT_YN_3" name="AGREEMENT_YN_3" value="${DATA.AGREEMENT_YN_3}" onchange="fnChangeCheck(this);">
@@ -377,7 +379,7 @@
               <input type="checkbox" id="AGREEMENT_YN_4" name="AGREEMENT_YN_4" value="${DATA.AGREEMENT_YN_4}" onchange="fnChangeCheck(this);">
             </label>
 	        </div>
-	        <div class="electronic_contract_condition">
+	        <div class="electronic_contract_Rcondition">
 	          <div class="electronic_contract_condition_typo_container">
 	            <p class="electronic_contract_condition_typo sub_typo">(선택) </p>
 	            <p class="electronic_contract_condition_typo">전자치과기공물의뢰서(바로가기)에 첨부된 파일, 최종결과물 수집이용 동의</p>
@@ -397,7 +399,28 @@
 	    </div>
 	    <div class="main_container_divider"></div>
 	    <div class="special_contract">
-	      <p class="special_contract_title">특수 계약조건</p>
+	      <p class="special_contract_title" style="float:left">특수 계약조건</p>
+	      <div>
+	      <img id="question" src="/public/assets/images/question.png" style="height:15px;width:15px;" data-bs-toggle="tooltip" data-bs-placement="right" title="예시)             제재작 횟수, 금액에 대한 조건은 OOO입니다. 작업진행 중 불가피하게 발생하는 추가 결제 건은 쪽지로 합의 후에 진행해주세요.">
+        	<br style="clear:both">
+          </div>
+        	<script>
+         	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        	  return new bootstrap.Tooltip(tooltipTriggerEl)
+        	}) 
+/*         	var tooltip = new bootstrap.Tooltip(element, {
+		  popperConfig: function (defaultBsPopperConfig) {
+			  title: '예시)\n제재작 횟수, 금액에 대한 조건은 OOO입니다. 작업진행 중 불가피하게 발생하는 추가 결제 건은 쪽지로 합의 후에 진행해주세요.'
+		  }
+		}) */
+        	</script>
+        <div class="tooltip bs-tooltip-top" role="tooltip">
+		  <div class="tooltip-arrow"></div>
+		  <div class="tooltip-inner">
+		    Some tooltip text!
+		  </div>
+		</div>
         <c:choose>
             <c:when test="${CNT02 gt 0 and (DATA.PROGRESS_CD eq 'PC002' or DATA.PROGRESS_CD eq 'PC004')}"> <!-- 의뢰자 기준 치자이너가 승인, 수정 요청 한 경우 -->
 				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
@@ -495,3 +518,15 @@
     </div>
   </div>
 </form:form>
+<style>
+#question{
+	margin-top: 14px;
+    margin-left: 5px;
+}
+#question:hover > #discription{
+	display:block;
+}
+
+/* .tooltip-arrow,
+#question + .tooltip > .tooltip-inner {background-color:#0083e8;} */
+</style>

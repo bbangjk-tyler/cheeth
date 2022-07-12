@@ -171,9 +171,7 @@
 	        html += '	<p class="request_basket_request_count">' + (isEmpty(totalCnt) ? rtnArray[0]['TOTAL_CNT'] : totalCnt) + '개</p>';
 	        html += ` <img class="request_basket_request_close_button" src="/public/assets/images/request_close_button.svg" style="cursor: pointer;" id="` + groupCd + `" onclick="removeReqEl('` + groupCd + `');"/>`;
 	        html += '</div>';
-			    
 			    $('.request_basket_request_container').append(html);
-			    
 			  }, complete: function() {
 	
 			  }, error: function() {
@@ -194,10 +192,10 @@
 						var suppHtml = '';
 						data.map(m => {
 							var obj = { 'CNT' : m.CNT,
-													'SUPP_NM_STR' : m.SUPP_NM_STR,
-													'SUPP_CD_LIST' : m.SUPP_CD_STR.split('|'),
-													'GROUP_CD_LIST' : m.GROUP_CD_STR.split('|'),
-													'RQST_NO_LIST' : m.RQST_NO_STR.split('|') };
+										'SUPP_NM_STR' : m.SUPP_NM_STR,
+										'SUPP_CD_LIST' : m.SUPP_CD_STR.split('|'),
+										'GROUP_CD_LIST' : m.GROUP_CD_STR.split('|'),
+										'RQST_NO_LIST' : m.RQST_NO_STR.split('|') };
 							
 							suppList.push(obj);
 							

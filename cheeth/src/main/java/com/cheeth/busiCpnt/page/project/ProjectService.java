@@ -134,7 +134,7 @@ public class ProjectService extends AbstractService {
        
         rtnMap2.put("SEND_ID", "관리자");
         rtnMap2.put("RECEIVE_ID", receiveId);
-        String CONTENT = "<a class=\"note_box_list_context\" href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'>귀하에게 견적 문의가 들어왔습니다.</a>"; 
+        String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>"; 
         rtnMap2.put("CONTENT", CONTENT);
         rtnMap2.put("FILE_CD", fileUtil.createFileCd());
         rtnMap2.put("CREATE_ID", "관리자");

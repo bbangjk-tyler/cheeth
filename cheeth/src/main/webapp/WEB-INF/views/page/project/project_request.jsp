@@ -482,9 +482,13 @@
       
       var publicCd = $('#PUBLIC_CD').val();
       var appointUser = '${DATA.APPOINT_USER}';
+      var datauserid = $("p[data-nick-name='"+appointUser+"']").attr("data-user-id");
+      var htttml = '<p class="address_list_receiver_name" style="cursor: pointer;" data-user-id="'+ datauserid +'" data-nick-name="'+appointUser+'" onclick="fnAdressSelect2(this);">'+appointUser+'</p>';
       if(publicCd === 'U001' && isNotEmpty(appointUser)) {
     	  $('.quote_list').html('<p>' + appointUser + '</p>');
+    	  $(".address_list_receiver_name_container").html(htttml);
         $('.quote_list').removeClass('hidden');
+        
       } else {
         $('.quote_list').addClass('hidden');
       }
