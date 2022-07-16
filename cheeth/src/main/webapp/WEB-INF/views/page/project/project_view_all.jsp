@@ -224,7 +224,7 @@ function confirmModal() {
 	      <c:forEach var="item" items="${LIST}" varStatus="status">
 	        <div class="project_list">
 		        <div class="project_list project_list_order">
-		          <p class="project_list_order_typo">${item.RN}</p>
+		          <p class="project_list_order_typo">${item.PROJECT_NO}</p>
 		        </div>
 		        <div class="project_list project_list_title">
 			        <a href="/${api}/project/project_request_view?PROJECT_NO=${item.PROJECT_NO}" >

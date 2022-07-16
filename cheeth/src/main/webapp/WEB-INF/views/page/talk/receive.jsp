@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -349,13 +339,15 @@
   
   function fnAdressOk() {
     sendUserList = new Array();
-    $('.address_list_name_container > p').each(function(k,v) {
-      if($(v).hasClass('address_list_name_selected')) {
-        var userId = $(v).data('user-id');
-        var nickName = $(v).data('nick-name');
-        sendUserList.push({USER_ID: userId.toString(), USER_NICK_NAME: nickName.toString()});
-      }
-    });
+    
+	  $('.address_list_receiver_name_container > p').each(function(k,v) {
+		    //if($(v).hasClass('address_list_name_selected') || $(v).hasClass('address_list_name')) {
+		      var userId = $(v).data('user-id');
+		      var nickName = $(v).data('nick-name');
+		      sendUserList.push({USER_ID: userId.toString(), USER_NICK_NAME: nickName.toString()});
+		      
+		    //}
+		  });
     if(sendUserList.length > 0) {
       var reStr = '';
       for(var i=0; i<sendUserList.length; i++) {

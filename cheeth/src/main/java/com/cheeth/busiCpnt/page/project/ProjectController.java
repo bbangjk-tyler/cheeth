@@ -199,25 +199,59 @@ public class ProjectController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getReqList", parameter);
     
+    for(Map<String, Object> obj : list) {
+  	  Iterator<String> keys = obj.keySet().iterator();
+      while( keys.hasNext() ){
+          String key = keys.next();
+          String value = obj.get(key).toString();
+          System.out.println("(2)키 : "+key+", 값 : "+value);
+      }
+      
+  	  if(obj.get("SUPP_NM_STR").toString().contains("Frame") || obj.get("SUPP_NM_STR").toString().contains("Splint") || obj.get("SUPP_NM_STR").toString().contains("의치")
+		  || obj.get("SUPP_NM_STR").toString().contains("교정") || obj.get("SUPP_NM_STR").toString().contains("트레이")) {
+    	  int index = 0;
+  		  String realctn = "1";
+    	  if(obj.get("SUPP_NM_STR").toString().contains(",")) {
+  	  		  String SUPP_NM_STR[] = obj.get("SUPP_NM_STR").toString().split(",");
+  	  		  String CNT_STR[] = obj.get("CNT_STR").toString().split(",");
+  	  		  realctn = obj.get("CNT_STR").toString();
+  	  		  for(int i = 0; i < SUPP_NM_STR.length; i++) {
+  	  			String ctnstr = "";
+  	  			String CNT_STR2[] = realctn.split(",");
+  	  			  if(SUPP_NM_STR[i].contains("Frame") || SUPP_NM_STR[i].contains("Splint") || SUPP_NM_STR[i].contains("의치")
+	  	  			  || SUPP_NM_STR[i].toString().contains("교정") || SUPP_NM_STR[i].contains("트레이")) {
+	  	  	  		  index = i;
+	  	  	  	  }
+	    	  	 for(int j = 0; j < CNT_STR2.length; j++) {
+	    	  		 if(j == index) {
+	    	  			if(j == 0) {
+			    	  		 ctnstr = "1";	  			
+		    	  		}else {
+		    	  			ctnstr += "," + "1";
+		    	  		}
+	    	  		 }else {
+		    	  		if(j == 0) {
+			    	  		 ctnstr = CNT_STR2[j];	  			
+		    	  		}else {
+		    	  			ctnstr += "," + CNT_STR2[j];
+		    	  		}
+	    	  		 }
+
+	  	  		  }
+	    	  	realctn = ctnstr;
+  	  		  }
+    	  }
+    	  obj.put("CNT_STR", realctn);
+      }
+  	 
+//	  	  if(obj.get("SUPP_NM_1").toString().contains("Frame") || obj.get("SUPP_NM_1").toString().contains("Splint") || obj.get("SUPP_NM_1").toString().contains("의치")
+//	  			  || obj.get("SUPP_NM_1").toString().contains("교정") || obj.get("SUPP_NM_1").toString().contains("트레이")) {
+//	  		  //SUPP_GROUP_CNT
+//	  		  //Frame, Splint, 의치, 교정, 트레이
+//	  		 
+//	  	  }
+      }
     
-    for(Map<String, Object> m:list) {
-    	int bool = 0;
-    	Iterator<String> keys = m.keySet().iterator();
-    	while (keys.hasNext()){
-            String name = keys.next();
-            if (name.contains("Frame") || name.contains("Splint") || name.contains("의치") || name.contains("교정") || name.contains("트레이")) {
-            	bool = 1;
-            	break;
-            }
-            if(bool == 1) {
-            	m.replace(name, "1");
-            }
-    	}
-    	
-    	String name = m.get("SUPP_NM_STR").toString();
-        
-            m.put("CNT", "1");
-    }
     return list;
   }
   
@@ -306,6 +340,13 @@ public class ProjectController extends BaseController {
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getSuppInfoList", parameter);
     for(Map<String, Object> obj : list) {
       obj.put("SUPP_NM", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM").toString()));
+      
+	  if(obj.get("SUPP_NM").toString().contains("Frame") || obj.get("SUPP_NM").toString().contains("Splint") || obj.get("SUPP_NM").toString().contains("의치")
+			  || obj.get("SUPP_NM").toString().contains("교정") || obj.get("SUPP_NM").toString().contains("트레이")) {
+		  //SUPP_GROUP_CNT
+		  //Frame, Splint, 의치, 교정, 트레이
+		  obj.put("CNT", "1");
+	  }
     }
     
     return list;

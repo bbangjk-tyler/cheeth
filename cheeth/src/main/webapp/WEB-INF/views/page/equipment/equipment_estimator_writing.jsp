@@ -1,17 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!-- <script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script> -->
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -104,7 +95,7 @@
 			}
 		}
 	}
-	
+	console.log("uploadImgArr " + uploadImgArr);
 	function removeImage(elm) {
 		const imageDiv = $(elm).parent();
 		
@@ -203,19 +194,59 @@
 				  if(data.result == 'Y') {
 					  alert('저장되었습니다.');
 					  fnAllView();
+				  }else{
+					  alert('오류가 발생했습니다. 다시 시도해주세요.');
 				  }
 		    }, complete: function() {
-		    
 		    }, error: function() {
-		      
 		    }
 		  });
 			}else{
 				alert('미래시간을 입력하세요.');
 			}
+		}else{
+			
 		}
 	}
-	
+	function fnUpdate() {
+		
+		if(validate()) {
+		 	var formData = new FormData(document.getElementById('saveForm'));
+		 	for(var key of formData.keys()) {
+		 		formData.set(key, JSON.stringify(formData.get(key)));
+		 	}
+		 	
+		 	const content = $('#ADD_CONTENT').val().replace(/(\n|\r|\n)/g, '<br>');
+		 	formData.set('ADD_CONTENT', JSON.stringify(content));
+			realUploadImgArr.map(m => { formData.append('files', m.FILE); });
+			formData.append('fileDiv', JSON.stringify('EQUIPMENT'));
+			if(okbool == 1){
+		 	$.ajax({
+		    url: '/' + API + '/equipment/update05',
+		    type: 'POST',
+		    data: formData,
+		    cache: false,
+		    async: false,
+		    contentType: false,
+			  processData: false,
+		    success: function(data) {
+				  if(data.result == 'Y') {
+					  alert('저장되었습니다.');
+					  fnAllView();
+				  }else{
+					  alert('오류가 발생했습니다. 다시 시도해주세요.');
+				  }
+		    }, complete: function() {
+		    }, error: function() {
+		    }
+		  });
+			}else{
+				alert('미래시간을 입력하세요.');
+			}
+		}else{
+			
+		}
+	}
 	function validate() {
 		var chkValid = [...document.querySelectorAll('.required')].some(s => {
 			if(isEmpty(s.value) && s.id.includes('DELIVERY_EXP_DATE')) {
@@ -311,7 +342,6 @@
 				});
 			}
 		});
-	  
 	});
 </script>
 
@@ -335,18 +365,58 @@
             </c:forEach>
         </div>
         <form:form id="saveForm" name="saveForm">
+        <input type="hidden" name="FILE_CD" value="${DATA.FILE_CD}">
+        <%-- <input type="hidden" name="EQ_NO" value="${DATA.EQ_NO}"> --%>
         <div id="date_for_chk" onchange="CheckDate()" style="opacity:0;position:absolute;z-index:-1;"></div>
         <input type="hidden" id="EQ_NO" name="EQ_NO" value="${DATA.EQ_NO}">
         <input type="hidden" id="EQ_EXP_DATE" name="EQ_EXP_DATE" class="required" value="${DATA.EQ_EXP_DATE}" title="견적요청 만료시간">
         <input type="hidden" id="DELIVERY_EXP_DATE" name="DELIVERY_EXP_DATE" value="${DATA.DELIVERY_EXP_DATE}">
-		    <input type="hidden" id="DELIVERY_EXP_DATE_1" class="required" onchange="CheckDate()" name="DELIVERY_EXP_DATE_1" value="" title="납품 마감 날짜">
-		    <input type="hidden" id="DELIVERY_EXP_DATE_2" class="required" name="DELIVERY_EXP_DATE_2" value="" title="납품 마감 시간">
+		<input type="hidden" id="DELIVERY_EXP_DATE_1" class="required" onchange="CheckDate()" name="DELIVERY_EXP_DATE_1" value="" title="납품 마감 날짜">
+		<input type="hidden" id="DELIVERY_EXP_DATE_2" class="required" name="DELIVERY_EXP_DATE_2" value="" title="납품 마감 시간">
         <script>
+        $(document).ready(function(){
+        	console.log("11 :: ${DATA.AREA_CD}");
+        	/* 납품일 */
+        	var DeliveryDate = "${DATA.DELIVERY_EXP_DATE}";
+        	var del_date1 = "";
+        	var del_Time = "";
+        	if(DeliveryDate != ""){
+        		okbool = 1;
+        		del_date1 = DeliveryDate.split("T")[0];
+        		del_Time = DeliveryDate.split("T")[1];
+        		del_TimeCD = del_Time.replace(":", "");
+        		$("#DELIVERY_EXP_DATE_1").val(del_date1);
+        		$("#DELIVERY_EXP_DATE_2").val(del_TimeCD);
+        		$("#datepickerInput").val(del_date1);
+        		$("#TIME_CD_DIV_1").find(".dropbox_select_button_typo").text(del_Time);
+        		
+        	}
+        	/* 견적 만료 */
+        	
+        	var exp_date = "${DATA.EQ_EXP_DATE}";
+        	var exp_date1 = "";
+        	var exp_Time = "";
+        	var str = "";
+        	if(exp_date != ""){
+        		exp_date1 = exp_date.split(" ")[0];
+        		exp_Time = exp_date.split(" ")[1];
+        		
+        		ttyear = exp_date1.split(".")[0];
+        		ttmonth = exp_date1.split(".")[1].split(".")[0];
+        		ttday = exp_date1.split(".")[2];
+        		console.log("22 ::" + exp_date1);
+        		ttHour = exp_Time.split(":")[0];
+        		ttMinute = exp_Time.split(":")[1];
+        		
+        		str = ttyear + "년 " + ttmonth + "월 " + ttday + "일 " + ttHour+ "시 " + ttMinute+ "분";
+        		$(".equipment_estimator_writing_info_date_expiry_typo").text(str);
+        		
+        	}
+        });
         var okbool = 0;
         $('#datepickerInput').change( function() {
             alert('Change!');
             CheckDate();
-
         });
 
         function CheckDate(){
@@ -423,7 +493,8 @@
                         <select id="AREA_CD" name="AREA_CD" class="boardtop_select large required" title="지역">
                            <option value="">지역 선택</option>
                            <c:forEach items="${AREA_CD_LIST}" var="area">
-                           	<option value="${area.CODE_CD}" ${area.CODE_CD eq DATA.AREA_CD ? 'selected' : ''}>${area.CODE_NM}</option>
+                           	<%-- <option value="${area.CODE_CD}" ${area.CODE_CD eq DATA.AREA_CD ? 'selected' : ''}>${area.CODE_NM}</option> --%>
+                           	<option value="${area.CODE_CD}" <c:if test="${area.CODE_NM eq DATA.AREA_NM}">selected</c:if>>${area.CODE_NM}</option>
                            </c:forEach>
                          </select>
                         </div>
@@ -494,22 +565,51 @@
                         <div class="main_container_divider"></div>
                         <div class="equipment_estimator_writing_info_detail">
                             <p class="equipment_estimator_writing_info_detail_typo">상세내용</p>
+							<c:choose>
+							<c:when test="${not empty imgFileList}">
+	                        	<div id="imageSlider" class="carousel slide qna_writing_image_slider_wrapper" data-bs-ride="carousel">
+							      <div class="carousel-indicators">
+							      	<c:forEach items="${imgFileList}" var="item" varStatus="vs">
+							      		<button type="button" data-bs-target="#imageSlider" data-bs-slide-to="${vs.index}" ${vs.index eq 0 ? 'class="active" aria-current="true"' : ''} aria-label="Slide ${vs.count}"></button>
+							      	</c:forEach>
+									  </div>
+									  <div class="carousel-inner h-100">
+									  	<c:forEach items="${imgFileList}" var="item" varStatus="vs">
+							      		<div class="carousel-item w-100 h-100 ${vs.index eq 0 ? 'active' : ''}">
+										      <img src="/upload/${item.FILE_DIRECTORY}" class="d-block" alt="${item.FILE_ORIGIN_NM}">
+										    </div>
+							      	</c:forEach>
+									  </div>
+									  <button class="carousel-control-prev" type="button" data-bs-target="#imageSlider" data-bs-slide="prev">
+									    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									    <span class="visually-hidden">Previous</span>
+									  </button>
+									  <button class="carousel-control-next" type="button" data-bs-target="#imageSlider" data-bs-slide="next">
+									    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+									    <span class="visually-hidden">Next</span>
+									  </button>
+								</div>
+                        </c:when>
+                        <c:otherwise>
                             <div id="imageSlider" class="carousel slide qna_writing_image_slider_wrapper hidden" data-bs-ride="carousel">
-											       	<div class="carousel-indicators">
-														  </div>
-														  <div class="carousel-inner h-100">
-														  </div>
-														  <button class="carousel-control-prev" type="button" data-bs-target="#imageSlider" data-bs-slide="prev">
-														    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-														    <span class="visually-hidden">Previous</span>
-														  </button>
-														  <button class="carousel-control-next" type="button" data-bs-target="#imageSlider" data-bs-slide="next">
-														    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-														    <span class="visually-hidden">Next</span>
-														  </button>
-														</div>
+					       		<div class="carousel-indicators">
+							  	</div>
+							  	<div class="carousel-inner h-100">
+							  	</div>
+								  <button class="carousel-control-prev" type="button" data-bs-target="#imageSlider" data-bs-slide="prev">
+								    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								    <span class="visually-hidden">Previous</span>
+								  </button>
+								  <button class="carousel-control-next" type="button" data-bs-target="#imageSlider" data-bs-slide="next">
+								    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+								    <span class="visually-hidden">Next</span>
+								  </button>
+							</div>
+                        </c:otherwise>
+                        </c:choose>
                             <textarea class="equipment_estimator_writing_info_detail_blank" maxlength="1300" id="ADD_CONTENT" name="ADD_CONTENT" placeholder="상세내용을 적어주세요">${DATA.ADD_CONTENT}</textarea>
                         </div>
+                        
                     </div>
                 </div>
                 <div class="equipment_estimator_writing_info_button_container">
@@ -524,11 +624,22 @@
 <!--                                 임시저장 -->
 <!--                             </p> -->
 <!--                         </a> -->
-                        <a href="javascript:fnSave()" class="equipment_estimator_writing_info_button_right_submit">
-                            <p class="equipment_estimator_writing_info_button_right_submit_typo">
-                            	글쓰기
-                            </p>
-                        </a>
+						<c:choose>
+							<c:when test="${empty DATA.EQ_NO}">
+	                        <a href="javascript:fnSave()" class="equipment_estimator_writing_info_button_right_submit">
+	                            <p class="equipment_estimator_writing_info_button_right_submit_typo">
+	                            	글쓰기
+	                            </p>
+	                        </a>
+	                        </c:when>
+	                        <c:otherwise>
+	                        <a href="javascript:fnUpdate()" class="equipment_estimator_writing_info_button_right_submit">
+	                            <p class="equipment_estimator_writing_info_button_right_submit_typo">
+	                            	글쓰기
+	                            </p>
+	                        </a>
+	                        </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
                 <div class="modal fade" id="picAttachModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -557,7 +668,9 @@
 								              </div>
 						                </div>
 						                <div class="qna_pic_attatchment_sub_pic_upload_wrapper">
-						                    <!-- hidden과 invisible로 조절 -->
+						                    <!-- hidden과 invisible로 조절 imgFileList-->
+						                    <c:choose>
+						                    <c:when test="${empty imgFileList}">
 						                    <div class="qna_pic_attatchment_sub_pic_upload_container">
 						                      <div class="qna_pic_attatchment_sub_pic_upload"></div>
 						                      <div class="qna_pic_attatchment_sub_pic_upload"></div>
@@ -572,6 +685,37 @@
 						                      <div class="qna_pic_attatchment_sub_pic_upload"></div>
 						                      <div class="qna_pic_attatchment_sub_pic_upload"></div>
 						                    </div>
+						                    </c:when>
+						                    <c:otherwise>
+						                    	<c:set var="imagelengthFirst" value="${fn:length(imgFileList)}"></c:set>
+						                    	<div class="qna_pic_attatchment_sub_pic_upload_container">
+							                    	<c:forEach var="item" items="${imgFileList}" varStatus="status" begin="0" end="4">
+							                    		<div class="qna_pic_attatchment_sub_pic_upload" style="background-image:url(https://dentner.co.kr/upload/${item.FILE_DIRECTORY});"></div>
+							                    	</c:forEach>
+							                    	<c:if test="${imagelengthFirst < 5}">
+							                    	<c:forEach begin="0" end="${4 - imagelengthFirst}">
+							                    		<div class="qna_pic_attatchment_sub_pic_upload"></div>
+							                    	</c:forEach>
+							                    	</c:if>
+						                    	</div>
+						                    	<div class="qna_pic_attatchment_sub_pic_upload_container">
+							                    	<c:forEach var="item" items="${imgFileList}" varStatus="status" begin="5" end="9">
+							                    		<div class="qna_pic_attatchment_sub_pic_upload" style="background-image:url(https://dentner.co.kr/upload/${item.FILE_DIRECTORY});"></div>
+							                    	</c:forEach>
+							                    	<c:if test="${imagelengthFirst < 5}">
+							                    	<c:forEach begin="0" end="4">
+							                    		<div class="qna_pic_attatchment_sub_pic_upload"></div>
+							                    	</c:forEach>
+							                    	</c:if>
+							                    	<c:if test="${imagelengthFirst >= 5 and imagelengthFirst < 10}">
+							                    	<c:forEach begin="0" end="${9 - imagelengthFirst}">
+							                    		<div class="qna_pic_attatchment_sub_pic_upload"></div>
+							                    	</c:forEach>
+							                    	</c:if>
+						                    	</div>
+						                    </c:otherwise>
+						                    </c:choose>
+
 						                </div>
 						                <div class="main_container_divider"></div>
 						                <div class="qna_pic_attatchment_button_container">

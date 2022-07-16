@@ -13,7 +13,11 @@
         ON A.CREATE_ID = B.USER_ID
      WHERE 1=1
         	 <!-- 수정 -->
-   	 AND A.PROJECT_EXP_DATE >= NOW()
+   	   	 <if test='isNotEmpty(SEARCH_ORDER)'>
+   	 <if test='"B".equals(SEARCH_ORDER)'>
+     AND A.PROJECT_EXP_DATE >= NOW()
+     </if>
+     </if>
    <if test="isNotEmpty(SEARCH_OPTION_1)">
      <if test='"Y".equals(SEARCH_OPTION_1)'>
        AND A.CREATE_ID = #{CREATE_ID}
@@ -144,20 +148,22 @@
      </if>
    </if>
    	 <!-- 수정 -->
-   	 AND A.PROJECT_EXP_DATE >= NOW()
-   	 
-     
+   	 <if test='isNotEmpty(SEARCH_ORDER)'>
+   	 <if test='"B".equals(SEARCH_ORDER)'>
+     AND A.PROJECT_EXP_DATE >= NOW()
+     </if>
+     </if>
      <choose>
        <when test="isNotEmpty(SEARCH_ORDER)">
          <if test='"A".equals(SEARCH_ORDER)'>
      ORDER BY A.PROJECT_NO DESC
          </if>
          <if test='"B".equals(SEARCH_ORDER)'>
-     ORDER BY A.PROJECT_EXP_DATE DESC
+     ORDER BY A.PROJECT_EXP_DATE ASC
          </if>
        </when>
        <otherwise>
-	ORDER BY A.PROJECT_EXP_DATE ASC  
+	ORDER BY A.PROJECT_NO DESC
        </otherwise>
      </choose> 
    <if test="isNotEmpty(PAGE)">

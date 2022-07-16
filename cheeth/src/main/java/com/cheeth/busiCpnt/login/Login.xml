@@ -43,7 +43,45 @@
        AND A.USER_PW = #{pw}
   ]]>
   </select>
-  
+    <select id="getInfo2" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* login.login.getInfo */
+    SELECT A.USER_ID
+         , A.USER_PW
+         , A.USER_TYPE_CD
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'USER_TYPE'
+                AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
+         , A.USER_NM
+         , A.USER_PHONE
+         , A.AUTH_NO
+         , A.USER_ZIP_CD
+         , A.USER_ADDRESS
+         , A.USER_ADDRESS_DTL
+         , A.USER_NICK_NAME
+         , A.COMP_GROUP_NM
+         , A.COMP_GROUP_CD
+         , A.COMP_NO
+         , A.COMP_NAME
+         , A.COMP_ZIP_CD
+         , A.COMP_ADDRESS
+         , A.COMP_ADDRESS_DTL
+         , A.COMP_FILE_CD
+         , A.JOB_CD
+         , A.LICENSE_NO
+         , A.LICENSE_FILE_CD
+         , A.BANK_CD
+         , A.ACCOUNT_NM
+         , A.ACCOUNT_NO
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+      FROM TB_USER_INFO A
+     WHERE A.USER_ID = #{id}
+  ]]>
+  </select>
   <select id="getInfoRefresh" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* login.login.getInfoRefresh */
@@ -83,7 +121,18 @@
      WHERE A.USER_ID = #{USER_ID}
   ]]>
   </select>
- 
+ <select id="getList01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* USER.getList01 */
+  ]]>
+    SELECT A.USER_ID
+    	 , A.USER_TYPE_CD
+      FROM TB_USER_INFO A
+     WHERE 1=1
+	 AND A.USER_PHONE = #{USER_PHONE}
+	 AND A.USER_ID LIKE '%@%'
+  </select>
+  
   <insert id="insert01" parameterType="map">
   <![CDATA[
     /* sam.sam0127.insert01 */

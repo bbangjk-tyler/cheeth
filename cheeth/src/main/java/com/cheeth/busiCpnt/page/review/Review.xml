@@ -29,6 +29,7 @@
     SELECT COUNT(REVIEW_NO)
       FROM TB_REVIEW
      WHERE WR_NO = #{WR_NO}
+     AND CREATE_ID = #{CREATE_ID}
   ]]>
   </select>
   
@@ -79,7 +80,7 @@
     SELECT COUNT(PROJECT_NO)
       FROM TB_PROJECT
      WHERE PROJECT_NO = #{PROJECT_NO}
-       AND CREATE_ID = #{CREATE_ID}
+
   ]]>
   </select>
   

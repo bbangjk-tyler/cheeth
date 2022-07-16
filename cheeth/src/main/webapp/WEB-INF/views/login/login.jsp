@@ -1,16 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <meta name ="google-signin-client_id" content="424263397710-33kiaq16joefkfn7cdeffjmvg0vvg5jr.apps.googleusercontent.com">
 
 <script src="https://developers.kakao.com/sdk/js/kakao.js" charset="utf-8"></script>
@@ -244,8 +234,8 @@
 	        <p class="login_find_save_typo"><label style="cursor: pointer;" for="login_save_id">아이디 저장</label></p>
 	      </div>
 	      <div class="login_find_info_container">
-	        <p class="login_find_info_typo" onclick="javascript:alert('아이디 찾기');">아이디 찾기</p>
-	        <p class="login_find_info_typo" onclick="javascript:alert('비밀번호 찾기');">비밀번호 찾기</p>
+	        <p class="login_find_info_typo" onclick="javascript:location.href='/api/login/IDfinder'">아이디 찾기</p>
+	        <p class="login_find_info_typo" onclick="javascript:location.href='/api/login/pwfinder'">비밀번호 찾기</p>
 	      </div>
 	    </div>
 	    <div class="login_platform_container">

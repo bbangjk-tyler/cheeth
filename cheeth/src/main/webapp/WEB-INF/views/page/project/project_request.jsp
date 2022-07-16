@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -359,12 +349,13 @@
   
   function fnAdressOk() {
 	  sendUserList = new Array();
-	  $('.address_list_name_container > p').each(function(k,v) {
-	    if($(v).hasClass('address_list_name_selected')) {
+	  $('.address_list_receiver_name_container > p').each(function(k,v) {
+	    //if($(v).hasClass('address_list_name_selected') || $(v).hasClass('address_list_name')) {
 	      var userId = $(v).data('user-id');
 	      var nickName = $(v).data('nick-name');
 	      sendUserList.push({USER_ID: userId.toString(), USER_NICK_NAME: nickName.toString()});
-	    }
+	      console.log("들어옴");
+	    //}
 	  });
 	  if(sendUserList.length > 0) {
 	    var reStr = '';
@@ -372,9 +363,10 @@
 	      if(reStr.length === 0) {
 	        reStr = sendUserList[i].USER_NICK_NAME;
 	      } else {
-	        reStr += ', ' + sendUserList[i].USER_NICK_NAME;
+	        reStr += ',' + sendUserList[i].USER_NICK_NAME;
 	      }
 	    }
+	    console.log("reStr " + reStr);
 	    reStr = '<p>' + reStr + '</p>';
 	    $('.quote_list').html(reStr);
 	    $('.quote_list').removeClass('hidden');
@@ -482,11 +474,28 @@
       
       var publicCd = $('#PUBLIC_CD').val();
       var appointUser = '${DATA.APPOINT_USER}';
-      var datauserid = $("p[data-nick-name='"+appointUser+"']").attr("data-user-id");
-      var htttml = '<p class="address_list_receiver_name" style="cursor: pointer;" data-user-id="'+ datauserid +'" data-nick-name="'+appointUser+'" onclick="fnAdressSelect2(this);">'+appointUser+'</p>';
+      
+      var appointUser_indi;
+      if(appointUser.includes(",")){
+          appointUser_indi = appointUser.split(",");  
+    	  console.log("appointUser_indi0 " + appointUser_indi[0]);
+    	  console.log("appointUser_indi1 " + appointUser_indi[1]);
+      }
+	
       if(publicCd === 'U001' && isNotEmpty(appointUser)) {
     	  $('.quote_list').html('<p>' + appointUser + '</p>');
-    	  $(".address_list_receiver_name_container").html(htttml);
+    	  if(appointUser.includes(",")){
+    		  for(var i = 0;i < appointUser_indi.length; i++){
+    			  var datauserid = $("p[data-nick-name='"+appointUser_indi[i]+"']").attr("data-user-id");
+        	      var htttml = '<p class="address_list_receiver_name" style="cursor: pointer;" data-user-id="'+ datauserid +'" data-nick-name="'+appointUser_indi[i]+'" onclick="fnAdressSelect2(this);">'+appointUser_indi[i]+'</p>';
+            	  $(".address_list_receiver_name_container").append(htttml);    		      			  
+    		  }
+    	  }else{
+    		  var datauserid = $("p[data-nick-name='"+appointUser+"']").attr("data-user-id");
+    	      var htttml = '<p class="address_list_receiver_name" style="cursor: pointer;" data-user-id="'+ datauserid +'" data-nick-name="'+appointUser+'" onclick="fnAdressSelect2(this);">'+appointUser+'</p>';
+        	  $(".address_list_receiver_name_container").html(htttml);    		  
+    	  }
+
         $('.quote_list').removeClass('hidden');
         
       } else {
@@ -514,11 +523,26 @@
            var year = today.getFullYear();
            var month = ('0' + (today.getMonth() + 1)).slice(-2);
            var day = ('0' + today.getDate()).slice(-2);
-           var toDayStr = year + month + day;
+           
+           
+           if(ccyear == ""){
+        	   ccyear = year;
+           }
+           if(ccmonth == ""){
+        	   ccmonth = month;
+           }
+		   if(ccday == ""){
+			   ccday = day;
+           }
+		   console.log("ccyear " + ccyear);
+		   console.log("ccmonth " + ccmonth);
+		   console.log("ccday " + ccday);
+		   
            console.log(args);
+           var toDayStr = year + month + day;
            if(args <= toDayStr){
              okbool =0;
-             alert('미래시간을 선택해주세요.');
+             alert('견적만료시간 이후 날짜를 선택해주세요.');
             var div = $(".datepicker-cell.day.selected.focused");
             console.log("div.length " + div.length);
             setTimeout(function(){
@@ -539,7 +563,6 @@
           if(curpicdate != picdate){
              picdate = curpicdate;
              CheckDate();
-             
           }
        });
         </script>
@@ -560,7 +583,6 @@
     </c:forEach>
   </div>
   <form:form id="saveForm" name="saveForm">
-    
     <input type="hidden" id="PROJECT_NO" name="PROJECT_NO" value="${DATA.PROJECT_NO}">
     <input type="hidden" id="PROJECT_CD" name="PROJECT_CD" value="${DATA.PROJECT_CD}">
     <input type="hidden" id="PUBLIC_CD" name="PUBLIC_CD" value="${DATA.PUBLIC_CD}">

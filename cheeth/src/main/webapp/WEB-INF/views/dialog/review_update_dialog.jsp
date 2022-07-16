@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -58,7 +48,6 @@
       score_08.addClass('active');
       score_10.addClass('active');
     }
-    
     $('.equipment_estimator_my_page_progress_writing_review_star_numb').html(score);
     $('#reviewSaveForm #SCORE').val(score);
   }

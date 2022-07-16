@@ -1415,7 +1415,7 @@
 											        <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
 											      </div>
 											    </div>
-											    <div id="CADSW_CD_DIV_1_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
+											    <div id="CADSW_CD_DIV_1_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;position:relative;">
 											      <c:forEach var="item" items="${CADSW_CD_LIST}" varStatus="status">
 											        <div class="dropbox_select_button_item" onclick="fnSelect_4('1', '${item.CODE_CD}', '${item.CODE_NM}')">
 											          <p class="dropbox_select_button_item_typo">${item.CODE_NM}</p>
@@ -1432,7 +1432,7 @@
 											        <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
 											      </div>
 											    </div>
-											    <div id="CADSW_CD_DIV_2_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
+											    <div id="CADSW_CD_DIV_2_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;position:relative;">
 											      <c:forEach var="item" items="${CADSW_CD_LIST}" varStatus="status">
 											        <div class="dropbox_select_button_item" onclick="fnSelect_4('2', '${item.CODE_CD}', '${item.CODE_NM}')">
 											          <p class="dropbox_select_button_item_typo">${item.CODE_NM}</p>
@@ -1449,7 +1449,7 @@
 											        <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
 											      </div>
 											    </div>
-											    <div id="CADSW_CD_DIV_3_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
+											    <div id="CADSW_CD_DIV_3_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;position:relative;">
 											      <c:forEach var="item" items="${CADSW_CD_LIST}" varStatus="status">
 											        <div class="dropbox_select_button_item" onclick="fnSelect_4('3', '${item.CODE_CD}', '${item.CODE_NM}')">
 											          <p class="dropbox_select_button_item_typo">${item.CODE_NM}</p>

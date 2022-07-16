@@ -1,6 +1,7 @@
 package com.cheeth.busiCpnt.page.tribute;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -143,6 +144,25 @@ public class TributeController extends BaseController {
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getRequestBasketList", parameter);
     for(Map<String, Object> obj : list) {
       obj.put("SUPP_NM_STR", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM_STR").toString()));
+      
+	  if(obj.get("SUPP_NM_STR").toString().contains("Frame") || obj.get("SUPP_NM_STR").toString().contains("Splint") || obj.get("SUPP_NM_STR").toString().contains("의치")
+			  || obj.get("SUPP_NM_STR").toString().contains("교정") || obj.get("SUPP_NM_STR").toString().contains("트레이")) {
+		  
+		  Map<String, Object> parameter2 = ParameterUtil.getParameterMap(request);
+		  String GROUP_CD = obj.get("GROUP_CD").toString();
+		  parameter2.put("GROUP_CD", GROUP_CD);
+		  List<Map<String, Object>> list2 = (List<Map<String, Object>>) service.list("getReqInfoList", parameter2);
+		  int sumctn = 0;  
+		  for(Map<String, Object> obj2 : list2) {     
+		      int cnt = Integer.parseInt(obj2.get("SUPP_GROUP_CNT").toString());
+		  	  if(obj2.get("SUPP_NM_1").toString().contains("Frame") || obj2.get("SUPP_NM_1").toString().contains("Splint") || obj2.get("SUPP_NM_1").toString().contains("의치")
+		  			  || obj2.get("SUPP_NM_1").toString().contains("교정") || obj2.get("SUPP_NM_1").toString().contains("트레이")) {
+		  		cnt = 1;
+		  	  }
+		  	sumctn += cnt;
+		    }
+		  obj.put("TOOTH_CNT", sumctn);
+	  }
     }
     mv.addObject("LIST", list);
     mv.addObject("TOTAL_CNT", service.integer("getCnt01", parameter)); // 총건수
@@ -162,6 +182,13 @@ public class TributeController extends BaseController {
       obj.put("SUPP_NM_1", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM_1").toString()));
       obj.put("TRIBUTE_DTL", service.list("getReqDtlInfoList", obj));
       obj.put("EXCEPTION_BRIDGE", service.list("getExceptionBridgeList", obj));
+      
+	  if(obj.get("SUPP_NM_1").toString().contains("Frame") || obj.get("SUPP_NM_1").toString().contains("Splint") || obj.get("SUPP_NM_1").toString().contains("의치")
+			  || obj.get("SUPP_NM_1").toString().contains("교정") || obj.get("SUPP_NM_1").toString().contains("트레이")) {
+		  //SUPP_GROUP_CNT
+		  //Frame, Splint, 의치, 교정, 트레이
+		  obj.put("SUPP_GROUP_CNT", "1");
+	  }
     }
     return list;
   }
@@ -174,6 +201,28 @@ public class TributeController extends BaseController {
 	List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getSuppInfoList", parameter);
 	for(Map<String, Object> obj : list) {
 	  obj.put("SUPP_NM_STR", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM_STR").toString()));
+	  System.out.println("SUPP_NM_STR " + obj.get("SUPP_NM_STR").toString());
+	  Iterator<String> keys = obj.keySet().iterator();
+      while( keys.hasNext() ){
+          String key = keys.next();
+          String value = obj.get(key).toString();
+          System.out.println("키 : "+key+", 값 : "+value);
+      }
+	  if(obj.get("SUPP_NM_STR").toString().contains("Frame") || obj.get("SUPP_NM_STR").toString().contains("Splint") || obj.get("SUPP_NM_STR").toString().contains("의치")
+			  || obj.get("SUPP_NM_STR").toString().contains("교정") || obj.get("SUPP_NM_STR").toString().contains("트레이")) {
+		  String GROUP_CD_STR = obj.get("GROUP_CD_STR").toString();
+		  int cnt = 1;
+		  
+		  if(GROUP_CD_STR.contains("|")) {
+			  String str[] = GROUP_CD_STR.split("\\|");
+			  cnt = str.length;
+			  System.out.println("cnt ::" + cnt);
+		  }else {
+			  cnt = 1;
+		  }
+
+		  obj.put("CNT", cnt);
+	  }
 	}
     return list;
   }
@@ -198,7 +247,6 @@ public class TributeController extends BaseController {
 	  rtnMap.put("result", "N");
 	  logger.error(e.getMessage());
 	}
-	
 	return rtnMap;
   }
 }

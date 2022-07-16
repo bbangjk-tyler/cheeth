@@ -5,17 +5,6 @@
 <%
   String callback = request.getParameter("callback");
 %>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -47,6 +36,7 @@
     } else {
       target.addClass('hidden');
     }
+    ccyear = code;
 	  var today = new Date();
   	  var year3 = today.getFullYear() + "년";
   	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
@@ -69,6 +59,7 @@
     }
   }
   var curmonth = 0;
+  var curTime= 0;
   function fnDateDialogSelect_2() {
     var code = arguments[0];
     var codeNm = arguments[1];
@@ -82,7 +73,7 @@
     if(isNotEmpty(code)) {
       $('#MM_DIV_1').find('p').html(codeNm);
       $('#DIALOG_MM').val(code);
-      
+      ccmonth = code;
       // 일자
       var yaer = $('#DIALOG_YYYY').val();
       if(isNotEmpty(yaer)) {
@@ -119,6 +110,7 @@
         	k = day;
         	k = k - 1;
         	curbool = 1;
+
         }
         for(var i=k; i<cnt; i++) {
           if(i < 9) {
@@ -142,6 +134,10 @@
   $(document).ready(function(){
 	  DateInit();  
   })
+  var ccyear="";
+  var ccmonth="";
+  var ccday="";
+  
   function fnDateDialogSelect_3() {
     var code = arguments[0];
     var codeNm = arguments[1];
@@ -151,19 +147,25 @@
     } else {
       target.addClass('hidden');
     } 
-    
+    ccday = code;
     if(isNotEmpty(code)) {
       $('#DD_DIV_1').find('p').html(codeNm);
       $('#DIALOG_DD').val(code);
     }
     var today = new Date();
+	var year3 = today.getFullYear() + "년";
+	var month = ('0' + (today.getMonth() + 1)).slice(-2);
     var day = ('0' + today.getDate()).slice(-2);
     var dayNM = day+"일"
     var hours = today.getHours();
     var minutes = today.getMinutes();
+    console.log("dayNM :: " + dayNM);
+    console.log("codeNm :: " + codeNm);
+    $("#TTMM_DIV_2").find("div:gt(0)").removeClass("hidden");
     if(curbool == 1){
     	if(dayNM == codeNm){
     	minutes *= 1;
+    	hours *= 1;
     	if(minutes >= 0 && minutes < 30){
     		minutes = "30";
     	}else {
@@ -179,12 +181,16 @@
     	console.log("minutes " + minutes);
     	console.log("hourid " + hourid);
     	
-    	var index = $("#"+hourid).index;
-    	
+    	var index = $("#"+hourid).index();
+    	console.log("index " + index);
     	$("#TTMM_DIV_2").find("div:lt(" + index + ")").addClass("hidden");
-    	}
-    }else{
-    	$("#TTMM_DIV_2").removeClass("hidden");
+    	}else{
+        	var list = $("#TTMM_DIV_2").find("div").get();
+        	for(var jj = 0; jj < list.length; jj++){
+        		$("#TTMM_DIV_2").find("div").eq(jj).removeClass("hidden");    		
+        	}
+
+        }
     }
   }
   
@@ -269,6 +275,112 @@
   		  $("#Month_" + j).addClass("hidden");
   	  }
   }
+
+  var ttyear = "";
+  var ttmonth = "";
+  var ttday = "";
+  var ttHour = "";
+  var ttMinute = "";
+  
+  $(window).on("load",function(){
+	  setTimeout(function(){
+		  
+	  
+	  var today = new Date();
+		var year3 = today.getFullYear() + "년";
+		var month = ('0' + (today.getMonth() + 1)).slice(-2) + "월";
+	  var day = ('0' + today.getDate()).slice(-2);
+	  var dayNM = day+"일"
+	  var hours = today.getHours();
+	  var minutes = today.getMinutes();
+      var yaer = today.getFullYear();
+      code = ('0' + (today.getMonth() + 1)).slice(-2);
+		if(ttyear != ""){
+			yaer = ttyear;
+			year3 = ttyear+"년";
+			
+			month = ttmonth+"월";
+			code = ttmonth;
+			dayNM = ttday + "일";
+			day = ttday;
+			hours = ttHour;
+			minutes = ttMinute;
+		}
+		minutes *= 1;
+		hours *= 1;
+		if(minutes >= 0 && minutes < 30){
+			minutes = "30";
+		}else {
+			minutes = "00";
+			hours += 1;
+		}
+		if(hours.length == 1){
+			hours = "0" + hours;
+		}
+		
+		var hourid = hours + "" + minutes;
+		console.log("hours " + hours);
+		console.log("minutes " + minutes);
+		console.log("hourid " + hourid);
+		
+		var index = $("#"+hourid).index();
+		console.log("index " + index);
+		$("#TTMM_DIV_2").find("div:lt(" + index + ")").addClass("hidden");
+	    var cTime = hours + ":" + minutes;
+	    
+	    
+	  $("#YYYY_DIV_1").find(".dropbox_select_button_typo").text(year3);
+	  $("#MM_DIV_1").find(".dropbox_select_button_typo").text(month);
+	  $("#DD_DIV_1").find(".dropbox_select_button_typo").text(dayNM);
+	  $("#TTMM_DIV_1").find(".dropbox_select_button_typo").text(cTime);
+	  
+      // 일자
+
+        var cnt = 30;
+        if(code === '01' || code === '03' || code === '05' || code === '07' || code === '08' || code === '10' || code === '12') {
+          cnt = 31
+        } else if(code === '02') {
+          cnt = 28;
+          if( (yaer%4 === 0 && yaer%100 !== 0) || yaer%400 === 0 ) {
+            cnt = 29;
+          }
+        }
+        var html = ``;
+        /*///////////////////////// */
+
+  	    var k = 0;
+        
+       	k = day;
+       	k = k - 1;
+
+        $('#DIALOG_YYYY').val(yaer);
+        $('#DIALOG_MM').val(code);
+        $('#DIALOG_DD').val(day);
+        $('#DIALOG_TTMM').val(hourid);
+        
+        for(var i=k; i<cnt; i++) {
+          if(i < 9) {
+        	i *= 1;
+            var code = ('0' + (i+1));
+            var codeNm = ('0' + (i+1)) + '일';
+            html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
+            html += `<p class="dropbox_select_button_item_typo">` + ('0' + (i+1)) + '일' + `</p>`;
+          } else {
+            var code = (i+1);
+            var codeNm = (i+1) + '일';
+        	  html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
+            html += `<p class="dropbox_select_button_item_typo">` + (i+1) + '일' + `</p>`;
+          }
+          html += `</div>`;
+        }
+        $('#DD_DIV_2').html(html);
+        var str = yaer + code + day + hourid;
+        $("#EQ_EXP_DATE").val(str);
+        fnDateDialogSave();
+	  }, 10);
+  })
+	  
+  
 </script>
 
 <div id="dateDialogDiv" class="sample_dialog_root hidden">

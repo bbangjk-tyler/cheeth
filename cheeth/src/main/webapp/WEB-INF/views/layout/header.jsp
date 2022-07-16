@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   	var locations = document.location.href;
   	locations += ""; 
   	if (locations.includes('http://www.')) {
@@ -11,7 +11,7 @@
      }else if(locations.includes('https://www.')){
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
      }
-</script> -->
+</script>
 <script>
 
   function fnLogOut() {
@@ -23,8 +23,6 @@
   });
 
 </script>
-
-
 <div class="header">
   <div class="container header_container">
     <div class="header_left_container">
@@ -93,8 +91,8 @@ function showUnread(result) {
 	}
 }
 $(document).ready(function(){
-	getUnread();
-	getInfiniteUnread();
+	/* getUnread();
+	getInfiniteUnread();  */
 });
 function getUnread(){
 	$.ajax({

@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -105,12 +95,10 @@
 
 </script>
 <style>
-.equipment_estimator_my_page_progress_step_arrow {
+/* .equipment_estimator_my_page_progress_step_arrow {
 	position: relative;
     float: left;
-   /*  border: 1px solid #000; */
     width: 15px;
-    /* height: 100px; */
     margin-right: 5px;
 }
 .equipment_estimator_my_page_progress_step_arrow::after {
@@ -123,7 +111,7 @@
     border-top: 2px solid #005fa8;
     border-right: 2px solid #005fa8;
     transform: rotate(45deg);
-}
+} */
 </style>
 <jsp:include page="/WEB-INF/views/page/talk/common_send.jsp" flush="true"/>
 
@@ -137,7 +125,15 @@
       <div class="side_menu_title">
         <p class="side_menu_title_typo">전체보기</p>
       </div>
-      <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
+      <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
+          <a href="/${api}/mypage/equipment_estimator_my_page_cad" class="side_menu_list">
+		  </c:if>
+		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 3}">
+          <a href="/${api}/mypage/equipment_estimator_my_page_sent" class="side_menu_list">
+		  </c:if>
+		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
+          <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
+		  </c:if>
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
         <p class="side_menu_list_typo">견적·의뢰내역</p>
       </a>
@@ -292,8 +288,9 @@
                         <p class="equipment_estimator_my_page_progress_step_typo_clicked">전자계약</p>
                       </div>
                       <div class="equipment_estimator_my_page_progress_step_arrow">
-                        <div class="equipment_estimator_my_page_progress_step_arrow_top" style="background-color:#005fa800;"></div>
-                        <div class="equipment_estimator_my_page_progress_step_arrow_bottom" style="background-color:#005fa800;"></div>
+                      	<img src="">
+<!--                         <div class="equipment_estimator_my_page_progress_step_arrow_top" style="background-color:#005fa800;"></div>
+                        <div class="equipment_estimator_my_page_progress_step_arrow_bottom" style="background-color:#005fa800;"></div> -->
                       </div>
                     </div>
                     <c:choose>
@@ -487,11 +484,11 @@
                     <div class="dropbox_my_page_progress_pop_up_item <c:if test="${item.PROGRESS_CD eq 'PC005'}">invisible</c:if>">
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
                       <%-- <div class="dropbox_my_page_progress_pop_up_body" <c:if test="${item2_1 eq 'Y'}">onclick="javascript:location.href='/${api}/contract/project_electronic_contract?ESTIMATOR_NO=${item.ESTIMATOR_NO}&MY_PAGE=Y'" style="cursor: pointer;"</c:if>> --%>
-                      <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:location.href='/${api}/contract/project_electronic_contract?ESTIMATOR_NO=${item.ESTIMATOR_NO}&MY_PAGE=Y'" style="cursor: pointer;">
+                      <div class="dropbox_my_page_progress_pop_up_body">
                         <div class="dropbox_my_page_progress_pop_up_typo_container">
-                          <p class="dropbox_my_page_progress_pop_up_typo <c:if test="${item2_2 eq 'A'}">bold_type</c:if>">의뢰인</p>
+                          <p class="dropbox_my_page_progress_pop_up_typo <c:if test="${item2_2 eq 'A'}">bold_type</c:if>" <c:if test="${item2_2 eq 'A'}">onclick="javascript:location.href='/${api}/contract/project_electronic_contract?ESTIMATOR_NO=${item.ESTIMATOR_NO}&MY_PAGE=Y'" style="cursor: pointer;"</c:if>>의뢰인</p>
                           <p class="dropbox_my_page_progress_pop_up_typo_divider">/</p>
-                          <p class="dropbox_my_page_progress_pop_up_typo <c:if test="${item2_2 eq 'B'}">bold_type</c:if>">치자이너</p>
+                          <p class="dropbox_my_page_progress_pop_up_typo <c:if test="${item2_2 eq 'B'}">bold_type</c:if>" <c:if test="${item2_2 eq 'B'}">onclick="javascript:location.href='/${api}/contract/project_electronic_contract?ESTIMATOR_NO=${item.ESTIMATOR_NO}&MY_PAGE=Y'" style="cursor: pointer;"</c:if>>치자이너</p>
                         </div>
                       </div>
                     </div>

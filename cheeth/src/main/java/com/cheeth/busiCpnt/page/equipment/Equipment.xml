@@ -325,7 +325,6 @@
     )
   ]]>
   </insert>
-  
   <insert id="insert03" parameterType="map">
   <![CDATA[
     /* equipment.insert03 */
@@ -404,7 +403,22 @@
   	 WHERE MATCHING_NO = #{MATCHING_NO}
   ]]>
   </update>
-  
+    <update id="update05" parameterType="map">
+  <![CDATA[
+    /* equipment.update05 */
+    UPDATE TB_EQUIPMENT 
+      SET EQ_CD = #{EQ_CD}
+    , AREA_CD = #{AREA_CD}
+    , TITLE = #{TITLE}
+    , BRAND_NM = #{BRAND_NM}
+    , EQ_NM = #{EQ_NM}
+    , ADD_CONTENT = #{ADD_CONTENT}
+    , FILE_CD = #{FILE_CD}
+    , UPDATE_ID = #{CREATE_ID}
+    , UPDATE_DATE = NOW()
+   WHERE EQ_NO = #{EQ_NO}
+  ]]>
+  </update>
   <delete id="delete01" parameterType="map">
   <![CDATA[
   	/* equipment.delete01 */

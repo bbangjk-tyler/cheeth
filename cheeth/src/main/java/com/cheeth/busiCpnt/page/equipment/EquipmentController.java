@@ -1,5 +1,6 @@
 package com.cheeth.busiCpnt.page.equipment;
 
+import java.security.KeyStore.Entry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class EquipmentController extends BaseController {
     mv.addObject("AREA_CD_LIST", service.list("common", "getCode", parameter)); // 지역코드
     
     mv.addObject("SEARCH_EQ_CD", parameter.get("SEARCH_EQ_CD"));
-      
+
     return mv;
   }
   
@@ -106,7 +107,14 @@ public class EquipmentController extends BaseController {
     
     Map<?, ?> data = service.getData01(parameter);
     mv.addObject("DATA", data);
-      
+    try {
+    Map<String, Object> List2 = (Map<String, Object>)service.getData01(parameter);
+	parameter.put("FILE_CD", List2.get("FILE_CD"));
+    List<Map<String, Object>> imgFileList = (List<Map<String, Object>>) service.list("common", "getFileList", parameter);
+    mv.addObject("imgFileList", imgFileList);
+    }catch(Exception e) {
+    	
+    }
     return mv;
   }
   
@@ -118,6 +126,7 @@ public class EquipmentController extends BaseController {
 
     try {
       resultMap = service.save01(parameter);
+      resultMap.put("result", "Y");
     } catch(Exception e) {
       resultMap.put("result", "N");
       logger.error(e.getMessage());
@@ -126,7 +135,23 @@ public class EquipmentController extends BaseController {
     return resultMap;
     
   }
-  
+  @PostMapping(value="/update05")
+  public Map<?, ?> update05(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getMultipartParameterMap(request);
+    Map<String, String> resultMap = new HashMap<String, String>();
+
+    try {
+      resultMap = service.update05(parameter);
+      resultMap.put("result", "Y");
+    } catch(Exception e) {
+      resultMap.put("result", "N");
+      logger.error(e.getMessage());
+    }
+
+    return resultMap;
+    
+  }
   @PostMapping(value="/save02")
   public Map<?, ?> save02(HttpServletRequest request) throws Exception {
     

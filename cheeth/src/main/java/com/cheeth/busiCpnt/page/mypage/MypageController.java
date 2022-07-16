@@ -289,10 +289,29 @@ public class MypageController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getSuppInfo", parameter);
-    for(Map<String, Object> obj : list) {
-      obj.put("SUPP_NM", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM").toString()));
-    }
+    int TotalFake = 0;
+    int RealTotal = 0;
+    int markTotal = 0;
     
+    for(Map<String, Object> obj : list) {
+    	RealTotal = Integer.parseInt(obj.get("TOTAL_CNT").toString());
+      obj.put("SUPP_NM", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM").toString()));
+      if(obj.get("SUPP_NM").toString().contains("Frame") || obj.get("SUPP_NM").toString().contains("Splint") || obj.get("SUPP_NM").toString().contains("의치")
+			  || obj.get("SUPP_NM").toString().contains("교정") || obj.get("SUPP_NM").toString().contains("트레이")) {
+		  //SUPP_GROUP_CNT
+		  //Frame, Splint, 의치, 교정, 트레이
+    	  TotalFake = Integer.parseInt(obj.get("CNT").toString());
+    	  RealTotal = RealTotal - TotalFake + 1;
+    	  markTotal = RealTotal;
+		  obj.put("CNT", "1");
+	  }
+    }
+    if(markTotal == 0) {
+    	markTotal = RealTotal;
+    }
+    for(Map<String, Object> obj : list) {
+      obj.put("TOTAL_CNT", markTotal);
+    }
     return list;
   }
   

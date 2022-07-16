@@ -563,6 +563,7 @@
          , ( SELECT COUNT(REVIEW_NO)
                FROM TB_REVIEW
               WHERE PROJECT_NO = A.PROJECT_NO
+              AND CREATE_ID = #{CREATE_ID} 
            ) AS REVIEW_CNT
       FROM TB_PROJECT A
       JOIN TB_ELECTRONIC_CONTRACT B

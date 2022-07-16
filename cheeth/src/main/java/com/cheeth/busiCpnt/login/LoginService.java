@@ -40,5 +40,23 @@ public class LoginService extends AbstractService {
     
     return rtn;
   }
+  public String login2(HttpServletRequest request, Map<String, Object> parameter) throws Exception {
+	    
+	    String id = ObjectUtils.isEmpty(parameter.get("id")) ? "" : parameter.get("id").toString();
+	    
+	    String rtn = "N";
 
+	      Map<?, ?> info = map("getInfo2", parameter);
+	      if(info != null && !info.isEmpty()) {
+	        HttpSession session = request.getSession();
+	        if(session != null) {
+	          // 로그인 성공 세션 생성
+	          Map<String, Object> sessionInfo = new HashMap<String, Object>();
+	          sessionInfo.put("user", info); // 사용자 정보
+	          session.setAttribute("sessionInfo", sessionInfo);
+	          rtn = "Y";
+	        }
+	      }
+	    return rtn;
+	  }
 }

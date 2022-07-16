@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -384,7 +374,7 @@
 	            <p class="electronic_contract_condition_typo sub_typo">(선택) </p>
 	            <p class="electronic_contract_condition_typo">전자치과기공물의뢰서(바로가기)에 첨부된 파일, 최종결과물 수집이용 동의</p>
 	          </div>
-	          <label class="checkbox_large">
+	          <label class="checkbox_large" style="float: right;margin-top: -30px;">
               <input type="checkbox" id="CHOICE_AGREEMENT_YN_1" name="CHOICE_AGREEMENT_YN_1" value="${DATA.CHOICE_AGREEMENT_YN_1}" onchange="fnChangeCheck(this);">
             </label>
 	        </div>
@@ -401,10 +391,18 @@
 	    <div class="special_contract">
 	      <p class="special_contract_title" style="float:left">특수 계약조건</p>
 	      <div>
-	      <img id="question" src="/public/assets/images/question.png" style="height:15px;width:15px;" data-bs-toggle="tooltip" data-bs-placement="right" title="예시)             제재작 횟수, 금액에 대한 조건은 OOO입니다. 작업진행 중 불가피하게 발생하는 추가 결제 건은 쪽지로 합의 후에 진행해주세요.">
+	      <img id="question" src="/public/assets/images/question.png" style="height:15px;width:15px;">
+	      <img id="tooltip" src="/public/assets/images/tooltip.png" style="position:absolute;margin-left:110px;margin-top: -53px;display:none">
+        	<!-- <img id="question" src="/public/assets/images/question.png" style="height:15px;width:15px;" data-bs-toggle="tooltip" data-bs-placement="right" title="예시)             제재작 횟수, 금액에 대한 조건은 OOO입니다. 작업진행 중 불가피하게 발생하는 추가 결제 건은 쪽지로 합의 후에 진행해주세요."> -->
         	<br style="clear:both">
           </div>
         	<script>
+        	    $('#question').hover(function(){        
+        			$("#tooltip").css('display','block');
+        	    }, function() {
+    			$("#tooltip").css('display','none');
+        		    });
+        	
          	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         	  return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -523,6 +521,10 @@
 	margin-top: 14px;
     margin-left: 5px;
 }
+#question:hover ~ #tooltip{
+	display:block;
+}
+
 #question:hover > #discription{
 	display:block;
 }

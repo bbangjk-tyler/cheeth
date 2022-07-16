@@ -355,7 +355,7 @@
 		     , CONCAT_WS(' - ', IF(B.SUPP_NM_1 = '', NULL, B.SUPP_NM_1)
 		                      , IF(B.SUPP_NM_2 = '', NULL, B.SUPP_NM_2)
 		                      , IF(B.SUPP_NM_3 = '', NULL, B.SUPP_NM_3)
-		                      , IF(B.SUPP_NM_4 = '', NULL, B.SUPP_NM_4)) SUPP_NM_STR
+		                      , IF(B.SUPP_NM_4 = '', NULL, B.SUPP_NM_4)) 	
       FROM (
 						SELECT A.GROUP_CD
 						     , A.RQST_NO

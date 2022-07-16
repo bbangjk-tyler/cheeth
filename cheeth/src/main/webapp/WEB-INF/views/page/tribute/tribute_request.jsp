@@ -1,16 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -1348,8 +1338,8 @@ function confirmModal() {
             </a>
           </div>
           <div class="dialog_tribute_request_body">
-          <font style="margin-left:10px">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font>
-          	<div class="dialog_tribute_request_table">
+          <font style="margin-left:10px;color:#444;font-size:14px;">※ 파일 최대 용량 <span style="color:#005fa8;">500MB</span> (zip 형식의 압축파일을 권장합니다.) </font>
+          	<div class="dialog_tribute_request_table" style="margin-top:10px">
 							<div class="dialog_tribute_request_table_data_type_container">
 								<div class="dialog_tribute_request_table_data_type_order">
 								    <p class="dialog_tribute_request_table_data_type_typo">NO.</p>

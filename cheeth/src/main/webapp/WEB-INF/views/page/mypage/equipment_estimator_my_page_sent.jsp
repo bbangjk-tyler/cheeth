@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script type="text/javascript">
-  	var locations = document.location.href;
-  	locations += ""; 
-  	if (locations.includes('http://www.')) {
-          document.location.href = document.location.href.replace('http://www.', 'https://');
-     }else if(locations.includes('http:')){
-    	 document.location.href = document.location.href.replace('http:', 'https:');
-     }else if(locations.includes('https://www.')){
-    	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -97,7 +87,15 @@
                     전체보기
                 </p>
             </div>
-            <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
+                        <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
+          <a href="/${api}/mypage/equipment_estimator_my_page_cad" class="side_menu_list">
+		  </c:if>
+		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 3}">
+          <a href="/${api}/mypage/equipment_estimator_my_page_sent" class="side_menu_list">
+		  </c:if>
+		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
+          <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
+		  </c:if>
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
 				      <p class="side_menu_list_typo_blue">견적·의뢰내역</p>
 				    </a>
