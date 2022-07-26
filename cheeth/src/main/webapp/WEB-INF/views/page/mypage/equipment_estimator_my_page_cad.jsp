@@ -268,6 +268,17 @@
 	  
 	  // 치자이너 정보 변경
 	  $('#nick_p_1').html(currEstimator.USER_NICK_NAME);
+	  
+	    if(currEstimator.TAX_BILL_YN === 'Y') {
+	        $('#texbool').html('세금 계산서 발행 가능');
+	      } else {
+	        $('#texbool').html('');
+	      }
+	      
+	      $('#successrate').html(currEstimator.COMPLETE_RATIO + ' %'); // 거래 성공률
+	      $('#stafyrate').html(currEstimator.SCORE_AVG + ' / 10'); // 만족도
+	      $('#amountCash').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' 원'); // 거래 총 금액
+	      
   }
   
   function fnDeleteEstimator() {
@@ -628,20 +639,20 @@
 																	<p class="dialog_item_title_typo">치자이너 정보</p>
 																</div>
 																<div class="cad_estimator_dialog_item_context">
-																	<div class="cad_estimator_profile_pic_upload"></div>
+																	<!-- <div class="cad_estimator_profile_pic_upload"></div> -->
 																	<div class="cad_estimator_profile_typo_container">
 																		<div class="cad_estimator_profile_name">
 																			<p class="cad_estimator_profile_name_typo" id="nick_p_1">중랑구 핫도그</p>
-																			<p class="cad_estimator_dialog_item_sub_title_typo">
+																			<p class="cad_estimator_dialog_item_sub_title_typo" id="texbool">
 																			    세금 계산서 발행 가능
 																			</p>
 																		</div>
 																		<div class="cad_estimator_profile_info_container">
 																			<div class="cad_estimator_profile_info">
-																				<p class="cad_estimator_profile_info_typo">
+																				<p class="cad_estimator_profile_info_typo" >
 																				    거래 성공률
 																				</p>
-																				<p class="cad_estimator_profile_info_typo">
+																				<p class="cad_estimator_profile_info_typo" id="successrate">
 																				    100 %
 																				</p>
 																			</div>
@@ -649,7 +660,7 @@
 																				<p class="cad_estimator_profile_info_typo">
 																				    만족도
 																				</p>
-																				<p class="cad_estimator_profile_info_typo">
+																				<p class="cad_estimator_profile_info_typo" id="stafyrate">
 																				    82 %
 																				</p>
 																			</div>
@@ -657,7 +668,7 @@
 																				<p class="cad_estimator_profile_info_typo">
 																				    현재까지 거래 총 금액
 																				</p>
-																				<p class="cad_estimator_profile_info_typo">
+																				<p class="cad_estimator_profile_info_typo" id="amountCash">
 																				    1234,567 원
 																				</p>
 																			</div>

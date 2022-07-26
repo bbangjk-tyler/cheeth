@@ -84,7 +84,7 @@
   ) VALUES (
       #{GROUP_CD}
     , #{TAB_NO}
-    , #{PANT_NM}
+    , HEX(AES_ENCRYPT(#{PANT_NM}, 'NAME'))
     , #{SUPP_CD_1}
     , #{SUPP_NM_1}
     , #{SUPP_CD_2}
@@ -122,7 +122,7 @@
   ) VALUES (
       #{RQST_NO}
     , #{GROUP_CD}
-    , #{TOOTH_NO}
+    , (HEX(AES_ENCRYPT(#{TOOTH_NO}, #{CREATE_ID})))
     , #{TAB_NO}
     , #{CREATE_ID}
     , NOW()
@@ -156,7 +156,142 @@
   )
   ]]>
   </insert>
-
+  <insert id="insert05" parameterType="map">
+  <![CDATA[
+    /* tribute.insert05 */
+    INSERT INTO TB_TRIBUTE_SETTING (
+      seqID
+    , GROUP_CD
+    , TABNUM
+    , BOOL
+    , TOPORBOTTOM
+    , CATEGORYCHOICEBOOL
+    , CREATE_ID
+  ) VALUES (
+    NULL
+    , #{GROUP_CD}
+    , #{TABNUM}
+    , #{BOOL}
+    , #{TOPORBOTTOM}
+    , #{CATEGORYCHOICEBOOL}
+    , #{CREATE_ID}
+  )
+  ]]>
+  </insert>
+  
+    <insert id="insert06" parameterType="map">
+  <![CDATA[
+    /* tribute.insert06 */
+    INSERT INTO TB_TRIBUTE (
+      GROUP_CD
+    , TAB_NO
+    , PANT_NM
+    , SUPP_CD_1
+    , SUPP_NM_1
+    , SUPP_CD_2
+    , SUPP_NM_2
+    , SUPP_CD_3
+    , SUPP_NM_3
+    , SUPP_CD_4
+    , SUPP_NM_4
+    , PRO_METH_CD
+    , PRO_METH_ETC
+    , SHADE_CD
+    , SHADE_ETC
+    , DTL_TXT
+    , FILE_CD
+    , CREATE_ID
+    , CREATE_DATE
+    , UPDATE_ID
+    , UPDATE_DATE
+    , STATE_CD
+  ) VALUES (
+      #{GROUP_CD}
+    , #{TAB_NO}
+    , HEX(AES_ENCRYPT(#{PANT_NM}, 'NAME'))
+    , #{SUPP_CD_1}
+    , #{SUPP_NM_1}
+    , #{SUPP_CD_2}
+    , #{SUPP_NM_2}
+    , #{SUPP_CD_3}
+    , #{SUPP_NM_3}
+    , #{SUPP_CD_4}
+    , #{SUPP_NM_4}
+    , #{PRO_METH_CD}
+    , #{PRO_METH_ETC}
+    , #{SHADE_CD}
+    , #{SHADE_ETC}
+    , #{DTL_TXT}
+    , #{FILE_CD}
+    , #{CREATE_ID}
+    , NOW()
+    , #{UPDATE_ID}
+    , NOW()
+    , '0'
+  )
+  ]]>
+  </insert>
+    <select id="getList10" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* review.getList01 */
+    SELECT A.REVIEW_NO
+         , A.WR_NO
+         , A.PROJECT_NO
+         , A.SCORE
+         , A.REVIEW_CONTENT
+         , A.FILE_CD
+         , A.CREATE_ID
+         , ( SELECT USER_NICK_NAME
+               FROM TB_USER_INFO
+              WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+         , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = B.PROJECT_CD
+           ) AS PROJECT_CD_NM
+         , D.FILE_NM
+         , D.FILE_ORIGIN_NM
+         , REPLACE(D.FILE_DIRECTORY, '\\', '/') AS FILE_DIRECTORY
+         , ( SELECT REPLY_CONTENT
+               FROM TB_REVIEW_REPLY
+              WHERE REVIEW_NO = A.REVIEW_NO
+                AND REPLY_NO = 1
+           ) AS REPLY_CONTENT
+         , C.CHEESIGNER_ID
+         , B.TITLE
+      FROM TB_REVIEW A
+      JOIN TB_PROJECT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      JOIN TB_ELECTRONIC_CONTRACT C
+        ON A.PROJECT_NO = C.PROJECT_NO
+      LEFT OUTER JOIN TB_FILE_INFO D
+        ON A.FILE_CD = D.FILE_CD
+       AND D.FILE_NO = 1
+     WHERE C.CHEESIGNER_ID = #{CREATE_ID} /* 치자이너 */
+     ORDER BY A.REVIEW_NO DESC
+  ]]>
+    <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+    </if>
+  </select>
+      <select id="getData01" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData01 */
+    SELECT RQST_NO
+      FROM TB_PROJECT_DTL
+     WHERE PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </select>
+        <select id="getData02" parameterType="map" resultType="java.lang.String">
+  <![CDATA[
+    /* mypage.getData01 */
+    SELECT GROUP_CD
+      FROM TB_TRIBUTE
+     WHERE RQST_NO = #{RQST_NO}
+  ]]>
+  </select>
   <delete id="delete01" parameterType="map">
   <![CDATA[
     /* tribute.delete01 */
@@ -165,7 +300,42 @@
        AND MNG_NO = #{MNG_NO}
   ]]>
   </delete>
-  
+    <delete id="delete03" parameterType="map">
+  <![CDATA[
+    /* tribute.delete03 */
+    DELETE FROM TB_TRIBUTE
+     WHERE GROUP_CD = #{GROUP_CD}
+  ]]>
+  </delete>
+      <delete id="delete04" parameterType="map">
+  <![CDATA[
+    /* tribute.delete04 */
+    DELETE FROM TB_TRIBUTE_DTL
+     WHERE GROUP_CD = #{GROUP_CD}
+  ]]>
+  </delete>
+  <delete id="delete05" parameterType="map">
+  <![CDATA[
+    /* tribute.delete05 */
+    DELETE FROM TB_TRIBUTE_SETTING
+     WHERE GROUP_CD = #{GROUP_CD}
+  ]]>
+  </delete>
+  <delete id="delete06" parameterType="map">
+  <![CDATA[
+    /* tribute.delete06 */
+    DELETE FROM TB_TRIBUTE_BRIDGE
+     WHERE GROUP_CD = #{GROUP_CD}
+  ]]>
+  </delete>  
+    <delete id="delete07" parameterType="map">
+  <![CDATA[
+    /* tribute.delete07 */
+    DELETE FROM TB_TRIBUTE
+     WHERE STATE_CD = '0'
+     AND CREATE_ID = #{CREATE_ID}
+  ]]>
+  </delete>  
   <select id="getCnt01" parameterType="map" resultType="java.lang.Integer">
   <![CDATA[
     /* tribute.getCnt01 */
@@ -176,7 +346,16 @@
               GROUP BY GROUP_CD ) A
   ]]>
   </select>
-  
+    <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* tribute.getCnt02 */
+    SELECT COUNT(A.RQST_NO) AS CNT
+      FROM ( SELECT RQST_NO
+               FROM TB_TRIBUTE
+                WHERE STATE_CD = '0'
+     			AND CREATE_ID = #{USER_ID} ) A
+  ]]>
+  </select>
   <select id="getRequestBasketList" parameterType="map" resultType="hashmap">
   <![CDATA[
   	/* tribute.getRequestBasketList */
@@ -187,21 +366,25 @@
 							   , (SELECT COUNT(*)
 							        FROM TB_TRIBUTE_DTL DTL
 							       WHERE DTL.GROUP_CD = A.GROUP_CD) AS TOOTH_CNT
-							   , A.PANT_NM
+							   , CAST(AES_DECRYPT(UNHEX(A.PANT_NM), 'NAME') AS CHAR) AS PANT_NM
 						     , GROUP_CONCAT(DISTINCT(A.SUPP_NM_1) SEPARATOR ', ') AS SUPP_NM_STR
 							   , A.FILE_CD
 							   , (SELECT COUNT(*) FROM TB_FILE_INFO F WHERE F.FILE_CD = A.FILE_CD) AS FILE_CNT
 						  FROM TB_TRIBUTE A
 						 WHERE A.CREATE_ID = #{USER_ID}
+						 AND A.STATE_CD = '1'
 						 GROUP BY A.GROUP_CD
 						 ORDER BY CAST(A.GROUP_CD AS UNSIGNED)
 					 ) B
 				 , (SELECT @ROWNUM := 0) RN_TB
+		
      ORDER BY RN DESC
   ]]>
   	<if test="isNotEmpty(PAGE)">
 	   LIMIT #{PAGE}, 5
 	  </if>
+	  
+	  
   </select>
   
   <select id="getRqstNoList" parameterType="map" resultType="hashmap">
@@ -238,7 +421,7 @@
 				 , A.RQST_NO
          , A.GROUP_CD
          , A.TAB_NO
-         , A.PANT_NM
+         , CAST(AES_DECRYPT(UNHEX(A.PANT_NM), 'NAME') AS CHAR) AS PANT_NM
          , ( SELECT COUNT(RQST_NO)
                FROM TB_TRIBUTE_DTL DTL
               WHERE DTL.GROUP_CD = A.GROUP_CD
@@ -277,18 +460,40 @@
   ]]>
   </select>
   
+    <select id="getTsaveInfo" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* tribute.getTsaveInfo */
+    SELECT A.GROUP_CD
+      FROM TB_TRIBUTE A
+     WHERE A.STATE_CD = '0'
+     AND A.CREATE_ID = #{USER_ID}
+  ]]>
+  </select>
+  
   <select id="getReqDtlInfoList" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* tribute.getReqDtlInfoList */
     SELECT A.RQST_NO
          , A.GROUP_CD
-         , A.TOOTH_NO
+         , CAST(AES_DECRYPT(UNHEX(A.TOOTH_NO), A.CREATE_ID) AS CHAR) AS TOOTH_NO
          , A.TAB_NO
       FROM TB_TRIBUTE_DTL A
      WHERE A.RQST_NO = #{RQST_NO}
   ]]>
   </select>
-  
+    <select id="getSettingInfoList" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* tribute.getSettingInfoList */
+    SELECT A.GROUP_CD
+         , A.TABNUM
+         , A.BOOL
+         , A.TOPORBOTTOM
+         , A.CATEGORYCHOICEBOOL
+         , A.CREATE_ID
+      FROM TB_TRIBUTE_SETTING A
+     WHERE A.GROUP_CD = #{GROUP_CD}
+  ]]>
+  </select>
   <select id="getExceptionBridgeList" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* tribute.getBridgeList */
@@ -355,11 +560,11 @@
 		     , CONCAT_WS(' - ', IF(B.SUPP_NM_1 = '', NULL, B.SUPP_NM_1)
 		                      , IF(B.SUPP_NM_2 = '', NULL, B.SUPP_NM_2)
 		                      , IF(B.SUPP_NM_3 = '', NULL, B.SUPP_NM_3)
-		                      , IF(B.SUPP_NM_4 = '', NULL, B.SUPP_NM_4)) 	
+		                      , IF(B.SUPP_NM_4 = '', NULL, B.SUPP_NM_4)) SUPP_NM_STR
       FROM (
 						SELECT A.GROUP_CD
 						     , A.RQST_NO
-						     , A.PANT_NM
+						     , CAST(AES_DECRYPT(UNHEX(A.PANT_NM), 'NAME') AS CHAR) AS PANT_NM
 						     , A.SUPP_CD_1
 						     , A.SUPP_NM_1
 						     , A.SUPP_CD_2

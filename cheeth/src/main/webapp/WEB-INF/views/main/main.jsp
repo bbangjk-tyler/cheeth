@@ -48,6 +48,24 @@ $(document).ready(function(){
     	$("#EventePopupBTN").trigger('click');
     }
 });
+jQuery(function($){
+
+	var sect1_swiper = new Swiper('#cheesigner_swiper .swiper-container', {
+		loop:true,
+		slidesPerView: 'auto',
+		spaceBetween: 30,
+		speed:600,
+		autoplay: {
+			delay: 4000,
+			disableOnInteraction: false,
+		},
+		navigation: {
+			nextEl: '.main_cheesigner .swiper-button-next',
+			prevEl: '.main_cheesigner .swiper-button-prev',
+		},
+	});
+
+});
   var progPage = 0;
   var progCnt = toNumber('${PROG_CNT}');
   
@@ -301,164 +319,107 @@ $(document).ready(function(){
   </div>
 </div>
 <div class="main_sub_body">
-  <div class="main_sub_inner_body">
-    <div class="main_sub_text_container">
-      <div class="main_sub_text_typo_title">이달의 치자이너</div>
-      <div class="main_sub_text_typo_see_all" style="cursor: pointer;" onclick="javascript:location.href='/${api}/cheesigner/cheesigner_view_all'">모두 보기 ></div>
-      <div class="main_sub_carousel_button_container">
-        <button class="main_sub_carousel_button">
-          <img class="main_sub_carousel_button_img" src="/public/assets/images/sub_banner_left_arrow.svg" />
-        </button>
-        <div class="main_sub_carousel_button_divider"></div>
-        <button class="main_sub_carousel_button">
-          <img class="main_sub_carousel_button_img" src="/public/assets/images/sub_banner_right_arrow.svg" />
-        </button>
-      </div>
-    </div>
-<!--     <div class="main_sub_banner_container"> -->
-<!--       <div class="main_sub_banner"> -->
-<!--         <div class="main_sub_banner_header"> -->
-<!--           <div class="main_sub_banner_chip"> -->
-<!--             <p class="main_sub_banner_chip_typo"> -->
-<!--               크라운 -->
-<!--             </p> -->
-<!--           </div> -->
-<!--           <div class="main_sub_banner_header_nickname"> -->
-<!--             <p>sunny88</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_item"> -->
-<!--           <p class="main_sub_banner_item_top_typo">이번달 만족도</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>80</p> -->
-<!--             <p>%</p> -->
-<!--           </div> -->
-<!--           <p class="main_sub_banner_item_bottom_typo">이번달 거래 총 금액</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>250</p> -->
-<!--             <p>만원</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_divider"></div> -->
-<!--         <div class="main_sub_banner_footer"> -->
-<!--           <p>국민경제자문회의의 조직·직무범위 </br>기타 필요한 사항은 법률로 정한다.</p> -->
-<!--         </div> -->
-<!--       </div> -->
-<!--       <div class="main_sub_banner"> -->
-<!--         <div class="main_sub_banner_header"> -->
-<!--           <div class="main_sub_banner_chip"> -->
-<!--             <p class="main_sub_banner_chip_typo"> -->
-<!--               크라운 -->
-<!--             </p> -->
-<!--           </div> -->
-<!--           <div class="main_sub_banner_header_nickname"> -->
-<!--             <p>sunny88</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_item"> -->
-<!--           <p class="main_sub_banner_item_top_typo">이번달 만족도</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>80</p> -->
-<!--             <p>%</p> -->
-<!--           </div> -->
-<!--           <p class="main_sub_banner_item_bottom_typo">이번달 거래 총 금액</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>250</p> -->
-<!--             <p>만원</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_divider"></div> -->
-<!--         <div class="main_sub_banner_footer"> -->
-<!--           <p>국민경제자문회의의 조직·직무범위 </br>기타 필요한 사항은 법률로 정한다.</p> -->
-<!--         </div> -->
-<!--       </div> -->
-<!--       <div class="main_sub_banner"> -->
-<!--         <div class="main_sub_banner_header"> -->
-<!--           <div class="main_sub_banner_chip"> -->
-<!--             <p class="main_sub_banner_chip_typo"> -->
-<!--               크라운 -->
-<!--             </p> -->
-<!--           </div> -->
-<!--           <div class="main_sub_banner_header_nickname"> -->
-<!--             <p>sunny88</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_item"> -->
-<!--           <p class="main_sub_banner_item_top_typo">이번달 만족도</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>80</p> -->
-<!--             <p>%</p> -->
-<!--           </div> -->
-<!--           <p class="main_sub_banner_item_bottom_typo">이번달 거래 총 금액</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>250</p> -->
-<!--             <p>만원</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_divider"></div> -->
-<!--         <div class="main_sub_banner_footer"> -->
-<!--           <p>국민경제자문회의의 조직·직무범위 </br>기타 필요한 사항은 법률로 정한다.</p> -->
-<!--         </div> -->
-<!--       </div> -->
-<!--       <div class="main_sub_banner"> -->
-<!--         <div class="main_sub_banner_header"> -->
-<!--           <div class="main_sub_banner_chip"> -->
-<!--             <p class="main_sub_banner_chip_typo"> -->
-<!--               크라운 -->
-<!--             </p> -->
-<!--           </div> -->
-<!--           <div class="main_sub_banner_header_nickname"> -->
-<!--             <p>sunny88</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_item"> -->
-<!--           <p class="main_sub_banner_item_top_typo">이번달 만족도</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>80</p> -->
-<!--             <p>%</p> -->
-<!--           </div> -->
-<!--           <p class="main_sub_banner_item_bottom_typo">이번달 거래 총 금액</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>250</p> -->
-<!--             <p>만원</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_divider"></div> -->
-<!--         <div class="main_sub_banner_footer"> -->
-<!--           <p>국민경제자문회의의 조직·직무범위 </br>기타 필요한 사항은 법률로 정한다.</p> -->
-<!--         </div> -->
-<!--       </div> -->
-<!--       <div class="main_sub_banner"> -->
-<!--         <div class="main_sub_banner_header"> -->
-<!--           <div class="main_sub_banner_chip"> -->
-<!--             <p class="main_sub_banner_chip_typo"> -->
-<!--               크라운 -->
-<!--             </p> -->
-<!--           </div> -->
-<!--           <div class="main_sub_banner_header_nickname"> -->
-<!--             <p>sunny88</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_item"> -->
-<!--           <p class="main_sub_banner_item_top_typo">이번달 만족도</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>80</p> -->
-<!--             <p>%</p> -->
-<!--           </div> -->
-<!--           <p class="main_sub_banner_item_bottom_typo">이번달 거래 총 금액</p> -->
-<!--           <div class="main_number"> -->
-<!--             <p>250</p> -->
-<!--             <p>만원</p> -->
-<!--           </div> -->
-<!--         </div> -->
-<!--         <div class="main_sub_banner_divider"></div> -->
-<!--         <div class="main_sub_banner_footer"> -->
-<!--           <p>국민경제자문회의의 조직·직무범위 </br>기타 필요한 사항은 법률로 정한다.</p> -->
-<!--         </div> -->
-<!--       </div> -->
-<!--     </div> -->
-  </div>
 </div>
+			<section class="main_cheesigner" style="margin-top:150px;margin-bottom:150px;">
+
+				<div class="main_cheesigner_info">
+					<div class="info_title">이달의 치자이너</div>
+					<div class="info_text"><a href="#">모두 보기 ></a></div>
+
+					<div class="control">
+						<div class="swiper-button-prev" style="background:url('/public/assets/images/sub_banner_left_arrow.svg') no-repeat 50% 50%"></div>
+						<div class="swiper-button-next" style="background:url('/public/assets/images/sub_banner_right_arrow.svg') no-repeat 50% 50%"></div>
+					</div>
+
+				</div>
+
+				<div id="cheesigner_swiper" <c:if test="${empty sessionInfo.user}">style="filter: blur(4px);"</c:if>>
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide">
+								<a href="#">
+									<div class="inner_level">크라운</div>
+									<div class="inner_name">sunny88</div>
+									<dl class="inner_data">
+										<dt>이번달 만족도</dt>
+										<dd class="data1">80 <sub>%</sub></dd>
+										<dt>이번달 거래 총 금액</dt>
+										<dd class="data2">250 <sub>만원</sub></dd>
+									</dl>
+									<div class="inner_text">국민경제자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. </div>
+								</a>
+							</div>
+							<div class="swiper-slide">
+								<a href="#">
+									<div class="inner_level">크라운</div>
+									<div class="inner_name">sunny88</div>
+									<dl class="inner_data">
+										<dt>이번달 만족도</dt>
+										<dd class="data1">80 <sub>%</sub></dd>
+										<dt>이번달 거래 총 금액</dt>
+										<dd class="data2">250 <sub>만원</sub></dd>
+									</dl>
+									<div class="inner_text">국민경제자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. </div>
+								</a>
+							</div>
+							<div class="swiper-slide">
+								<a href="#">
+									<div class="inner_level">크라운</div>
+									<div class="inner_name">sunny88</div>
+									<dl class="inner_data">
+										<dt>이번달 만족도</dt>
+										<dd class="data1">80 <sub>%</sub></dd>
+										<dt>이번달 거래 총 금액</dt>
+										<dd class="data2">250 <sub>만원</sub></dd>
+									</dl>
+									<div class="inner_text">국민경제자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. </div>
+								</a>
+							</div>
+							<div class="swiper-slide">
+								<a href="#">
+									<div class="inner_level">크라운</div>
+									<div class="inner_name">sunny88</div>
+									<dl class="inner_data">
+										<dt>이번달 만족도</dt>
+										<dd class="data1">80 <sub>%</sub></dd>
+										<dt>이번달 거래 총 금액</dt>
+										<dd class="data2">250 <sub>만원</sub></dd>
+									</dl>
+									<div class="inner_text">국민경제자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. </div>
+								</a>
+							</div>
+							<div class="swiper-slide">
+								<a href="#">
+									<div class="inner_level">크라운</div>
+									<div class="inner_name">sunny88</div>
+									<dl class="inner_data">
+										<dt>이번달 만족도</dt>
+										<dd class="data1">80 <sub>%</sub></dd>
+										<dt>이번달 거래 총 금액</dt>
+										<dd class="data2">250 <sub>만원</sub></dd>
+									</dl>
+									<div class="inner_text">국민경제자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. </div>
+								</a>
+							</div>
+							<div class="swiper-slide">
+								<a href="#">
+									<div class="inner_level">크라운</div>
+									<div class="inner_name">sunny88</div>
+									<dl class="inner_data">
+										<dt>이번달 만족도</dt>
+										<dd class="data1">80 <sub>%</sub></dd>
+										<dt>이번달 거래 총 금액</dt>
+										<dd class="data2">250 <sub>만원</sub></dd>
+									</dl>
+									<div class="inner_text">국민경제자문회의의 조직·직무범위 기타 필요한 사항은 법률로 정한다. </div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</section>
+
 <div class="main_footer_body">
   <div class="main_footer_body_header">
     <div class="main_footer_body_typo_container">

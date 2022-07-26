@@ -199,7 +199,7 @@
         </a>
       </c:when>
       <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
-        <a href="/${api}/mypage/profile_management_cheesigner" class="side_menu_list">
+        <a href="/${api}/mypage/profile_management_cheesigner_show" class="side_menu_list">
           <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
           <p class="side_menu_list_typo_blue">프로필 관리</p>
         </a>
@@ -386,6 +386,131 @@
 	          </div>
 	        </div>
 	      </div>
+	                       <!--    <div class="profile_management_writing_profile_item pic_writing">
+                        <div class="profile_management_writing_profile_item_title_container">
+                            <p class="profile_management_writing_profile_item_title">
+                                사진 업로드
+                            </p>
+                            <p class="profile_management_writing_profile_item_sub_title">
+                                최대 10장까지 업로드 가능합니다.
+                            </p>
+                        </div>
+                        <div class="profile_management_writing_profile_item_context">
+                            <div class="profile_management_pic_upload_wrapper">
+                                <div class="profile_management_main_pic_upload_wrapper">
+                                    <img class="profile_management_main_pic_upload" src="/public/assets/images/profile_image.svg"/>
+                                </div>
+											<div class="preview_form_file">
+												<label><input type="file" name="upload" class="form-control preview_input_file" accept=".jfif,.jpg,.jpeg,.png,.gif">이미지 업로드</label>
+											</div>
+                            </div>
+
+									<script>
+										jQuery(document).ready(function() {
+
+											var storedFiles = [];
+											var limitNum = 10; // 개수제한
+
+											function preview_add_order() {
+												$('.preview_uploaded_files li').each(function(n) {
+													$(this).attr('item', n);
+												});
+											}
+
+											$('body').on('change', '.preview_input_file', function() {
+
+												if ($('.preview_uploaded_files li').length >= limitNum) {
+
+													alert('최대 ' + limitNum + '장까지 업로드 가능합니다.');
+													$(this).val("");
+
+												} else {
+
+
+													var files = this.files;
+													var i = 0;
+
+													for (i = 0; i < files.length; i++) {
+														var readImg = new FileReader();
+														var file = files[i];
+
+														if (file.type.match('image.*')) {
+															storedFiles.push(file);
+															readImg.onload = (function(file) {
+																return function(e) {
+																	$('.preview_uploaded_files').append(
+																		"<li file='" + file.name + "'>" +
+																		"<img src='" + e.target.result + "' />" +
+																		"<a href='#' class='preview_delete_btn' title='삭제'><img src='/public/assets/images/preview_delete_button.svg'></a>" +
+																		"</li>"
+																	);
+																};
+															})(file);
+															readImg.readAsDataURL(file);
+
+														} else {
+															alert('not image');
+														}
+
+														if (files.length === (i + 1)) {
+															setTimeout(function() {
+																preview_add_order();
+															}, 1000);
+														}
+													}
+
+
+
+												}
+											});
+
+											// Delete Image
+											$('body').on('click', 'a.preview_delete_btn', function(e) {
+												e.preventDefault();
+												$(this).parent().remove('');
+
+												var file = $(this).parent().attr('file');
+												for (var i = 0; i < storedFiles.length; i++) {
+													if (storedFiles[i].name == file) {
+														storedFiles.splice(i, 1);
+														break;
+													}
+												}
+
+											});
+										});
+									</script>
+
+									<div class="preview_uploaded_files_wrap">
+
+										<ul class="preview_uploaded_files">
+											<li>
+												<img src="../assets/images/swiper_sample.jpg">
+												<a href="#" class="preview_delete_btn" title="삭제"><img src="../assets/images/preview_delete_button.svg"></a>
+											</li>
+											<li>
+												<img src="../assets/images/swiper_sample.jpg">
+												<a href="#" class="preview_delete_btn" title="삭제"><img src="../assets/images/preview_delete_button.svg"></a>
+											</li>
+											<li>
+												<img src="../assets/images/swiper_sample.jpg">
+												<a href="#" class="preview_delete_btn" title="삭제"><img src="../assets/images/preview_delete_button.svg"></a>
+											</li>
+											<li>
+												<img src="../assets/images/swiper_sample.jpg">
+												<a href="#" class="preview_delete_btn" title="삭제"><img src="../assets/images/preview_delete_button.svg"></a>
+											</li>
+											<li>
+												<img src="../assets/images/swiper_sample.jpg">
+												<a href="#" class="preview_delete_btn" title="삭제"><img src="../assets/images/preview_delete_button.svg"></a>
+											</li>
+										</ul>
+									</div>
+                        </div>
+                    </div> -->
+ 
+            </div>
+        </div>
 	      <div class="profile_management_writing_button_wrapper">
 	        <div class="profile_management_writing_button_container">
 	          <a href="javascript:fnSave();" class="profile_management_writing_button_blue">

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="/js/bootstrap/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jquery/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
-    
+    <script type="text/javascript" src="/js/swiper.js"></script>
     <c:set var="api" value="api" scope="request" />
     
     <script>

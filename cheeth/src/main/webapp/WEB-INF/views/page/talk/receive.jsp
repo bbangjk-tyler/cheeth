@@ -506,7 +506,7 @@
               </div>
             </c:if>
               <c:choose>
-              <c:when test="${empty item.SEND_NM}">
+              <c:when test="${empty item.SEND_NM and item.SEND_ID eq '관리자'}">
               <div onclick="fnDtlView('${item.TALK_NO}')">
               ${item.CONTENT}
               </div>

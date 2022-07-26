@@ -133,7 +133,7 @@
 	    }
 	  }
 	}
-	  
+
 	function fnDateDialogSelect_3() {
 	  var code = arguments[0];
 	  var codeNm = arguments[1];
@@ -236,7 +236,6 @@
 				var suppNmArr = new Array();
 
 			  reqArr.map((req, index) => {
-					
 					cntArr = req['CNT_STR'].split(',');
 					rqstNoArr = req['RQST_NO_STR'].split(',');
 					suppCdArr = req['SUPP_CD_STR'].split(',');
@@ -273,10 +272,10 @@
 					var suppHtml = '';
 					data.map(m => {
 						var obj = { 'CNT' : m.CNT,
-												'SUPP_NM_STR' : m.SUPP_NM_STR,
-												'SUPP_CD_LIST' : m.SUPP_CD_STR.split('|'),
-												'GROUP_CD_LIST' : m.GROUP_CD_STR.split('|'),
-												'RQST_NO_LIST' : m.RQST_NO_STR.split('|') };
+									'SUPP_NM_STR' : m.SUPP_NM_STR,
+									'SUPP_CD_LIST' : m.SUPP_CD_STR.split('|'),
+									'GROUP_CD_LIST' : m.GROUP_CD_STR.split('|'),
+									'RQST_NO_LIST' : m.RQST_NO_STR.split('|') };
 						suppList.push(obj);
 					});
 					suppInfo = [...suppList];
@@ -496,10 +495,15 @@
 			var suppStr = suppNmArr.map((nm, i) => {
 				return nm + ' ' + cntArr[i] + '개';
 			}).join(', ');
-			
+			console.log("suppStr " +  suppStr);
+			var pant_name = req.PANT_NM.substring(0, 1); 
+			var nmlength = req.PANT_NM.length;
+			for(var i = 0; i < nmlength - 1; i++){
+				pant_name += "*";
+			}
 			reqHtml += '<div class="electronic_estimator_dialog_request">';
 			reqHtml += '  <p class="electronic_estimator_dialog_request_title">의뢰서' + (index + 1) + '</p>';
-			reqHtml += '	<p class="electronic_estimator_dialog_request_name">' + req.PANT_NM + '</p>';
+			reqHtml += '	<p class="electronic_estimator_dialog_request_name">' + pant_name + '</p>';
 			reqHtml += '	<p class="electronic_estimator_dialog_request_context">' + suppStr + '</p>';
 			reqHtml += '</div>';
 		});
@@ -776,10 +780,28 @@
 	    error: function() {}
 	  });
   }
-  
+
+  function messageSend06() {
+	  var result = '';
+	  var p_info_1 = $("#p_info_1").text();
+	  $.ajax({
+	    url: '/' + API + '/common/message06',
+	    type: 'POST',
+	    data: { USER_NICK_NAME: p_info_1},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
   function fnProjectDelete() {
    
-	  var isConfirm = window.confirm('삭제 하시겠습니까?');
+	var isConfirm = window.confirm('삭제 하시겠습니까?');
     if(!isConfirm) return;
     
     $.ajax({
@@ -845,9 +867,7 @@
         data.map((m, i) => {
           var suppHtml = '';
           var counts = m.CNT;
-          if(m.SUPP_NM_STR.includes('Frame') || m.SUPP_NM_STR.includes('Splint') || m.SUPP_NM_STR.includes('의치') || m.SUPP_NM_STR.includes('교정') || m.SUPP_NM_STR.includes('트레이')){
-        	  counts = 1;
-          }//Frame, Splint, 의치, 교정, 트레이
+
           suppHtml += '<div class="prosthetics_type_list_container">';
           suppHtml += '<div class="prosthetics_type_list">';
           suppHtml += '  <p class="prosthetics_type_list_typo">' + m.SUPP_NM_STR + '</p>';
@@ -943,11 +963,9 @@
 		<input type="hidden" id="CADSW_CD_1" name="CADSW_CD_1" value="" />
     <input type="hidden" id="CADSW_CD_2" name="CADSW_CD_2" value="" />
     <input type="hidden" id="CADSW_CD_3" name="CADSW_CD_3" value="" />
-    
     <input type="hidden" id="CADSW_NM_1" name="CADSW_NM_1" value="" />
     <input type="hidden" id="CADSW_NM_2" name="CADSW_NM_2" value="" />
     <input type="hidden" id="CADSW_NM_3" name="CADSW_NM_3" value="" />
-		
 	<div class="project_request_main_container">
 		<div class="project_connection_location_container">
 			<a href="./main.html" class="project_connection_location_typo">
@@ -1476,7 +1494,7 @@
 									<div class="electronic_estimator_pic_upload_wrapper">
 									  <div class="electronic_estimator_pic_upload_container">
 									    <div class="electronic_estimator_main_pic_upload_wrapper">
-									      <img id="mainPicImage" class="electronic_estimator_main_pic_upload" src="/public/assets/images/profile_image.svg" style="width: 100%; height: 100%;"/>
+									      <img id="mainPicImage" class="electronic_estimator_main_pic_upload" src="/public/assets/images/profile_image.svg" style="width: 100%; height: 100%;object-fit: cover;"/>
 									    </div>
 									  </div>
 									  <button id="imaageUploadTypo" class="electronic_estimator_upload_button" type="button">
@@ -1786,3 +1804,8 @@
     </div>
   </div>
 </div>
+<style>
+.electronic_estimator_sub_pic_upload{
+	background-size:cover;
+}
+</style>

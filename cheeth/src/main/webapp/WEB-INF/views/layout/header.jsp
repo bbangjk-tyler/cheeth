@@ -13,7 +13,6 @@
      }
 </script>
 <script>
-
   function fnLogOut() {
     $('#logoutForm').submit();
   }
@@ -60,7 +59,7 @@
           </c:choose>
             <c:choose>
           	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
-          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management_cheesigner'">${sessionInfo.user.USER_TYPE_NM}</span>
+          		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management_cheesigner_show'">${sessionInfo.user.USER_TYPE_NM}</span>
           	</c:when>
           	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2}">
           		<span class="username_blue" onclick="javascript:location.href='/${api}/mypage/profile_management'">의뢰인</span>
@@ -91,8 +90,8 @@ function showUnread(result) {
 	}
 }
 $(document).ready(function(){
-	/* getUnread();
-	getInfiniteUnread();  */
+	getUnread();
+	getInfiniteUnread();  
 });
 function getUnread(){
 	$.ajax({

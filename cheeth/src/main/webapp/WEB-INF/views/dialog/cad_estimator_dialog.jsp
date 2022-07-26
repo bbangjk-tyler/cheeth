@@ -95,9 +95,15 @@
 				return nm + ' ' + cntArr[i] + '개';
 			}).join(', ');
 			
+			var PANT_NM_str = req.PANT_NM.substring(0, 1);
+			var nmlngth = req.PANT_NM.length
+			for(var i = 0; i < nmlngth - 1; i++){
+				PANT_NM += "*";
+			}
+			
 			reqHtml += '<div class="cad_estimator_dialog_request">';
 			reqHtml += '  <p class="cad_estimator_dialog_request_title">의뢰서' + (index + 1) + '</p>';
-			reqHtml += '	 <p class="cad_estimator_dialog_request_name">' + req.PANT_NM + '</p>';
+			reqHtml += '	 <p class="cad_estimator_dialog_request_name">' + PANT_NM_str + '</p>';
 			reqHtml += '	 <p class="cad_estimator_dialog_request_context">' + suppStr + '</p>';
 			reqHtml += '</div>';
 		});
@@ -236,7 +242,6 @@
 			  success: function(data) {
 		    	if(data.result == 'Y') {
 		    		alert('삭제되었습니다.');
-		    		//fnGetCadEstimators(projectNo);
 		    		location.reload();
 		    	}
 		    }, complete: function() {

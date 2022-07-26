@@ -17,10 +17,12 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
+isValidAccount = null;
 var pwbool = 0;
 isValidNickname = null;
 var compFile;
-
+var licenseFile;
+var bankbool = 0;
 function keyupNickName() {
   isValidNickname = null;
   $('input[id=USER_NICK_NAME]').removeClass('valid-nick invalid-nick');
@@ -47,6 +49,49 @@ function chkNickNameDuplication() {
     }
   }
 }
+function chkAccountName() {
+	  var bankCd = $('input[id=BANK_CD]').val();
+	  var accountNm = $('input[id=ACCOUNT_NM]').val();
+	  var accountNo = $('input[id=ACCOUNT_NO]').val();
+	  if(bankCd && accountNm && accountNo && !isValidAccount) {
+	    if(checkAccount(bankCd, accountNm, accountNo)) {
+	      isValidAccount = true;
+	      alert('계좌 실명 인증 되었습니다.');
+		    $('input[id=ACCOUNT_NM]').addClass('valid-account');
+	    } else {
+	      isValidNickname = false;
+	      alert('잘못된 계좌 정보입니다. 다시 인증해 주세요');
+	      $('input[id=ACCOUNT_NM]').focus();
+		    $('input[id=ACCOUNT_NM]').addClass('invalid-account');
+	    }
+	  }
+	}
+function fnSelect2() {
+    
+	  var code = arguments[0];
+  var codeNm = arguments[1];
+  var target;
+
+  if(isObjectType(code) !== 'String') {
+  	target = $(arguments[0]).next();
+  } else {
+  	target = $(event.target).parents('div.codebox2');
+  }
+  if(target.hasClass('hidden')) {
+  	target.removeClass('hidden');
+  } else {
+  	target.addClass('hidden');
+  }
+    
+  if(isNotEmpty(code) && isObjectType(code) == 'String') {
+  	target.prev().find('p').html(codeNm);
+    var div = $(event.target).data('div');
+    $('input[name=' + div + ']').val(code);
+    if(div == 'COMP_GROUP_CD') {
+  	  $('input[name=COMP_GROUP_NM]').val(codeNm);
+    }
+  }
+}
 
 function fnSetFile() {
 	  var target = event.target;
@@ -61,7 +106,6 @@ function fnSetFile() {
 function fnSave() {
 
     if (validate()) {
-
         if (isEmpty(isValidNickname)) {
             alert('닉네임 중복 확인이 되지 않았습니다.');
             $('input[id=USER_NICK_NAME]').focus();
@@ -73,18 +117,52 @@ function fnSave() {
                 return;
             }
         }
-
+        if(bankbool == 1){
+        	if(isEmpty(isValidAccount)){
+        		alert('계좌 본인 인증이 되지 않았습니다.');
+    			$('input[id=ACCOUNT_NM]').focus();
+    			return;
+        	} else {
+    			if(!isValidAccount) {
+    				alert('계좌 본인 인증이 되지 않았습니다.');
+    				$('input[id=USER_NICK_NAME]').focus();
+    				return;
+    			}
+    		}
+        }
 
         if (confirm('정보를 변경 하시겠습니까?')) {
-
             var formData = new FormData(document.getElementById('mypage_edit_form'));
+
             for (var key of formData.keys()) {
                 formData.set(key, JSON.stringify(formData.get(key)));
             }
             formData.append('COMP_FILE', compFile);
-
+            formData.append('LICENSE_FILE', licenseFile);
             $.ajax({
                 url: '/' + API + '/mypage/edit_info/save07',
+                type: 'POST',
+                data: formData,
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data.result == 'Y') {
+                        alert('변경이 완료되었습니다.');
+                        location.href = '/' + API + '/mypage/my_page_edit_info';
+                    }
+                },
+                complete: function() {
+
+                },
+                error: function() {
+
+                }
+            });
+            
+            $.ajax({
+                url: '/' + API + '/mypage/edit_info/save10',
                 type: 'POST',
                 data: formData,
                 cache: false,
@@ -111,7 +189,11 @@ function fnSave() {
 function regCheck(regExp, str) {
     return regExp.test(str);
 }
-
+$(function(){
+	$('#licenseFileBtn').click(function() {
+	  	$('input[id=LICENSE_FILE]').trigger('click');
+		});
+});
 function validate() {
     var result = true;
 
@@ -179,7 +261,33 @@ function fnSelect() {
         }
     }
 }
+function fnSelect3() {
+    
+	 var code = arguments[0];
+	  var codeNm = arguments[1];
+	  var target;
 
+	  if(isObjectType(code) !== 'String') {
+	  	target = $(arguments[0]).next();
+	  } else {
+	  	target = $(event.target).parents('div.codebox2');
+	  }
+	  if(target.hasClass('hidden')) {
+	  	target.removeClass('hidden');
+	  } else {
+	  	target.addClass('hidden');
+	  }
+	    
+	  if(isNotEmpty(code) && isObjectType(code) == 'String') {
+	  	target.prev().find('p').html(codeNm);
+	    var div = $(event.target).data('div');
+	    $('input[name=' + div + ']').val(code);
+	    if(div == 'COMP_GROUP_CD') {
+	  	  $('input[name=COMP_GROUP_NM]').val(codeNm);
+	    }
+	  }
+	}
+	
 function fnSetSelect() {
     var code = '${DATA.COMP_GROUP_CD}';
     var codeNm = '${DATA.COMP_GROUP_NM}';
@@ -223,7 +331,10 @@ $(document).ready(function() {
  });
  
 });
-  
+function keyupAccounNm() {
+	  //isValidAccount = null;
+	  $('input[id=ACCOUNT_NM]').removeClass('valid-account invalid-account');
+	}
 </script>
 
 
@@ -267,7 +378,7 @@ $(document).ready(function() {
                 </a>
               </c:when>
               <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
-                <a href="/${api}/mypage/profile_management_cheesigner" class="side_menu_list">
+                <a href="/${api}/mypage/profile_management_cheesigner_show" class="side_menu_list">
                   <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
                   <p class="side_menu_list_typo">프로필 관리</p>
                 </a>
@@ -302,6 +413,7 @@ $(document).ready(function() {
             </div>
             <div class="equipment_estimator_edit_info_wrapper">
             	<form name="mypage_edit_form" id="mypage_edit_form">
+            	<input type="hidden" name="USER_TYPE_CD" value="${sessionInfo.user.USER_TYPE_CD}">
                 <p class="equipment_estimator_edit_info_title"></p>
                 <div class="connection_location_divider divider_without_margin"></div>
                 <div class="equipment_estimator_edit_info_container">
@@ -332,7 +444,6 @@ $(document).ready(function() {
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">이름</p>
                         <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_NM}</p>
-                        
                     </div>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">주소</p>
@@ -349,6 +460,207 @@ $(document).ready(function() {
                     </div>
                 </div>
                 <div class="equipment_estimator_edit_info_divider"></div>
+                	<c:if test="${sessionInfo.user.USER_TYPE_CD eq 3}">
+                	<script>
+                	bankbool = 1;
+                	var index = "${DATA.BANK_CD}";
+                	if(index != ""){
+                    	var bankName = $("#${DATA.BANK_CD}").text();                		
+                	}
+
+                	$(document).ready(function(){
+                		$(".dropbox_select_button_typo").text(bankName);
+                	});
+                	</script>
+           <div class="sign_up_info_container">
+			<div class="sign_up_info_item" >
+				<p class="sign_up_info_item_typo">은행</p>
+				<input type="hidden" name="BANK_CD" id="BANK_CD" data-field="은행선택" value="${DATA.BANK_CD}" required/>
+				<div class="dropbox_sign_up_expert_bank">
+					<div id="BANK_CD_DIV_1" class="dropbox_select_button codebox1" onclick="fnSelect2(this);" style="cursor: pointer;">
+						<div class="dropbox_select_button_typo_container">
+							<p class="dropbox_select_button_typo">선택</p>
+							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
+						</div>
+					</div>
+					<div id="BANK_CD_DIV_2" class="dropbox_select_button_item_container hidden codebox2" style="cursor: pointer;width:171px;height: 500px;overflow: auto;">
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0003" onclick="fnSelect2('0003', '기업')" data-div="BANK_CD">기업</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0004" onclick="fnSelect2('0004', '국민')" data-div="BANK_CD">국민</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0011"onclick="fnSelect2('0011', '농협')" data-div="BANK_CD">농협</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0020"onclick="fnSelect2('0020', '우리')" data-div="BANK_CD">우리</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0081"onclick="fnSelect2('0081', '하나')" data-div="BANK_CD">하나</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0088"onclick="fnSelect2('0088', '신한')" data-div="BANK_CD">신한</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0090"onclick="fnSelect2('0090', '카카오뱅크')" data-div="BANK_CD">카카오뱅크</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0027"onclick="fnSelect2('0027', '한국시티은행')" data-div="BANK_CD">한국시티은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0023"onclick="fnSelect2('0023', 'SC제일은행')" data-div="BANK_CD">SC제일은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0039"onclick="fnSelect2('0039', '경남은행')" data-div="BANK_CD">경남은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0034"onclick="fnSelect2('0034', '광주은행')" data-div="BANK_CD">광주은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0031"onclick="fnSelect2('0031', '대구은행')" data-div="BANK_CD">대구은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0032"onclick="fnSelect2('0032', '부산은행')" data-div="BANK_CD">부산은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0037"onclick="fnSelect2('0037', '전북은행')" data-div="BANK_CD">전북은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0035"onclick="fnSelect2('0035', '제주은행')" data-div="BANK_CD">제주은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0011"onclick="fnSelect2('0011', '농협은행')" data-div="BANK_CD">농협은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0012"onclick="fnSelect2('0012', '지역농축협')" data-div="BANK_CD">지역농축협</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0007"onclick="fnSelect2('0007', '수협은행')" data-div="BANK_CD">수협은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0002"onclick="fnSelect2('0002', '산업은행')" data-div="BANK_CD">산업은행</p>
+						</div>
+						<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0071"onclick="fnSelect2('0071', '우체국')" data-div="BANK_CD">우체국</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0045"onclick="fnSelect2('0045', '새마을금고')" data-div="BANK_CD">새마을금고</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0050"onclick="fnSelect2('0050', 'SBI저축은행')" data-div="BANK_CD">저축은행</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0089"onclick="fnSelect2('0089', '케이뱅크')" data-div="BANK_CD">케이뱅크</p>
+						</div>
+												<div class="dropbox_select_button_item">
+							<p class="dropbox_select_button_item_typo" id="0098" onclick="fnSelect2('0098', '토스뱅크')" data-div="BANK_CD">토스뱅크</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="sign_up_info_item">
+				<p class="sign_up_info_item_typo">예금주</p>
+				<input class="sign_up_info_item_blank_with_button required" style="width: 142px;" type="text" name="ACCOUNT_NM" id="ACCOUNT_NM" onkeyup="keyupAccounNm()" data-field="예금주" value="${DATA.ACCOUNT_NM}" required/>
+ 				<button class="sign_up_info_item_button" type="button" onclick="chkAccountName()">
+					<p class="sign_up_info_item_button_typo">본인인증</p>
+				</button>
+			</div>
+			<div class="sign_up_info_item">
+				<p class="sign_up_info_item_typo">계좌번호</p>
+				<input class="sign_up_info_item_blank valid-account required" placeholder='"-"를 제외하고 입력하시기 바랍니다.' type="number" name="ACCOUNT_NO" id="ACCOUNT_NO" data-field="계좌번호" value="${DATA.ACCOUNT_NO}" required/>
+			</div>
+			
+		</div>
+		<div class="sign_up_info_container_divider"></div>
+		</c:if>
+		<c:if test="${sessionInfo.user.USER_TYPE_CD eq 2 or sessionInfo.user.USER_TYPE_CD eq 3}">
+			<script>
+			$(document).ready(function(){
+				var JOB_CD = "${DATA.JOB_CD}";
+				
+				if(JOB_CD == "J001"){
+					$("#jabnm").text("치과의사");
+				}else if(JOB_CD == "J002"){
+					$("#jabnm").text("치과기공사");
+				}				
+			});
+
+			</script>
+		  <div id="expert_info_container">
+	  		<div class="sign_up_info_container">
+			<input class="required" type="hidden" name="JOB_CD" id="JOB_CD" value="${DATA.JOB_CD}" data-field="직업" />
+			<c:if test="${sessionInfo.user.USER_TYPE_CD eq 3}">
+			<div id="cheesigner_job_container" class="sign_up_info_item">
+				<p class="sign_up_info_item_typo">직업선택</p>
+				<div class="dropbox_sign_up_expert_job">
+					<div id="JOB_CD_DIV_1_CHEESIGNER" class="dropbox_select_button codebox1" onclick="fnSelect3(this);" style="cursor: pointer;">
+						<div class="dropbox_select_button_typo_container">
+							<p class="dropbox_select_button_typo" id="jabnm">선택</p>
+							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
+						</div>
+					</div>
+					<div id="JOB_CD_DIV_2_CHEESIGNER" class="dropbox_select_button_item_container hidden codebox2 cheesigner" style="cursor: pointer;">
+						<c:forEach items="${jobCdList1}" var="job">
+							<div class="dropbox_select_button_item">
+								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('${job.CODE_CD}', '${job.CODE_NM}');" data-div="JOB_CD">
+								  ${job.CODE_NM}
+								</p>
+							</div>
+						</c:forEach>
+					</div>
+				</div>
+			</div>
+			</c:if>
+			<c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
+			<script>
+			$(document).ready(function(){
+			var JOB_CD = "${DATA.JOB_CD}";
+			if(JOB_CD == "K001"){
+				$("#jabnm").text("치과의사");
+			}else if(JOB_CD == "K002"){
+				$("#jabnm").text("치과기공사");
+			}else if(JOB_CD == "K003"){
+				$("#jabnm").text("치과위생사");
+			}
+			});
+			</script>
+			<div id="client_job_container" class="sign_up_info_item">
+				<p class="sign_up_info_item_typo">직업선택</p>
+				<div class="dropbox_sign_up_expert_job">
+					<div id="JOB_CD_DIV_1_CLIENT" class="dropbox_select_button codebox1" onclick="fnSelect3(this);" style="cursor: pointer;">
+						<div class="dropbox_select_button_typo_container">
+							<p class="dropbox_select_button_typo" id="jabnm">선택</p>
+							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
+						</div>
+					</div>
+					<div id="JOB_CD_DIV_2_CLIENT" class="dropbox_select_button_item_container hidden codebox2 cheesigner" style="cursor: pointer;">
+						<c:forEach items="${jobCdList2}" var="job">
+							<div class="dropbox_select_button_item">
+								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('${job.CODE_CD}', '${job.CODE_NM}');" data-div="JOB_CD">
+								  ${job.CODE_NM}
+								</p>
+							</div>
+						</c:forEach>
+					</div>
+				</div>
+			</div>
+			</c:if>
+           <div class="sign_up_info_item">
+				<p class="sign_up_info_item_typo">면허증 첨부</p>
+				<input class="sign_up_info_item_blank_with_button required" style="width: 341px;" value="${DATA.LICENSE_FILE}" data-field="면허증"/>
+				<input type="file" name="LICENSE_FILE" id="LICENSE_FILE" style="display: none;" onchange="fnSetFile();"/>
+				<button class="sign_up_info_item_button" type="button" id="licenseFileBtn">
+					<p class="sign_up_info_item_button_typo">파일첨부</p>
+				</button>
+			</div>
+			<div class="sign_up_info_item">
+				<p class="sign_up_info_item_typo">면허증 번호</p>
+				<input class="sign_up_info_item_blank required" type="text" name="LICENSE_NO" value="${DATA.LICENSE_NO}" id="LICENSE_NO" data-field="면허증 번호" />
+			</div>
+			</div>
+			</div>
+        </c:if>
                 <div class="equipment_estimator_edit_info_container">
                     <p class="equipment_estimator_edit_info_container_title">추가정보</p>
                     <div class="equipment_estimator_edit_info_item">

@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%
+String groupCd = "";
+if(request.getParameter("groupCd") != null){
+	groupCd = request.getParameter("groupCd");
+ }
+%>
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -14,12 +19,17 @@
 </script>
 </c:if> --%>
 <script>
-function confirmModal() {
+	function confirmModal() {
 	  if (window.confirm("\n 해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?")) {
 	    location.href = ('/api/mypage/my_page_edit_info');
 	  } else {
 		history.back();	  
 	  }
+	}
+	function TsaveConfirmModal(){
+		if (window.confirm("\n 작성 중이던 의뢰서가 있습니다. \n 불러오시겠습니까?")) {
+		    location.href = ('/api/tribute/tribute_request?groupCd=${TSaveCode}');
+		  } 
 	}
 </script>
 <c:choose>
@@ -37,7 +47,13 @@ function confirmModal() {
 </script>
 </c:otherwise>
 </c:choose>
-	
+<% if(groupCd.equals("")){%>
+<c:if test="${TSaveCode ne '0'}">
+	<script>
+		TsaveConfirmModal();
+	</script>
+</c:if>
+<% } %>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
 
 <style>
@@ -52,23 +68,30 @@ function confirmModal() {
 </style>
 <button id="tribute_request_button_displaynone" href="#prostheticsModal" style="display:none;" data-bs-toggle="modal"></button>
 <script>
-	var CategoryChoiceBool = 0;
+	
 	function CategoryChkBtn(){
-		if(CategoryChoiceBool == 0){
+		if(CATEGORYCHOICEBOOL == 0){
 			alert("보철종류 입력이 필요합니다.");
-			
+			flag = 1;
 			$("#tribute_request_button_displaynone").trigger("click");
 		}
 	}
+	var rewritebool = 0;
+	var rewritebool2 = 0;
+	var CATEGORYCHOICEBOOL = 0;
 	var justonebool = 0;
+	var justoneboolArray = new Array();
+	var curtabnum = 1;
 	var topbool = 0;
 	var bottombool = 0;
-	
+	var TOPORBOTTOM = 0;
+	var firstbool = 1;
 	const MAX_CARD_CNT = 6;
 	var cardArr = new Array();
+	var cardArr2 = new Array();
 	var currCardObj = new Object();
+	var currCardObj2 = new Object();
 	var pcurrCardObj = new Object();
-
 	const suppCodeArr = fnGetSuppCd();
 	const suppObj = new Object();
 	
@@ -77,15 +100,398 @@ function confirmModal() {
 	const uploadPath = commonCreateRandomKey();
 	const fileCd = '${FILE_CD}';
 	const fileDiv = 'TRIBUTE';
-
 	/* shift 키 start */
 	var preClcikToothNum = 0;
 	var shiftbool = 0;
+	function fnTSave(){
+		console.log("뭐양");
+		//cardArr.push({...currCardObj});
+		saveCard();
+		for(const [key, value] of Object.entries(cardArr)) {
+			console.log(cardArr[key]);
+		} 
+		if(confirm('임시 저장하시겠습니까?')) {
+			$.ajax({
+				url: '/' + API + '/tribute/save02',
+			  type: 'POST',
+			  data: JSON.stringify({ cards : cardArr , cardsetting : justoneboolArray}),
+			  contentType: 'application/json; charset=utf-8',
+			  cache: false,
+			  async: false,
+			  success: function(resp) {
+					if(resp.result == 'Y') {
+						alert('임시 저장되었습니다.');
+						location.href = '/' + API + '/tribute/request_basket';
+					}
+			  }, 
+			  complete: function() {
+				  //alert('오류가 발생하였습니다.')
+			  }, 
+			  error: function() {
+				  alert('오류가 발생하였습니다.')
+			  }
+			});
+		}
+	}
 	$(document).ready(function() {
 		$("body").attr("onkeydown", "shiftKeyDown(event)");
 		$("body").attr("onkeyup", "shiftKeyUp(event)");
+
+		<%if(!groupCd.equals("")){%>
+		rewrite();
+		rewritebool = 1;
+		rewritebool2 = 1;
+		//setCard2('1');
+		//$("#1").trigger("click");
+		<%}%>
 	});
+ 	<%if(!groupCd.equals("")){%>
+
+		$(window).on("load", function(){
+		 	setTimeout(function(){
+		 		console.log('들어옴');
+				
+				//$("#3").trigger("click");
+				cardArr = cardArr.filter(f => f.TAB_NO != cardArr.length);
+
+				
+				
+		 	}, 400);
+		});
+	<%}%> 
 	
+	$(window).on("load", function(){
+		setTimeout(function(){
+	<%if(!groupCd.equals("")){%>
+
+	curtabnum = 1;
+	justoneboolArray.map((m, i) => {
+		if(m.TABNUM == curtabnum){
+			  justonebool = m.BOOL;
+			  TOPORBOTTOM = m.TOPORBOTTOM;
+			  CATEGORYCHOICEBOOL = m.CATEGORYCHOICEBOOL;
+			  console.log("tabnum :: " + m.TABNUM);
+			  console.log("justonebool :: " + justonebool);
+			  console.log("TOPORBOTTOM :: " + TOPORBOTTOM);
+			  console.log("CATEGORYCHOICEBOOL :: " + CATEGORYCHOICEBOOL);
+		}
+	});
+	for(const [key, value] of Object.entries(cardArr)) {
+		console.log(cardArr[key]);
+	} 
+	if(justonebool == 1){
+		  if(TOPORBOTTOM == 0){
+				$("#bottom_div").css("display", "none");
+				$("#top_div").css("display", "none");	
+				topbool = 0;
+				bottombool = 0;
+		  }else if(TOPORBOTTOM == 2){
+				$("#bottom_div").css("display", "none");
+				$("#top_div").css("display", "block");
+				$("#top_div").css("filter", "blur(8px)");
+				$("#top_div").css("opacity", "80%");
+				$("#top_div").css("background-color", "gray");
+				topbool = 0;
+				bottombool = 1;
+		  }else if(TOPORBOTTOM ==1){
+				$("#top_div").css("display", "none");	
+				$("#bottom_div").css("display", "block");
+				$("#bottom_div").css("filter", "blur(8px)");
+				$("#bottom_div").css("opacity", "80%");
+				$("#bottom_div").css("background-color", "gray");
+				topbool = 1;
+				bottombool = 0;
+		  }
+	  }else{
+		$("#bottom_div").css("display", "none");
+		$("#top_div").css("display", "none");		
+		topbool = 0;
+		bottombool = 0;
+	  }
+	$("#1").trigger("click");
+	<%}else{%>
+	var obj = {
+			'TABNUM': '1',
+			'BOOL': '0',
+			'TOPORBOTTOM' : '0', //0 비활성화. 1 상. 2하
+			'CATEGORYCHOICEBOOL' : '0'
+		}
+
+		justoneboolArray.push(obj);
+
+	<%}%>
+		}, 400);
+	});
+	function rewrite(){
+		CATEGORYCHOICEBOOL = 1;
+
+		 $.ajax({
+		      url: '/' + API + '/tribute/getReqInfo',
+		      type: 'GET',
+		      data: { GROUP_CD : "<%= groupCd %>" },
+		      cache: false,
+		      async: false,
+		      success: function(data) {
+		    	  cardArr2 = data;
+		      }, complete: function() {
+		      }, error: function() {
+		      }
+
+		 });
+		 $.ajax({
+		      url: '/' + API + '/tribute/getSettingInfo',
+		      type: 'GET',
+		      data: { GROUP_CD : "<%= groupCd %>" },
+		      cache: false,
+		      async: false,
+		      success: function(data) {
+		    	  justoneboolArray = data;	
+		    	  console.log("$$$$$$$$$$$$$$$$%%%%%%%%%%%%%%%");
+		    	  for(const [key, value] of Object.entries(justoneboolArray)) {
+						console.log(justoneboolArray[key]);
+					} 
+		      }, complete: function() {
+		      }, error: function() {
+		    	  console.log("GEG$A");
+		    	  }
+
+		 });
+		var index = 0;
+		cardArr2.map(m => {
+			if(isNotEmpty(m['SUPP_NM_1'])) {
+				console.log("m['SUPP_NM_1'] " + m['SUPP_NM_1']);
+				
+				var arrValues2 = new Array(); 
+				
+				arrValues2 = { 
+			    		'SUPP_NM_1' : m.SUPP_NM_1,
+	                    'SUPP_NM_2' : m.SUPP_NM_2,
+	                    'SUPP_CD_1' : m.SUPP_CD_1,
+	                    'SUPP_CD_2' : m.SUPP_CD_2,
+	                    'SUPP_NM_3' : m.SUPP_NM_3,
+	                    'SUPP_NM_4' : m.SUPP_NM_4,
+	                    'SUPP_CD_3' : m.SUPP_CD_3,
+	                    'SUPP_CD_4' : m.SUPP_CD_4
+	                  };
+			}
+			var arrValues = new Array(); 
+			
+			
+			m['SUPP_CD_1']
+			m['TRIBUTE_DTL'].map(m2 => {
+				console.log("m2.TOOTH_NO " + m2.TOOTH_NO);
+				arrValues.push(m2.TOOTH_NO);
+			});
+
+		    currCardObj2 = {
+		    		'TAB_NO' : m.TAB_NO,
+                    'EXCEPTION_BRIDGE' : m.EXCEPTION_BRIDGE,
+                    'SUPP_INFO' : arrValues2,
+                    'PANT_NM' : m.PANT_NM,
+                    'FILE_CD' : m.FILE_CD,
+                    'BRIDGES' : m.BRIDGES,
+                    'PRO_METH_CD' : m.PRO_METH_CD,
+                    'PRO_METH_NM' : m.PRO_METH_NM,
+                    'PRO_METH_ETC' : m.PRO_METH_ETC,
+                    'SHADE_NM' : m.SHADE_NM,
+                    'SHADE_CD' : m.SHADE_CD,
+                    'SHADE_ETC' : m.SHADE_ETC,
+                    'DTL_TXT'  : m.DTL_TXT,
+                    'TRIBUTE_DTL' : arrValues
+                  };
+		    index++
+			 console.log("index :: " + index);
+			 console.log("PRO_METH_NM :: " + m.PRO_METH_NM);
+			 
+		    cardArr.push({...currCardObj2});
+		    
+			console.log("m.TAB_NO" + m.TAB_NO);
+			console.log("m.EXCEPTION_BRIDGE" + m.EXCEPTION_BRIDGE);
+			console.log("m.SUPP_INFO" + m.SUPP_INFO);
+			console.log("m.PANT_NM" + m.PANT_NM);
+			console.log("m.FILE_CD" + m.FILE_CD);
+			console.log("m.BRIDGES" + m.BRIDGES);
+			console.log("m.PRO_METH_CD" + m.PRO_METH_CD);
+			console.log("m.PRO_METH_NM" + m.PRO_METH_NM);
+			console.log("m.PRO_METH_ETC" + m.PRO_METH_ETC);
+			console.log("m.SHADE_NM" + m.SHADE_NM);
+			console.log("m.SHADE_CD" + m.SHADE_CD);
+			console.log("m.SHADE_ETC" + m.SHADE_ETC);
+			console.log("m.DTL_TXT" + m.DTL_TXT);
+			console.log("m.TRIBUTE_DTL" + m.DTL_TXT);
+
+		  var html = '';
+		  if(cardArr2.length == m.TAB_NO){
+				$('.card_chip').each(function() {
+					$(this).removeClass('tribute_request_card_chip_selected').addClass('tribute_request_card_chip_not_selected');
+					$(this).find('p').removeClass('tribute_request_card_chip_selected_typo').addClass('tribute_request_card_chip_not_selected_typo');
+				});
+				 saveCard5(cardArr2.length);
+		  }
+				  html += '<div class="tribute_request_card_chip_selected card_chip">';
+				  html += '  <p class="tribute_request_card_chip_selected_typo card_title" id="' + m.TAB_NO +'" onclick="setCard(this);">의뢰서&nbsp;' + m.TAB_NO + '</p>';
+				  html += '  <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg" onclick="deleteCard();"/>';
+				  html += '</div>';
+
+		  $('.card_chip:last').after(html);
+		  if(firstbool == 1){
+			  firstbool = 0;
+			  $('.card_chip:first').remove();
+		  }
+			console.log("m.TRIBUTE_DTL" + m.TRIBUTE_DTL);
+			m['TRIBUTE_DTL'].map(m2 => {
+				console.log("m2.TOOTH_NO " + m2.TOOTH_NO);
+			});
+			$("#PANT_NM").val(m.PANT_NM);
+			
+		});
+		for(const [key, value] of Object.entries(cardArr)) {
+			  console.log(cardArr[key]);
+		} 
+	}
+
+	function saveCard2(tabIndex) {
+
+		tabIndex = tabIndex - 1;
+		console.log("헬로우 " + tabIndex);
+		currCardObj = {...cardArr[tabIndex]};
+		$('.teeth_model_tooth_img').each(function() {
+			   var $this = $(this);
+			   var $div = $this.prev();
+			   var currIndex = $('img.teeth_model_tooth_img').index($this);
+			   var currToothNum = $this.attr('class').split('img_').pop();
+			   var src = $this.attr('src');
+			   console.log("헬로우  0000");
+			   currCardObj['TRIBUTE_DTL'].map(m => {
+				   console.log("ㅅㅅㅅ " + src);
+				   console.log("ㅁㅁㅁ " + m.TOOTH_NO);
+			      if(src.includes(m.TOOTH_NO)) {
+			    	  console.log("헬로우  1111");
+			         $this.attr('src', src.replace('normal', 'blue'));
+			         $div.removeClass('p_teeth_model_tooth').addClass('teeth_model_tooth_selected');
+			         $div.find('p').removeClass('teeth_model_tooth_numb').addClass('teeth_model_tooth_selected_numb');
+			      }
+			   });
+			});
+
+ 
+
+ 
+
+/* 			$('.bridge').each(function() {
+
+			    var $pbridge = $(this);
+
+			    console.log("헬로우  2222");
+
+			    currCardObj['BRIDGES'].map(bridge => {
+
+			        if($pbridge.attr('class').includes(bridge)) {
+
+				    	  console.log("헬로우  3333");
+
+			            $pbridge.removeClass('hidden');
+
+			        }
+
+			    });
+
+			});  */
+
+		}
+
+	function saveCard5(tabIndex) {
+		tabIndex = tabIndex - 1;
+		console.log("헬로우 " + tabIndex);
+		currCardObj = {...cardArr[tabIndex]};
+		for(const [key, value] of Object.entries(currCardObj)) {
+			  console.log(currCardObj);
+		} 
+		console.log("=============================");
+		for(const [key, value] of Object.entries(cardArr)) {
+			  
+			console.log(cardArr[key]);
+		} 
+		console.log("=============================");
+		for(const [key, value] of Object.entries(cardArr2)) {
+			  
+			console.log(cardArr2[key]);
+		} 
+		// 치식
+/*  		$('.teeth_model_tooth_img').each(function() {
+			var $this = $(this);
+			
+			currCardObj['TRIBUTE_DTL'].map(m => {
+				if($this.attr('src').includes(m)) {
+					console.log("$this.attr('src') " + $this.attr('src'));
+					$this.trigger('click');
+				}
+
+			});
+		});  */
+
+		console.log("currCardObj['SUPP_INFO'] " + currCardObj['SUPP_INFO']);
+		// 보철종류
+		var prostheticsTypo ='보철 종류를 선택해 주세요.';
+		if(isNotEmpty(currCardObj['SUPP_INFO'])) {
+			prostheticsTypo = Object.keys(currCardObj['SUPP_INFO']).map(
+				m => {
+					console.log(m);
+					document.getElementById(m).value = currCardObj['SUPP_INFO'][m];
+					if(m.includes('SUPP_NM')) return currCardObj['SUPP_INFO'][m];
+			})
+			.filter(f => f)
+			.join(' - ');
+		}
+		document.querySelector('.tribute_request_info_prosthetics_blank_typo').textContent = prostheticsTypo;
+		console.log("currCardObj['SUPP_INFO'] " + currCardObj['SUPP_INFO']);
+		// 가공방법
+/* 		if(isNotEmpty(currCardObj['PRO_METH_CD'])) {
+			fnSelect(currCardObj['PRO_METH_CD'], currCardObj['PRO_METH_NM'], 'pro_meth_container');
+			if(currCardObj['PRO_METH_CD'] == 'P007') {
+				$('input[id=PRO_METH_ETC]').val(currCardObj['PRO_METH_ETC']);
+			}
+		}
+		// Shade
+		if(isNotEmpty(currCardObj['SHADE_CD'])) {
+			fnSelect(currCardObj['SHADE_CD'], currCardObj['SHADE_NM'], 'shade_container');
+			if(currCardObj['SHADE_CD'] == 'S005') {
+				$('input[id=SHADE_ETC]').val(currCardObj['SHADE_ETC']);
+			}
+		} */
+
+	/* 텝 추가 */
+		// 상세내용
+
+/* 			$('textarea[id=DTL_TXT]').val(currCardObj['DTL_TXT']);
+			$('.teeth_model_tooth_img').each(function() {
+				   var $this = $(this);
+				   var $div = $this.prev();
+				   var currIndex = $('img.teeth_model_tooth_img').index($this);
+				   var currToothNum = $this.attr('class').split('img_').pop();
+				   var src = $this.attr('src');
+				   
+				   currCardObj['TRIBUTE_DTL'].map(m => {
+				      if(src.includes(m)) {
+				         $this.attr('src', src.replace('normal', 'blue'));
+				         $div.removeClass('p_teeth_model_tooth').addClass('teeth_model_tooth_selected');
+				         $div.find('p').removeClass('teeth_model_tooth_numb').addClass('teeth_model_tooth_selected_numb');
+				      
+				      }
+				   });
+				});
+
+
+				$('.bridge').each(function() {
+				    var $pbridge = $(this);
+				    currCardObj['BRIDGES'].map(bridge => {
+				        if($pbridge.attr('class').includes(bridge)) {
+				            $pbridge.removeClass('hidden');
+				        }
+				    });
+				});  */
+
+	}
 	function shiftKeyDown(e){
 /* 		  alert(
 		    "Key Pressed: " + String.fromCharCode(e.charCode) + "\n"
@@ -171,9 +577,8 @@ function confirmModal() {
 		
 		/* 클릭 */
 		$('.teeth_model_tooth_img').click(function(e) {
-			if(CategoryChoiceBool == 1){
+			if(CATEGORYCHOICEBOOL == 1){
 			var isTrusted = e?.originalEvent?.isTrusted;
-
 			var $el = $(this);
 			var $div = $el.prev();
 			var currIndex = $('img.teeth_model_tooth_img').index($el);
@@ -194,7 +599,6 @@ function confirmModal() {
 				prevIndex = 16;
 			}
 			
-
 			var $prev = $('img.teeth_model_tooth_img').eq(prevIndex);
 			var $next = $('img.teeth_model_tooth_img').eq(nextIndex);
 			var prevToothNum = $prev.attr('class').split('img_').pop();
@@ -224,11 +628,9 @@ function confirmModal() {
 						if(curClcikToothNum != preClcikToothNum){
 							flag22 = 1;							
 						}
-
 					}
 					fc *= 1;
 					lc *= 1;
-
 					if(flag22 == 1){
 						var k = lc - 1;
 					
@@ -249,7 +651,6 @@ function confirmModal() {
 					}
 					for(var i = fc+1; i < lc+1;i++){ // 치아 색 바꾸는 부분
 						$el2 = $(".teeth_model_wrapper").find("img[toothNum='" + i + "']");
-
 						var src2 = $el2.attr('src');
 						var toothNo = i;
 						var $div2 = $el2.prev();
@@ -275,7 +676,6 @@ function confirmModal() {
 				        	  prevBridge2 = curtooth_index + '_' + pevtooth_index;
 					          }
 				          var bridgeTarget = $('#' + prevBridge2);
-
 				          //var targetId = bridgeTarget.attr('id');
 				          bridgeTarget.removeClass('hidden');
 				          // 브릿지 end
@@ -294,7 +694,6 @@ function confirmModal() {
 					
 				}
 			}
-
 			/* shift 끝 */
 			if(src.includes('normal')) {
 		        src = src.replace('normal', 'blue');
@@ -394,9 +793,10 @@ function confirmModal() {
 						$("#bottom_div").css("opacity", "80%");
 						$("#bottom_div").css("background-color", "gray");
 						topbool = 1;
+						TOPORBOTTOM = 1;
 					}else{
 						topbool = 0;
-					
+						TOPORBOTTOM = 0;
 						$("#bottom_div").css("display", "none");
 						$("#top_div").css("display", "none");
 					}
@@ -408,10 +808,12 @@ function confirmModal() {
 						$("#top_div").css("opacity", "80%");
 						$("#top_div").css("background-color", "gray");
 						bottombool = 1;
+						TOPORBOTTOM = 2;
 					}else{
 						$("#bottom_div").css("display", "none");
 						$("#top_div").css("display", "none");		
 						bottombool = 0;
+						TOPORBOTTOM = 0;
 					}
 				}
 			}
@@ -449,34 +851,63 @@ function confirmModal() {
 	}
 	
 	function addCard() {
+		console.log("curtabnum --------- " + curtabnum);
+		justoneboolArray = justoneboolArray.filter(f => f.TABNUM != curtabnum);
+		var obj = {
+				'TABNUM': curtabnum,
+				'BOOL': justonebool,
+				'TOPORBOTTOM' : TOPORBOTTOM, //0 비활성화. 1 상. 2하
+				'CATEGORYCHOICEBOOL' : CATEGORYCHOICEBOOL
+			}
+		justoneboolArray.push(obj);
 		
+		 console.log("curtabnum :: " + curtabnum);
 		const cardCnt = $('.card_chip').length;
 		if(cardCnt == MAX_CARD_CNT) return;
-		
 		$('.card_chip').each(function() {
 			$(this).removeClass('tribute_request_card_chip_selected').addClass('tribute_request_card_chip_not_selected');
 			$(this).find('p').removeClass('tribute_request_card_chip_selected_typo').addClass('tribute_request_card_chip_not_selected_typo');
 		});
-		
+
 		var html = '';
 		html += '<div class="tribute_request_card_chip_selected card_chip">';
-	  html += '  <p class="tribute_request_card_chip_selected_typo card_title" onclick="setCard(this);">의뢰서&nbsp;' + (cardCnt + 1) + '</p>';
+	  html += '  <p class="tribute_request_card_chip_selected_typo card_title" id="' + (cardCnt + 1) +'" onclick="setCard(this);">의뢰서&nbsp;' + (cardCnt + 1) + '</p>';
 	  html += '  <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg" onclick="deleteCard();"/>';
 	  html += '</div>';
 	  $('.card_chip:last').after(html);
-	  
 	  saveCard();
-    currCardObj = { 'TAB_NO' : cardArr.length + 1,
+      currCardObj = { 'TAB_NO' : cardArr.length + 1,
                     'TRIBUTE_DTL' : new Array(),
                     'EXCEPTION_BRIDGE' : new Array()
                   };
+
+	 
 	  cardArr.push({...currCardObj});
-	  
+	  curtabnum = cardArr.length;
+		
+	  //curtabnum = curtabnum + 1;
+	  justonebool = 0;
+	  TOPORBOTTOM = 0;
+	  CATEGORYCHOICEBOOL = 0;
+	  console.log("TOPORBOTTOM -- " + TOPORBOTTOM);
+		justoneboolArray = justoneboolArray.filter(f => f.TABNUM != curtabnum);
+		var obj = {
+				'TABNUM': curtabnum,
+				'BOOL': justonebool,
+				'TOPORBOTTOM' : TOPORBOTTOM, //0 비활성화. 1 상. 2하
+				'CATEGORYCHOICEBOOL' : CATEGORYCHOICEBOOL
+			}
+		justoneboolArray.push(obj);
+		$("#bottom_div").css("display", "none");
+		$("#top_div").css("display", "none");		
+		console.log("curtabnum ######## " + curtabnum);
+		for(const [key, value] of Object.entries(justoneboolArray)) {
+			  console.log(justoneboolArray[key]);
+		} 
 	  resetCard();
 	}
 	
 	function saveCard() {
-		
 		currCardObj['PANT_NM'] = $('#PANT_NM').val();
 		currCardObj['FILE_CD'] = fileCd;
 		
@@ -515,11 +946,67 @@ function confirmModal() {
 	}
 	
 	function setCard() {
+		console.log("curtabnum " + curtabnum);
+	
+		var prevtab = curtabnum;
 		var el = arguments[0];
 		var tabIndex = $('.card_title').index(el);
 		
+		justoneboolArray = justoneboolArray.filter(f => f.TABNUM != curtabnum);
+		var obj = {
+				'TABNUM': curtabnum,
+				'BOOL': justonebool,
+				'TOPORBOTTOM' : TOPORBOTTOM, //0 비활성화. 1 상. 2하
+				'CATEGORYCHOICEBOOL' : CATEGORYCHOICEBOOL
+			}
+		justoneboolArray.push(obj);
+		
+		curtabnum = tabIndex + 1;
+		console.log("curtabnum :: " + curtabnum);
+		justoneboolArray.map((m, i) => {
+			if(m.TABNUM == curtabnum){
+				  console.log("tabnum " + m.TABNUM);
+				  console.log("bool " + m.BOOL);
+				  console.log("TOPORBOTTOM " + m.TOPORBOTTOM);
+				  console.log("CATEGORYCHOICEBOOL " + m.CATEGORYCHOICEBOOL);
+				  justonebool = m.BOOL;
+				  TOPORBOTTOM = m.TOPORBOTTOM;
+				  CATEGORYCHOICEBOOL = m.CATEGORYCHOICEBOOL;
+			}
+		});
+		if(justonebool == 1){
+			  if(TOPORBOTTOM == 0){
+					$("#bottom_div").css("display", "none");
+					$("#top_div").css("display", "none");	
+					topbool = 0;
+					bottombool = 0;
+			  }else if(TOPORBOTTOM == 2){
+					$("#bottom_div").css("display", "none");
+					$("#top_div").css("display", "block");
+					$("#top_div").css("filter", "blur(8px)");
+					$("#top_div").css("opacity", "80%");
+					$("#top_div").css("background-color", "gray");
+					topbool = 0;
+					bottombool = 1;
+			  }else if(TOPORBOTTOM ==1){
+					$("#top_div").css("display", "none");	
+					$("#bottom_div").css("display", "block");
+					$("#bottom_div").css("filter", "blur(8px)");
+					$("#bottom_div").css("opacity", "80%");
+					$("#bottom_div").css("background-color", "gray");
+					topbool = 1;
+					bottombool = 0;
+			  }
+		  }else{
+			$("#bottom_div").css("display", "none");
+			$("#top_div").css("display", "none");		
+			topbool = 0;
+			bottombool = 0;
+		  }
+		
+
 		if(tabIndex != (+currCardObj['TAB_NO'] - 1)) {
-			
+ 			//curtabnum = currCardObj.TAB_NO; // 수정
 			$('.card_chip').each(function(index) {
 				if(index == tabIndex) {
 					$(this).removeClass('tribute_request_card_chip_not_selected').addClass('tribute_request_card_chip_selected');
@@ -529,17 +1016,19 @@ function confirmModal() {
 					$(this).find('p').removeClass('tribute_request_card_chip_selected_typo').addClass('tribute_request_card_chip_not_selected_typo');
 				}
 			});
+
 			
+
 			/* if(isNotEmpty(cardArr[+currCardObj['TAB_NO'] - 1])) {
+
 				saveCard();
+
 			} */
-			
 			if(cardArr.some(s => s.TAB_NO == currCardObj.TAB_NO)) {
 				saveCard();
 			}
 			currCardObj = {...cardArr[tabIndex]};
 			resetCard();
-			
 			// 치식
 			$('.teeth_model_tooth_img').each(function() {
 				var $this = $(this);
@@ -548,37 +1037,44 @@ function confirmModal() {
 						$this.trigger('click');
 					}
 				});
+				
 			});
-			
-			
-			// 브릿지 예외처리
-// 			currCardObj['EXCEPTION_BRIDGE'].map(m => {
-// 				var a = $('#' + m);
-// 				console.log('a', a);
-// 			});
-			
-			
+			for(const [key, value] of Object.entries(cardArr)) {
+				  console.log(cardArr[key]);
+			} 
 			// 보철종류
 			var prostheticsTypo ='보철 종류를 선택해 주세요.';
 			if(isNotEmpty(currCardObj['SUPP_INFO'])) {
+				
+
 				prostheticsTypo = Object.keys(currCardObj['SUPP_INFO']).map(
 					m => {
+						console.log("m" + m);
+						console.log("currCardObj['SUPP_INFO']" + currCardObj['SUPP_INFO'][m]);					
 						document.getElementById(m).value = currCardObj['SUPP_INFO'][m];
 						if(m.includes('SUPP_NM')) return currCardObj['SUPP_INFO'][m];
 				})
 				.filter(f => f)
 				.join(' - ');
 			}
-			document.querySelector('.tribute_request_info_prosthetics_blank_typo').textContent = prostheticsTypo;
 			
-			// 가공방법
+			document.querySelector('.tribute_request_info_prosthetics_blank_typo').textContent = prostheticsTypo;
+			// 가공방
+/* 			if(rewritebool == 1){
+				$(".tribute_request_info_with_select_button_container:first").find(".dropbox_select_button_typo").text(currCardObj['PRO_METH_NM']);
+				//$(".tribute_request_info_with_select_button_container").find(".tribute_request_info_blank").text(currCardObj['PRO_METH_NM']);
+				console.log("하하하하 : " + currCardObj['PRO_METH_NM']);
+
+				rewritebool = 0;
+				//PRO_METH_CD
+			}else{ */
 			if(isNotEmpty(currCardObj['PRO_METH_CD'])) {
 				fnSelect(currCardObj['PRO_METH_CD'], currCardObj['PRO_METH_NM'], 'pro_meth_container');
 				if(currCardObj['PRO_METH_CD'] == 'P007') {
 					$('input[id=PRO_METH_ETC]').val(currCardObj['PRO_METH_ETC']);
 				}
 			}
-			
+			//}
 			// Shade
 			if(isNotEmpty(currCardObj['SHADE_CD'])) {
 				fnSelect(currCardObj['SHADE_CD'], currCardObj['SHADE_NM'], 'shade_container');
@@ -586,12 +1082,152 @@ function confirmModal() {
 					$('input[id=SHADE_ETC]').val(currCardObj['SHADE_ETC']);
 				}
 			}
-			
+			/* 텝 추가 */
+
 			// 상세내용
-			$('textarea[id=DTL_TXT]').val(currCardObj['DTL_TXT']);
+ 			$('textarea[id=DTL_TXT]').val(currCardObj['DTL_TXT']);
 		}
+
 	}
-	
+	function setCard2(test) {
+		var prevtab = test;
+		curtabnum = test
+		var el = arguments[0];
+		var tabIndex = test;
+		justoneboolArray = justoneboolArray.filter(f => f.TABNUM != curtabnum);
+		var obj = {
+				'TABNUM': curtabnum,
+				'BOOL': justonebool,
+				'TOPORBOTTOM' : TOPORBOTTOM, //0 비활성화. 1 상. 2하
+				'CATEGORYCHOICEBOOL' : CATEGORYCHOICEBOOL
+			}
+		justoneboolArray.push(obj);
+
+		
+
+		for(const [key, value] of Object.entries(justoneboolArray)) {
+
+			  console.log(justoneboolArray[key]);
+
+		}
+		if(tabIndex != (+currCardObj['TAB_NO'] - 1)) {
+ 			curtabnum = currCardObj.TAB_NO;
+			$('.card_chip').each(function(index) {
+				if(index == tabIndex) {
+					$(this).removeClass('tribute_request_card_chip_not_selected').addClass('tribute_request_card_chip_selected');
+					$(this).find('p').removeClass('tribute_request_card_chip_not_selected_typo').addClass('tribute_request_card_chip_selected_typo');
+				} else {
+					$(this).removeClass('tribute_request_card_chip_selected').addClass('tribute_request_card_chip_not_selected');
+					$(this).find('p').removeClass('tribute_request_card_chip_selected_typo').addClass('tribute_request_card_chip_not_selected_typo');
+				}
+			});
+
+			
+
+			/* if(isNotEmpty(cardArr[+currCardObj['TAB_NO'] - 1])) {
+				saveCard();
+			} */
+			if(cardArr.some(s => s.TAB_NO == currCardObj.TAB_NO)) {
+				saveCard();
+			}
+			currCardObj = {...cardArr[tabIndex]};
+			resetCard();
+			// 치식
+			$('.teeth_model_tooth_img').each(function() {
+				var $this = $(this);
+				currCardObj['TRIBUTE_DTL'].map(m => {
+					if($this.attr('src').includes(m)) {
+						$this.trigger('click');
+					}
+				});
+				
+			});
+			for(const [key, value] of Object.entries(cardArr)) {
+				  console.log(cardArr[key]);
+			} 
+			// 보철종류
+			var prostheticsTypo ='보철 종류를 선택해 주세요.';
+			if(isNotEmpty(currCardObj['SUPP_INFO'])) {
+				
+				for(const [key, value] of Object.entries(currCardObj['SUPP_INFO'])) {
+
+					  console.log(currCardObj['SUPP_INFO'][key]);
+
+				}
+				prostheticsTypo = Object.keys(currCardObj['SUPP_INFO']).map(
+					m => {
+						console.log("m" + m);
+						console.log("currCardObj['SUPP_INFO']" + currCardObj['SUPP_INFO'][m]);					
+						document.getElementById(m).value = currCardObj['SUPP_INFO'][m];
+						if(m.includes('SUPP_NM')) return currCardObj['SUPP_INFO'][m];
+				})
+				.filter(f => f)
+				.join(' - ');
+			}
+			
+			document.querySelector('.tribute_request_info_prosthetics_blank_typo').textContent = prostheticsTypo;
+			// 가공방
+			if(isNotEmpty(currCardObj['PRO_METH_CD'])) {
+				fnSelect(currCardObj['PRO_METH_CD'], currCardObj['PRO_METH_NM'], 'pro_meth_container');
+				if(currCardObj['PRO_METH_CD'] == 'P007') {
+					$('input[id=PRO_METH_ETC]').val(currCardObj['PRO_METH_ETC']);
+				}
+			}
+			// Shade
+			if(isNotEmpty(currCardObj['SHADE_CD'])) {
+				fnSelect(currCardObj['SHADE_CD'], currCardObj['SHADE_NM'], 'shade_container');
+				if(currCardObj['SHADE_CD'] == 'S005') {
+					$('input[id=SHADE_ETC]').val(currCardObj['SHADE_ETC']);
+				}
+			}
+			/* 텝 추가 */
+
+			// 상세내용
+ 			$('textarea[id=DTL_TXT]').val(currCardObj['DTL_TXT']);
+		}
+		curtabnum = tabIndex + 1;
+		console.log("curtabnum :: " + curtabnum);
+		justoneboolArray.map((m, i) => {
+			if(m.TABNUM == curtabnum){
+				  console.log("tabnum " + m.TABNUM);
+				  console.log("bool " + m.BOOL);
+				  console.log("TOPORBOTTOM " + m.TOPORBOTTOM);
+				  console.log("CATEGORYCHOICEBOOL " + m.CATEGORYCHOICEBOOL);
+				  justonebool = m.BOOL;
+				  TOPORBOTTOM = m.TOPORBOTTOM;
+				  CATEGORYCHOICEBOOL = m.CATEGORYCHOICEBOOL;
+			}
+		});
+		if(justonebool == 1){
+			  if(TOPORBOTTOM == 0){
+					$("#bottom_div").css("display", "none");
+					$("#top_div").css("display", "none");	
+					topbool = 0;
+					bottombool = 0;
+			  }else if(TOPORBOTTOM == 2){
+					$("#bottom_div").css("display", "none");
+					$("#top_div").css("display", "block");
+					$("#top_div").css("filter", "blur(8px)");
+					$("#top_div").css("opacity", "80%");
+					$("#top_div").css("background-color", "gray");
+					topbool = 0;
+					bottombool = 1;
+			  }else if(TOPORBOTTOM ==1){
+					$("#top_div").css("display", "none");	
+					$("#bottom_div").css("display", "block");
+					$("#bottom_div").css("filter", "blur(8px)");
+					$("#bottom_div").css("opacity", "80%");
+					$("#bottom_div").css("background-color", "gray");
+					topbool = 1;
+					bottombool = 0;
+			  }
+		  }else{
+			$("#bottom_div").css("display", "none");
+			$("#top_div").css("display", "none");		
+			topbool = 0;
+			bottombool = 0;
+		  }
+	}
 	function resetCard() {
 		// 치식 초기화
 		$('.teeth_model_tooth_img').each(function() {
@@ -630,7 +1266,6 @@ function confirmModal() {
 		
 		var cardChipEl = $(event.target).parent();
 		var tabIndex = $('.card_chip').index(cardChipEl);
-
 		cardChipEl.remove();
 		
 		$('.card_title').each(function(index) {
@@ -642,7 +1277,6 @@ function confirmModal() {
 		if((tabIndex + 1) == currCardObj['TAB_NO']) {
 			$('.card_title').eq(tabIndex - 1).trigger('click');
 		}
-
 		cardArr.map((card, index) => {
 			if(card['TAB_NO'] == currCardObj['TAB_NO']) {
 				currCardObj['TAB_NO'] = index + 1;
@@ -664,21 +1298,33 @@ function confirmModal() {
 		  var codeNm = arguments[1];
 		  var div = arguments[2];
 		  var target;
-		
+		 
+		  console.log("code :: " + code);
+		  console.log("codeNm :: " + codeNm);
+		  console.log("pro_meth_container :: " + div);
+		  
+		  
 		  if(isObjectType(code) != 'String') {
 		  	target = $(arguments[0]).next();
 		  } else {
-				target = $(event.target).parents('div.dropbox_select_button_item_container');
+		  		if(rewritebool == 1){
+		  			target = $("#" + div).find("div.dropbox_select_button_item_container");
+		  			
+		  		}else{
+					target = $(event.target).parents('div.dropbox_select_button_item_container');
+		  		}
 		  }
-		  
-		  if(target.hasClass('hidden')) {
-		  	target.removeClass('hidden');
-		  } else {
-		  	target.addClass('hidden');
+		  if(rewritebool == 0){
+			  if(target.hasClass('hidden')) {
+			  	target.removeClass('hidden');
+			  } else {
+			  	target.addClass('hidden');
+			  }
+		  }else{
+			  rewritebool = 0;
 		  }
-		  
 		  if(div) target = $('#' + div).find('div.dropbox_select_button_item_container');
-		    
+
 		  if(isNotEmpty(code) && isObjectType(code) == 'String') {
 		  	target.prev().find('p').html(codeNm);
 		    
@@ -715,7 +1361,66 @@ function confirmModal() {
 		  }
 		}
 	}
-	
+	function fnSelect2() {
+		if(!$(arguments[0]).hasClass('dropbox_select_button_inactive')) {
+		  var code = arguments[0];
+		  var codeNm = arguments[1];
+		  var div = arguments[2];
+		  var target;
+		 
+		  console.log("code :: " + code);
+		  console.log("codeNm :: " + codeNm);
+		  	target = $(arguments[0]).next();
+
+		  
+		  if(target.hasClass('hidden')) {
+		  	target.removeClass('hidden');
+		  } else {
+		  	target.addClass('hidden');
+		  }
+		  if(code.includes("P")){
+			  target = $(arguments[0]).next();			  
+		  }else {
+				target = $(event.target).parents('div.dropbox_select_button_item_container');
+		  }
+
+		    
+		  if(isNotEmpty(code) && code.includes("P")) {
+		  	target.prev().find('p').html(codeNm);
+		    
+		  	if(code.startsWith('SP')) {
+		  		var level = target.parent().index();
+		  		suppObj['SUPP_CD_' + (level + 1)] = code;
+		  		suppObj['SUPP_NM_' + (level + 1)] = codeNm;
+				  fnSetSubSupp(code, level);
+		  	} else {
+		  		var div = target.data('div');
+		  		var etcContainer = target.parent().siblings('.tribute_request_direct_input_container');
+		  		$('input[id=' + div + ']').val(code);
+		  		if(div == 'PRO_METH_CD') {
+		  			if(code == 'P007') {	// 기타
+		  				$('.tribute_request_info_blank').addClass('hidden');
+			  			$('.tribute_request_info_blank_typo').text('');
+			  			etcContainer.removeClass('hidden');
+		  			} else {
+		  				$('.tribute_request_info_blank').removeClass('hidden');
+			  			$('.tribute_request_info_blank_typo').text(codeNm);
+			  			etcContainer.addClass('hidden');
+			  			$('input[id=PRO_METH_ETC]').val('');
+			  			
+		  			}
+		  		} else if(div == 'SHADE_CD') {
+		  			if(code == 'S005') {	// 직접입력
+		  				etcContainer.removeClass('hidden');
+		  			} else {
+		  				etcContainer.addClass('hidden');
+		  				$('input[id=SHADE_ETC]').val('');
+		  			}
+		  		}
+		  	}
+		  }
+		}
+	}
 	function fnSetSubSupp() {
 		const pSuppCd = arguments[0];
 		const currLevel = arguments[1];
@@ -762,7 +1467,8 @@ function confirmModal() {
 	}
 	
 	function saveSuppModal() {
-		CategoryChoiceBool = 1;
+		console.log("ggg")
+		CATEGORYCHOICEBOOL = 1;
 		var rootSuppCd = suppObj['SUPP_CD_1'];
 		
 		if(rootSuppCd == 'SP109') {		// 기타
@@ -771,11 +1477,9 @@ function confirmModal() {
 					const value = m.value;
 					const index = m.id.split('_').pop();
 					suppObj['SUPP_NM_' + index] = value;
-
 				}
 			);
 		}
-
 		var prostheticsTypo =
 		Object.keys(suppObj)
 		.map(m => {
@@ -802,6 +1506,30 @@ function confirmModal() {
 			$("#bottom_div").css("display", "none");
 			$("#top_div").css("display", "none");
 		}
+		// 치식 초기화 수정
+		$('.teeth_model_tooth_img').each(function() {
+		  var $this = $(this);
+		  $this.attr('src', $this.attr('src').replace('blue', 'normal'));
+		  $this.prev().removeClass('teeth_model_tooth_selected').addClass('teeth_model_tooth');
+		  $this.prev().find('p').removeClass('teeth_model_tooth_selected_numb').addClass('teeth_model_tooth_numb');
+		});
+		$('.bridge').each(function() { $(this).addClass('hidden'); });
+		$('.selected_dental_container').addClass('hidden');
+		$('.selected_dental_container').html('');
+		$('.tribute_request_info_selected_dental_blank_typo').removeClass('hidden');
+		//수정 끝
+		justoneboolArray = justoneboolArray.filter(f => f.TABNUM != curtabnum);
+		if(justonebool == 0){
+			TOPORBOTTOM = 0;
+		}
+		console.log("curtabnum -- "  + curtabnum)
+		var obj = {
+		'TABNUM': curtabnum,
+		'BOOL': justonebool,
+		'TOPORBOTTOM' : TOPORBOTTOM, //0 비활성화. 1 상. 2하
+		'CATEGORYCHOICEBOOL' : CATEGORYCHOICEBOOL
+		}
+		justoneboolArray.push(obj);
 		closeSuppModal();
 	}
 	
@@ -927,6 +1655,13 @@ function confirmModal() {
 		previewBodyEl.find('.tribute_request_card_chip_numb_typo').text(cardArr.length);
 		
 		pcurrCardObj = cardArr[cardArr.length-1];
+		console.log("length" + cardArr.length);
+		for(const [key, value] of Object.entries(cardArr)) {
+			  console.log(cardArr[key]);
+		} 
+		for(const [key, value] of Object.entries(pcurrCardObj)) {
+			  console.log(pcurrCardObj[key]);
+		} 
 		setPreviewCardContent();
 	}
 	
@@ -1090,7 +1825,7 @@ function confirmModal() {
 			$.ajax({
 				url: '/' + API + '/tribute/save',
 			  type: 'POST',
-			  data: JSON.stringify({ cards : cardArr }),
+			  data: JSON.stringify({ cards : cardArr , cardsetting : justoneboolArray}),
 			  contentType: 'application/json; charset=utf-8',
 			  cache: false,
 			  async: false,
@@ -1105,9 +1840,65 @@ function confirmModal() {
 			});
 		}
 	}
+	function fnRewrite() {
+		
+		if(isEmpty($('#PANT_NM').val())) {
+			alert('환자명을 입력해주세요.');
+			return;
+		}
+		
+		if(cardArr.some(s => isEmpty(s.SUPP_INFO)) || cardArr.some(s => isEmpty(s.SUPP_INFO['SUPP_CD_1']))) {
+			alert('보철종류를 선택해주세요.');
+			return;
+		}
+		
+		if(cardArr.some(s => isEmpty(s.TRIBUTE_DTL))) {
+			alert('치식을 선택해주세요.');
+			return;
+		}
+		
+		if(cardArr.some(s => isEmpty(s.PRO_METH_CD))) {
+			alert('가공방법을 선택해주세요.');
+			return;
+		} else {
+			if(cardArr.some(s => {
+				if(s.PRO_METH_CD == 'P007') {
+					if(isEmpty(s.PRO_METH_ETC)) return true;
+				}
+			})) {
+				alert('기타 가공방법을 입력해주세요.');
+				return;
+			}
+		}
+		if(cardArr.some((s, i) => {
+			if(s.SHADE_CD == 'S005') {
+				if(isEmpty(s.SHADE_ETC)) return true;
+			}
+		})) {
+			alert('Shade를 입력해주세요.');
+			return;
+		}
 	
+		if(confirm('저장하시겠습니까?')) {
+			$.ajax({
+				url: '/' + API + '/tribute/rewrite',
+			  type: 'POST',
+			  data: JSON.stringify({ cards : cardArr , cardsetting : justoneboolArray, groupCd : '<%=groupCd%>'}),
+			  contentType: 'application/json; charset=utf-8',
+			  cache: false,
+			  async: false,
+			  success: function(resp) {
+					if(resp.result == 'Y') {
+						alert('저장되었습니다.');
+						location.href = '/' + API + '/tribute/request_basket';
+					}
+			  }, 
+			  complete: function() {}, 
+			  error: function() {}
+			});
+		}
+	}
 </script>
-
 <div class="tribute_request_header">
 	<p class="tribute_request_header_typo">전자치과기공물의뢰서</p>
 	<div class="tribute_request_connection_location_container">
@@ -1117,7 +1908,11 @@ function confirmModal() {
 	  <img class="tribute_request_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	  <div class="tribute_request_connection_location">
 	    <p class="tribute_request_connection_location_typo">
+	    <%if(!groupCd.equals("")){%>
+	    <a href="/${api}/tribute/request_basket" class="tribute_request_connection_location_typo">의뢰서 바구니</a>
+	    <%}else{ %>
 	    	<a href="/${api}/tribute/request_basket" class="tribute_request_connection_location_typo">의뢰서 바구니</a>
+	    <%} %>
 	    </p>
 	  </div>
 	  <img class="tribute_request_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
@@ -1132,6 +1927,7 @@ function confirmModal() {
 		<div class="teeth_model_title">
 		  <img class="teeth_model_title_icon" src="/public/assets/images/teeth_model_title_icon.svg"/>
 		  <input class="teeth_model_title_typo" type="text" name="PANT_NM" id="PANT_NM" onkeyup="fnSetPantNm(this);" placeholder="환자명을 입력하세요." />
+		  <button id="EventePopupBTN" type="button" class="btn btn-primary" style="color:#fff!important;font-size: 13px;font-weight: 800;position: absolute;margin-left: 402px;margin-top: 6px;" data-bs-toggle="modal" data-bs-target="#exampleModal">작성 tip</button>
 		</div>
 		<div class="teeth_model_wrapper" onclick="CategoryChkBtn()">
 		<div id="top_div" style="width:100%;height:50%;display:none;position: absolute;top:0;z-index:9998"></div>
@@ -1139,7 +1935,6 @@ function confirmModal() {
 			<!-- 
 			bridge: 일반 브릿지
 			bridge_dash: 점선 브릿지
-			
 			one_one_one_two: 일반 브릿지
 			d_one_one_one_two: 점선 브릿지
 			p_one_one_one_two: 미리보기 브릿지 
@@ -1277,7 +2072,6 @@ function confirmModal() {
         <p class="teeth_model_tooth_numb">38</p>
       </div>
       <img class="teeth_model_tooth_img img_three_eight" toothNum="17" toothindex="38" src="/public/assets/images/tooth/normal/38.png"/>
-
       <div class="teeth_model_tooth tooth_numb_four_one">
         <p class="teeth_model_tooth_numb">41</p>
       </div>
@@ -1320,9 +2114,11 @@ function confirmModal() {
 		      <p class="tribute_request_button_typo">의뢰서 미리보기</p> 
 		    </a>
 		  </div>
-<!-- 		  <a href="javascript:void(0)" class="tribute_request_button" onclick="alert('개발중입니다.');"> -->
-<!-- 		    <p class="tribute_request_button_typo">임시저장</p>  -->
-<!-- 		  </a> -->
+		 <%if(groupCd.equals("")){ %> 
+		  <a href="javascript:void(0)" class="tribute_request_button" onclick="fnTSave()">
+ 		    <p class="tribute_request_button_typo">임시저장</p> 
+		  </a> 
+		  <%} %> 
 		</div>
   </div>
   
@@ -1691,7 +2487,7 @@ function confirmModal() {
 			</div>
 			
 			<!-- 자주 쓰는 말 modal -->
-			<div class="modal fade" id="oftenWordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal fade" id="oftenWordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" style="z-index:9999;" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content" style="width: fit-content;">
 						<div class="dialog_tribute_request_frequently_used_word_container">
@@ -1718,7 +2514,6 @@ function confirmModal() {
 	</div>
 </form>
 </div>
-
 <div class="tribute_request_preview_body hidden">
             <div class="teeth_model_container">
                 <div class="teeth_model_title">
@@ -1734,7 +2529,6 @@ function confirmModal() {
                   <div class="hidden p_bridge p_one_five_one_six"></div>
                   <div class="hidden p_bridge p_one_six_one_seven"></div>
                   <div class="hidden p_bridge p_one_seven_one_eight"></div>
-
                   <div class="hidden p_bridge p_one_one_two_one"></div>
                   <div class="hidden p_bridge p_two_one_two_two"></div>
                   <div class="hidden p_bridge p_two_two_two_three"></div>
@@ -1743,7 +2537,6 @@ function confirmModal() {
                   <div class="hidden p_bridge p_two_five_two_six"></div>
                   <div class="hidden p_bridge p_two_six_two_seven"></div>
                   <div class="hidden p_bridge p_two_seven_two_eight"></div>
-
                   <div class="hidden p_bridge p_three_one_three_two"></div>
                   <div class="hidden p_bridge p_three_two_three_three"></div>
                   <div class="hidden p_bridge p_three_three_three_four"></div>
@@ -1751,7 +2544,6 @@ function confirmModal() {
                   <div class="hidden p_bridge p_three_five_three_six"></div>
                   <div class="hidden p_bridge p_three_six_three_seven"></div>
                   <div class="hidden p_bridge p_three_seven_three_eight"></div>
-
                   <div class="hidden p_bridge p_three_one_four_one"></div>
                   <div class="hidden p_bridge p_four_one_four_two"></div>
                   <div class="hidden p_bridge p_four_two_four_three"></div>
@@ -1760,7 +2552,6 @@ function confirmModal() {
                   <div class="hidden p_bridge p_four_five_four_six"></div>
                   <div class="hidden p_bridge p_four_six_four_seven"></div>
                   <div class="hidden p_bridge p_four_seven_four_eight"></div>
-
                   <div class="p_teeth_model_tooth p_tooth_numb_one_one">
                       <p class="teeth_model_tooth_numb">11</p>
                   </div>
@@ -1793,7 +2584,6 @@ function confirmModal() {
                       <p class="teeth_model_tooth_numb">18</p>
                   </div>
                   <img class="p_teeth_model_tooth_img p_img_one_eight" src="/public/assets/images/tooth/gray/18.png"/>
-
                   <div class="p_teeth_model_tooth p_tooth_numb_two_one">
                       <p class="teeth_model_tooth_numb">21</p>
                   </div>
@@ -1826,7 +2616,6 @@ function confirmModal() {
                       <p class="teeth_model_tooth_numb">28</p>
                   </div>
                   <img class="p_teeth_model_tooth_img p_img_two_eight" src="/public/assets/images/tooth/gray/28.png"/>
-
                   <div class="p_teeth_model_tooth p_tooth_numb_three_one">
                       <p class="teeth_model_tooth_numb">31</p>
                   </div>
@@ -1859,7 +2648,6 @@ function confirmModal() {
                       <p class="teeth_model_tooth_numb">38</p>
                   </div>
                   <img class="p_teeth_model_tooth_img p_img_three_eight" src="/public/assets/images/tooth/gray/38.png"/>
-
                   <div class="p_teeth_model_tooth p_tooth_numb_four_one">
                       <p class="teeth_model_tooth_numb">41</p>
                   </div>
@@ -1963,11 +2751,54 @@ function confirmModal() {
                             <a href="javascript:fnWriteView();" class="tribute_request_preview_button">
                             	<p class="tribute_request_preview_button_typo">수정하기</p>
                             </a>
+                            <%if(groupCd.equals("")){ %>
                             <a href="javascript:fnSave();" class="tribute_request_preview_button">
                                 <p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
                             </a>
+                            <%}else{ %>
+                            <a href="javascript:fnRewrite();" class="tribute_request_preview_button">
+                                <p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
+                            </a>
+                            <%} %>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" style="padding:0">
+        <img style="width:100%;" src="/public/assets/images/SELECTTIP.png">
+      </div>
+      <div class="modal-footer" style="background-color:#FFF3F4;justify-content:normal;height: 49px;">
+ 
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color:black!important;backtround-color:#FFF3F4;">오늘하루 열지 않기</button> --><!-- onclick="closePopup()" -->
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="closePopup()" style="margin-top: -7px;color:black!important;background-color:#FFF3F4!important;float:right;margin-left:398px;border-color:#FFF3F4!important;">닫기 X</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+#exampleModal{
+    display: block;
+    padding-left: 0px;
+    max-width: 500px;
+    z-index:-1;
+    /* overflow: hidden; */
+    margin-left: auto;
+    margin-right: auto;
+    left: 50%;
+    transform: translate(-50%, 0);
+     -ms-overflow-style: none;
+}
+ #exampleModal.show{
+    z-index:9999;
+ }
+#exampleModal::-webkit-scrollbar { 
+    display: none;
+    width: 0 !important;
+}
+
+</style>

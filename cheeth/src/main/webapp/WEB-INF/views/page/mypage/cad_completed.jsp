@@ -17,6 +17,7 @@ if(request.getParameter("alreadychk") !=null){
 }
 %>
 <script>
+  console.log("createID :: ${DATA_02.CREATE_ID}");
   
   var fileArray = new Array();
   var requestPreviewModal;
@@ -36,6 +37,24 @@ if(request.getParameter("alreadychk") !=null){
 
 	  }
   });
+  function messageSend01() {
+	  var result = '';
+	  $.ajax({
+	    url: '/' + API + '/common/message01',
+	    type: 'POST',
+	    data: { USER_ID: "${DATA_02.CREATE_ID}"},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  console.log("${DATA_02.CREATE_ID}");
+	  return result;
+	}
   function fnSend() {
     
     var lastAmount = $('#LAST_AMOUNT').val();
@@ -80,7 +99,7 @@ if(request.getParameter("alreadychk") !=null){
       fileList.push(obj);
     });
     formData.append("fileList", JSON.stringify(fileList));
-    
+    messageSend01();
     $.ajax({
      url: '/' + API + '/mypage/cad_completed/save02',
      type: 'POST',
@@ -90,6 +109,7 @@ if(request.getParameter("alreadychk") !=null){
      contentType: false,
      processData: false,
      success: function(data) {
+    	
        if(data.cnt === 0) {
          alert('업데이트 실패하였습니다.');
        }
@@ -100,7 +120,7 @@ if(request.getParameter("alreadychk") !=null){
    });
   }
   
-  function fnOpenFileModal() {
+/*   function fnOpenFileModal() {
     const fileCd = arguments[0];
     $.ajax({
       url: '/' + API + '/common/getFiles',
@@ -126,7 +146,7 @@ if(request.getParameter("alreadychk") !=null){
     
     fileModal.show();
   }
-  
+   */
   function fnFileChange() {
     var target = arguments[0];
     var rqstNo = arguments[1];
@@ -169,7 +189,15 @@ if(request.getParameter("alreadychk") !=null){
             html += `</p>`;
             html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + `개</p>`;
             html += `</div>`;
-            html += `<input type="file" onchange="fnFileChange(this, ` + rtnArray[0]['RQST_NO'] + `);" title="의뢰서 첨부">`;
+            <% if(alreadychk.equals("1")){%>
+            if(isNotEmpty(rtnArray[0]['WR_FILE_CD'])) {
+                html += `<button class="receive_estimator_attatchment_download_button" onclick="fnFileDownload('\${rtnArray[0]['WR_FILE_CD']}', '1');">`;
+                html += `<p class="receive_estimator_attatchment_download_button_typo">첨부파일 다운로드</p>`;
+                html += `</button>`;
+              }
+            <% }else{ %>
+            html += `<input type="file" style="padding:9px 45px" onchange="fnFileChange(this, ` + rtnArray[0]['RQST_NO'] + `);" title="의뢰서 첨부">`;
+            <% } %>
             html += `</div>`;
             $('.receive_estimator_request_wrapper').append(html);
             fnSetNext(data);
@@ -221,7 +249,7 @@ if(request.getParameter("alreadychk") !=null){
   <input type="hidden" id="WR_NO" name="WR_NO" value="${DATA_02.WR_NO}">
   <input type="hidden" id="PROJECT_NO" name="PROJECT_NO" value="${DATA_01.PROJECT_NO}">
 	<div class="receive_estimator_header">
-	  <p class="receive_estimator_header_typo">CAD 완성 및 결제 요청</p>
+	  <p class="receive_estimator_header_typo">CAD파일 업로드</p>
 	  <div class="receive_estimator_connection_location_container">
 	    <a href="/" class="receive_estimator_connection_location_typo">
 	      <img class="receive_estimator_connection_location_home_button" src="/public/assets/images/connection_location_home_button_white.svg"/>
@@ -236,7 +264,7 @@ if(request.getParameter("alreadychk") !=null){
 	    </div>
 	    <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	    <div class="receive_estimator_connection_location">
-	      <p class="receive_estimator_connection_location_typo_bold">CAD 완성 및 결제 요청</p>
+	      <p class="receive_estimator_connection_location_typo_bold">CAD파일 업로드</p>
 	    </div>
 	  </div>
 	</div>
@@ -276,7 +304,7 @@ if(request.getParameter("alreadychk") !=null){
 	      <div class="cad_completed_info_item_container">
 	        <div class="cad_completed_info_item">
 	          <p class="cad_completed_info_item_typo">은행</p>
-	          <p class="cad_completed_info_item_typo">${DATA_02.BANK_NM}</p>
+	          <p class="cad_completed_info_item_typo" id="banknm">${DATA_02.BANK_NM}</p>
 	        </div>
 	        <div class="cad_completed_info_item">
 	          <p class="cad_completed_info_item_typo">계좌번호</p>
@@ -288,6 +316,65 @@ if(request.getParameter("alreadychk") !=null){
 	        </div>
 	      </div>
 	    </div>
+	    <script>
+	    var aaa = "${DATA_02.ACCOUNT_NM}";
+	    var bbb = "${DATA_02.ACCOUNT_NO}";
+	    var ccc = "${DATA_02.BANK_CD}";
+	    var banknm = "";
+	    var bankcd = "${DATA_02.BANK_CD}";
+	      if(bankcd == "0003") {
+	    	  banknm = "기업";
+	      }else if(bankcd=="0004") {
+	    	  banknm = "국민";
+	      }else if(bankcd=="0011") {
+	    	  banknm = "농협";
+	      }else if(bankcd=="0020") {
+	    	  banknm = "우리";
+	      }else if(bankcd=="0081") {
+	    	  banknm = "하나";
+	      }else if(bankcd=="0088") {
+	    	  banknm = "신한";
+	      }else if(bankcd=="0090") {
+	    	  banknm = "카카오뱅크";
+	      }else if(bankcd=="0027") {
+	    	  banknm = "한국시티은행";
+	      }else if(bankcd=="0023") {
+	    	  banknm = "SC제일은행";
+	      }else if(bankcd=="0039") {
+	    	  banknm = "경남은행";
+	      }else if(bankcd=="0034") {
+	    	  banknm = "광주은행";
+	      }else if(bankcd=="0031") {
+	    	  banknm = "대구은행";
+	      }else if(bankcd=="0032") {
+	    	  banknm = "부산은행";
+	      }else if(bankcd=="0037") {
+	    	  banknm = "전북은행";
+	      }else if(bankcd=="0035") {
+	    	  banknm = "제주은행";
+	      }else if(bankcd=="0011") {
+	    	  banknm = "농협은행";
+	      }else if(bankcd=="0012") {
+	    	  banknm = "지역농축협";
+	      }else if(bankcd=="0007") {
+	    	  banknm = "수협은행";
+	      }else if(bankcd=="0002") {
+	    	  banknm = "산업은행";
+	      }else if(bankcd=="0071") {
+	    	  banknm = "우체국";
+	      }else if(bankcd=="0045") {
+	    	  banknm = "새마을금고";
+	      }else if(bankcd=="0050") {
+	    	  banknm = "SBI저축은행";
+	      }else if(bankcd=="0089") {
+	    	  banknm = "케이뱅크";
+	      }else if(bankcd=="0098") {
+	    	  banknm = "토스뱅크";
+	      }
+	      $(document).ready(function(){
+	    	  $("#banknm").text(banknm);
+	      });
+	    </script>
 	    <div class="main_container_divider without_margin"></div>
 	    <div class="cad_completed_item">
 	      <div class="cad_completed_price_container">
@@ -320,4 +407,8 @@ if(request.getParameter("alreadychk") !=null){
 	    </button>
 	  </div>
 	</div>
+</form:form>
+<form:form id="fileDownloadForm" name="fileDownloadForm" action="/${api}/file/download" method="POST">
+  <input type="hidden" id="FILE_CD" name="FILE_CD" value="">
+  <input type="hidden" id="FILE_NO" name="FILE_NO" value="">
 </form:form>

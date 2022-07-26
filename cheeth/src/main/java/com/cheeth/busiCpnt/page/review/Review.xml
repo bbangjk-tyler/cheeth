@@ -156,6 +156,7 @@
         ON A.FILE_CD = D.FILE_CD
        AND D.FILE_NO = 1
      WHERE C.CHEESIGNER_ID = #{CREATE_ID} /* 치자이너 */
+     AND A.CREATE_ID != #{CREATE_ID}
      ORDER BY A.REVIEW_NO DESC
   ]]>
     <if test="isNotEmpty(PAGE)">

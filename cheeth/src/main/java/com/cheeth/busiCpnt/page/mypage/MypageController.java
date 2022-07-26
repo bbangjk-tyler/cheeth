@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cheeth.busiCpnt.common.CommonService;
 import com.cheeth.comAbrt.controller.BaseController;
 import com.cheeth.comUtils.ParameterUtil;
 
@@ -35,6 +35,9 @@ public class MypageController extends BaseController {
   @Autowired
   private MypageService service;
   
+  @Autowired
+  private CommonService commonService;
+  
   @GetMapping(value="/equipment_estimator_my_page_progress")
   public ModelAndView equipment_estimator_my_page_progress(HttpServletRequest request) throws Exception {
     
@@ -42,7 +45,6 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView("page/mypage/equipment_estimator_my_page_progress");
     if(isSession()) {
-      
       mv.addObject("PAGE", ObjectUtils.isEmpty(parameter.get("PAGE")) ? "1" : parameter.get("PAGE")); // 현재 페이지
       
       Map<String, Object> data = service.getData01(parameter);
@@ -104,6 +106,60 @@ public class MypageController extends BaseController {
       
       Map<?, ?> data01 = service.getData02(parameter);
       Map<?, ?> data02 = service.getData04(parameter);
+
+      //String bankcd = data02.get("BANK_CD").toString();
+      //System.out.println("bankcd -- " + bankcd);
+//      String banknm = "";
+//      if(bankcd.equals("0003")) {
+//    	  banknm = "기업";
+//      }else if(bankcd.equals("0004")) {
+//    	  banknm = "국민";
+//      }else if(bankcd.equals("0011")) {
+//    	  banknm = "농협";
+//      }else if(bankcd.equals("0020")) {
+//    	  banknm = "우리";
+//      }else if(bankcd.equals("0081")) {
+//    	  banknm = "하나";
+//      }else if(bankcd.equals("0088")) {
+//    	  banknm = "신한";
+//      }else if(bankcd.equals("0090")) {
+//    	  banknm = "카카오뱅크";
+//      }else if(bankcd.equals("0027")) {
+//    	  banknm = "한국시티은행";
+//      }else if(bankcd.equals("0023")) {
+//    	  banknm = "SC제일은행";
+//      }else if(bankcd.equals("0039")) {
+//    	  banknm = "경남은행";
+//      }else if(bankcd.equals("0034")) {
+//    	  banknm = "광주은행";
+//      }else if(bankcd.equals("0031")) {
+//    	  banknm = "대구은행";
+//      }else if(bankcd.equals("0032")) {
+//    	  banknm = "부산은행";
+//      }else if(bankcd.equals("0037")) {
+//    	  banknm = "전북은행";
+//      }else if(bankcd.equals("0035")) {
+//    	  banknm = "제주은행";
+//      }else if(bankcd.equals("0011")) {
+//    	  banknm = "농협은행";
+//      }else if(bankcd.equals("0012")) {
+//    	  banknm = "지역농축협";
+//      }else if(bankcd.equals("0007")) {
+//    	  banknm = "수협은행";
+//      }else if(bankcd.equals("0002")) {
+//    	  banknm = "산업은행";
+//      }else if(bankcd.equals("0071")) {
+//    	  banknm = "우체국";
+//      }else if(bankcd.equals("0045")) {
+//    	  banknm = "새마을금고";
+//      }else if(bankcd.equals("0050")) {
+//    	  banknm = "SBI저축은행";
+//      }else if(bankcd.equals("0089")) {
+//    	  banknm = "케이뱅크";
+//      }else if(bankcd.equals("0098")) {
+//    	  banknm = "토스뱅크";
+//      }
+      //data02.put("BANK_NM", banknm);
       if(data02 == null || data02.isEmpty()) {
         mv.setViewName("redirect:/");
       } else {
@@ -200,8 +256,6 @@ public class MypageController extends BaseController {
       resultMap.put("result", "N");
       logger.error(e.getMessage());
     }
-
-    
     return resultMap;
   }
   
@@ -239,7 +293,6 @@ public class MypageController extends BaseController {
       resultMap.put("result", "N");
       logger.error(e.getMessage());
     }
-
     return resultMap;
   }
   
@@ -258,7 +311,32 @@ public class MypageController extends BaseController {
 
     return resultMap;
   }
-  
+  @PostMapping(value="/equipment_estimator_my_page_progress/ProjectCancel")
+  public Map<?, ?> ProjectCancel(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getMultipartParameterMap(request);
+    Map<String, Object> resultMap = new HashMap<String, Object>();
+    
+    Map<String, Object> data = new HashMap<String, Object>();
+    data.put("WR_NO", service.integer("getData21", parameter));
+    data.put("CONTRACT_NO", service.integer("getData22", parameter));
+    data.put("ESTIMATOR_NO", service.integer("getData23", parameter));
+    data.put("PROJECT_NO", parameter.get("PROJECT_NO"));
+
+    List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getData10", parameter);
+    for(Map<String, Object> obj : list) {
+    	String RQST_NO = obj.get("RQST_NO").toString();
+    	parameter.put("RQST_NO", RQST_NO);
+    	service.StateUpdate(parameter);
+    }
+    try {
+      resultMap = service.ProjectCancel(data);
+    } catch(Exception e) {
+      resultMap.put("result", "N");
+      logger.error(e.getMessage());
+    }
+    return resultMap;
+  }
   // 입금확인
   @PostMapping(value="/equipment_estimator_my_page_progress/save06")
   public Map<?, ?> save06(HttpServletRequest request) throws Exception {
@@ -327,7 +405,13 @@ public class MypageController extends BaseController {
       if(data == null || data.isEmpty()) {
         mv.setViewName("redirect:/");
       } else {
-        mv.addObject("DATA", data);
+    	  	parameter.put("GROUP_CD", "JOB_CD_01");
+    	    List<Map<String, String>> jobCdList1 = (List<Map<String, String>>) commonService.getList(parameter);
+    	  	parameter.put("GROUP_CD", "JOB_CD_02");
+    	  	List<Map<String, String>> jobCdList2 = (List<Map<String, String>>) commonService.getList(parameter);
+    	  	mv.addObject("DATA", data);
+    	  	mv.addObject("jobCdList1", jobCdList1);
+    	  	mv.addObject("jobCdList2", jobCdList2);
       }
     } else {
       mv.setViewName("redirect:" + "/" + apiUrl + "/login/view");
@@ -467,7 +551,29 @@ public class MypageController extends BaseController {
     
     return mv;
   }
-  
+  @GetMapping(value="/profile_management_cheesigner_show")
+  public ModelAndView profile_management_cheesigner_show(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    
+    ModelAndView mv = new ModelAndView();
+    if(isSession()) {
+      Map<String, Object> data = service.getData07(parameter);
+      mv.addObject("DATA", data);
+      String userTypeCd = ObjectUtils.isEmpty(((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD")) ? "" : ((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD").toString();
+      //Map<String, Object> data2 = service.getData03(parameter);
+      
+      mv.addObject("LIST3", service.list("getList10", parameter));
+      if(userTypeCd.equals("3")) {
+        mv.setViewName("page/mypage/profile_management_cheesigner_show");
+      } else {
+        mv.setViewName("redirect:" + "/" + apiUrl + "/mypage/profile_management");
+      }
+    } else {
+      mv.setViewName("redirect:" + "/" + apiUrl + "/login/view");
+    }
+    return mv;
+  }
   @PostMapping(value="/profile_management_cheesigner/save08")
   public Map<?, ?> save08(HttpServletRequest request) throws Exception {
     

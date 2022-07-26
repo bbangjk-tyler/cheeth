@@ -27,7 +27,10 @@
 	  fnSetPageInfo('${PAGE}', '${TOTAL_CNT}', 10);
 	  
   });
-  
+  function fnCheesInfo(obj){
+	  var nm = $(obj).text();
+	  window.open('/api/cheesigner/cheesigner_info?USER_NICK_NAME=' + nm)
+  }
 </script>
 
 <form:form id="searchForm" name="searchForm" action="/${api}/cheesigner/cheesigner_view_all" method="GET">
@@ -132,7 +135,7 @@
 				    	<p class="cheesigner_view_all_list_order_typo">${item.RN}</p>
 				    </div>
 				    <div class="cheesigner_view_all_list cheesigner_view_all_list_nickname">
-				      <p class="cheesigner_view_all_list_typo">${item.USER_NICK_NAME}</p>
+				      <p class="cheesigner_view_all_list_typo" style="cursor:pointer;" onclick="fnCheesInfo(this)">${item.USER_NICK_NAME}</p>
 				    </div>
 				    <div class="cheesigner_view_all_list cheesigner_view_all_list_success_rate">
 				      <p class="cheesigner_view_all_list_typo">${item.COMPLETE_RATIO}%</p>

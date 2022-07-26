@@ -487,7 +487,44 @@
        AND ( A.PAYMENT_CD IS NULL OR A.PAYMENT_CD = 'PAY_001' )
   ]]>
   </select>
-  
+  <select id="getData21" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getData21 */
+    SELECT A.WR_NO
+      FROM TB_WRITTEN_REQUEST A
+      JOIN TB_ELECTRONIC_CONTRACT B
+        ON A.CONTRACT_NO = B.CONTRACT_NO
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+  <select id="getData22" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getData22 */
+    SELECT B.CONTRACT_NO
+      FROM TB_ELECTRONIC_CONTRACT B
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+    <select id="getData23" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getData23 */
+    SELECT B.ESTIMATOR_NO
+      FROM TB_ELECTRONIC_CONTRACT B
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
+    <select id="getData24" parameterType="map" resultType="java.lang.Integer">
+  <![CDATA[
+    /* mypage.getData24 */
+    SELECT B.PROJECT_NO
+      FROM TB_ELECTRONIC_CONTRACT B
+     WHERE B.PROJECT_NO = #{PROJECT_NO}
+       AND ( B.CREATE_ID = #{CREATE_ID} OR B.CHEESIGNER_ID = #{CREATE_ID} )
+  ]]>
+  </select>
   <select id="getData02" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* mypage.getData02 */
@@ -505,6 +542,7 @@
                 AND GROUP_CD = 'PUBLIC_CD' 
            ) AS PUBLIC_NM
          , A.TITLE
+         , A.CREATE_ID
          , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y%m%d%H%i') AS PROJECT_EXP_DATE
          , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS PROJECT_EXP_DATE2
          , A.DELIVERY_EXP_DATE
@@ -549,7 +587,7 @@
                FROM TB_PROJECT_DTL
               WHERE PROJECT_NO = A.PROJECT_NO 
            ) AS REQS
-         , A.CREATE_ID
+         , 1
          , DATE_FORMAT(A.CREATE_DATE, '%Y년 %m월 %d일 %H시 %i분') AS CREATE_DATE
          , A.UPDATE_ID
          , A.UPDATE_DATE
@@ -615,10 +653,8 @@
          , A.ESTIMATE_AMOUNT
          , A.LAST_AMOUNT
          , A.CHANGE_CAUSE
-         , ( SELECT CODE_NM
-               FROM TB_CODE
-              WHERE GROUP_CD = 'BANK_CD'
-                AND CODE_CD = A.BANK_CD ) AS BANK_NM
+         , B.CREATE_ID
+         , B.CHEESIGNER_ID
       FROM TB_WRITTEN_REQUEST A
       JOIN TB_ELECTRONIC_CONTRACT B
         ON A.CONTRACT_NO = B.CONTRACT_NO
@@ -640,7 +676,9 @@
          , A.ACCOUNT_NO
          , A.ESTIMATE_AMOUNT
          , A.LAST_AMOUNT
+         , A.CREATE_ID
          , A.CHANGE_CAUSE
+         , B.CHEESIGNER_ID
          , ( SELECT CODE_NM
                FROM TB_CODE
               WHERE GROUP_CD = 'BANK_CD'
@@ -673,13 +711,21 @@
          , A.COMP_GROUP_CD
          , A.COMP_GROUP_NM
          , B.FILE_ORIGIN_NM
+         , A.BANK_CD
+         , A.ACCOUNT_NM
+         , A.LICENSE_NO
+         , A.JOB_CD
+         , C.FILE_ORIGIN_NM AS LICENSE_FILE
       FROM TB_USER_INFO A
       LEFT OUTER JOIN TB_FILE_INFO B
         ON A.COMP_FILE_CD = B.FILE_CD
+      LEFT OUTER JOIN TB_FILE_INFO C
+        ON A.LICENSE_FILE_CD = C.FILE_CD
+       AND C.FILE_NO = 1
      WHERE A.USER_ID = #{USER_ID}
   ]]>
   </select>
-  
+
   <select id="getData07" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* mypage.getData07 */
@@ -801,6 +847,59 @@
      WHERE A.USER_ID = #{USER_ID}
   ]]>
   </select>
+      <select id="getList10" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* review.getList10 */
+    SELECT A.REVIEW_NO
+         , A.WR_NO
+         , A.PROJECT_NO
+         , A.SCORE
+         , A.REVIEW_CONTENT
+         , A.FILE_CD
+         , A.CREATE_ID
+         , B.TITLE
+         , ( SELECT USER_NICK_NAME
+               FROM TB_USER_INFO
+              WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
+         , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
+         , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
+         , ( SELECT CODE_NM
+               FROM TB_CODE
+              WHERE GROUP_CD = 'PROJECT_CD'
+                AND CODE_CD = B.PROJECT_CD
+           ) AS PROJECT_CD_NM
+         , D.FILE_NM
+         , D.FILE_ORIGIN_NM
+         , REPLACE(D.FILE_DIRECTORY, '\\', '/') AS FILE_DIRECTORY
+         , ( SELECT REPLY_CONTENT
+               FROM TB_REVIEW_REPLY
+              WHERE REVIEW_NO = A.REVIEW_NO
+                AND REPLY_NO = 1
+           ) AS REPLY_CONTENT
+         , C.CHEESIGNER_ID
+      FROM TB_REVIEW A
+      JOIN TB_PROJECT B
+        ON A.PROJECT_NO = B.PROJECT_NO
+      JOIN TB_ELECTRONIC_CONTRACT C
+        ON A.PROJECT_NO = C.PROJECT_NO
+      LEFT OUTER JOIN TB_FILE_INFO D
+        ON A.FILE_CD = D.FILE_CD
+       AND D.FILE_NO = 1
+     WHERE C.CHEESIGNER_ID = #{CREATE_ID} /* 치자이너 */
+     ORDER BY A.REVIEW_NO DESC
+  ]]>
+    <if test="isNotEmpty(PAGE)">
+     LIMIT #{PAGE}, 10
+    </if>
+  </select>
+  <select id="getData10" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* mypage.getData10 */
+    SELECT RQST_NO
+      FROM TB_PROJECT_DTL
+     WHERE PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </select>
   
   <select id="getSuppInfo" parameterType="map" resultType="hashmap">
   <![CDATA[
@@ -824,7 +923,7 @@
            ) AS WR_FILE_CD
       FROM ( SELECT A.RQST_NO
                   , A.GROUP_CD
-                  , A.PANT_NM
+                  , CAST(AES_DECRYPT(UNHEX(A.PANT_NM), 'NAME') AS CHAR) AS PANT_NM
                   , ( SELECT COUNT(RQST_NO)
                         FROM TB_TRIBUTE_DTL DTL
                        WHERE DTL.GROUP_CD = A.GROUP_CD
@@ -1028,12 +1127,21 @@
          , USER_NICK_NAME = #{USER_NICK_NAME}
          , COMP_GROUP_CD = #{COMP_GROUP_CD}
          , COMP_GROUP_NM = #{COMP_GROUP_NM}
-         , COMP_NO = #{COMP_NO}
          , COMP_ADDRESS = #{COMP_ADDRESS}
          , COMP_ADDRESS_DTL = #{COMP_ADDRESS_DTL}
          , COMP_FILE_CD = #{COMP_FILE_CD}
-     WHERE USER_ID = #{CREATE_ID}
   ]]>
+         <if test='"2".equals(USER_TYPE_CD) or "3".equals(USER_TYPE_CD)'>   <!-- 의뢰인 OR 치위생사 -->
+			, JOB_CD = #{JOB_CD}
+			, LICENSE_NO = #{LICENSE_NO}
+			, LICENSE_FILE_CD = #{LICENSE_FILE_CD}
+			<if test='"3".equals(USER_TYPE_CD)'>   <!-- 치위생사 -->
+				, BANK_CD = #{BANK_CD}
+				, ACCOUNT_NM = #{ACCOUNT_NM}
+				, ACCOUNT_NO = #{ACCOUNT_NO}
+			</if>
+		</if>
+     WHERE USER_ID = #{CREATE_ID}
   </update>
   
   <update id="update07" parameterType="map">
@@ -1095,11 +1203,18 @@
      WHERE USER_ID = #{USER_ID}
   ]]>
   </update>
-  
+      <update id="update11" parameterType="map">
+  <![CDATA[
+    /* project.update11 */
+    UPDATE TB_TRIBUTE
+       SET STATE_CD = '1'
+     WHERE RQST_NO = #{RQST_NO}
+  ]]>
+  </update>
   <delete id="delete01" parameterType="map">
   <![CDATA[
     /* mypage.delete01 */
-    DELETE TB_WRITTEN_REQUEST
+    DELETE FROM TB_WRITTEN_REQUEST
      WHERE WR_NO = #{WR_NO}
   ]]>
   </delete>
@@ -1107,7 +1222,7 @@
   <delete id="delete02" parameterType="map">
   <![CDATA[
     /* mypage.delete02 */
-    DELETE TB_WRITTEN_REQUEST_FILE
+    DELETE FROM TB_WRITTEN_REQUEST_FILE
      WHERE WR_NO = #{WR_NO}
   ]]>
   </delete>
@@ -1115,11 +1230,32 @@
   <delete id="delete03" parameterType="map">
   <![CDATA[
     /* mypage.delete03 */
-    DELETE TB_ELECTRONIC_CONTRACT
-     WHERE CONTRACT_NO = #{CONTRACT_NO}
+    DELETE FROM TB_ELECTRONIC_CONTRACT
+    WHERE CONTRACT_NO = #{CONTRACT_NO}
   ]]>
   </delete>
-  
+  <update id="update14" parameterType="map">
+  <![CDATA[
+    /* mypage.update14 */
+    UPDATE TB_PROJECT
+    SET PUBLIC_CD = 'U003'
+    WHERE PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </update>
+      <delete id="delete05" parameterType="map">
+  <![CDATA[
+    /* mypage.delete05 */
+    DELETE FROM TB_PROJECT_APPOINT
+    WHERE PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </delete>
+      <delete id="delete06" parameterType="map">
+  <![CDATA[
+    /* mypage.delete06 */
+    DELETE FROM TB_PROJECT_DTL
+    WHERE PROJECT_NO = #{PROJECT_NO}
+  ]]>
+  </delete>
   <insert id="insertFile" parameterType="map">
   <![CDATA[
     /* mypage.insertFile */

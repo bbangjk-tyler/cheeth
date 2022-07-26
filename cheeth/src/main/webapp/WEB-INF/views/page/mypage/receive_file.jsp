@@ -189,9 +189,11 @@ if(request.getParameter("reviewbool") != null){
 		        <p class="receive_file_button_white_typo">후기쓰기</p>
 		      </a>
 	      </c:if>
-	      <a href="javascript:alert('재제작 요청');" class="receive_file_button_white">
+	     <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
+	      <a href="javascript:alert('서비스 준비 중입니다. 재제작 요청 시 쪽지 보내기 기능을 이용해주세요.');" class="receive_file_button_white">
 	        <p class="receive_file_button_white_typo">재제작 요청</p>
 	      </a>
+        </c:if>
       </c:if>
       <c:if test="${DATA.FILE_RECEIVE_YN eq 'N'}">
 	      <a href="javascript:fnReceive();" class="receive_file_button_blue">
@@ -202,13 +204,12 @@ if(request.getParameter("reviewbool") != null){
             <c:if test="${DATA.FILE_RECEIVE_YN eq 'Y'}">
             <c:choose>
             	<c:when test="${DATA.REVIEW_CNT eq 0}">
-            			      	<script>
+            	<script>
 		      	$(document).ready(function(){
 			      	$("#receive_btn").trigger("click");	
 			      	console.log("gg");
 			      	reviewWritingModal.show()
 		      	});
-
 	      		</script>
             	</c:when>
             	<c:otherwise>
@@ -218,10 +219,10 @@ if(request.getParameter("reviewbool") != null){
             	</c:otherwise>
             </c:choose>
 	      <c:if test="${DATA.REVIEW_CNT eq 0}">
-
+	      
 	      </c:if>
       	</c:if>
-	<%} %>
+	<% } %>
     </div>
   </div>
 </div>

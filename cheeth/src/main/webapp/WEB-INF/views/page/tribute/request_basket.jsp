@@ -9,15 +9,15 @@
 </script>
 </c:if>
 <link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
-
+<link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
 <script>
 
 	var reqArr = new Array();
 	var suppInfo = new Array();
 	var rqstNoArr = new Array();
-	
+	var Rewritebool = 1;
 	var fileModal;
-
+	
 	$(function() {
 		
 		fileModal = new bootstrap.Modal(document.getElementById('fileModal'));
@@ -34,10 +34,10 @@
 		fnSetPageInfo('${PAGE}', '${TOTAL_CNT}', 5);
 		
 		var reqs = '${REQS}';
+		console.log("reqs reqs reqs " + reqs);
 		if(isNotEmpty(reqs)) {
 			reqs.split('l').map(m => { fnSelectReq(m); });
 		}
-		
 	});
 	
 	function fnOpenFileModal() {
@@ -81,6 +81,7 @@
 	}
 	
 	function removeReqEl() {
+    	console.log("번호 1");
 		var groupCd = arguments[0];
 		var el = event.target;
 		var $div = $(el).parent();
@@ -89,13 +90,17 @@
 		if($('.request_basket_request_container').find('div').length == 0) {
 			$('.request_basket_context_typo').removeClass('hidden');
 		}
-		
 		suppInfo = suppInfo.map((m, i) => {
+			console.log("groupCd :: " + groupCd);
+			console.log("m.GROUP_CD_LIST :: " + m.GROUP_CD_LIST);
 			if(m.GROUP_CD_LIST.includes(groupCd)) {
 				reqArr.map(m2 => {
 					if((m2.GROUP_CD == groupCd) && 
 							(m.SUPP_CD_LIST.includes(m2.SUPP_CD_1)) && (m.RQST_NO_LIST.includes(m2.RQST_NO.toString()))) {
+						console.log("m.CNT :: " + m.CNT);
+						console.log("m.CNT2 :: " + m2.CNT);
 						m.CNT = +m.CNT - +m2.CNT;
+						console.log("result :: " + m.CNT);
 					}
 				});
 			}
@@ -109,25 +114,24 @@
 		var suppHtml = '';
 	  suppInfo.map(m => {
 			suppHtml += '<div class="request_basket_total_prosthetics_info_container">';
-		  suppHtml += '	<p class="request_basket_total_prosthetics_info">' + m.SUPP_NM_STR + '</p>';
-      suppHtml += ' <p class="request_basket_total_prosthetics_info">' + m.CNT + '</p>';
-      suppHtml += '</div>';
+		  	suppHtml += '	<p class="request_basket_total_prosthetics_info">' + m.SUPP_NM_STR + '</p>';
+      		suppHtml += ' <p class="request_basket_total_prosthetics_info">' + m.CNT + '</p>';
+      		suppHtml += '</div>';
 	  });
 	  $('.request_basket_total_prosthetics_info_container_wrapper').html(suppHtml);
-		
+	  return;
 	}
 
 	function fnSelectReq() {
 		var groupCd = arguments[0];
 		var pantNm;
 		var totalCnt;
-		
+		console.log(groupCd);
 		if(event) {
 			pantNm = $(event.target).parent().prev().find('p').text();
 			totalCnt = $(event.target).parent().next().find('p').text();
 		}
 		var rtnArray = new Array();
-
 		if(!reqArr.some(s => s.GROUP_CD == groupCd)) {
 			$.ajax({
 			  url: '/' + API + '/tribute/getReqInfo',
@@ -141,21 +145,22 @@
 			    
 			    var html = '';
 			    html += '<div class="request_basket_request">';
-	        html += '	<p class="request_basket_request_name">' + (isEmpty(pantNm) ? rtnArray[0]['PANT_NM'] : pantNm) + '</p>';
-	        html += ' <p class="request_basket_request_context">';
+		        html += '	<p class="request_basket_request_name">' + (isEmpty(pantNm) ? rtnArray[0]['PANT_NM'] : pantNm) + '</p>';
+		        html += ' <p class="request_basket_request_context">';
 	        
 	        var duplicateChkSuppArr = new Array();
+
+		        rtnArray.map(m => {
+		        	console.log("CNT :: " + m.CNT);
+		        	reqArr.push(m);
+		        	
+		        	if(!duplicateChkSuppArr.includes(m.SUPP_CD_1)) {
+			        	duplicateChkSuppArr.push(m.SUPP_CD_1);
+			        	html += m.SUPP_NM_1 + ' ' + m.SUPP_GROUP_CNT + '개, ';
+		        	}
+		        	
+		        });
 	        
-	        rtnArray.map(m => {
-	        	
-	        	reqArr.push(m);
-	        	
-	        	if(!duplicateChkSuppArr.includes(m.SUPP_CD_1)) {
-		        	duplicateChkSuppArr.push(m.SUPP_CD_1);
-		        	html += m.SUPP_NM_1 + ' ' + m.SUPP_GROUP_CNT + '개, ';
-	        	}
-	        	
-	        });
 	        html = html.substring(0, html.lastIndexOf(','));
 	        html += '	</p>';
 	        html += '	<p class="request_basket_request_count">' + (isEmpty(totalCnt) ? rtnArray[0]['TOTAL_CNT'] : totalCnt) + '개</p>';
@@ -269,7 +274,18 @@
 			}
 		}
 	}
+	var requestPreviewModal;
 	
+	  $(document).ready(function() {
+	    requestPreviewModal = new bootstrap.Modal(document.getElementById('requestModal'));
+
+	  });
+	  function fnRequestView() {
+		    var groupCd = arguments[0];
+		    fnPreview(groupCd);
+		    requestPreviewModal.show();
+		    $("#Rewritebtn").css("display", "block");
+		  }
 	function fnCheckAll(obj) {
 		var checked = event.target.checked;
 		[...document.querySelectorAll('input[id^=REQ_CHECK]')].map(m => { m.checked = checked; });
@@ -294,10 +310,11 @@
 	}
 	
 </script>
-
+<jsp:include page="/WEB-INF/views/dialog/request_preview_dialog.jsp" flush="true" />
 <div class="request_basket_header">
         <p class="request_basket_header_typo">의뢰서 바구니</p>
     </div>
+    
     <div class="request_basket_body">
         <div class="side_menu">
             <div class="side_menu_title">
@@ -421,6 +438,7 @@
             	}
             }
             function removeReqEl2(k){
+            	console.log("번호 2");
         		var groupCd = k;
         		var $div = $("#"+groupCd).parent();
         		$div.remove();
@@ -459,6 +477,7 @@
 	              <div class="list_divider"></div>
 	              <div class="request_basket_list">
 	                <input class="request_basket_checkbox" type="checkbox" chkboxbool="0" chkid="${item.GROUP_CD}" onclick="chkboxChange(this)" id="REQ_CHECK_${item.GROUP_CD}" value="${item.GROUP_CD}"/>
+	                
 	                <div class="request_basket_list request_basket_order">
 	                  <p class="request_basket_list_order_typo">${item.RN}</p>
 	                </div>
@@ -466,7 +485,8 @@
 	                  <p class="request_basket_list_typo">${item.PANT_NM}</p>
 	                </div>
 	                <div class="request_basket_list request_basket_prosthetics_type_vol2">
-	                  <p class="request_basket_list_typo" style="cursor: pointer;" onclick="fnSelectReq('${item.GROUP_CD}');">${item.SUPP_NM_STR}</p>
+	                  <%-- <p class="request_basket_list_typo" style="cursor: pointer;" onclick="fnSelectReq('${item.GROUP_CD}');">${item.SUPP_NM_STR}</p> --%>
+	                  <p class="request_basket_list_typo" style="cursor: pointer;" onclick="fnRequestView('${item.GROUP_CD}');">${item.SUPP_NM_STR}</p>
 	                </div>
 	                <div class="request_basket_list request_basket_count">
 	                  <p class="request_basket_list_typo">${item.TOOTH_CNT}</p>

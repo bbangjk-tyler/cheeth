@@ -9,6 +9,70 @@
 </script>
 </c:if>
 <script>
+  var cheesignerID = "${DATA.CHEESIGNER_ID}";
+  var CREATEID = "${DATA.CLIENT}";
+  
+  console.log("cheesignerID :: " + cheesignerID);
+  console.log("CREATEID :: " + CREATEID);
+  
+  var curid = "${sessionInfo.user.USER_ID}";
+  var realid = "";
+  if(cheesignerID == curid){
+	  realid = CREATEID;
+  }else{
+	  realid = cheesignerID;
+  }
+  function message04_1() {
+	  var result = '';
+	  $.ajax({
+	    url: '/' + API + '/common/message04_1',
+	    type: 'POST',
+	    data: { RECEIVE_ID: realid},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
+  function message04_2() {
+	  var result = '';
+	  $.ajax({
+	    url: '/' + API + '/common/message04_2',
+	    type: 'POST',
+	    data: { RECEIVE_ID: realid},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
+  function message04() {
+	  var result = '';
+	  $.ajax({
+	    url: '/' + API + '/common/message04',
+	    type: 'POST',
+	    data: { RECEIVE_ID: realid},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
   
   function fnAllView() {
     if('${MY_PAGE}' === 'Y') {
@@ -29,7 +93,7 @@
       var agreementYn3 = $('#AGREEMENT_YN_3').val();
       var agreementYn4 = $('#AGREEMENT_YN_4').val();
       
-      if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y' || agreementYn4 !== 'Y') {
+      if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y') {
         alert('필수 동의 항목을 동의해야 승인이 가능합니다.');
         return;
       }
@@ -44,7 +108,7 @@
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
-      
+      message04();
       $.ajax({
         url: '/' + API + '/contract/save02',
         type: 'POST',
@@ -71,7 +135,7 @@
       var agreementYn3 = $('#AGREEMENT_YN_3').val();
       var agreementYn4 = $('#AGREEMENT_YN_4').val();
       
-      if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y' || agreementYn4 !== 'Y') {
+      if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y') {
         alert('필수 동의 항목을 동의해야 수정요청이 가능합니다.');
         return;
       }
@@ -80,7 +144,7 @@
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
-      
+      message04_2();
       $.ajax({
         url: '/' + API + '/contract/save03',
         type: 'POST',
@@ -93,6 +157,8 @@
         }, error: function() {
         }
       });
+      
+      
     }
   }
   
@@ -108,7 +174,7 @@
       var agreementYn3 = $('#AGREEMENT_YN_3').val();
       var agreementYn4 = $('#AGREEMENT_YN_4').val();
       
-      if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y' || agreementYn4 !== 'Y') {
+      if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y') {
         alert('필수 동의 항목을 동의해야 승인요청이 가능합니다.');
         return;
       }      
@@ -123,7 +189,7 @@
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
-      
+      message04_1(realid);
       $.ajax({
         url: '/' + API + '/contract/save01',
         type: 'POST',
@@ -159,32 +225,50 @@
         }, error: function() {
         }
       });
+      messageSend08_2(realid);
     }
   }
-  
+  function messageSend08_2(id) {
+	  var result = '';
+
+	  $.ajax({
+	    url: '/' + API + '/common/message08_2',
+	    type: 'POST',
+	    data: { RECEIVE_ID: id},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
   function fnAllCheck() {
     var target = arguments[0];
     if($(target).is(':checked')) {
       $('#AGREEMENT_YN_1').prop('checked', true);
       $('#AGREEMENT_YN_2').prop('checked', true);
       $('#AGREEMENT_YN_3').prop('checked', true);
-      $('#AGREEMENT_YN_4').prop('checked', true);
+      //$('#AGREEMENT_YN_4').prop('checked', true);
       $('#CHOICE_AGREEMENT_YN_1').prop('checked', true);
       $('#AGREEMENT_YN_1').val('Y');
       $('#AGREEMENT_YN_2').val('Y');
       $('#AGREEMENT_YN_3').val('Y');
-      $('#AGREEMENT_YN_4').val('Y');
+      //$('#AGREEMENT_YN_4').val('Y');
       $('#CHOICE_AGREEMENT_YN_1').val('Y');
     } else {
       $('#AGREEMENT_YN_1').prop('checked', false);
       $('#AGREEMENT_YN_2').prop('checked', false);
       $('#AGREEMENT_YN_3').prop('checked', false);
-      $('#AGREEMENT_YN_4').prop('checked', false);
+      //$('#AGREEMENT_YN_4').prop('checked', false);
       $('#CHOICE_AGREEMENT_YN_1').prop('checked', false);
       $('#AGREEMENT_YN_1').val('N');
       $('#AGREEMENT_YN_2').val('N');
       $('#AGREEMENT_YN_3').val('N');
-      $('#AGREEMENT_YN_4').val('N');
+      //$('#AGREEMENT_YN_4').val('N');
       $('#CHOICE_AGREEMENT_YN_1').val('N');
     }
   }
@@ -228,16 +312,16 @@
     var agreementYn1 = '${DATA.AGREEMENT_YN_1}';
     var agreementYn2 = '${DATA.AGREEMENT_YN_2}';
     var agreementYn3 = '${DATA.AGREEMENT_YN_3}';
-    var agreementYn4 = '${DATA.AGREEMENT_YN_4}';
+
     var choiceAgreementYn_1 = '${DATA.CHOICE_AGREEMENT_YN_1}';
     
     if(agreementYn1 === 'Y') $('#AGREEMENT_YN_1').prop('checked', true);
     if(agreementYn2 === 'Y') $('#AGREEMENT_YN_2').prop('checked', true);
     if(agreementYn3 === 'Y') $('#AGREEMENT_YN_3').prop('checked', true);
-    if(agreementYn4 === 'Y') $('#AGREEMENT_YN_4').prop('checked', true);
+
     if(choiceAgreementYn_1 === 'Y') $('#CHOICE_AGREEMENT_YN_1').prop('checked', true);
     
-    if(agreementYn1 === 'Y' && agreementYn2 === 'Y' && agreementYn3 === 'Y' && agreementYn4 === 'Y' && choiceAgreementYn_1 === 'Y') {
+    if(agreementYn1 === 'Y' && agreementYn2 === 'Y' && agreementYn3 === 'Y') {
       $('#ALL_CHECKBOX').prop('checked', true);
     }
     
@@ -330,7 +414,7 @@
 	            <div class="electronic_contract_condition_typo_container">
 	              <p class="electronic_contract_condition_typo">용역 일반 계약서 동의</p>
 	              <!-- 수정필요 -->
-	              <a href="javascript:window.open('https://www.dentner.co.kr/static/.pdf')" class="electronic_contract_condition_typo short_cut">바로가기</a>
+	              <a href="javascript:window.open('https://www.dentner.co.kr/static/용역 계약서.pdf')" class="electronic_contract_condition_typo short_cut">바로가기</a>
 	            </div>
 	            <label class="checkbox_large">
                 <input type="checkbox" id="AGREEMENT_YN_1" name="AGREEMENT_YN_1" value="${DATA.AGREEMENT_YN_1}" onchange="fnChangeCheck(this);">
@@ -354,7 +438,7 @@
               <input type="checkbox" id="AGREEMENT_YN_3" name="AGREEMENT_YN_3" value="${DATA.AGREEMENT_YN_3}" onchange="fnChangeCheck(this);">
             </label>
 	        </div>
-	        <div class="electronic_contract_condition">
+	        <%-- <div class="electronic_contract_condition">
 	          <div class="electronic_contract_condition_typo_container">
 	            <p class="electronic_contract_condition_typo">사용 CAD (Computer Aided Design) S/W</p>
 	            <div class="project_select_button_container">
@@ -377,7 +461,9 @@
 	          <label class="checkbox_large" style="float: right;margin-top: -30px;">
               <input type="checkbox" id="CHOICE_AGREEMENT_YN_1" name="CHOICE_AGREEMENT_YN_1" value="${DATA.CHOICE_AGREEMENT_YN_1}" onchange="fnChangeCheck(this);">
             </label>
-	        </div>
+	        </div> --%>
+	        <input type="hidden" id="AGREEMENT_YN_4" name="AGREEMENT_YN_4" value="Y">
+	        <input type="hidden" name="CHOICE_AGREEMENT_YN_1" value="Y">
 	      </div>
 	      <div class="main_container_divider divider_without_margin"></div>
 	      <div class="accept_all">

@@ -14,16 +14,30 @@
 <script>
 
   var cadEstimatorViewModal;
-  
+  var realnm = "";
+  var title = "";
+  function cancelsetting(obj){
+	  var Client_nicknm= $(obj).parent().parent().prev().find("#clientNickName").text();
+	  var CheesignerName = $(obj).parent().parent().prev().find("#CheesignerName").text();
+	  
+	  var cur_user = "${sessionInfo.user.USER_ID}";
+	  title=$(obj).parent().parent().prev().find("#title").text();
+	  if(Client_nicknm == cur_user){
+		  realnm = CheesignerName;
+	  }else{
+		  realnm = Client_nicknm;
+	  }
+	  console.log("realnm1 :: " + realnm);
+	  
+  }
   function fnCancel() {
     
     var projectNo = arguments[0];
-    
     var isConfirm = window.confirm('취소요청 하시겠습니까?\n모든 계약정보가 삭제 됩니다.');
     if(!isConfirm) return;
     
-    $.ajax({
-      url: '/' + API + '/mypage/equipment_estimator_my_page_progress/save04',
+   $.ajax({
+      url: '/' + API + '/mypage/equipment_estimator_my_page_progress/ProjectCancel',
       type: 'POST',
       data: { PROJECT_NO : projectNo },
       cache: false,
@@ -35,16 +49,23 @@
       }, complete: function() {
       }, error: function() {
       }
-    });
+    }); 
+    console.log("realnm2 :: " + realnm);
+    messageSend08(realnm);
+	 
   }
-  
+  var Client_nicknm="";
+  function paysetting(obj){
+	  Client_nicknm= $(obj).parent().parent().parent().parent().prev().find("#clientNickName").text();//수정
+	  console.log("Client_nicknm :: " + Client_nicknm);
+  }
   function fnPayment() {
     
     var wrNo = arguments[0];
     
     var isConfirm = window.confirm('입금확인 하시겠습니까?');
     if(!isConfirm) return;
-    
+   	
     $.ajax({
       url: '/' + API + '/mypage/equipment_estimator_my_page_progress/save06',
       type: 'POST',
@@ -59,8 +80,41 @@
       }, error: function() {
       }
     });
+    messageSend02(Client_nicknm);
   }
-  
+  function messageSend02(Client) {
+	  var result = '';
+	  $.ajax({
+	    url: '/' + API + '/common/message02',
+	    type: 'POST',
+	    data: { USER_NICK_NAME: Client},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	    }, error: function() {
+	    }
+	  });
+	  return result;
+	}
+  function messageSend08(realnm) {
+	  var result = '';
+
+	  $.ajax({
+	    url: '/' + API + '/common/message08',
+	    type: 'POST',
+	    data: { USER_NICK_NAME: realnm, TITLE: title},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
   function fnListToggle() {
     var target = arguments[0];
     var img = $(target).find('img');
@@ -227,6 +281,7 @@
       <jsp:param name="PROJECT_NM" value="${item.PROJECT_NM}" />
     </jsp:include>
     <script>
+    //PUBLIC_CD
     console.log("${item.WR_NO}");
     console.log("${item.PROJECT_NO}");
     console.log("${item.PROJECT_NM}");
@@ -236,9 +291,19 @@
     </script>
               <div class="equipment_estimator_my_page_progress_list">
                 <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_current">
-                  <div class="equipment_estimator_my_page_progress_completed">
+                <c:choose>
+	                <c:when test="${item.PUBLIC_CD eq 'U003'}">
+	                  <div class="equipment_estimator_my_page_progress_completed" style="background-color:#ff1924;border:1px solid #ff1924">
+	                    <p class="equipment_estimator_my_page_progress_completed_typo">취소</p>
+	                  </div>
+	                </c:when>
+	                <c:otherwise>
+	              <div class="equipment_estimator_my_page_progress_completed">
                     <p class="equipment_estimator_my_page_progress_completed_typo">${item.PROGRESS_NM}</p>
                   </div>
+	                </c:otherwise>
+                </c:choose>
+
                 </div>
                 <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_category">
                   <p class="equipment_estimator_my_page_progress_list_item_typo">${item.PROJECT_NM}</p>
@@ -246,12 +311,12 @@
                 <c:choose>
                   <c:when test="${item.PROGRESS_CD eq 'PC005'}">
                     <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_context">
-                      <p class="equipment_estimator_my_page_progress_list_item_typo">${item.TITLE}</p>
+                      <p class="equipment_estimator_my_page_progress_list_item_typo" id="title">${item.TITLE}</p>
                     </div>
                   </c:when>
                   <c:otherwise>
                     <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_context">
-                      <p class="equipment_estimator_my_page_progress_list_item_typo">${item.TITLE}</p>
+                      <p class="equipment_estimator_my_page_progress_list_item_typo" id="title">${item.TITLE}</p>
                     </div>
                   </c:otherwise>
                 </c:choose>
@@ -259,13 +324,13 @@
                   <p class="equipment_estimator_my_page_progress_list_item_typo">${item.MATCHING_DATE}</p>
                 </div>
                 <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_date_expiry">
-                  <p class="equipment_estimator_my_page_progress_list_item_typo">${item.DELIVERY_EXP_DATE}</p>
+                  <p class="equipment_estimator_my_page_progress_list_item_typo"><c:if test="${item.PUBLIC_CD ne 'U003'}">${item.DELIVERY_EXP_DATE}</c:if></p>
                 </div>
                 <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_client">
-                  <p class="equipment_estimator_my_page_progress_list_item_typo">${item.USER_NICK_NAME}</p>
+                  <p class="equipment_estimator_my_page_progress_list_item_typo" id="clientNickName">${item.USER_NICK_NAME}</p>
                 </div>
                 <div class="equipment_estimator_my_page_progress_list_item equipment_estimator_my_page_progress_cheesigner">
-                  <p class="equipment_estimator_my_page_progress_list_item_typo">${item.CHEESIGNER_NICK_NAME}</p>
+                  <p class="equipment_estimator_my_page_progress_list_item_typo" id="CheesignerName">${item.CHEESIGNER_NICK_NAME}</p>
                 </div>
                 <div class="equipment_estimator_my_page_progress_list_arrow_wrapper" style="cursor: pointer;" onclick="javascript:fnListToggle(this);">
                   <img src="/public/assets/images/equipment_estimator_my_page_progress_list_arrow.svg"/> 
@@ -274,7 +339,7 @@
               <div class="equipment_estimator_my_page_progress_list_pop_up_info_wrapper">
                 <div class="equipment_estimator_my_page_progress_step_wrapper">
                   <div class="equipment_estimator_my_page_progress_step_container">
-                    <div class="equipment_estimator_my_page_progress_sub_wrapper on">
+                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item.PUBLIC_CD ne 'U003'}">on</c:if><c:if test="${item.PUBLIC_CD eq 'U003'}">off</c:if>">
                       <div class="equipment_estimator_my_page_progress_step" onclick="javascript:fnGetCadEstimators('${item.PROJECT_NO}', 'MY_PAGE');" style="cursor: pointer;">
                         <p class="equipment_estimator_my_page_progress_step_typo_clicked">견적서</p>
                       </div>
@@ -283,7 +348,7 @@
                         <div class="equipment_estimator_my_page_progress_step_arrow_bottom" style="background-color:#005fa800;"></div>
                       </div>
                     </div>
-                    <div class="equipment_estimator_my_page_progress_sub_wrapper on">
+                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item.PUBLIC_CD ne 'U003'}">on</c:if><c:if test="${item.PUBLIC_CD eq 'U003'}">off</c:if>">
                       <div class="equipment_estimator_my_page_progress_step" <c:if test="${item.PROGRESS_CD eq 'PC005'}">style="cursor:pointer;" onclick="javascript:location.href='/${api}/contract/project_electronic_contract?ESTIMATOR_NO=${item.ESTIMATOR_NO}&MY_PAGE=Y'"</c:if>>
                         <p class="equipment_estimator_my_page_progress_step_typo_clicked">전자계약</p>
                       </div>
@@ -315,7 +380,7 @@
                         <c:set var="item3_2" value="N"/>
                       </c:otherwise>
                     </c:choose>
-                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item3_2 eq 'Y'}">on</c:if>">
+                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item3_2 eq 'Y'}"><c:if test="${item.PUBLIC_CD ne 'U003'}">on</c:if><c:if test="${item.PUBLIC_CD eq 'U003'}">off</c:if></c:if>">
                        <%-- <div class="equipment_estimator_my_page_progress_step" <c:if test="${item3_1 eq 'Y'}">onclick="javascript:location.href='/${api}/mypage/receive_estimator?PROJECT_NO=${item.PROJECT_NO}'" style="cursor: pointer;"</c:if>> --%>
                       <c:choose>
                       <c:when test="${item3_1 eq 'Y'}">
@@ -357,7 +422,7 @@
                         <c:set var="item4_2" value="N"/>
                       </c:otherwise>
                     </c:choose>
-                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item4_2 eq 'Y'}">on</c:if>">
+                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item4_2 eq 'Y'}"><c:if test="${item.PUBLIC_CD ne 'U003'}">on</c:if><c:if test="${item.PUBLIC_CD eq 'U003'}">off</c:if></c:if>">
                     <c:choose>
 	                    <c:when test="${item4_1 eq 'Y'}">
 		                    <div class="equipment_estimator_my_page_progress_step" onclick="javascript:location.href='/${api}/mypage/cad_completed?PROJECT_NO=${item.PROJECT_NO}'" style="cursor: pointer;">
@@ -372,7 +437,7 @@
 	                    </c:otherwise>
                     </c:choose>
                       <%-- <div class="equipment_estimator_my_page_progress_step" <c:if test="${item4_1 eq 'Y'}">onclick="javascript:location.href='/${api}/mypage/cad_completed?PROJECT_NO=${item.PROJECT_NO}'" style="cursor: pointer;"</c:if>> --%>
-                        <p class="equipment_estimator_my_page_progress_step_typo_clicked">CAD완성 및 결제요청</p>
+                        <p class="equipment_estimator_my_page_progress_step_typo_clicked">CAD파일 업로드</p>
                       </div>
                       <div class="equipment_estimator_my_page_progress_step_arrow">
                         <div class="equipment_estimator_my_page_progress_step_arrow_top"  style="background-color:#005fa800;"></div>
@@ -401,7 +466,7 @@
                         <c:set var="item5_2" value="N"/>
                       </c:otherwise>
                     </c:choose>
-                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item5_2 eq 'Y'}">on</c:if>">
+                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item5_2 eq 'Y'}"><c:if test="${item.PUBLIC_CD ne 'U003'}">on</c:if><c:if test="${item.PUBLIC_CD eq 'U003'}">off</c:if></c:if>">
                       <c:choose>
                       <c:when test="${item5_1 eq 'Y'}">
                       	<div class="equipment_estimator_my_page_progress_step" onclick="javascript:location.href='/${api}/mypage/cad_completed_next?PROJECT_NO=${item.PROJECT_NO}'" style="cursor: pointer;">
@@ -443,13 +508,14 @@
                         <c:set var="item6_2" value="N"/>
                       </c:otherwise>
                     </c:choose>
-                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item6_2 eq 'Y'}">on</c:if>">
+                    <div class="equipment_estimator_my_page_progress_sub_wrapper <c:if test="${item6_2 eq 'Y'}"><c:if test="${item.PUBLIC_CD ne 'U003'}">on</c:if><c:if test="${item.PUBLIC_CD eq 'U003'}">off</c:if></c:if>">
                       <div class="equipment_estimator_my_page_progress_step" <c:if test="${item6_1 eq 'Y'}">onclick="javascript:location.href='/${api}/mypage/receive_file?PROJECT_NO=${item.PROJECT_NO}'" style="cursor: pointer;"</c:if>>
                         <p class="equipment_estimator_my_page_progress_step_typo_clicked">파일수령</p>
                       </div>
                     </div>
                     
                   </div>
+                  <c:if test="${item.PUBLIC_CD ne 'U003'}">
                   <div class="dropbox_my_page_progress_pop_up_item_container">
                     <div class="dropbox_my_page_progress_pop_up_item invisible">
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
@@ -521,13 +587,13 @@
                     </c:choose>
                     <div class="dropbox_my_page_progress_pop_up_item <c:if test="${item5_3 eq 'N'}">invisible</c:if>">
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
-                      <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:fnPayment(${item.WR_NO});" style="cursor: pointer;">
+                      <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:paysetting(this);fnPayment(${item.WR_NO});" style="cursor: pointer;">
                         <div class="dropbox_my_page_progress_pop_up_typo_container">
                           <p class="dropbox_my_page_progress_pop_up_typo">입금확인</p>
                         </div>
                       </div>
                     </div>
-                    <div class="dropbox_my_page_progress_pop_up_item <c:if test="${item.FILE_RECEIVE_YN eq 'N'}">invisible</c:if>" style="width: 150px;margin-left:250px;">
+                    <div class="dropbox_my_page_progress_pop_up_item <c:if test="${item.FILE_RECEIVE_YN eq 'N'}">invisible</c:if>">
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
                       <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:location.href=('receive_file?PROJECT_NO=${item.PROJECT_NO}&reviewbool=1')" style="cursor: pointer;border-radius:0 0 0 0;">
                         <div class="dropbox_my_page_progress_pop_up_typo_container">
@@ -536,6 +602,7 @@
                       </div>
                     </div>
                   </div>
+                  </c:if>
                 </div>
                 <c:choose>
                   <c:when test="${item.DVSN_CD eq 'A'}">
@@ -547,16 +614,28 @@
                     <c:set var="talk1_2" value="${item.USER_NICK_NAME}"/> <!-- 닉네임 -->
                   </c:when>
                 </c:choose>
+                <c:choose>
+                	<c:when test="${item.PUBLIC_CD eq 'U003'}">
+                		                <div class="equipment_estimator_my_page_progress_list_pop_up_info_button_container">
+                  <button type="button" class="equipment_estimator_my_page_progress_list_pop_up_info_button_white" onclick="javascript:fnOpenTalk('${talk1_1}', '${talk1_2}');">
+                    <p class="equipment_estimator_my_page_progress_list_pop_up_info_button_white_typo">쪽지보내기</p>
+                  </button>
+                  </div>
+                	</c:when>
+                	<c:otherwise>
                 <div class="equipment_estimator_my_page_progress_list_pop_up_info_button_container">
                   <button type="button" class="equipment_estimator_my_page_progress_list_pop_up_info_button_white" onclick="javascript:fnOpenTalk('${talk1_1}', '${talk1_2}');">
                     <p class="equipment_estimator_my_page_progress_list_pop_up_info_button_white_typo">쪽지보내기</p>
                   </button>
                   <c:if test="${empty item.PAYMENT_CD or item.PAYMENT_CD eq 'PAY_001'}">
-                    <button type="button" class="equipment_estimator_my_page_progress_list_pop_up_info_button_black" onclick="javascript:fnCancel(${item.PROJECT_NO});">
+                    <button type="button" class="equipment_estimator_my_page_progress_list_pop_up_info_button_black" onclick="javascript:cancelsetting(this);fnCancel(${item.PROJECT_NO});">
                       <p class="equipment_estimator_my_page_progress_list_pop_up_info_button_black_typo">취소요청</p>
                     </button>
                   </c:if>
                 </div>
+                	</c:otherwise>
+                </c:choose>
+
               </div>
               <div class="list_divider"></div>
             </c:forEach>
@@ -585,3 +664,12 @@
 
   </script>
 </form:form>
+<style>
+.off{
+background-color:#ff6c6c;
+
+}
+.off p{
+	color:white;
+}
+</style>

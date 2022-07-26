@@ -70,7 +70,7 @@ public class ProcessingController extends BaseController {
     mv.addObject("TOTAL_CNT", service.integer("getCnt01", parameter)); // 총건수
     
     mv.addObject("LIST", service.list("getList01", parameter)); // 목록조회
-      
+     
     return mv;
   }
   

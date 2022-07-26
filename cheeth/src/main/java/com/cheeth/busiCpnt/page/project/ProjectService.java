@@ -4,9 +4,16 @@ import java.io.File;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,10 +33,16 @@ import com.cheeth.busiCpnt.page.talk.TalkService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.popbill.api.MessageService;
+
+import com.popbill.api.PopbillException;
 @Service("ProjectService")
 public class ProjectService extends AbstractService {
   
   protected Logger logger = LogManager.getLogger(ProjectService.class);
+  
+  @Autowired
+  private MessageService messageService;
   
   @Value("${upload.default.path}")
   String uploadDir;
@@ -37,6 +50,11 @@ public class ProjectService extends AbstractService {
   @Autowired
   private FileUtil fileUtil;
   
+  @Value("${popbill.testCorpNum}")
+  private String testCorpNum;
+  
+  @Value("${popbill.testUserID}")
+  private String testUserID;
   public Map<?, ?> getData01(Map<String, Object> parameter) throws Exception {
     
     Map<?, ?> rtnMap = map("getData01", parameter);
@@ -84,6 +102,7 @@ public class ProjectService extends AbstractService {
             insertMap.put("CREATE_ID", userId);
             insertMap.put("UPDATE_ID", userId);
             insert("insert04", insertMap);
+            update("update05", insertMap);
           }
         }
       }
@@ -144,13 +163,47 @@ public class ProjectService extends AbstractService {
         System.out.println("projectNo" + projectNo);
         
         insert("insert06", rtnMap2);
+        
+		  LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));	
+		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+		 
+		  String rtnResult = "";
+		  //인증번호 SMS 전송
+		  
+		  parameter.put("CREATE_ID", receiveId);
+		  String userPhone  = string("common", "getPhoneNum02", parameter);
+		  
+		  parameter.put("userPhone", userPhone);
+		  parameter.put("content", "[덴트너] 지정견적 요청이 왔습니다.");
+		  String result = sendSMS(parameter);
       }
     }
     
     
     return rtnMap;
   }
-  
+  public String sendSMS(Map<String, Object> parameter) throws Exception {
+	  String sender = "02-2273-2822";
+	  String receiver = String.valueOf(parameter.get("userPhone"));
+	  String content = String.valueOf(parameter.get("content"));
+	
+	  // 전송예약일시, null인 경우 즉시전송
+	  Date reserveDT = null;
+	
+	  // 광고 메시지 여부 ( true , false 중 택 1)
+	  // └ true = 광고 , false = 일반
+	  Boolean adsYN = false;
+	
+	  // 전송요청번호
+	  // 팝빌이 접수 단위를 식별할 수 있도록 파트너가 할당한 식별번호.
+	  // 1~36자리로 구성. 영문, 숫자, 하이픈(-), 언더바(_)를 조합하여 팝빌 회원별로 중복되지 않도록 할당.
+	  String requestNum = "";
+	
+	
+	  String receiptNum = messageService.sendSMS(testCorpNum, sender, receiver, "", content, reserveDT, adsYN, testUserID, requestNum);
+
+    return receiptNum;
+  }
   @Transactional(propagation=Propagation.REQUIRED)
   public Map<String, String> save02(Map<String, Object> parameter) throws Exception {
     
@@ -208,16 +261,16 @@ public class ProjectService extends AbstractService {
     
     Integer cnt = 0; // 삭제 조건 추후 수정
     if(cnt == 0) {
-      delete("delete03", parameter);
-      delete("delete02", parameter);
-      delete("delete01", parameter);
+    	
+    	delete("delete03", parameter);
+    	delete("delete02", parameter);
+    	delete("delete01", parameter);
     }
     
     rtnMap.put("result", "Y");
     
     return rtnMap;
   }
-  
   @Transactional(propagation=Propagation.REQUIRED)
   public Map<String, String> updateHit(Map<String, Object> parameter) throws Exception {
     
@@ -258,5 +311,4 @@ public class ProjectService extends AbstractService {
     
     return rtnMap;
   }
-
 }

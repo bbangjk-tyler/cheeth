@@ -43,7 +43,7 @@
 <script>
 
   var sendUserList = new Array();
-
+  var log = 0;
   function fnAllView() {
     location.href = '/' + API + '/project/project_view_all';
   }
@@ -501,10 +501,20 @@
       } else {
         $('.quote_list').addClass('hidden');
       }
+    }else{//수정
+    	
+    	log = 1;
+   	 
+		 console.log("ggggg");
+		 setTimeout(function(){
+			 console.log("wwww");
+			 $(".equipment_estimator_writing_info_date_expiry_typo").html("견적요청 만료시간");	         
+         }, 100);
+
     }
     
   });
-  
+
 </script>
 <div id="date_for_chk" onchange="CheckDate()" style="opacity:0;position:absolute;z-index:-1;"></div>
         <script>
@@ -739,52 +749,6 @@
               </div>
               <div class="project_request_writing_info_underline_box">
                 <input type="text" id="PREFER_NM_2" name="PREFER_NM_2" maxlength="100" value="${DATA.PREFER_NM_2}">
-              </div>
-            </div>
-            <div class="project_request_writing_info_item">
-              <p class="project_request_writing_info_item_typo"></p>
-              <div class="project_request_select_button_container">
-                <div class="dropbox_project_request_preference">
-                  <div class="dropbox_select_button">
-                    <div id="PREFER_CD_DIV_3_1" class="dropbox_select_button_typo_container" onclick="fnSelect_4('3');" style="cursor: pointer;">
-                      <p class="dropbox_select_button_typo">선택</p>
-                      <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-                    </div>
-                  </div>
-                  <div id="PREFER_CD_DIV_3_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
-                    <c:forEach var="item" items="${PREFER_CD_LIST}" varStatus="status">
-                      <div class="dropbox_select_button_item" onclick="fnSelect_4('3', '${item.CODE_CD}', '${item.CODE_NM}')">
-                        <p class="dropbox_select_button_item_typo">${item.CODE_NM}</p>
-                      </div>
-                    </c:forEach>
-                  </div>
-                </div>
-              </div>
-              <div class="project_request_writing_info_underline_box">
-                <input type="text" id="PREFER_NM_3" name="PREFER_NM_3" maxlength="100" value="${DATA.PREFER_NM_3}">
-              </div>
-            </div>
-            <div class="project_request_writing_info_item">
-              <p class="project_request_writing_info_item_typo"></p>
-              <div class="project_request_select_button_container">
-                <div class="dropbox_project_request_preference">
-                  <div class="dropbox_select_button">
-                    <div id="PREFER_CD_DIV_4_1" class="dropbox_select_button_typo_container" onclick="fnSelect_4('4');" style="cursor: pointer;">
-                      <p class="dropbox_select_button_typo">선택</p>
-                      <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-                    </div>
-                  </div>
-                  <div id="PREFER_CD_DIV_4_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
-                    <c:forEach var="item" items="${PREFER_CD_LIST}" varStatus="status">
-                      <div class="dropbox_select_button_item" onclick="fnSelect_4('4', '${item.CODE_CD}', '${item.CODE_NM}')">
-                        <p class="dropbox_select_button_item_typo">${item.CODE_NM}</p>
-                      </div>
-                    </c:forEach>
-                  </div>
-                </div>
-              </div>
-              <div class="project_request_writing_info_underline_box">
-                <input type="text" id="PREFER_NM_4" name="PREFER_NM_4" maxlength="100" value="${DATA.PREFER_NM_4}">
               </div>
             </div>
             <div class="project_request_writing_info_item project_request_detail">

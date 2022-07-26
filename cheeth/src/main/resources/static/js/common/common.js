@@ -579,6 +579,8 @@ function fnCheck() {
 function fnFileDownload() {
   var fileCd = arguments[0];
   var fileNo = arguments[1];
+  console.log("fileCd :: " + fileCd);
+  console.log("fileNo :: " + fileNo);
   $('#fileDownloadForm #FILE_CD').val(fileCd);
   $('#fileDownloadForm #FILE_NO').val(fileNo);
   $('#fileDownloadForm').submit();

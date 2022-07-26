@@ -62,11 +62,13 @@
          , A.CADSW_CD_3
          , A.CADSW_NM_3
          , A.CREATE_ID
+         , B.CREATE_ID AS CLIENT
          , A.CREATE_DATE
          , A.UPDATE_ID
          , A.UPDATE_DATE
          , B.CONTRACT_NO
          , B.PROGRESS_CD
+         , B.CHEESIGNER_ID
          , B.AGREEMENT_YN_1
          , B.AGREEMENT_YN_2
          , B.AGREEMENT_YN_3

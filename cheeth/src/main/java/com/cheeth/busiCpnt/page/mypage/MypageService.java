@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -60,7 +61,13 @@ public class MypageService extends AbstractService {
     
     return rtnMap;
   }
-  
+  public Map<String, Object> getData10(Map<String, Object> parameter) throws Exception {
+	  Map<String, Object> rtnMap = new HashMap<String, Object>();
+	    Map<?, ?> data = map("getData01", parameter);
+	    rtnMap.put("DATA", data);
+	    return rtnMap;
+	    //return data;
+	  }
   public Map<?, ?> getData02(Map<String, Object> parameter) throws Exception {
     Map<?, ?> rtnMap = map("getData02", parameter);
     return rtnMap;
@@ -80,7 +87,29 @@ public class MypageService extends AbstractService {
     Map<?, ?> rtnMap = map("getData06", parameter);
     return rtnMap;
   }
-  
+  public Map<String, Object> getData03(Map<String, Object> parameter) throws Exception {
+	    
+	    Map<String, Object> rtnMap = new HashMap<String, Object>();
+	    
+	    Integer page = 0;
+	    if(!ObjectUtils.isEmpty(parameter.get("PAGE")) && parameter.get("PAGE").toString().chars().allMatch(Character::isDigit)) {
+	      page = Integer.parseInt(parameter.get("PAGE").toString());
+	      if(page == 1) {
+	        page = 0;
+	      } else {
+	        page = (page-1) * 10;
+	      }
+	    }
+	    parameter.put("PAGE", page);
+	    
+	   // Integer cnt = integer("getCnt01", parameter);
+	    List<?> list =list("getList10", parameter);
+	    
+	   // rtnMap.put("TOTAL_CNT", cnt);
+	    rtnMap.put("LIST", list);
+	    
+	    return rtnMap;
+	  }
   public Map<String, Object> getData07(Map<String, Object> parameter) throws Exception {
     
     Map<String, Object> rtnMap = new HashMap<String, Object>();
@@ -224,18 +253,47 @@ public class MypageService extends AbstractService {
   public Map<String, Object> save04(Map<String, Object> parameter) throws Exception {
     Map<String, Object> rtnMap = new HashMap<String, Object>();
     rtnMap.put("result", "Y");
+//    WHERE A.PROJECT_NO = #{PROJECT_NO}
+//    AND A.CREATE_ID = #{CREATE_ID}
     
     Map<?, ?> data = map("getData01", parameter);
+    Map<?, ?> data2 = map("getData02", parameter);
+    
+    List<Map<String, Object>> cardsettingList = (List<Map<String, Object>>) parameter.get("cardsetting");
+
     if(data != null && !data.isEmpty()) {
-      delete("delete02", data);
-      delete("delete01", data);
-      delete("delete03", data);
+//      delete("delete02", data);
+      
+//      delete("delete03", data);
       update("update03", data);
+      update("update11", data2);
+//      delete("delete01", data);
     }
     
     return rtnMap;
   }
-  
+
+  @Transactional(propagation=Propagation.REQUIRED)
+  public Map<String, Object> ProjectCancel(Map<String, Object> parameter) throws Exception {
+    Map<String, Object> rtnMap = new HashMap<String, Object>();
+    rtnMap.put("result", "Y");
+    if(parameter.get("WR_NO") != null) {
+//    	delete("delete02", parameter);
+//    	delete("delete01", parameter);
+    	 update("update03", parameter);
+    }
+   
+    update("update11", parameter);
+    update("update14", parameter);
+    return rtnMap;
+  }
+  @Transactional(propagation=Propagation.REQUIRED)
+  public Map<String, Object> StateUpdate(Map<String, Object> parameter) throws Exception {
+    Map<String, Object> rtnMap = new HashMap<String, Object>();
+    rtnMap.put("result", "Y");
+    update("update11", parameter);
+    return rtnMap;
+  }
   @Transactional(propagation=Propagation.REQUIRED)
   public Map<String, Object> save05(Map<String, Object> parameter) throws Exception {
     Map<String, Object> rtnMap = new HashMap<String, Object>();
@@ -275,19 +333,31 @@ public class MypageService extends AbstractService {
     rtnMap.put("result", "Y");
     
     List<MultipartFile> compFiles = new ArrayList<>();
-    
+    List<MultipartFile> LicenseFiles = new ArrayList<>();
     if (!ObjectUtils.isEmpty(parameter.get("COMP_FILE"))) {
       compFiles = (List<MultipartFile>) parameter.get("COMP_FILE");
     }
-
+    if (!ObjectUtils.isEmpty(parameter.get("LICENSE_FILE"))) {
+    	LicenseFiles = (List<MultipartFile>) parameter.get("LICENSE_FILE");
+    }
+    
     List<Map<String, Object>> compFileInfoList = fileUtil.getMultiPartFileInfo(compFiles, "COMP");
     for(Map fileInfo : compFileInfoList) {
       fileUtil.saveMultiPartFileBack(compFiles.get(((int)fileInfo.get("FILE_NO"))-1), fileInfo, uploadDir + File.separator);
+      System.out.println("FILE_CD 1 :: "  + fileInfo.get("FILE_CD"));
       parameter.put("COMP_FILE_CD", fileInfo.get("FILE_CD"));
       fileInfo.put("CREATE_ID", parameter.get("CREATE_ID"));
       insert("insertFile", fileInfo);
     }
-
+    List<Map<String, Object>> LicenseFilesList = fileUtil.getMultiPartFileInfo(LicenseFiles, "COMP");
+    for(Map fileInfo2 : LicenseFilesList) {
+        fileUtil.saveMultiPartFileBack(LicenseFiles.get(((int)fileInfo2.get("FILE_NO"))-1), fileInfo2, uploadDir + File.separator);
+        System.out.println("FILE_CD 2 :: "  + fileInfo2.get("FILE_CD"));
+        parameter.put("LICENSE_FILE_CD", fileInfo2.get("FILE_CD"));
+        fileInfo2.put("CREATE_ID", parameter.get("CREATE_ID"));
+        insert("insertFile", fileInfo2);
+      }
+    
     Integer updateCnt = (Integer) update("update06", parameter);
     rtnMap.put("cnt", updateCnt);
     

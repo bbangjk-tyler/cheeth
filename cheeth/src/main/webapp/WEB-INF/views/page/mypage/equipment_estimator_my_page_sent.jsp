@@ -115,7 +115,7 @@
 				        </a>
 				      </c:when>
 				      <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
-				        <a href="/${api}/mypage/profile_management_cheesigner" class="side_menu_list">
+				        <a href="/${api}/mypage/profile_management_cheesigner_show" class="side_menu_list">
 				          <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
 				          <p class="side_menu_list_typo">프로필 관리</p>
 				        </a>

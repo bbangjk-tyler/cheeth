@@ -45,6 +45,8 @@
      cache: false,
      async: false,
      success: function(data) {
+    	 alert("결제를 완료하셨습니까? \n 치자이너 회원님의 입금확인 후에 완성된 캐드파일을 다운로드 하실 수 있습니다.");
+    	 message07();
        if(data.cnt === 0) {
     	   alert('업데이트 실패하였습니다.');
        }
@@ -54,7 +56,26 @@
      }
    });
   }
-
+  console.log("${DATA_02.CHEESIGNER_ID}");
+  function message07() {
+	  var result = '';
+	  var p_info_1 = "${DATA_02.CHEESIGNER_ID}";
+	  $.ajax({
+	    url: '/' + API + '/common/message07',
+	    type: 'POST',
+	    data: { USER_ID: p_info_1},
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	    }, complete: function() {
+	      
+	    }, error: function() {
+	      
+	    }
+	  });
+	  return result;
+	}
+  
   function fnSetReqInfo() {
     var gsc = '${DATA_01.GCS}';
     if(isNotEmpty(gsc)) {
@@ -83,6 +104,11 @@
             html += `</p>`;
             html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + `개</p>`;
             html += `</div>`;
+            if(isNotEmpty(rtnArray[0]['WR_FILE_CD'])) {
+                html += `<button class="receive_estimator_attatchment_download_button" onclick="javascript:alert('결제완료와 입금확인 후에 파일 다운로드가 가능합니다.');">`;
+                html += `<p class="receive_estimator_attatchment_download_button_typo">첨부파일 다운로드</p>`;
+                html += `</button>`;
+              }
             html += `</div>`;
             $('.receive_estimator_request_wrapper').append(html);
             fnSetNext(data);

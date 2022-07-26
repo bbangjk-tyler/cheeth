@@ -9,16 +9,29 @@
 </script>
 </c:if>
 <script>
-
+	var locations = document.location.href;
 	var cardArr = new Array();
 	var pcurrCardObj = new Object();
+	var groupCD_STR = "";
+	function fnRewriteLink(){
+		location.href = '/api/tribute/tribute_request?groupCd='+groupCD_STR;
+	}
 
+ 	$(document).ready(function(){
+
+		if(locations.includes("request_basket")){
+			  Rewritebool = 1;
+			  console.log(Rewritebool);
+				$("#Rewritebtn").css("display", "block");
+		}
+	}); 
   function fnPreview() {
-	  
+
 	  resetPreviewCard();
-	
-	  const groupCd = arguments[0]; 
 	  
+
+	  const groupCd = arguments[0]; 
+	  groupCD_STR = groupCd;
 	  $.ajax({
       url: '/' + API + '/tribute/getReqInfo',
       type: 'GET',
@@ -214,10 +227,25 @@
   });
   
 </script>
-
+<style>
+#Rewritebtn{
+    display: block;
+    position: absolute;
+    /* right: 8px; */
+    margin-right: 10px;
+    right: 26px;
+    top: 108px;
+    /* top: 8px; */
+    background: gray;
+    z-index: 9999;
+    color: white!important;
+    padding: 10px 10px;
+}
+</style>
 <div class="modal fade" id="requestModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="width: fit-content;">
+		<button id="Rewritebtn" style="display:none" onclick="fnRewriteLink()">수정하기</button>
 			<div class="rework_request_preview_dialog_container">
 				<div class="rework_request_preview_dialog_header">
 					<p class="rework_request_preview_dialog_header_typo">의뢰서 미리보기</p>
@@ -399,6 +427,7 @@
             	<img class="p_teeth_model_tooth_img p_img_four_eight" src="/public/assets/images/tooth/gray/48.png"/>
             </div>
           </div>
+          
 					<div class="tribute_request_preview_main_container">
 						<div class="tribute_request_preview_card">
 							<div class="dialog_tribute_request_card_chip_container tribute_request_card_chip_container">

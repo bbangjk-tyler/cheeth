@@ -166,7 +166,6 @@ public class SignController extends BaseController {
     
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     Map<String, Object> rtnMap = new HashMap<>();
-    
     try {
       Map<?, ?> info = service.getSnsInfo(parameter);
       if(ObjectUtils.isEmpty(info)) {
@@ -179,5 +178,4 @@ public class SignController extends BaseController {
     }
     return rtnMap;
   }
-
 }
