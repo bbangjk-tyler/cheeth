@@ -22,7 +22,7 @@
   }else{
 	  realid = cheesignerID;
   }
-  function message04_1() {
+  function message04_1(realid) {
 	  var result = '';
 	  $.ajax({
 	    url: '/' + API + '/common/message04_1',

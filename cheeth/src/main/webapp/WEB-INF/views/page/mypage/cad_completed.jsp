@@ -192,11 +192,11 @@ if(request.getParameter("alreadychk") !=null){
             <% if(alreadychk.equals("1")){%>
             if(isNotEmpty(rtnArray[0]['WR_FILE_CD'])) {
                 html += `<button class="receive_estimator_attatchment_download_button" onclick="fnFileDownload('\${rtnArray[0]['WR_FILE_CD']}', '1');">`;
-                html += `<p class="receive_estimator_attatchment_download_button_typo">첨부파일 다운로드</p>`;
+                html += `<p class="receive_estimator_attatchment_download_button_typo">CAD파일 다운로드</p>`;
                 html += `</button>`;
               }
             <% }else{ %>
-            html += `<input type="file" style="padding:9px 45px" onchange="fnFileChange(this, ` + rtnArray[0]['RQST_NO'] + `);" title="의뢰서 첨부">`;
+            html += `<div style="background-color: black;color: white;text-align: center;height: 38px;width: 150px; margin-left: 20px;line-height: 38px;border-radius: 5px;">CAD파일 업로드<input type="file" style="padding:9px 45px;opacity:0;" onchange="fnFileChange(this, ` + rtnArray[0]['RQST_NO'] + `);" title="의뢰서 첨부"></div>`;
             <% } %>
             html += `</div>`;
             $('.receive_estimator_request_wrapper').append(html);
@@ -249,7 +249,7 @@ if(request.getParameter("alreadychk") !=null){
   <input type="hidden" id="WR_NO" name="WR_NO" value="${DATA_02.WR_NO}">
   <input type="hidden" id="PROJECT_NO" name="PROJECT_NO" value="${DATA_01.PROJECT_NO}">
 	<div class="receive_estimator_header">
-	  <p class="receive_estimator_header_typo">CAD파일 업로드</p>
+	  <p class="receive_estimator_header_typo">CAD완성 및 결제요청</p>
 	  <div class="receive_estimator_connection_location_container">
 	    <a href="/" class="receive_estimator_connection_location_typo">
 	      <img class="receive_estimator_connection_location_home_button" src="/public/assets/images/connection_location_home_button_white.svg"/>
@@ -264,7 +264,7 @@ if(request.getParameter("alreadychk") !=null){
 	    </div>
 	    <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	    <div class="receive_estimator_connection_location">
-	      <p class="receive_estimator_connection_location_typo_bold">CAD파일 업로드</p>
+	      <p class="receive_estimator_connection_location_typo_bold">CAD완성 및 결제요청</p>
 	    </div>
 	  </div>
 	</div>

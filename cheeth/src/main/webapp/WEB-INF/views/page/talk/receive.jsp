@@ -180,7 +180,7 @@
       cache: false,
       async: false,
       success: function(data) {
-        $('#dtl_r_nm').html(data.info.RECEIVE_NM);
+        $('#dtl_r_nm').html(data.info.SEND_NM);
         $('#dtl_s_date').html(data.info.SEND_DATE);
         $('#dtl_content').html(data.info.CONTENT);
         $('#dtl_SEND_ID').val(data.info.SEND_ID);
