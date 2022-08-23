@@ -105,7 +105,7 @@
             html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + `개</p>`;
             html += `</div>`;
             if(isNotEmpty(rtnArray[0]['WR_FILE_CD'])) {
-                html += `<button class="receive_estimator_attatchment_download_button" onclick="javascript:alert('결제완료와 입금확인 후에 파일 다운로드가 가능합니다.');">`;
+                html += `<button type="button" class="receive_estimator_attatchment_download_button" onclick="javascript:alert('결제완료와 입금확인 후에 파일 다운로드가 가능합니다.');">`;
                 html += `<p class="receive_estimator_attatchment_download_button_typo">첨부파일 다운로드</p>`;
                 html += `</button>`;
               }

@@ -20,7 +20,7 @@
 	  var Client_nicknm= $(obj).parent().parent().prev().find("#clientNickName").text();
 	  var CheesignerName = $(obj).parent().parent().prev().find("#CheesignerName").text();
 	  
-	  var cur_user = "${sessionInfo.user.USER_ID}";
+	  var cur_user = "${sessionInfo.user.USER_NICK_NAME}";
 	  title=$(obj).parent().parent().prev().find("#title").text();
 	  if(Client_nicknm == cur_user){
 		  realnm = CheesignerName;
@@ -44,7 +44,9 @@
       async: false,
       success: function(data) {
         if(data.result === 'Y') {
-          location.reload();
+          setTimeout(function(){
+              location.reload();        	  
+          },100);
         }
       }, complete: function() {
       }, error: function() {

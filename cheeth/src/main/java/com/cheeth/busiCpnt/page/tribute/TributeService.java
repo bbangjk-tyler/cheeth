@@ -92,14 +92,14 @@ public class TributeService extends AbstractService {
     
     List<Map<String, Object>> cardList = (List<Map<String, Object>>) parameter.get("cards");
     List<Map<String, Object>> cardsettingList = (List<Map<String, Object>>) parameter.get("cardsetting");
-    String groupCd = parameter.get("groupCd").toString();
+    String groupCd = parameter.get("GROUP_CD").toString();
     
-    parameter.put("GROUP_CD", groupCd);
-
+    //parameter.put("GROUP_CD", groupCd);
+    System.out.println("groupCd :: " + groupCd);
     delete("delete03", parameter);
     delete("delete04", parameter);
     delete("delete05", parameter);
-    delete("delete06", parameter);
+    delete("delete06", parameter); 
     String rqstNo = "";
     String tabNo = "";
     System.out.println("mvvvp" + parameter.get("cardsetting"));
@@ -114,7 +114,6 @@ public class TributeService extends AbstractService {
     	cardsetting.put("CATEGORYCHOICEBOOL", cardsetting.get("CATEGORYCHOICEBOOL"));
     	cardsetting.put("BOOL", cardsetting.get("BOOL"));
     	cardsetting.put("TABNUM", cardsetting.get("TABNUM"));
-    	
     	
     	insert("insert05", cardsetting);
     }

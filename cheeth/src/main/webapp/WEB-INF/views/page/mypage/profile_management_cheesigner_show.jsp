@@ -163,7 +163,14 @@
   });
   
 </script>
-
+<style>
+#PROFILE_FILE{
+	width: 58px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
 <div class="equipment_estimator_header">
   <p class="equipment_estimator_header_typo">프로필 관리</p>
 </div>
@@ -508,3 +515,13 @@
                 </div>
              </div>
        </div>
+       <style>
+    .swiper-slide{
+        width: 214px;
+    height: 180px;
+    margin-right: 24px;
+    }
+    #IMAGE_FILE{
+    	width: 100%;
+    }
+    </style>

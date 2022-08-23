@@ -399,6 +399,21 @@ public class ProjectController extends BaseController {
     
     return resultMap;
   }
+  @GetMapping(value = "/getEstimatorInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Map<String, Object> getEstimatorInfo(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    Map<String, Object> resultMap = new HashMap<>();
+    
+    List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getEstimatorList2", parameter);
+    for(Map<String, Object> estimator : list) {
+      estimator.put("dtlInfo", service.list("getEstimatorDtlInfo", estimator));
+      estimator.put("fileList", service.list("common", "getFileList", estimator));
+    }
+    resultMap.put("estimatorList", list);
+    
+    return resultMap;
+  }
   
   @GetMapping(value = "/getMyEstimator", produces = MediaType.APPLICATION_JSON_VALUE)
   public Map<String, Object> getMyEstimator(HttpServletRequest request) throws Exception {

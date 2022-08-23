@@ -79,7 +79,7 @@
       contentType: false,
       processData: false,
       success: function(data) {
-        location.href = '/' + API + '/mypage/profile_management_cheesigner';
+        location.href = '/' + API + '/mypage/profile_management_cheesigner_show';
       }, complete: function() {
       }, error: function() {
       }
@@ -522,3 +522,13 @@
 	  </div>
   </form:form>
 </div>
+       <style>
+    .swiper-slide{
+        width: 214px;
+    height: 180px;
+    margin-right: 24px;
+    }
+    #IMAGE_FILE{
+    	width: 100%;
+    }
+    </style>

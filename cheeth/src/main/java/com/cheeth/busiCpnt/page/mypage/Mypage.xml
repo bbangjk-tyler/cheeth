@@ -714,6 +714,8 @@
          , A.BANK_CD
          , A.ACCOUNT_NM
          , A.LICENSE_NO
+         , A.LICENSE_FILE_CD
+         , A.COMP_FILE_CD
          , A.JOB_CD
          , C.FILE_ORIGIN_NM AS LICENSE_FILE
       FROM TB_USER_INFO A
@@ -721,7 +723,6 @@
         ON A.COMP_FILE_CD = B.FILE_CD
       LEFT OUTER JOIN TB_FILE_INFO C
         ON A.LICENSE_FILE_CD = C.FILE_CD
-       AND C.FILE_NO = 1
      WHERE A.USER_ID = #{USER_ID}
   ]]>
   </select>
@@ -1130,6 +1131,7 @@
          , COMP_ADDRESS = #{COMP_ADDRESS}
          , COMP_ADDRESS_DTL = #{COMP_ADDRESS_DTL}
          , COMP_FILE_CD = #{COMP_FILE_CD}
+         , COMP_NO= #{COMP_NO}
   ]]>
          <if test='"2".equals(USER_TYPE_CD) or "3".equals(USER_TYPE_CD)'>   <!-- 의뢰인 OR 치위생사 -->
 			, JOB_CD = #{JOB_CD}
@@ -1203,7 +1205,7 @@
      WHERE USER_ID = #{USER_ID}
   ]]>
   </update>
-      <update id="update11" parameterType="map">
+  <update id="update11" parameterType="map">
   <![CDATA[
     /* project.update11 */
     UPDATE TB_TRIBUTE
@@ -1239,6 +1241,7 @@
     /* mypage.update14 */
     UPDATE TB_PROJECT
     SET PUBLIC_CD = 'U003'
+    , PROGRESS_CD = 'PC005'
     WHERE PROJECT_NO = #{PROJECT_NO}
   ]]>
   </update>

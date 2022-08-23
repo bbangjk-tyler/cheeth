@@ -455,6 +455,7 @@
          ) AS SHADE_NM
          , A.SHADE_ETC
          , A.DTL_TXT
+         , A.FILE_CD
       FROM TB_TRIBUTE A
      WHERE A.GROUP_CD = #{GROUP_CD}
   ]]>
@@ -533,6 +534,7 @@
 						     , A.SUPP_NM_3
 						     , A.SUPP_CD_4
 						     , A.SUPP_NM_4
+						     , A.FILE_CD
 						     , (SELECT COUNT(DTL.RQST_NO)
 									    FROM TB_TRIBUTE_DTL DTL
 									   WHERE DTL.GROUP_CD = A.GROUP_CD

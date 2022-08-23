@@ -8,6 +8,12 @@
    location.href = '/api/login/view';
 </script>
 </c:if>
+<%
+String nm = "";
+if(request.getParameter("nm") !=null){
+	nm = request.getParameter("nm");
+}
+%>
 <script>
   var cheesignerID = "${DATA.CHEESIGNER_ID}";
   var CREATEID = "${DATA.CLIENT}";
@@ -16,18 +22,23 @@
   console.log("CREATEID :: " + CREATEID);
   
   var curid = "${sessionInfo.user.USER_ID}";
+  
+  console.log("curid :: " + curid);
   var realid = "";
   if(cheesignerID == curid){
 	  realid = CREATEID;
-  }else{
-	  realid = cheesignerID;
+	  console.log("1 :: ");
   }
-  function message04_1(realid) {
+  if(CREATEID == curid){
+	  realid = cheesignerID;
+	  console.log("2 :: ");
+  }
+  function message04_1() {
 	  var result = '';
 	  $.ajax({
 	    url: '/' + API + '/common/message04_1',
 	    type: 'POST',
-	    data: { RECEIVE_ID: realid},
+	    data: { USER_NICK_NAME: "<%=nm%>"},
 	    cache: false,
 	    async: false,
 	    success: function(data) {
@@ -44,7 +55,7 @@
 	  $.ajax({
 	    url: '/' + API + '/common/message04_2',
 	    type: 'POST',
-	    data: { RECEIVE_ID: realid},
+	    data: { USER_ID: realid},
 	    cache: false,
 	    async: false,
 	    success: function(data) {
@@ -58,10 +69,11 @@
 	}
   function message04() {
 	  var result = '';
+	  console.log("realid :: " + realid);
 	  $.ajax({
 	    url: '/' + API + '/common/message04',
 	    type: 'POST',
-	    data: { RECEIVE_ID: realid},
+	    data: { USER_ID: realid},
 	    cache: false,
 	    async: false,
 	    success: function(data) {
@@ -81,7 +93,169 @@
       location.href = '/' + API + '/project/project_view_all';
 	  }
   }
+  var reqArr = new Array();
+  var suppInfo = new Array();
+  function fnViewEstimators() {
+	  
+		var cntArr = new Array();
+		var rqstNoArr = new Array();
+		var suppCdArr = new Array();
+		var suppNmArr = new Array();
+		var reqHtml = '';
+
+	  reqArr.map((req, index) => {
+			
+			cntArr = req['CNT_STR'].split(',');
+			rqstNoArr = req['RQST_NO_STR'].split(',');
+			suppCdArr = req['SUPP_CD_STR'].split(',');
+			suppNmArr = req['SUPP_NM_STR'].split(',');
+			
+			var suppStr = suppNmArr.map((nm, i) => {
+				return nm + ' ' + cntArr[i] + '개';
+			}).join(', ');
+			
+			reqHtml += '<div class="cad_estimator_dialog_request">';
+			reqHtml += '  <p class="cad_estimator_dialog_request_title">의뢰서' + (index + 1) + '</p>';
+			reqHtml += '	 <p class="cad_estimator_dialog_request_name">' + req.PANT_NM + '</p>';
+			reqHtml += '	 <p class="cad_estimator_dialog_request_context">' + suppStr + '</p>';
+			reqHtml += '</div>';
+		});
+		$('.cad_estimator_dialog_request_container').html(reqHtml);
+		
+		var suppHtml = '';
+		suppInfo.map((m, i) => {
+	  	suppHtml += '<div class="prosthetics_type_list_container">';
+			suppHtml += '  <div class="prosthetics_type_list">';
+			suppHtml += '	   <p class="prosthetics_type_list_typo">' + m.SUPP_NM_STR + '</p>';
+			suppHtml += '	 </div>';
+			suppHtml += '  <div class="prosthetics_type_list_divider"></div>';
+			suppHtml += '  <div class="prosthetics_type_list">';
+			suppHtml += '    <p class="prosthetics_type_list_typo">' + m.CNT + '</p>';
+			suppHtml += '  </div>';
+			suppHtml += '</div>';
+	  });
+		$('.view_prosthetics_type_list_container_wrapper').html(suppHtml);
+	  
+		fnGetEstimators();
+}
+
+var estimatorArr = new Array();
+
+function fnGetEstimators() {
+	  var ESTIMATORNO = '${ESTIMATOR_NO}';
+	  
+	  $.ajax({
+		  url: '/' + API + '/project/getEstimatorInfo',
+		  type: 'GET',
+		  data: { ESTIMATOR_NO : ESTIMATORNO },
+		  cache: false,
+		  async: false,
+		  success: function(data) {
+				estimatorArr = data.estimatorList;
+				if(isEmpty(estimatorArr)) {
+					alert('받은 견적서가 존재하지 않습니다.');
+					estimatorViewModal.hide();
+				} else {
+					fnSetEstimator(0);
+					fnSetEstimatorPageInfo(0);
+					estimatorViewModal.show();
+				}
+		  }, 
+		  complete: function() {}, 
+		  error: function() {}
+		});
+}
+
+function fnSetEstimatorPageInfo() {
+	  var pageIndex = arguments[0];
+	  
+	  var btnHtml = '';
+		btnHtml += '<button class="pagination_page_button_prev ' + ((pageIndex > 0) ? '' : 'invisible') + '" type="button"';
+		if(pageIndex > 0) {
+			btnHtml += 'onclick="fnSetEstimator(' + (pageIndex - 1) + ');">';
+		} else {
+			btnHtml += '>';
+		}
+		btnHtml += '	<img src="/public/assets/images/dialog_page_next_button_arrow.svg" class="pagination_page_before_button_arrow"/>';
+		btnHtml += '</button>';
+		btnHtml += '<p class="pagination_current_page">' + (pageIndex + 1) + '&nbsp;</p>';
+		btnHtml += '<p class="pagination_total_page">/ ' + estimatorArr.length + '</p>';
+		btnHtml += '<button class="pagination_page_button ' + ((pageIndex == estimatorArr.length - 1) ? 'invisible' : '') + '" type="button"';
+		if(pageIndex == estimatorArr.length - 1) {
+			btnHtml += '>';
+		} else {
+			btnHtml += 'onclick="fnSetEstimator(' + (pageIndex + 1) + ');">';
+		}
+		btnHtml += '	<img src="/public/assets/images/dialog_page_next_button_arrow.svg" class="pagination_page_next_button_arrow"/>';
+		btnHtml += '</button>';
+		
+		$('.cad_estimator_pagination').html(btnHtml);
+}
+
+var currEstimator;
+
+function fnSetEstimator() {
+	  var index = arguments[0];
+	  currEstimator = estimatorArr[index];
+	  
+	  $('#viewDeliveryPosDateTypo').text(currEstimator['DELIVERY_POS_DATE']);
+	  
+	  var suppDtlHtml = '';
+	  var totalPrice = 0;
+	  currEstimator.dtlInfo.map((m, i) => {
+		  suppDtlHtml += '<div class="cad_estimator_dialog_item_context">';
+			suppDtlHtml += '	<div class="dialog_item_context_calculate_price_wrapper">';
+			suppDtlHtml += '		<div class="dialog_item_context_calculate_price without_margin">';
+			var suppNmStr = [m.SUPP_CD_1, m.SUPP_CD_2, m.SUPP_CD_3, m.SUPP_CD_4].filter(f => isNotEmpty(f)).map(m => fnFindSuppNm(m)).join(' - ');
+			suppDtlHtml += '			<input class="cad_estimator_dialog_item_context_blank_prosthetics_type" readonly value="' + suppNmStr + '"/>';
+			suppDtlHtml += '			<input class="cad_estimator_dialog_item_context_blank_price" readonly value="' + m.UNIT_PRICE + '"/>';
+			suppDtlHtml += '			<p class="operator">X</p>';
+			suppDtlHtml += '			<input class="cad_estimator_dialog_item_context_blank_count" readonly value=" '+ m.AMOUNT + '"/>';
+			suppDtlHtml += '			<p class="operator">=</p>';
+			suppDtlHtml += '			<div class="dialog_item_context_typo_container price_area">';
+			suppDtlHtml += '				<p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
+			suppDtlHtml += '				<p class="dialog_item_context_typo">원</p>';
+			suppDtlHtml += '			</div>';
+			suppDtlHtml += '		</div>';
+			suppDtlHtml += '	</div>';
+			suppDtlHtml += '</div>';
+			
+			totalPrice += (+m.SUM_AMOUNT);
+	  });
+	  $('.cad_estimator_dialog_item_context_wrapper').html(suppDtlHtml);
+	  $('.cad_estimator_total_price_wrapper #totalPriceNum').text(totalPrice);
+	  
+	  var cadswInfo = new Array();
+	  if(isNotEmpty(currEstimator.CADSW_CD_1)) cadswInfo.push(currEstimator.CADSW_NM_1);
+	  if(isNotEmpty(currEstimator.CADSW_CD_2)) cadswInfo.push(currEstimator.CADSW_NM_2);
+	  if(isNotEmpty(currEstimator.CADSW_CD_3)) cadswInfo.push(currEstimator.CADSW_NM_3);
+	  
+	  $('#viewCadswTypo').text(cadswInfo.join(', '));
+	  
+	  currEstimator.fileList.map((m, i) => {
+		  m.FILE_DIRECTORY = m.FILE_DIRECTORY.replace(/\\/g, '\/');
+		  if(i == 0) $('#viewMainPicImage').attr('src', '/upload/' + m.FILE_DIRECTORY);
+		  const target = $('.cad_estimator_sub_pic_upload').eq(i);
+			target.addClass('active');
+			target.css('background-image', "url('/upload/" + m.FILE_DIRECTORY + "')");
+	  });
+	  
+	  fnSetEstimatorPageInfo(index);
+	  
+	  // 치자이너 정보 변경
+//	  console.log('currEstimator', currEstimator);
+  $('#p_info_1').html(currEstimator.USER_NICK_NAME);
   
+  if(currEstimator.TAX_BILL_YN === 'Y') {
+    $('#p_info_2').html('세금 계산서 발행 가능');
+  } else {
+    $('#p_info_2').html('');
+  }
+  
+  $('#p_info_3').html(currEstimator.COMPLETE_RATIO + ' %'); // 거래 성공률
+  $('#p_info_4').html(currEstimator.SCORE_AVG + ' / 10'); // 만족도
+  $('#p_info_5').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' 원'); // 거래 총 금액
+}
   function fnApproval() {
     var estimatorNo = '${ESTIMATOR_NO}';
     if(isEmpty(estimatorNo)) {
@@ -116,7 +290,10 @@
         cache: false,
         async: false,
         success: function(data) {
-          fnAllView();
+            setTimeout(function(){
+                fnAllView();       	  
+            },100);
+
         }, complete: function() {
         }, error: function() {
         }
@@ -152,7 +329,9 @@
         cache: false,
         async: false,
         success: function(data) {
-          fnAllView();
+            setTimeout(function(){
+                fnAllView();       	  
+            },100);
         }, complete: function() {
         }, error: function() {
         }
@@ -189,7 +368,7 @@
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
-      message04_1(realid);
+      message04_1();
       $.ajax({
         url: '/' + API + '/contract/save01',
         type: 'POST',
@@ -197,7 +376,9 @@
         cache: false,
         async: false,
         success: function(data) {
-          fnAllView();
+            setTimeout(function(){
+                fnAllView();       	  
+            },100);
         }, complete: function() {
         }, error: function() {
         }
@@ -306,7 +487,9 @@
     $('#SPECIAL_CONDITION').val(temp);
     $('#SP_CHANGE').val('N');
   }
-  
+  var profileModal;
+  var estimatorModal;
+  var estimatorViewModal;
   $(document).ready(function() {
     
     var agreementYn1 = '${DATA.AGREEMENT_YN_1}';
@@ -324,11 +507,19 @@
     if(agreementYn1 === 'Y' && agreementYn2 === 'Y' && agreementYn3 === 'Y') {
       $('#ALL_CHECKBOX').prop('checked', true);
     }
-    
+	  
+	  estimatorViewModal = new bootstrap.Modal(document.getElementById('estimatorViewModal'));
+/* 	  var estimatorModalEl = document.getElementById('estimatorModal');
+	  estimatorModalEl.addEventListener('hidden.bs.modal', function(e) {
+		  fnCloseEstimatorModal();
+		}); */
+	  
   });
   
 </script>
-
+<link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
+<link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
 <form:form id="saveForm" name="saveForm">
 
   <input type="hidden" id="CONTRACT_NO" name="CONTRACT_NO" value="${DATA.CONTRACT_NO}">
@@ -432,7 +623,7 @@
 	          <div class="electronic_contract_condition_typo_container">
 	          <!-- 수정필요 -->
 	            <p class="electronic_contract_condition_typo">전자견적서 이행</p>
-	            <a href="javascript:window.open('https://www.dentner.co.kr/static/.pdf');" class="electronic_contract_condition_typo short_cut">바로가기</a>
+	            <a href="javascript:fnViewEstimators();" class="electronic_contract_condition_typo short_cut">바로가기</a>
 	          </div>
 	          <label class="checkbox_large">
               <input type="checkbox" id="AGREEMENT_YN_3" name="AGREEMENT_YN_3" value="${DATA.AGREEMENT_YN_3}" onchange="fnChangeCheck(this);">
@@ -602,6 +793,180 @@
     </div>
   </div>
 </form:form>
+				<!-- 받은 견적서 보기 modal -->
+				<div class="modal fade" id="estimatorViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered">
+				    <div class="modal-content" style="width: fit-content;">
+						  <div class="cad_container">
+				        <div class="dialog_header">
+				         	<p class="dialog_header_typo">
+				          	CAD 견적서 보기
+				          </p>
+				          <a href="javascript:void(0)" data-bs-dismiss="modal" aria-label="Close">
+				          	<img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
+				          </a>
+				        </div>
+				        <div class="cad_estimator_dialog_item">
+									<div class="dialog_item_title cad_title">
+										<p class="dialog_item_title_typo">
+											납품가능시간
+										</p>
+									</div>
+									<div class="dialog_item_context_container">
+										<p id="viewDeliveryPosDateTypo" class="dialog_item_context_typo">
+										</p>
+									</div>
+				        </div>
+				        <div class="main_container_divider without_margin"></div>
+				        <div class="cad_estimator_dialog_item_column">
+									<div class="dialog_item_title cad_title">
+										<p class="dialog_item_title_typo">
+											금액
+										</p>
+									</div>
+				          <div class="cad_estimaotor_dialog_item_context_container_price_area">
+										<div class="cad_estimator_dialog_item_context">
+											<div class="cad_estimator_dialog_request_container">
+											</div>
+										</div>
+										<div class="dotted_divider_container">
+											<img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
+											<img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
+										</div>
+				            <div class="prosthetics_type_container">
+											<div class="prosthetics_type_data_type_container">
+												<div class="prosthetics_type_data_type">
+													<p class="prosthetics_type_data_type_typo">
+														보철종류
+													</p>
+												</div>
+												<div class="prosthetics_type_data_type_divider"></div>
+												<div class="prosthetics_type_data_type">
+													<p class="prosthetics_type_data_type_typo">
+														개수
+													</p>
+												</div>
+											</div>
+											<div class="view_prosthetics_type_list_container_wrapper"></div>
+				            </div>
+										<div class="dotted_divider_container">
+											<img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
+											<img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
+										</div>
+										<div class="cad_estimator_dialog_item_context_wrapper"></div>
+										<div class="cad_estimator_total_price_wrapper">
+											<div class="dialog_item_context_typo_container total_price_area">
+												<p class="dialog_item_context_typo total_price">총 금액</p>
+												<p id="totalPriceNum" class="dialog_item_context_typo price_num">
+													2,500,000
+												</p>
+												<p class="dialog_item_context_typo">
+													원
+												</p>
+											</div>
+										</div>
+				        	</div>
+				        </div>
+				        <div class="main_container_divider without_margin"></div>
+				        <div class="cad_estimator_dialog_item">
+									<div class="dialog_item_title cad_title">
+										<p class="dialog_item_title_typo">
+											구동가능한 CAD S/W
+										</p>
+									</div>
+									<div class="dialog_item_context_container without_padding">
+										<p id="viewCadswTypo" class="dialog_item_context_typo">
+											<!-- 3Shape, EXOCAD, Dentalwing -->
+										</p>
+									</div>
+				        </div>
+				        <div class="main_container_divider without_margin"></div>
+				        <div class="cad_estimator_dialog_item">
+									<div class="cad_estimator_dialog_item_title cad_title">
+										<p class="dialog_item_title_typo">
+											사진 업로드
+										</p>
+									</div>
+									<div class="cad_estimator_pic_upload_wrapper">
+										<div class="cad_estimator_pic_upload_container" style="margin-right: 110px;">
+											<div class="cad_estimator_main_pic_upload_wrapper">
+												<img id="viewMainPicImage" class="cad_estimator_main_pic_upload" src="/public/assets/images/profile_image.svg" style="width: 100%; height: 100%;"/>
+											</div>
+										</div>
+									</div>
+				        </div>
+				        <div class="cad_estimator_sub_pic_upload_wrapper">
+									<div class="cad_estimator_sub_pic_upload_container">
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+									</div>
+									<div class="cad_estimator_sub_pic_upload_container">
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+										<div class="cad_estimator_sub_pic_upload"></div>
+									</div>
+				        </div>
+				        <div class="main_container_divider without_margin"></div>
+				        <div class="cad_estimator_dialog_item">
+									<div class="dialog_item_title cad_title">
+										<p class="dialog_item_title_typo">치자이너 정보</p>
+									</div>
+									<div class="cad_estimator_dialog_item_context">
+<!-- 										<div class="cad_estimator_profile_pic_upload"></div> -->
+										<div class="cad_estimator_profile_typo_container">
+											<div class="cad_estimator_profile_name">
+												<p id="p_info_1" class="cad_estimator_profile_name_typo">중랑구 핫도그</p>
+												<p id="p_info_2" class="cad_estimator_dialog_item_sub_title_typo">세금 계산서 발행 가능</p>
+											</div>
+											<div class="cad_estimator_profile_info_container">
+												<div class="cad_estimator_profile_info">
+													<p class="cad_estimator_profile_info_typo">거래 성공률</p>
+													<p id="p_info_3" class="cad_estimator_profile_info_typo">100 %</p>
+												</div>
+												<div class="cad_estimator_profile_info">
+													<p class="cad_estimator_profile_info_typo">만족도</p>
+													<p id="p_info_4" class="cad_estimator_profile_info_typo">82 %</p>
+												</div>
+												<div class="cad_estimator_profile_info without_margin">
+													<p class="cad_estimator_profile_info_typo">거래 총 금액</p>
+													<p id="p_info_5" class="cad_estimator_profile_info_typo">1234,567 원</p>
+												</div>
+											</div>
+										</div>
+									</div>
+				        </div>
+				        <div class="main_container_divider without_margin"></div>
+				        <div class="cad_estimator_pagination">
+									<!-- <button type="button" class="pagination_page_button invisible">
+										<img src="/public/assets/images/dialog_page_next_button_arrow.svg" class="pagination_page_before_button_arrow"/>
+									</button>
+									<p class="pagination_current_page">1&nbsp;</p>
+									<p class="pagination_total_page">/ 3</p>
+									<button type="button" class="pagination_page_button">
+										<img src="/public/assets/images/dialog_page_next_button_arrow.svg" class="pagination_page_next_button_arrow"/>
+									</button> -->
+				        </div>
+<!-- 				        <div class="button_container">
+									<a href="javascript:void(0)" class="button_white" onclick="fnDeleteEstimator();">
+										<p class="button_white_typo">견적서 삭제하기</p>
+									</a>
+									<a href="javascript:void(0)" class="button_blue" onclick="fnMatching();">
+									  <p class="button_blue_typo">매칭하기</p>
+									</a>
+				        </div> -->
+				    	</div>
+				    </div>
+				  </div>
+				</div>
+				<!-- 받은 견적서 보기 modal end -->
+				<jsp:include page="/WEB-INF/views/dialog/profile_dialog.jsp" flush="true" />
+				<jsp:include page="/WEB-INF/views/page/talk/common_send.jsp" flush="true"/>
+	
 <style>
 #question{
 	margin-top: 14px;

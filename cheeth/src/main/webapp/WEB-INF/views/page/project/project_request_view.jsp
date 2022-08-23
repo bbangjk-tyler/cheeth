@@ -13,6 +13,20 @@
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
      }
 </script> -->
+<%
+String checkbool = "";
+if(request.getParameter("checkbool") !=null){
+	checkbool = request.getParameter("checkbool");
+}
+%>
+<script>
+var checkbool = "<%=checkbool %>";
+$(document).ready(function(){
+	if(checkbool == 1){
+		fnViewEstimators();
+	}
+});
+</script>
 <c:if test="${empty sessionInfo.user}">
   <script>
    alert('로그인 후 이용가능 합니다.');
@@ -577,11 +591,11 @@
   
   function fnViewEstimators() {
 	  
-	  var cntArr = new Array();
+		var cntArr = new Array();
 		var rqstNoArr = new Array();
 		var suppCdArr = new Array();
 		var suppNmArr = new Array();
-	  var reqHtml = '';
+		var reqHtml = '';
 
 	  reqArr.map((req, index) => {
 			
@@ -711,7 +725,11 @@
 	  if(isNotEmpty(currEstimator.CADSW_CD_3)) cadswInfo.push(currEstimator.CADSW_NM_3);
 	  
 	  $('#viewCadswTypo').text(cadswInfo.join(', '));
-	  
+	  $('#viewMainPicImage').attr('src', '/public/assets/images/profile_image.svg');
+	  $(".cad_estimator_sub_pic_upload").each(function(){
+		 $(this).removeClass("active"); 
+		 $(this).css("background-image", "");
+	  });
 	  currEstimator.fileList.map((m, i) => {
 		  m.FILE_DIRECTORY = m.FILE_DIRECTORY.replace(/\\/g, '\/');
 		  if(i == 0) $('#viewMainPicImage').attr('src', '/upload/' + m.FILE_DIRECTORY);
@@ -768,7 +786,7 @@
 		  async: false,
 		  success: function(data) {
 	    	if(data.result == 'Y') {
-	    		location.href = '/' + API + '/contract/project_electronic_contract?ESTIMATOR_NO=' + estimatorNo;
+	    		location.href = '/' + API + '/contract/project_electronic_contract?ESTIMATOR_NO=' + estimatorNo+ "&nm="+ currEstimator.USER_NICK_NAME;
 	    	} else if(data.result == 'N') {
 	    		if(isNotEmpty(data.msg)) {
 	    			alert(data.msg);
@@ -1187,6 +1205,11 @@
 				            	   $("#MM_DIV_1").find(".dropbox_select_button_typo").text(month +"월");
 				            	   $("#DD_DIV_1").find(".dropbox_select_button_typo").text(day +"일");
 				            	   $("#TTMM_DIV_1").find(".dropbox_select_button_typo").text(Hours +":" + minutes);
+				            	   fnDateDialogSelect_2(month, month+'월');
+				            	   setTimeout(function(){
+					            	   $('#MM_DIV_2').addClass("hidden");				            		   
+				            	   },100);
+
 				               });
 				              </script>
 				              <div class="electronic_estimator_select_button_container" style="height: 38px;">

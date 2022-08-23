@@ -303,8 +303,8 @@ public class CommonController extends BaseController {
 //	  String userID = service.string("getUserID", parameter);
 //	  String userPhone = service.string("getPhoneNum", parameter);
 	  
-	  String userID = parameter.get("RECEIVE_ID").toString();
-	  parameter.put("CREATE_ID", userID);
+	  String userID = parameter.get("USER_ID").toString();
+	  parameter.put("RECEIVE_ID", userID);
 	  parameter.put("USER_ID", userID);
 	  String userPhone = service.string("getPhoneNum02", parameter);
 	  parameter.put("userPhone", userPhone);
@@ -347,11 +347,14 @@ public class CommonController extends BaseController {
 //	  String userID = service.string("getUserID", parameter);
 //	  String userPhone = service.string("getPhoneNum", parameter);
 	  
-	  String userID = parameter.get("RECEIVE_ID").toString();
-	  parameter.put("CREATE_ID", userID);
-	  String userPhone = service.string("getPhoneNum02", parameter);
+//	  String userID = parameter.get("RECEIVE_ID").toString();
+//	  parameter.put("CREATE_ID", userID);
+//	  String userPhone = service.string("getPhoneNum02", parameter);
+//	  parameter.put("userPhone", userPhone);
+	  String userID = service.string("getUserID", parameter);
+	  String userPhone = service.string("getPhoneNum", parameter);
 	  parameter.put("userPhone", userPhone);
-	  
+	  parameter.put("RECEIVE_ID", userID);
 	  try {
 		  LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));	
 		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -387,8 +390,8 @@ public class CommonController extends BaseController {
 	  Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
 	  Map<String, Object> rtnMap = new HashMap<>();
 	  
-	  String userID = parameter.get("RECEIVE_ID").toString();
-	  parameter.put("CREATE_ID", userID);
+	  String userID = parameter.get("USER_ID").toString();
+	  parameter.put("RECEIVE_ID", userID);
 	  String userPhone = service.string("getPhoneNum02", parameter);
 	  parameter.put("userPhone", userPhone);
 	  
@@ -545,7 +548,7 @@ public class CommonController extends BaseController {
 	  String userPhone = service.string("getPhoneNum", parameter);
 	  parameter.put("userPhone", userPhone);
 	  parameter.put("RECEIVE_ID", userID);
-	  
+	  String TITLE = parameter.get("TITLE").toString();
 	  try {
 		  LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));	
 		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -554,7 +557,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 상대방이 계약 취소요청을 하였습니다.");
+			  parameter.put("content", "[덴트너] 상대방이 계약 취소요청을 하였습니다.(제목: " + TITLE +")     '마이페이지 > 진행내역'에서 확인 가능합니다.");
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -565,7 +568,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "상대방이 계약 취소요청을 하였습니다.";
+	        String CONTENT = "상대방이 계약 취소요청을 하였습니다.(제목: " + TITLE +")     '마이페이지 > 진행내역'에서 확인 가능합니다. ";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");

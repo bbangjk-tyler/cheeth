@@ -8,7 +8,7 @@
    location.href = '/api/login/view';
 </script>
 </c:if>
-<link type="text/css" rel="stylesheet" href="/public/assets/css/dialog.css"/>
+<link type="text/css" rel="stylesheet" href="/public/assets/css/default2.css"/>
 
 <script>
 
@@ -29,7 +29,14 @@
   });
   
 </script>
-
+<style>
+#PROFILE_FILE{
+	width: 58px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
 <form:form id="searchForm" name="searchForm" action="/${api}/cheesigner/cheesigner_view_all" method="GET">
   
   <input type="hidden" id="PAGE" name="PAGE" value="${PAGE}">
@@ -40,6 +47,7 @@
 			치자이너 전체보기
 		</p>
 	</div>
+	<div class="equipment_estimator_body">
 	  <div class="profile_management_main_container">
 	    <div class="profile_management_connection_location_container">
 	      <a href="/" class="profile_management_connection_location_typo">
@@ -47,17 +55,17 @@
 	      </a>
 	      <img class="profile_management_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="profile_management_connection_location">
-	        <p class="profile_management_connection_location_typo">마이페이지</p>
+	        <p class="profile_management_connection_location_typo">치자이너 찾기</p>
 	      </div>
 	      <img class="profile_management_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="profile_management_connection_location">
-	        <p class="profile_management_connection_location_typo_bold">프로필관리</p>
+	        <p class="profile_management_connection_location_typo_bold">치자이너 프로필</p>
 	      </div>  
 	    </div>
 	                    <div class="profile_management_profile_edit_button_wrapper">
-                    <a href="/api/mypage/profile_management_cheesigner" class="profile_management_profile_edit_button">
+<!--                     <a href="/api/mypage/profile_management_cheesigner" class="profile_management_profile_edit_button">
                         <p class="profile_management_profile_edit_button_typo">프로필 수정하기</p>
-                    </a>
+                    </a> -->
                 </div>
 	    <div class="connection_location_divider"></div>
                <div class="profile_management_profile_container">
@@ -328,5 +336,15 @@
                     </div>
                 </div>
              </div>
+             </div>
 </form:form>
-    
+    <style>
+    .swiper-slide{
+        width: 214px;
+    height: 180px;
+    margin-right: 24px;
+    }
+    #IMAGE_FILE{
+    	width: 100%;
+    }
+    </style>

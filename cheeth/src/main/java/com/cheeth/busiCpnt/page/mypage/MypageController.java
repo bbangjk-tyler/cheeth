@@ -251,7 +251,7 @@ public class MypageController extends BaseController {
     Map<String, Object> resultMap = new HashMap<String, Object>();
 
     try {
-      resultMap = service.save07(parameter);
+      resultMap = service.save07(request, parameter);
     } catch(Exception e) {
       resultMap.put("result", "N");
       logger.error(e.getMessage());
@@ -322,7 +322,7 @@ public class MypageController extends BaseController {
     data.put("CONTRACT_NO", service.integer("getData22", parameter));
     data.put("ESTIMATOR_NO", service.integer("getData23", parameter));
     data.put("PROJECT_NO", parameter.get("PROJECT_NO"));
-
+    
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getData10", parameter);
     for(Map<String, Object> obj : list) {
     	String RQST_NO = obj.get("RQST_NO").toString();

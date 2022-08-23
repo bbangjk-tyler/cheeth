@@ -10,10 +10,15 @@
     	 document.location.href = document.location.href.replace('http:', 'https:');
      }else if(locations.includes('https://www.')){
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
-</script>
+     } 
+</script> 
 <script>
-  function fnLogOut() {
+$(document).ready(function(){
+ 	getUnread();
+	getInfiniteUnread();  
+});
+
+function fnLogOut() {
     $('#logoutForm').submit();
   }
   
@@ -89,10 +94,7 @@ function showUnread(result) {
 		$("#unread").css("display", "none");
 	}
 }
-$(document).ready(function(){
-	getUnread();
-	getInfiniteUnread();  
-});
+
 function getUnread(){
 	$.ajax({
 		type: "GET",

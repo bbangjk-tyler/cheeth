@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,12 @@ public class FileController extends BaseController {
   
   @PostMapping(value="/download")
   public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    fileService.download(request, response);
+    System.out.println("들어는 오심");
+	  fileService.download(request, response);
   }
-
+  @GetMapping(value="/download2")
+  public void download2(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    System.out.println("들어는 오심");
+	  fileService.download(request, response);
+  }
 }

@@ -320,7 +320,7 @@ jQuery(function($){
 </div>
 <div class="main_sub_body">
 </div>
-			<section class="main_cheesigner" style="margin-top:150px;margin-bottom:150px;">
+<%-- 			<section class="main_cheesigner" style="margin-top:150px;margin-bottom:150px;">
 
 				<div class="main_cheesigner_info">
 					<div class="info_title">이달의 치자이너</div>
@@ -418,7 +418,7 @@ jQuery(function($){
 					</div>
 				</div>
 
-			</section>
+			</section> --%>
 
 <div class="main_footer_body">
   <div class="main_footer_body_header">

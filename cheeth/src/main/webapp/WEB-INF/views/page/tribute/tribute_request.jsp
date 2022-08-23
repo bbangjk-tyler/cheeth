@@ -1,13 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
-String groupCd = "";
-if(request.getParameter("groupCd") != null){
-	groupCd = request.getParameter("groupCd");
- }
+	String groupCd = "";
+	if (request.getParameter("groupCd") != null) {
+		groupCd = request.getParameter("groupCd");
+	}
 %>
 <c:if test="${empty sessionInfo.user}">
-  <script>
+	<script>
    alert('로그인 후 이용가능 합니다.');
    location.href = '/api/login/view';
 </script>
@@ -33,40 +34,48 @@ if(request.getParameter("groupCd") != null){
 	}
 </script>
 <c:choose>
-	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2 and not empty sessionInfo.user.COMP_FILE_CD}">
+	<c:when
+		test="${sessionInfo.user.USER_TYPE_CD eq 2 and not empty sessionInfo.user.COMP_FILE_CD}">
 	</c:when>
-	<c:when test="${sessionInfo.user.USER_TYPE_CD eq 2 and empty sessionInfo.user.COMP_FILE_CD}">
+	<c:when
+		test="${sessionInfo.user.USER_TYPE_CD eq 2 and empty sessionInfo.user.COMP_FILE_CD}">
 		<script>
 		confirmModal();
 		</script>
 	</c:when>
-<c:otherwise>
- <script>
+	<c:otherwise>
+		<script>
  alert("의뢰인 회원만 이용 가능합니다.");
    history.back();
 </script>
-</c:otherwise>
+	</c:otherwise>
 </c:choose>
-<% if(groupCd.equals("")){%>
+<%
+	if (groupCd.equals("")) {
+%>
 <c:if test="${TSaveCode ne '0'}">
 	<script>
 		TsaveConfirmModal();
 	</script>
 </c:if>
-<% } %>
-<link type="text/css" rel="stylesheet" href="/public/assets/css/modal.css"/>
+<%
+	}
+%>
+<link type="text/css" rel="stylesheet"
+	href="/public/assets/css/modal.css" />
 
 <style>
-	.teeth_model_title_typo::placeholder {
-		color: #a5a0a0;
-	}
-	
-	.dropbox_select_button_item_large:hover,
-	.dropbox_select_button_item:hover {
-		cursor: pointer;
-	}
+.teeth_model_title_typo::placeholder {
+	color: #a5a0a0;
+}
+
+.dropbox_select_button_item_large:hover, .dropbox_select_button_item:hover
+	{
+	cursor: pointer;
+}
 </style>
-<button id="tribute_request_button_displaynone" href="#prostheticsModal" style="display:none;" data-bs-toggle="modal"></button>
+<button id="tribute_request_button_displaynone" href="#prostheticsModal"
+	style="display: none;" data-bs-toggle="modal"></button>
 <script>
 	
 	function CategoryChkBtn(){
@@ -91,6 +100,7 @@ if(request.getParameter("groupCd") != null){
 	var cardArr2 = new Array();
 	var currCardObj = new Object();
 	var currCardObj2 = new Object();
+	var currCardObj3 = new Object();
 	var pcurrCardObj = new Object();
 	const suppCodeArr = fnGetSuppCd();
 	const suppObj = new Object();
@@ -98,7 +108,7 @@ if(request.getParameter("groupCd") != null){
 	var oftenWordModal;
 	
 	const uploadPath = commonCreateRandomKey();
-	const fileCd = '${FILE_CD}';
+	var fileCd = '${FILE_CD}';
 	const fileDiv = 'TRIBUTE';
 	/* shift 키 start */
 	var preClcikToothNum = 0;
@@ -133,11 +143,16 @@ if(request.getParameter("groupCd") != null){
 			});
 		}
 	}
+	<%if (!groupCd.equals("")) {%>
+	rewritebool = 1;
+	rewritebool2 = 1;
+	<%}%>
+	
 	$(document).ready(function() {
 		$("body").attr("onkeydown", "shiftKeyDown(event)");
 		$("body").attr("onkeyup", "shiftKeyUp(event)");
 
-		<%if(!groupCd.equals("")){%>
+		<%if (!groupCd.equals("")) {%>
 		rewrite();
 		rewritebool = 1;
 		rewritebool2 = 1;
@@ -145,15 +160,20 @@ if(request.getParameter("groupCd") != null){
 		//$("#1").trigger("click");
 		<%}%>
 	});
- 	<%if(!groupCd.equals("")){%>
-
-		$(window).on("load", function(){
+ 	<%if (!groupCd.equals("")) {%>
+ 	
+ 	setTimeout(function(){
+ 		rewritebool = 0;
+		
+		
+ 	}, 1000);	
+ 	$(window).on("load", function(){
 		 	setTimeout(function(){
 		 		console.log('들어옴');
 				
 				//$("#3").trigger("click");
 				cardArr = cardArr.filter(f => f.TAB_NO != cardArr.length);
-
+				
 				
 				
 		 	}, 400);
@@ -162,7 +182,7 @@ if(request.getParameter("groupCd") != null){
 	
 	$(window).on("load", function(){
 		setTimeout(function(){
-	<%if(!groupCd.equals("")){%>
+	<%if (!groupCd.equals("")) {%>
 
 	curtabnum = 1;
 	justoneboolArray.map((m, i) => {
@@ -209,7 +229,7 @@ if(request.getParameter("groupCd") != null){
 		bottombool = 0;
 	  }
 	$("#1").trigger("click");
-	<%}else{%>
+	<%} else {%>
 	var obj = {
 			'TABNUM': '1',
 			'BOOL': '0',
@@ -222,13 +242,14 @@ if(request.getParameter("groupCd") != null){
 	<%}%>
 		}, 400);
 	});
+	
 	function rewrite(){
 		CATEGORYCHOICEBOOL = 1;
-
+		
 		 $.ajax({
 		      url: '/' + API + '/tribute/getReqInfo',
 		      type: 'GET',
-		      data: { GROUP_CD : "<%= groupCd %>" },
+		      data: { GROUP_CD : "<%=groupCd%>" },
 		      cache: false,
 		      async: false,
 		      success: function(data) {
@@ -241,7 +262,7 @@ if(request.getParameter("groupCd") != null){
 		 $.ajax({
 		      url: '/' + API + '/tribute/getSettingInfo',
 		      type: 'GET',
-		      data: { GROUP_CD : "<%= groupCd %>" },
+		      data: { GROUP_CD : "<%=groupCd%>" },
 		      cache: false,
 		      async: false,
 		      success: function(data) {
@@ -256,6 +277,7 @@ if(request.getParameter("groupCd") != null){
 		    	  }
 
 		 });
+		 
 		var index = 0;
 		cardArr2.map(m => {
 			if(isNotEmpty(m['SUPP_NM_1'])) {
@@ -276,16 +298,17 @@ if(request.getParameter("groupCd") != null){
 			}
 			var arrValues = new Array(); 
 			
+			fileCd = m.FILE_CD;
 			
 			m['SUPP_CD_1']
 			m['TRIBUTE_DTL'].map(m2 => {
 				console.log("m2.TOOTH_NO " + m2.TOOTH_NO);
 				arrValues.push(m2.TOOTH_NO);
 			});
-
+			
 		    currCardObj2 = {
 		    		'TAB_NO' : m.TAB_NO,
-                    'EXCEPTION_BRIDGE' : m.EXCEPTION_BRIDGE,
+                    /* 'EXCEPTION_BRIDGE' : m.EXCEPTION_BRIDGE, */
                     'SUPP_INFO' : arrValues2,
                     'PANT_NM' : m.PANT_NM,
                     'FILE_CD' : m.FILE_CD,
@@ -299,11 +322,17 @@ if(request.getParameter("groupCd") != null){
                     'DTL_TXT'  : m.DTL_TXT,
                     'TRIBUTE_DTL' : arrValues
                   };
+		    var bridgearr = new Array();
+		    for(var j = 0; j < m.EXCEPTION_BRIDGE.length; j++){
+		    	bridgearr.push(m.EXCEPTION_BRIDGE[j].BRIDGE); 
+		    }
+		    currCardObj2.EXCEPTION_BRIDGE = bridgearr;
 		    index++
 			 console.log("index :: " + index);
 			 console.log("PRO_METH_NM :: " + m.PRO_METH_NM);
 			 
 		    cardArr.push({...currCardObj2});
+		    
 		    
 			console.log("m.TAB_NO" + m.TAB_NO);
 			console.log("m.EXCEPTION_BRIDGE" + m.EXCEPTION_BRIDGE);
@@ -338,6 +367,7 @@ if(request.getParameter("groupCd") != null){
 			  firstbool = 0;
 			  $('.card_chip:first').remove();
 		  }
+
 			console.log("m.TRIBUTE_DTL" + m.TRIBUTE_DTL);
 			m['TRIBUTE_DTL'].map(m2 => {
 				console.log("m2.TOOTH_NO " + m2.TOOTH_NO);
@@ -345,11 +375,53 @@ if(request.getParameter("groupCd") != null){
 			$("#PANT_NM").val(m.PANT_NM);
 			
 		});
+		
+		/* 수정 */
+		currCardObj = {...cardArr[0]};
+
+	    /*  */
+		
+		/* 테스트 START */
+		 
+			console.log("fileCd ------- " + fileCd);
+			$.ajax({
+			  url: '/' + API + '/common/getFiles',
+			  type: 'GET',
+			  data: { FILE_CD : fileCd },
+			  cache: false,
+			  async: false,
+			  success: function(data) {
+					if(isNotEmpty(data)) {
+						data.map((m, i) => {
+							var elIndex = (+m.FILE_NO - 1);
+							console.log("elIndex :: " + elIndex);
+							$('.dialog_tribute_request_table_data_file_name').find(".dialog_tribute_request_table_data_typo").eq(elIndex).text(m.FILE_ORIGIN_NM);
+						});
+					}
+			  }, 
+			  complete: function() {}, 
+			  error: function() {}
+			});
+			/* 테스트 END */
 		for(const [key, value] of Object.entries(cardArr)) {
 			  console.log(cardArr[key]);
 		} 
 	}
-
+	<%if (!groupCd.equals("")) {%>
+/* 	setTimeout(function(){
+	    $('.bridge').each(function() {
+			var $this = $(this);
+			for(var i = 0;i < currCardObj.EXCEPTION_BRIDGE.length;i++){
+				var BRIDGE = currCardObj.EXCEPTION_BRIDGE[i].BRIDGE;
+				console.log("m.BRIDGE :: " + BRIDGE);
+				if($this.attr('id').includes(BRIDGE)) {
+					$this.trigger('click');
+					console.log("들어옴");
+				}
+			}
+		});		
+	}, 1000); */
+	<%}%>
 	function saveCard2(tabIndex) {
 
 		tabIndex = tabIndex - 1;
@@ -1321,7 +1393,7 @@ if(request.getParameter("groupCd") != null){
 			  	target.addClass('hidden');
 			  }
 		  }else{
-			  rewritebool = 0;
+			  //rewritebool = 0;
 		  }
 		  if(div) target = $('#' + div).find('div.dropbox_select_button_item_container');
 
@@ -1840,6 +1912,7 @@ if(request.getParameter("groupCd") != null){
 			});
 		}
 	}
+
 	function fnRewrite() {
 		
 		if(isEmpty($('#PANT_NM').val())) {
@@ -1883,7 +1956,7 @@ if(request.getParameter("groupCd") != null){
 			$.ajax({
 				url: '/' + API + '/tribute/rewrite',
 			  type: 'POST',
-			  data: JSON.stringify({ cards : cardArr , cardsetting : justoneboolArray, groupCd : '<%=groupCd%>'}),
+			  data: JSON.stringify({ cards : cardArr , cardsetting : justoneboolArray, GROUP_CD : "<%=groupCd%>"}),
 			  contentType: 'application/json; charset=utf-8',
 			  cache: false,
 			  async: false,
@@ -1902,37 +1975,55 @@ if(request.getParameter("groupCd") != null){
 <div class="tribute_request_header">
 	<p class="tribute_request_header_typo">전자치과기공물의뢰서</p>
 	<div class="tribute_request_connection_location_container">
-	  <a href="/" class="tribute_request_connection_location_typo">
-	    <img class="tribute_request_connection_location_home_button" src="/public/assets/images/connection_location_home_button_white.svg"/>
-	  </a>
-	  <img class="tribute_request_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
-	  <div class="tribute_request_connection_location">
-	    <p class="tribute_request_connection_location_typo">
-	    <%if(!groupCd.equals("")){%>
-	    <a href="/${api}/tribute/request_basket" class="tribute_request_connection_location_typo">의뢰서 바구니</a>
-	    <%}else{ %>
-	    	<a href="/${api}/tribute/request_basket" class="tribute_request_connection_location_typo">의뢰서 바구니</a>
-	    <%} %>
-	    </p>
-	  </div>
-	  <img class="tribute_request_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
-	  <div class="tribute_request_connection_location">
-	    <p class="tribute_request_connection_location_typo_bold">전자치과기공물 의뢰서 작성하기</p>
-	  </div>
+		<a href="/" class="tribute_request_connection_location_typo"> <img
+			class="tribute_request_connection_location_home_button"
+			src="/public/assets/images/connection_location_home_button_white.svg" />
+		</a> <img class="tribute_request_connection_location_arrow"
+			src="/public/assets/images/connection_location_arrow.svg" />
+		<div class="tribute_request_connection_location">
+			<p class="tribute_request_connection_location_typo">
+				<%
+					if (!groupCd.equals("")) {
+				%>
+				<a href="/${api}/tribute/request_basket"
+					class="tribute_request_connection_location_typo">의뢰서 바구니</a>
+				<%
+					} else {
+				%>
+				<a href="/${api}/tribute/request_basket"
+					class="tribute_request_connection_location_typo">의뢰서 바구니</a>
+				<%
+					}
+				%>
+			</p>
+		</div>
+		<img class="tribute_request_connection_location_arrow"
+			src="/public/assets/images/connection_location_arrow.svg" />
+		<div class="tribute_request_connection_location">
+			<p class="tribute_request_connection_location_typo_bold">전자치과기공물
+				의뢰서 작성하기</p>
+		</div>
 	</div>
 </div>
 <div class="tribute_request_body">
-<form id="saveForm" name="saveForm" style="display: flex;">
-	<div class="teeth_model_container">
-		<div class="teeth_model_title">
-		  <img class="teeth_model_title_icon" src="/public/assets/images/teeth_model_title_icon.svg"/>
-		  <input class="teeth_model_title_typo" type="text" name="PANT_NM" id="PANT_NM" onkeyup="fnSetPantNm(this);" placeholder="환자명을 입력하세요." />
-		  <button id="EventePopupBTN" type="button" class="btn btn-primary" style="color:#fff!important;font-size: 13px;font-weight: 800;position: absolute;margin-left: 402px;margin-top: 6px;" data-bs-toggle="modal" data-bs-target="#exampleModal">작성 tip</button>
-		</div>
-		<div class="teeth_model_wrapper" onclick="CategoryChkBtn()">
-		<div id="top_div" style="width:100%;height:50%;display:none;position: absolute;top:0;z-index:9998"></div>
-		<div id="bottom_div" style="width:100%;height:50%;top:50%;display:none;position: absolute;z-index:9998"></div>
-			<!-- 
+	<form id="saveForm" name="saveForm" style="display: flex;">
+		<div class="teeth_model_container">
+			<div class="teeth_model_title">
+				<img class="teeth_model_title_icon"
+					src="/public/assets/images/teeth_model_title_icon.svg" /> <input
+					class="teeth_model_title_typo" type="text" name="PANT_NM"
+					id="PANT_NM" onkeyup="fnSetPantNm(this);" placeholder="환자명을 입력하세요." />
+				<button id="EventePopupBTN" type="button" class="btn btn-primary"
+					style="color: #fff !important; font-size: 13px; font-weight: 800; position: absolute; margin-left: 402px; margin-top: 6px;"
+					data-bs-toggle="modal" data-bs-target="#exampleModal">작성
+					tip</button>
+			</div>
+			<div class="teeth_model_wrapper" onclick="CategoryChkBtn()">
+				<div id="top_div"
+					style="width: 100%; height: 50%; display: none; position: absolute; top: 0; z-index: 9998"></div>
+				<div id="bottom_div"
+					style="width: 100%; height: 50%; top: 50%; display: none; position: absolute; z-index: 9998"></div>
+				<!-- 
 			bridge: 일반 브릿지
 			bridge_dash: 점선 브릿지
 			one_one_one_two: 일반 브릿지
@@ -1940,752 +2031,945 @@ if(request.getParameter("groupCd") != null){
 			p_one_one_one_two: 미리보기 브릿지 
 			hidden으로 조절
 			-->
-			<div id="11_12" class="hidden bridge one_one_one_two" data-target-from="11" data-target-to="12"></div>
-			<div id="12_13" class="hidden bridge one_two_one_three" data-target-from="12" data-target-to="13"></div>
-			<div id="13_14" class="hidden bridge one_three_one_four" data-target-from="13" data-target-to="14"></div>
-			<div id="14_15" class="hidden bridge one_four_one_five" data-target-from="14" data-target-to="15"></div>
-			<div id="15_16" class="hidden bridge one_five_one_six" data-target-from="15" data-target-to="16"></div>
-			<div id="16_17" class="hidden bridge one_six_one_seven" data-target-from="16" data-target-to="17"></div>
-			<div id="17_18" class="hidden bridge one_seven_one_eight" data-target-from="17" data-target-to="18"></div>
-			
-			<div id="11_21" class="hidden bridge one_one_two_one" data-target-from="11" data-target-to="21"></div>
-			<div id="21_22" class="hidden bridge two_one_two_two" data-target-from="21" data-target-to="22"></div>
-			<div id="22_23" class="hidden bridge two_two_two_three" data-target-from="22" data-target-to="23"></div>
-			<div id="23_24" class="hidden bridge two_three_two_four" data-target-from="23" data-target-to="24"></div>
-			<div id="24_25" class="hidden bridge two_four_two_five" data-target-from="24" data-target-to="25"></div>
-			<div id="25_26" class="hidden bridge two_five_two_six" data-target-from="25" data-target-to="26"></div>
-			<div id="26_27" class="hidden bridge two_six_two_seven" data-target-from="26" data-target-to="27"></div>
-			<div id="27_28" class="hidden bridge two_seven_two_eight" data-target-from="27" data-target-to="28"></div>
-			
-			<div id="31_32" class="hidden bridge three_one_three_two" data-target-from="31" data-target-to="32"></div>
-			<div id="32_33" class="hidden bridge three_two_three_three" data-target-from="32" data-target-to="33"></div>
-			<div id="33_34" class="hidden bridge three_three_three_four" data-target-from="33" data-target-to="34"></div>
-			<div id="34_35" class="hidden bridge three_four_three_five" data-target-from="34" data-target-to="35"></div>
-			<div id="35_36" class="hidden bridge three_five_three_six" data-target-from="35" data-target-to="36"></div>
-			<div id="36_37" class="hidden bridge three_six_three_seven" data-target-from="36" data-target-to="37"></div>
-			<div id="37_38" class="hidden bridge three_seven_three_eight" data-target-from="37" data-target-to="38"></div>
-			
-			<div id="31_41" class="hidden bridge three_one_four_one" data-target-from="31" data-target-to="41"></div>
-			<div id="41_42" class="hidden bridge four_one_four_two" data-target-from="41" data-target-to="42"></div>
-			<div id="42_43" class="hidden bridge four_two_four_three" data-target-from="42" data-target-to="43"></div>
-			<div id="43_44" class="hidden bridge four_three_four_four" data-target-from="43" data-target-to="44"></div>
-			<div id="44_45" class="hidden bridge four_four_four_five" data-target-from="44" data-target-to="45"></div>
-			<div id="45_46" class="hidden bridge four_five_four_six" data-target-from="45" data-target-to="46"></div>
-			<div id="46_47" class="hidden bridge four_six_four_seven" data-target-from="46" data-target-to="47"></div>
-			<div id="47_48" class="hidden bridge four_seven_four_eight" data-target-from="47" data-target-to="48"></div>
-				
-			<div class="teeth_model_tooth tooth_numb_one_one">
-			  <p class="teeth_model_tooth_numb">11</p>
+				<div id="11_12" class="hidden bridge one_one_one_two"
+					data-target-from="11" data-target-to="12"></div>
+				<div id="12_13" class="hidden bridge one_two_one_three"
+					data-target-from="12" data-target-to="13"></div>
+				<div id="13_14" class="hidden bridge one_three_one_four"
+					data-target-from="13" data-target-to="14"></div>
+				<div id="14_15" class="hidden bridge one_four_one_five"
+					data-target-from="14" data-target-to="15"></div>
+				<div id="15_16" class="hidden bridge one_five_one_six"
+					data-target-from="15" data-target-to="16"></div>
+				<div id="16_17" class="hidden bridge one_six_one_seven"
+					data-target-from="16" data-target-to="17"></div>
+				<div id="17_18" class="hidden bridge one_seven_one_eight"
+					data-target-from="17" data-target-to="18"></div>
+
+				<div id="11_21" class="hidden bridge one_one_two_one"
+					data-target-from="11" data-target-to="21"></div>
+				<div id="21_22" class="hidden bridge two_one_two_two"
+					data-target-from="21" data-target-to="22"></div>
+				<div id="22_23" class="hidden bridge two_two_two_three"
+					data-target-from="22" data-target-to="23"></div>
+				<div id="23_24" class="hidden bridge two_three_two_four"
+					data-target-from="23" data-target-to="24"></div>
+				<div id="24_25" class="hidden bridge two_four_two_five"
+					data-target-from="24" data-target-to="25"></div>
+				<div id="25_26" class="hidden bridge two_five_two_six"
+					data-target-from="25" data-target-to="26"></div>
+				<div id="26_27" class="hidden bridge two_six_two_seven"
+					data-target-from="26" data-target-to="27"></div>
+				<div id="27_28" class="hidden bridge two_seven_two_eight"
+					data-target-from="27" data-target-to="28"></div>
+
+				<div id="31_32" class="hidden bridge three_one_three_two"
+					data-target-from="31" data-target-to="32"></div>
+				<div id="32_33" class="hidden bridge three_two_three_three"
+					data-target-from="32" data-target-to="33"></div>
+				<div id="33_34" class="hidden bridge three_three_three_four"
+					data-target-from="33" data-target-to="34"></div>
+				<div id="34_35" class="hidden bridge three_four_three_five"
+					data-target-from="34" data-target-to="35"></div>
+				<div id="35_36" class="hidden bridge three_five_three_six"
+					data-target-from="35" data-target-to="36"></div>
+				<div id="36_37" class="hidden bridge three_six_three_seven"
+					data-target-from="36" data-target-to="37"></div>
+				<div id="37_38" class="hidden bridge three_seven_three_eight"
+					data-target-from="37" data-target-to="38"></div>
+
+				<div id="31_41" class="hidden bridge three_one_four_one"
+					data-target-from="31" data-target-to="41"></div>
+				<div id="41_42" class="hidden bridge four_one_four_two"
+					data-target-from="41" data-target-to="42"></div>
+				<div id="42_43" class="hidden bridge four_two_four_three"
+					data-target-from="42" data-target-to="43"></div>
+				<div id="43_44" class="hidden bridge four_three_four_four"
+					data-target-from="43" data-target-to="44"></div>
+				<div id="44_45" class="hidden bridge four_four_four_five"
+					data-target-from="44" data-target-to="45"></div>
+				<div id="45_46" class="hidden bridge four_five_four_six"
+					data-target-from="45" data-target-to="46"></div>
+				<div id="46_47" class="hidden bridge four_six_four_seven"
+					data-target-from="46" data-target-to="47"></div>
+				<div id="47_48" class="hidden bridge four_seven_four_eight"
+					data-target-from="47" data-target-to="48"></div>
+
+				<div class="teeth_model_tooth tooth_numb_one_one">
+					<p class="teeth_model_tooth_numb">11</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_one" toothNum="8"
+					toothindex="11" src="/public/assets/images/tooth/normal/11.png" />
+				<div class="teeth_model_tooth tooth_numb_one_two">
+					<p class="teeth_model_tooth_numb">12</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_two" toothNum="7"
+					toothindex="12" src="/public/assets/images/tooth/normal/12.png" />
+				<div class="teeth_model_tooth tooth_numb_one_three">
+					<p class="teeth_model_tooth_numb">13</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_three" toothNum="6"
+					toothindex="13" src="/public/assets/images/tooth/normal/13.png" />
+				<div class="teeth_model_tooth tooth_numb_one_four">
+					<p class="teeth_model_tooth_numb">14</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_four" toothNum="5"
+					toothindex="14" src="/public/assets/images/tooth/normal/14.png" />
+				<div class="teeth_model_tooth tooth_numb_one_five">
+					<p class="teeth_model_tooth_numb">15</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_five" toothNum="4"
+					toothindex="15" src="/public/assets/images/tooth/normal/15.png" />
+				<div class="teeth_model_tooth tooth_numb_one_six">
+					<p class="teeth_model_tooth_numb">16</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_six" toothNum="3"
+					toothindex="16" src="/public/assets/images/tooth/normal/16.png" />
+				<div class="teeth_model_tooth tooth_numb_one_seven">
+					<p class="teeth_model_tooth_numb">17</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_seven" toothNum="2"
+					toothindex="17" src="/public/assets/images/tooth/normal/17.png" />
+				<div class="teeth_model_tooth tooth_numb_one_eight">
+					<p class="teeth_model_tooth_numb">18</p>
+				</div>
+				<img class="teeth_model_tooth_img img_one_eight" toothNum="1"
+					toothindex="18" src="/public/assets/images/tooth/normal/18.png" />
+
+				<div class="teeth_model_tooth tooth_numb_two_one">
+					<p class="teeth_model_tooth_numb">21</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_one" toothNum="9"
+					toothindex="21" src="/public/assets/images/tooth/normal/21.png" />
+				<div class="teeth_model_tooth tooth_numb_two_two">
+					<p class="teeth_model_tooth_numb">22</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_two" toothNum="10"
+					toothindex="22" src="/public/assets/images/tooth/normal/22.png" />
+				<div class="teeth_model_tooth tooth_numb_two_three">
+					<p class="teeth_model_tooth_numb">23</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_three" toothNum="11"
+					toothindex="23" src="/public/assets/images/tooth/normal/23.png" />
+				<div class="teeth_model_tooth tooth_numb_two_four">
+					<p class="teeth_model_tooth_numb">24</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_four" toothNum="12"
+					toothindex="24" src="/public/assets/images/tooth/normal/24.png" />
+				<div class="teeth_model_tooth tooth_numb_two_five">
+					<p class="teeth_model_tooth_numb">25</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_five" toothNum="13"
+					toothindex="25" src="/public/assets/images/tooth/normal/25.png" />
+				<div class="teeth_model_tooth tooth_numb_two_six">
+					<p class="teeth_model_tooth_numb">26</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_six" toothNum="14"
+					toothindex="26" src="/public/assets/images/tooth/normal/26.png" />
+				<div class="teeth_model_tooth tooth_numb_two_seven">
+					<p class="teeth_model_tooth_numb">27</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_seven" toothNum="15"
+					toothindex="27" src="/public/assets/images/tooth/normal/27.png" />
+				<div class="teeth_model_tooth tooth_numb_two_eight">
+					<p class="teeth_model_tooth_numb">28</p>
+				</div>
+				<img class="teeth_model_tooth_img img_two_eight" toothNum="16"
+					toothindex="28" src="/public/assets/images/tooth/normal/28.png" />
+
+				<div class="teeth_model_tooth tooth_numb_three_one">
+					<p class="teeth_model_tooth_numb">31</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_one" toothNum="24"
+					toothindex="31" src="/public/assets/images/tooth/normal/31.png" />
+				<div class="teeth_model_tooth tooth_numb_three_two">
+					<p class="teeth_model_tooth_numb">32</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_two" toothNum="23"
+					toothindex="32" src="/public/assets/images/tooth/normal/32.png" />
+				<div class="teeth_model_tooth tooth_numb_three_three">
+					<p class="teeth_model_tooth_numb">33</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_three" toothNum="22"
+					toothindex="33" src="/public/assets/images/tooth/normal/33.png" />
+				<div class="teeth_model_tooth tooth_numb_three_four">
+					<p class="teeth_model_tooth_numb">34</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_four" toothNum="21"
+					toothindex="34" src="/public/assets/images/tooth/normal/34.png" />
+				<div class="teeth_model_tooth tooth_numb_three_five">
+					<p class="teeth_model_tooth_numb">35</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_five" toothNum="20"
+					toothindex="35" src="/public/assets/images/tooth/normal/35.png" />
+				<div class="teeth_model_tooth tooth_numb_three_six">
+					<p class="teeth_model_tooth_numb">36</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_six" toothNum="19"
+					toothindex="36" src="/public/assets/images/tooth/normal/36.png" />
+				<div class="teeth_model_tooth tooth_numb_three_seven">
+					<p class="teeth_model_tooth_numb">37</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_seven" toothNum="18"
+					toothindex="37" src="/public/assets/images/tooth/normal/37.png" />
+				<div class="teeth_model_tooth tooth_numb_three_eight">
+					<p class="teeth_model_tooth_numb">38</p>
+				</div>
+				<img class="teeth_model_tooth_img img_three_eight" toothNum="17"
+					toothindex="38" src="/public/assets/images/tooth/normal/38.png" />
+				<div class="teeth_model_tooth tooth_numb_four_one">
+					<p class="teeth_model_tooth_numb">41</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_one" toothNum="25"
+					toothindex="41" src="/public/assets/images/tooth/normal/41.png" />
+				<div class="teeth_model_tooth tooth_numb_four_two">
+					<p class="teeth_model_tooth_numb">42</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_two" toothNum="26"
+					toothindex="42" src="/public/assets/images/tooth/normal/42.png" />
+				<div class="teeth_model_tooth tooth_numb_four_three">
+					<p class="teeth_model_tooth_numb">43</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_three" toothNum="27"
+					toothindex="43" src="/public/assets/images/tooth/normal/43.png" />
+				<div class="teeth_model_tooth tooth_numb_four_four">
+					<p class="teeth_model_tooth_numb">44</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_four" toothNum="28"
+					toothindex="44" src="/public/assets/images/tooth/normal/44.png" />
+				<div class="teeth_model_tooth tooth_numb_four_five">
+					<p class="teeth_model_tooth_numb">45</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_five" toothNum="29"
+					toothindex="45" src="/public/assets/images/tooth/normal/45.png" />
+				<div class="teeth_model_tooth tooth_numb_four_six">
+					<p class="teeth_model_tooth_numb">46</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_six" toothNum="30"
+					toothindex="46" src="/public/assets/images/tooth/normal/46.png" />
+				<div class="teeth_model_tooth tooth_numb_four_seven">
+					<p class="teeth_model_tooth_numb">47</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_seven" toothNum="31"
+					toothindex="47" src="/public/assets/images/tooth/normal/47.png" />
+				<div class="teeth_model_tooth tooth_numb_four_eight">
+					<p class="teeth_model_tooth_numb">48</p>
+				</div>
+				<img class="teeth_model_tooth_img img_four_eight" toothNum="32"
+					toothindex="48" src="/public/assets/images/tooth/normal/48.png" />
 			</div>
-			<img class="teeth_model_tooth_img img_one_one" toothNum="8" toothindex="11" src="/public/assets/images/tooth/normal/11.png"/>
-			<div class="teeth_model_tooth tooth_numb_one_two">
-			  <p class="teeth_model_tooth_numb">12</p>
-			</div>
-			<img class="teeth_model_tooth_img img_one_two" toothNum="7" toothindex="12" src="/public/assets/images/tooth/normal/12.png"/>
-			<div class="teeth_model_tooth tooth_numb_one_three">
-			  <p class="teeth_model_tooth_numb">13</p>
-			</div>
-			<img class="teeth_model_tooth_img img_one_three" toothNum="6" toothindex="13" src="/public/assets/images/tooth/normal/13.png"/>
-			<div class="teeth_model_tooth tooth_numb_one_four">
-			  <p class="teeth_model_tooth_numb">14</p>
-			</div>
-			<img class="teeth_model_tooth_img img_one_four" toothNum="5" toothindex="14" src="/public/assets/images/tooth/normal/14.png"/>
-			<div class="teeth_model_tooth tooth_numb_one_five">
-			  <p class="teeth_model_tooth_numb">15</p>
-			</div>
-		  <img class="teeth_model_tooth_img img_one_five" toothNum="4" toothindex="15" src="/public/assets/images/tooth/normal/15.png"/>
-		  <div class="teeth_model_tooth tooth_numb_one_six">
-		    <p class="teeth_model_tooth_numb">16</p>
-		  </div>
-		  <img class="teeth_model_tooth_img img_one_six" toothNum="3" toothindex="16" src="/public/assets/images/tooth/normal/16.png"/>
-		  <div class="teeth_model_tooth tooth_numb_one_seven">
-		    <p class="teeth_model_tooth_numb">17</p>
-		  </div>
-	    <img class="teeth_model_tooth_img img_one_seven" toothNum="2" toothindex="17" src="/public/assets/images/tooth/normal/17.png"/>
-	    <div class="teeth_model_tooth tooth_numb_one_eight">
-	      <p class="teeth_model_tooth_numb">18</p>
-	    </div>
-	    <img class="teeth_model_tooth_img img_one_eight" toothNum="1"  toothindex="18" src="/public/assets/images/tooth/normal/18.png"/>
-	
-	    <div class="teeth_model_tooth tooth_numb_two_one">
-	      <p class="teeth_model_tooth_numb">21</p>
-	    </div>
-	    <img class="teeth_model_tooth_img img_two_one" toothNum="9" toothindex="21" src="/public/assets/images/tooth/normal/21.png"/>
-	    <div class="teeth_model_tooth tooth_numb_two_two">
-	      <p class="teeth_model_tooth_numb">22</p>
-	    </div>
-	    <img class="teeth_model_tooth_img img_two_two" toothNum="10" toothindex="22" src="/public/assets/images/tooth/normal/22.png"/>
-	    <div class="teeth_model_tooth tooth_numb_two_three">
-	      <p class="teeth_model_tooth_numb">23</p>
-	    </div>
-	    <img class="teeth_model_tooth_img img_two_three" toothNum="11" toothindex="23" src="/public/assets/images/tooth/normal/23.png"/>
-	    <div class="teeth_model_tooth tooth_numb_two_four">
-	    	<p class="teeth_model_tooth_numb">24</p>
-	    </div>
-	    <img class="teeth_model_tooth_img img_two_four" toothNum="12" toothindex="24" src="/public/assets/images/tooth/normal/24.png"/>
-			<div class="teeth_model_tooth tooth_numb_two_five">
-			  <p class="teeth_model_tooth_numb">25</p>
-			</div>
-			<img class="teeth_model_tooth_img img_two_five" toothNum="13" toothindex="25" src="/public/assets/images/tooth/normal/25.png"/>
-			<div class="teeth_model_tooth tooth_numb_two_six">
-			  <p class="teeth_model_tooth_numb">26</p>
-			</div>
-			<img class="teeth_model_tooth_img img_two_six" toothNum="14" toothindex="26" src="/public/assets/images/tooth/normal/26.png"/>
-			<div class="teeth_model_tooth tooth_numb_two_seven">
-			  <p class="teeth_model_tooth_numb">27</p>
-			</div>
-			<img class="teeth_model_tooth_img img_two_seven" toothNum="15" toothindex="27" src="/public/assets/images/tooth/normal/27.png"/>
-			<div class="teeth_model_tooth tooth_numb_two_eight">
-			  <p class="teeth_model_tooth_numb">28</p>
-			</div>
-			<img class="teeth_model_tooth_img img_two_eight" toothNum="16" toothindex="28" src="/public/assets/images/tooth/normal/28.png"/>
-				
-			<div class="teeth_model_tooth tooth_numb_three_one">
-			  <p class="teeth_model_tooth_numb">31</p>
-			</div>
-			<img class="teeth_model_tooth_img img_three_one"  toothNum="24" toothindex="31" src="/public/assets/images/tooth/normal/31.png"/>
-			<div class="teeth_model_tooth tooth_numb_three_two">
-			  <p class="teeth_model_tooth_numb">32</p>
-			</div>
-			<img class="teeth_model_tooth_img img_three_two" toothNum="23" toothindex="32" src="/public/assets/images/tooth/normal/32.png"/>
-			<div class="teeth_model_tooth tooth_numb_three_three">
-			  <p class="teeth_model_tooth_numb">33</p>
-			</div>
-			<img class="teeth_model_tooth_img img_three_three" toothNum="22" toothindex="33" src="/public/assets/images/tooth/normal/33.png"/>
-      <div class="teeth_model_tooth tooth_numb_three_four">
-        <p class="teeth_model_tooth_numb">34</p>
-      </div>
-      <img class="teeth_model_tooth_img img_three_four" toothNum="21" toothindex="34" src="/public/assets/images/tooth/normal/34.png"/>
-      <div class="teeth_model_tooth tooth_numb_three_five">
-        <p class="teeth_model_tooth_numb">35</p>
-      </div>
-      <img class="teeth_model_tooth_img img_three_five" toothNum="20" toothindex="35" src="/public/assets/images/tooth/normal/35.png"/>
-      <div class="teeth_model_tooth tooth_numb_three_six">
-        <p class="teeth_model_tooth_numb">36</p>
-      </div>
-      <img class="teeth_model_tooth_img img_three_six" toothNum="19" toothindex="36" src="/public/assets/images/tooth/normal/36.png"/>
-      <div class="teeth_model_tooth tooth_numb_three_seven">
-        <p class="teeth_model_tooth_numb">37</p>
-      </div>
-      <img class="teeth_model_tooth_img img_three_seven" toothNum="18" toothindex="37" src="/public/assets/images/tooth/normal/37.png"/>
-      <div class="teeth_model_tooth tooth_numb_three_eight">
-        <p class="teeth_model_tooth_numb">38</p>
-      </div>
-      <img class="teeth_model_tooth_img img_three_eight" toothNum="17" toothindex="38" src="/public/assets/images/tooth/normal/38.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_one">
-        <p class="teeth_model_tooth_numb">41</p>
-      </div>
-      <img class="teeth_model_tooth_img img_four_one" toothNum="25" toothindex="41" src="/public/assets/images/tooth/normal/41.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_two">
-        <p class="teeth_model_tooth_numb">42</p>
-      </div>
-      <img class="teeth_model_tooth_img img_four_two" toothNum="26" toothindex="42" src="/public/assets/images/tooth/normal/42.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_three">
-        <p class="teeth_model_tooth_numb">43</p>
-      </div>
-      <img class="teeth_model_tooth_img img_four_three" toothNum="27" toothindex="43" src="/public/assets/images/tooth/normal/43.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_four">
-        <p class="teeth_model_tooth_numb">44</p>
-      </div>
-      <img class="teeth_model_tooth_img img_four_four" toothNum="28" toothindex="44" src="/public/assets/images/tooth/normal/44.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_five">
-        <p class="teeth_model_tooth_numb">45</p>
-      </div>
-      <img class="teeth_model_tooth_img img_four_five" toothNum="29" toothindex="45" src="/public/assets/images/tooth/normal/45.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_six">
-        <p class="teeth_model_tooth_numb">46</p>
-      </div>
-      <img class="teeth_model_tooth_img img_four_six" toothNum="30" toothindex="46" src="/public/assets/images/tooth/normal/46.png"/>
-      <div class="teeth_model_tooth tooth_numb_four_seven">
-        <p class="teeth_model_tooth_numb">47</p>
-      </div>
-       <img class="teeth_model_tooth_img img_four_seven" toothNum="31" toothindex="47" src="/public/assets/images/tooth/normal/47.png"/>
-			<div class="teeth_model_tooth tooth_numb_four_eight">
-			  <p class="teeth_model_tooth_numb">48</p>
-			</div>
-			<img class="teeth_model_tooth_img img_four_eight" toothNum="32" toothindex="48" src="/public/assets/images/tooth/normal/48.png"/>
-		</div>
-		<div class="tribute_request_button_wrapper">
-		  <div class="tribute_request_button_container">
-		    <a href="#fileModal" class="tribute_request_button" data-bs-toggle="modal">
-		      <p class="tribute_request_button_typo">파일 첨부하기</p> 
-		    </a>
-		    <a href="javascript:void(0)" class="tribute_request_button" onclick="fnPreview();">
-		      <p class="tribute_request_button_typo">의뢰서 미리보기</p> 
-		    </a>
-		  </div>
-		 <%if(groupCd.equals("")){ %> 
-		  <a href="javascript:void(0)" class="tribute_request_button" onclick="fnTSave()">
- 		    <p class="tribute_request_button_typo">임시저장</p> 
-		  </a> 
-		  <%} %> 
-		</div>
-  </div>
-  
-  <!-- 파일 첨부 modal -->
-  <div class="modal fade" id="fileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="z-index:9999;">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content" style="width: fit-content;">
-				<div class="dialog_tribute_request_container">
-          <div class="dialog_tribute_request_header">
-            <p class="dialog_tribute_request_header_typo">파일 첨부</p>
-            <a href="javascript:void(0)" class="dialog_tribute_request_header_close_button_wrapper" data-bs-dismiss="modal">
-              <img class="dialog_tribute_request_header_close_button" src="/public/assets/images/tribute_request_dialog_close_button.svg"/>
-            </a>
-          </div>
-          <div class="dialog_tribute_request_body">
-          <font style="margin-left:10px;color:#444;font-size:14px;">※ 파일 최대 용량 <span style="color:#005fa8;">500MB</span> (zip 형식의 압축파일을 권장합니다.) </font>
-          	<div class="dialog_tribute_request_table" style="margin-top:10px">
-							<div class="dialog_tribute_request_table_data_type_container">
-								<div class="dialog_tribute_request_table_data_type_order">
-								    <p class="dialog_tribute_request_table_data_type_typo">NO.</p>
-								</div>
-								<div class="dialog_tribute_request_table_data_type_document">
-								    <p class="dialog_tribute_request_table_data_type_typo">문서유형</p>
-								</div>
-								<div class="dialog_tribute_request_table_data_type_necessary">
-								    <p class="dialog_tribute_request_table_data_type_typo">필수</p>
-								</div>
-								<div class="dialog_tribute_request_table_data_type_file_name">
-								    <p class="dialog_tribute_request_table_data_type_typo">파일명</p>
-								</div>
-								<div class="dialog_tribute_request_table_data_type_download">
-								    <p class="dialog_tribute_request_table_data_type_typo">업로드</p>
-								</div>
-								<div class="dialog_tribute_request_table_data_type_note">
-								    <p class="dialog_tribute_request_table_data_type_typo">비고</p>
-								</div>
-							</div>
-							<div class="dialog_tribute_request_table_data_container">
-							  <div class="dialog_tribute_request_table_data_order">
-							    <p class="dialog_tribute_request_table_data_typo">1</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_document">
-							    <p class="dialog_tribute_request_table_data_typo">스캔파일</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_necessary">
-							    <p class="dialog_tribute_request_table_data_typo">Y</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_file_name">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_download">
-							  	<input type="file" id="file1" class="tribute_file" onchange="fnUpload('1');">
-							    <p class="dialog_tribute_request_table_data_typo">업로드</p>
-							    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/> 
-							  </div>
-							  <div class="dialog_tribute_request_table_data_note">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							</div>
-							<div class="dialog_tribute_request_table_data_container">
-							  <div class="dialog_tribute_request_table_data_order">
-							    <p class="dialog_tribute_request_table_data_typo">2</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_document">
-							    <p class="dialog_tribute_request_table_data_typo">기타</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_necessary">
-							    <p class="dialog_tribute_request_table_data_typo">N</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_file_name">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_download">
-							  	<input type="file" id="file2" class="tribute_file" onchange="fnUpload('2');">
-							    <p class="dialog_tribute_request_table_data_typo">업로드</p>
-							    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/> 
-							  </div>
-							  <div class="dialog_tribute_request_table_data_note">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							</div>
-							<div class="dialog_tribute_request_table_data_container">
-							  <div class="dialog_tribute_request_table_data_order">
-							    <p class="dialog_tribute_request_table_data_typo">3</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_document">
-							    <p class="dialog_tribute_request_table_data_typo">기타</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_necessary">
-							    <p class="dialog_tribute_request_table_data_typo">N</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_file_name">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_download">
-							  	<input type="file" id="file3" class="tribute_file" onchange="fnUpload('3');">
-							    <p class="dialog_tribute_request_table_data_typo">업로드</p>
-							    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/> 
-							  </div>
-							  <div class="dialog_tribute_request_table_data_note">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							</div>
-							<div class="dialog_tribute_request_table_data_container">
-							  <div class="dialog_tribute_request_table_data_order">
-							    <p class="dialog_tribute_request_table_data_typo">4</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_document">
-							    <p class="dialog_tribute_request_table_data_typo">기타</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_necessary">
-							    <p class="dialog_tribute_request_table_data_typo">N</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_file_name">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_download">
-							  	<input type="file" id="file4" class="tribute_file" onchange="fnUpload('4');">
-							    <p class="dialog_tribute_request_table_data_typo">업로드</p>
-							    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/> 
-							  </div>
-							  <div class="dialog_tribute_request_table_data_note">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							</div>
-							<div class="dialog_tribute_request_table_data_container">
-							  <div class="dialog_tribute_request_table_data_order">
-							    <p class="dialog_tribute_request_table_data_typo">5</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_document">
-							    <p class="dialog_tribute_request_table_data_typo">기타</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_necessary">
-							    <p class="dialog_tribute_request_table_data_typo">N</p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_file_name">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							  <div class="dialog_tribute_request_table_data_download">
-							  	<input type="file" id="file5" class="tribute_file" onchange="fnUpload('5');">
-							    <p class="dialog_tribute_request_table_data_typo">업로드</p>
-							    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/> 
-							  </div>
-							  <div class="dialog_tribute_request_table_data_note">
-							    <p class="dialog_tribute_request_table_data_typo"></p>
-							  </div>
-							</div>
-            </div>
-            <div class="dialog_tribute_request_button_wrapper">
-              <button class="dialog_tribute_request_button" type="button" data-bs-dismiss="modal">
-                <p class="dialog_tribute_request_button_typo">닫기</p>
-              </button>
-            </div>
-        	</div>
-        </div>
+			<div class="tribute_request_button_wrapper">
+				<div class="tribute_request_button_container">
+					<a href="#fileModal" class="tribute_request_button"
+						data-bs-toggle="modal">
+						<p class="tribute_request_button_typo">파일 첨부하기</p>
+					</a> <a href="javascript:void(0)" class="tribute_request_button"
+						onclick="fnPreview();">
+						<p class="tribute_request_button_typo">의뢰서 미리보기</p>
+					</a>
+				</div>
+				<%
+					if (groupCd.equals("")) {
+				%>
+				<a href="javascript:void(0)" class="tribute_request_button"
+					onclick="fnTSave()">
+					<p class="tribute_request_button_typo">임시저장</p>
+				</a>
+				<%
+					}
+				%>
 			</div>
 		</div>
-	</div>
-  <!-- 파일 첨부 modal end -->
-  
-  <div class="tribute_request_card">
-		<div class="tribute_request_card_chip_container">
-		  <div class="tribute_request_card_chip_selected card_chip">
-		    <p class="tribute_request_card_chip_selected_typo card_title" onclick="setCard(this);">의뢰서 1</p>
-		    <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg" onclick="deleteCard();"/>
-		  </div>
-		  <button class="tribute_request_card_chip_add_button" type="button" onclick="addCard();">
-		    <p class="tribute_request_card_chip_add_button_typo">+</p>
-		  </button>
-		</div>
-		<div class="tribute_request_info_container">
-			<div class="tribute_request_info_prosthetics_container">
-			  <p class="tribute_request_info_typo">보철종류</p>
-			  <div class="tribute_request_info_prosthetics">
-			    <div class="tribute_request_info_prosthetics_blank">
-			      <p class="tribute_request_info_prosthetics_blank_typo">보철 종류를 선택해 주세요.</p>
-			    </div>
-			    <a href="#prostheticsModal" class="tribute_request_info_prosthetics_button" data-bs-toggle="modal">
-			      <p class="tribute_request_info_prosthetics_button_typo">보철종류 선택</p>
-			    </a>
-			  </div>
-			</div>
-			
-			<input type="hidden" name="SUPP_CD_1" id="SUPP_CD_1">
-			<input type="hidden" name="SUPP_NM_1" id="SUPP_NM_1">
-			<input type="hidden" name="SUPP_CD_2" id="SUPP_CD_2">
-			<input type="hidden" name="SUPP_NM_2" id="SUPP_NM_2">
-			<input type="hidden" name="SUPP_CD_3" id="SUPP_CD_3">
-			<input type="hidden" name="SUPP_NM_3" id="SUPP_NM_3">
-			<input type="hidden" name="SUPP_CD_4" id="SUPP_CD_4">
-			<input type="hidden" name="SUPP_NM_4" id="SUPP_NM_4">
-			
-			<!-- 보철 종류 modal -->
-			<div class="modal fade" id="prostheticsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="z-index:9999;">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content" style="width: fit-content;">
-						<div class="dropbox_tribute_request_etc_chosen" style="min-height: 280px; height: auto;">
-							<div class="dropbox_tribute_request_prosthetics_select_button_etc_chosen">
-							  <p class="tribute_request_prosthetics_select_button_typo">
-							  	보철종류
-							  </p>
-							  <a href="javascript:void(0)" data-bs-dismiss="modal" aria-label="Close" onclick="closeSuppModal();">
-								  <img class="dropbox_tribute_request_prosthetics_select_button_close_button" src="/public/assets/images/dialog_close_button.svg"/>
-			          </a>
-							</div>
-			        <div class="dropbox_tribute_request_prosthetics_select_button_container">
-								<div class="dropbox_prosthetics_type">
-									<div class="dropbox_select_button_large" onclick="fnSelect(this);" style="cursor: pointer;">
-									  <div class="dropbox_select_button_typo_container">
-									    <p class="dropbox_select_button_typo">선택</p>
-									    <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-									  </div>
+
+		<!-- 파일 첨부 modal -->
+		<div class="modal fade" id="fileModal" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+			style="z-index: 9999;">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" style="width: fit-content;">
+					<div class="dialog_tribute_request_container">
+						<div class="dialog_tribute_request_header">
+							<p class="dialog_tribute_request_header_typo">파일 첨부</p>
+							<a href="javascript:void(0)"
+								class="dialog_tribute_request_header_close_button_wrapper"
+								data-bs-dismiss="modal"> <img
+								class="dialog_tribute_request_header_close_button"
+								src="/public/assets/images/tribute_request_dialog_close_button.svg" />
+							</a>
+						</div>
+						<div class="dialog_tribute_request_body">
+							<font style="margin-left: 10px; color: #444; font-size: 14px;">※
+								파일 최대 용량 <span style="color: #005fa8;">500MB</span> (zip 형식의
+								압축파일을 권장합니다.)
+							</font>
+							<div class="dialog_tribute_request_table"
+								style="margin-top: 10px">
+								<div class="dialog_tribute_request_table_data_type_container">
+									<div class="dialog_tribute_request_table_data_type_order">
+										<p class="dialog_tribute_request_table_data_type_typo">NO.</p>
 									</div>
-									<div class="dropbox_select_button_item_container hidden">
+									<div class="dialog_tribute_request_table_data_type_document">
+										<p class="dialog_tribute_request_table_data_type_typo">문서유형</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_type_necessary">
+										<p class="dialog_tribute_request_table_data_type_typo">필수</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_type_file_name">
+										<p class="dialog_tribute_request_table_data_type_typo">파일명</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_type_download">
+										<p class="dialog_tribute_request_table_data_type_typo">업로드</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_type_note">
+										<p class="dialog_tribute_request_table_data_type_typo">비고</p>
 									</div>
 								</div>
-								<div class="dropbox_prosthetics_type">
-								  <div class="dropbox_select_button_large" onclick="fnSelect(this);" style="cursor: pointer;">
-								    <div class="dropbox_select_button_typo_container">
-								      <p class="dropbox_select_button_typo">선택</p>
-								      <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-								    </div>
-								  </div>
-								  <div class="dropbox_select_button_item_container hidden">
-								  </div>
+								<div class="dialog_tribute_request_table_data_container">
+									<div class="dialog_tribute_request_table_data_order">
+										<p class="dialog_tribute_request_table_data_typo">1</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_document">
+										<p class="dialog_tribute_request_table_data_typo">스캔파일</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_necessary">
+										<p class="dialog_tribute_request_table_data_typo">Y</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_file_name">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+									<div class="dialog_tribute_request_table_data_download">
+										<input type="file" id="file1" class="tribute_file"
+											onchange="fnUpload('1');">
+										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<img class="dialog_tribute_request_table_data_download_img"
+											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
+									</div>
+									<div class="dialog_tribute_request_table_data_note">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
 								</div>
-								<div class="dropbox_prosthetics_type">
-								  <div class="dropbox_select_button_large" onclick="fnSelect(this);" style="cursor: pointer;">
-								    <div class="dropbox_select_button_typo_container">
-								      <p class="dropbox_select_button_typo">선택</p>
-								      <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-								    </div>
-								  </div>
-								  <div class="dropbox_select_button_item_container hidden">
-								  </div>
+								<div class="dialog_tribute_request_table_data_container">
+									<div class="dialog_tribute_request_table_data_order">
+										<p class="dialog_tribute_request_table_data_typo">2</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_document">
+										<p class="dialog_tribute_request_table_data_typo">기타</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_necessary">
+										<p class="dialog_tribute_request_table_data_typo">N</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_file_name">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+									<div class="dialog_tribute_request_table_data_download">
+										<input type="file" id="file2" class="tribute_file"
+											onchange="fnUpload('2');">
+										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<img class="dialog_tribute_request_table_data_download_img"
+											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
+									</div>
+									<div class="dialog_tribute_request_table_data_note">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
 								</div>
-			          <div class="dropbox_prosthetics_type">
-			            <div class="dropbox_select_button_large" onclick="fnSelect(this);" style="cursor: pointer;">
-			              <div class="dropbox_select_button_typo_container">
-			                <p class="dropbox_select_button_typo">선택</p>
-			                <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-			              </div>
-			            </div>
-			            <div class="dropbox_select_button_item_container hidden">
-			            </div>
-			          </div>
-			      	</div>
-			      	<div class="prosthetics_select_etc_container hidden">
-				      	<div class="dropbox_tribute_request_divider"></div>
-		            <div class="dropbox_tribute_request_prosthetics_select_button_container">
-		              <div class="dropbox_prosthetics_type"></div>
-		              <div class="dropbox_prosthetics_type">
-		                <input type="text" class="dropbox_prosthetics_type_etc_chosen_direct_input" id="ETC_SUPP_NM_2" placeholder="직접입력"/>
-		              </div>
-		              <div class="dropbox_prosthetics_type">
-		                <input type="text" class="dropbox_prosthetics_type_etc_chosen_direct_input" id="ETC_SUPP_NM_3" placeholder="직접입력"/>
-		              </div>
-		              <div class="dropbox_prosthetics_type">
-		                <input type="text" class="dropbox_prosthetics_type_etc_chosen_direct_input" id="ETC_SUPP_NM_4" placeholder="직접입력"/>
-		              </div>
-		            </div>
-	            </div>
-	            <div class="dropbox_tribute_request_button_wrapper" style="margin-bottom: 35px;">
-	              <button type="button" class="dropbox_tribute_request_button" onclick="saveSuppModal();" data-bs-dismiss="modal">
-	                <div class="dropbox_tribute_request_button_typo">입력완료</div>
-	              </button>
-	            </div>
-			      </div>
+								<div class="dialog_tribute_request_table_data_container">
+									<div class="dialog_tribute_request_table_data_order">
+										<p class="dialog_tribute_request_table_data_typo">3</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_document">
+										<p class="dialog_tribute_request_table_data_typo">기타</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_necessary">
+										<p class="dialog_tribute_request_table_data_typo">N</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_file_name">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+									<div class="dialog_tribute_request_table_data_download">
+										<input type="file" id="file3" class="tribute_file"
+											onchange="fnUpload('3');">
+										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<img class="dialog_tribute_request_table_data_download_img"
+											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
+									</div>
+									<div class="dialog_tribute_request_table_data_note">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+								</div>
+								<div class="dialog_tribute_request_table_data_container">
+									<div class="dialog_tribute_request_table_data_order">
+										<p class="dialog_tribute_request_table_data_typo">4</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_document">
+										<p class="dialog_tribute_request_table_data_typo">기타</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_necessary">
+										<p class="dialog_tribute_request_table_data_typo">N</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_file_name">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+									<div class="dialog_tribute_request_table_data_download">
+										<input type="file" id="file4" class="tribute_file"
+											onchange="fnUpload('4');">
+										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<img class="dialog_tribute_request_table_data_download_img"
+											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
+									</div>
+									<div class="dialog_tribute_request_table_data_note">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+								</div>
+								<div class="dialog_tribute_request_table_data_container">
+									<div class="dialog_tribute_request_table_data_order">
+										<p class="dialog_tribute_request_table_data_typo">5</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_document">
+										<p class="dialog_tribute_request_table_data_typo">기타</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_necessary">
+										<p class="dialog_tribute_request_table_data_typo">N</p>
+									</div>
+									<div class="dialog_tribute_request_table_data_file_name">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+									<div class="dialog_tribute_request_table_data_download">
+										<input type="file" id="file5" class="tribute_file"
+											onchange="fnUpload('5');">
+										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<img class="dialog_tribute_request_table_data_download_img"
+											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
+									</div>
+									<div class="dialog_tribute_request_table_data_note">
+										<p class="dialog_tribute_request_table_data_typo"></p>
+									</div>
+								</div>
+							</div>
+							<div class="dialog_tribute_request_button_wrapper">
+								<button class="dialog_tribute_request_button" type="button"
+									data-bs-dismiss="modal">
+									<p class="dialog_tribute_request_button_typo">닫기</p>
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-			<!-- 보철 종류 modal end -->
-			
-			
-			<div class="tribute_request_info_selected_dental_container">
-			  <p class="tribute_request_info_typo">선택된 치식</p>
-			  <div class="tribute_request_info_selected_dental">
-			    <div class="tribute_request_info_selected_dental_blank">
-			      <p class="tribute_request_info_selected_dental_blank_typo" style="margin-bottom: 5px;">치식을 선택해 주세요.</p>
-			      <div class="selected_dental_container hidden">
-            </div>
-			    </div>
-			  </div>
+		</div>
+		<!-- 파일 첨부 modal end -->
+
+		<div class="tribute_request_card">
+			<div class="tribute_request_card_chip_container">
+				<div class="tribute_request_card_chip_selected card_chip">
+					<p class="tribute_request_card_chip_selected_typo card_title"
+						onclick="setCard(this);">의뢰서 1</p>
+					<img class="tribute_request_card_chip_close_button"
+						src="/public/assets/images/tribute_request_card_chip_close_button.svg"
+						onclick="deleteCard();" />
+				</div>
+				<button class="tribute_request_card_chip_add_button" type="button"
+					onclick="addCard();">
+					<p class="tribute_request_card_chip_add_button_typo">+</p>
+				</button>
 			</div>
-			<div id="pro_meth_container" class="tribute_request_info_with_select_button_container">
-				<input class="required" type="hidden" name="PRO_METH_CD" id="PRO_METH_CD" />
-				<p class="tribute_request_info_typo">가공방법</p>
-			  <div class="tribute_request_info_select_button_container">
-			    <div class="dropbox_tribute_request">
-			      <div class="dropbox_select_button" style="cursor: pointer;" onclick="fnSelect(this);">
-			      	<div class="dropbox_select_button_typo_container">
-			        	<p class="dropbox_select_button_typo">선택</p>
-			          <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-			        </div>
-			      </div>
-			      <div class="dropbox_select_button_item_container hidden" data-div="PRO_METH_CD">
-			      	<c:forEach items="${PRO_METH_CD_LIST}" var="pro">
-			      		<div class="dropbox_select_button_item">
-			            <p class="dropbox_select_button_item_typo" onclick="fnSelect('${pro.CODE_CD}', '${pro.CODE_NM}');" data-code="${pro.CODE_CD}">${pro.CODE_NM}</p>
-			        	</div>
-			      	</c:forEach>
-			      </div>
-			    </div>
-			    <div class="tribute_request_info_blank">
-				    <div class="tribute_request_info_blank_typo_container">
-				      <p class="tribute_request_info_blank_typo being_entered"></p>
-				    </div>
-					</div>
-				  <div class="tribute_request_direct_input_container hidden">
-					  <div class="tribute_request_direct_input">
-						  <input class="tribute_request_direct_input_blank" name="PRO_METH_ETC" id="PRO_METH_ETC" placeholder="기타 가공방법을 입력해 주세요." style="font-size: smaller;"/>
-					  </div>
-					</div>
-			  </div>
-			</div>
-			<div id="shade_container" class="tribute_request_info_with_select_button_container">
-				<input class="required" type="hidden" name="SHADE_CD" id="SHADE_CD" />
-				<p class="tribute_request_info_typo">Shade</p>
-				<div class="tribute_request_info_select_button_container">
-				  <div class="dropbox_tribute_request">
-				    <div class="dropbox_select_button" style="cursor: pointer;" onclick="fnSelect(this);">
-				      <div class="dropbox_select_button_typo_container">
-				        <p class="dropbox_select_button_typo">선택</p>
-				        <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
-				      </div>
-				    </div>
-				    <div class="dropbox_select_button_item_container hidden" data-div="SHADE_CD">
-				    	<c:forEach items="${SHADE_CD_LIST}" var="shade">
-				    		<div class="dropbox_select_button_item">
-				          <p class="dropbox_select_button_item_typo" onclick="fnSelect('${shade.CODE_CD}', '${shade.CODE_NM}');" data-code="${shade.CODE_CD}">${shade.CODE_NM}</p>
-				      	</div>
-				    	</c:forEach>
-				    </div>
-				  </div>
-				  <div class="tribute_request_direct_input_container hidden">
-					  <div class="tribute_request_direct_input">
-						  <input class="tribute_request_direct_input_blank" name="SHADE_ETC" id="SHADE_ETC" placeholder="Shade를 입력해 주세요." style="font-size: smaller;"/>
-					  </div>
+			<div class="tribute_request_info_container">
+				<div class="tribute_request_info_prosthetics_container">
+					<p class="tribute_request_info_typo">보철종류</p>
+					<div class="tribute_request_info_prosthetics">
+						<div class="tribute_request_info_prosthetics_blank">
+							<p class="tribute_request_info_prosthetics_blank_typo">보철 종류를
+								선택해 주세요.</p>
+						</div>
+						<a href="#prostheticsModal"
+							class="tribute_request_info_prosthetics_button"
+							data-bs-toggle="modal">
+							<p class="tribute_request_info_prosthetics_button_typo">보철종류
+								선택</p>
+						</a>
 					</div>
 				</div>
-			</div>
-			<img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
-			<textarea class="tribute_request_detail_info" name="DTL_TXT" id="DTL_TXT" placeholder="상세내용"></textarea>
-			<div class="tribute_request_info_more_container">
-			  <div class="tribute_request_info_more_header">
-			    <p class="tribute_request_info_more_header_typo">자주 쓰는 말</p>
-			    <div class="tribute_request_info_more_header_blank_container">
-			      <div class="tribute_request_info_more_header_blank">
-			        <p class="tribute_request_info_more_header_blank_typo">선택</p>
-			      </div> 
-			      <a href="#oftenWordModal" class="tribute_request_info_more_header_button" data-bs-toggle="modal">
-			        <p class="tribute_request_info_more_header_button_typo">자주 쓰는 말 관리</p> 
-			      </a> 
-			    </div>
-			  </div>
-			  <div class="main_container_divider"></div>
-			  <div class="tribute_request_info_more_body">
-			  	<c:forEach items="${OFTEN_WORD_LIST}" var="word">
-			  		<div class="tribute_request_info_more_item">
-				      <p class="tribute_request_info_more_item_typo" style="cursor: pointer;" onclick="fnSetDtlTxt(this);">${word.WORD_TXT}</p> 
-				      <img class="tribute_request_info_more_item_close_button" src="/public/assets/images/tribute_request_info_more_item_close_button.svg"
-				      			style="cursor: pointer;" onclick="deleteWord('${word.MNG_NO}');"/> 
-				    </div>
-			  	</c:forEach>
-			  </div>
-			</div>
-			
-			<!-- 자주 쓰는 말 modal -->
-			<div class="modal fade" id="oftenWordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" style="z-index:9999;" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content" style="width: fit-content;">
-						<div class="dialog_tribute_request_frequently_used_word_container">
-		          <div class="dialog_tribute_request_frequently_used_word_header">
-		            <p class="dialog_tribute_request_frequently_used_word_header_typo">자주 쓰는 말</p>
-		            <a href="javascript:void(0)" data-bs-dismiss="modal" aria-label="Close">
-		            	<img class="dialog_tribute_request_frequently_used_word_close_button" src="/public/assets/images/dialog_close_button.svg"/>
-		            </a>
-		          </div>
-		          <div class="dialog_tribute_request_frequently_used_word_body">
-		            <input class="dialog_tribute_request_frequently_used_word_direct_input" name="WORD_TXT" id="WORD_TXT" placeholder="자주 쓰는 말 입력"/>
-		            <div class="dialog_tribute_request_frequently_used_word_button_wrapper">
-		              <button type="button" class="dialog_tribute_request_frequently_used_word_button" onclick="saveOftenWordModal();">
-		                <p class="dialog_tribute_request_frequently_used_word_button_typo">입력완료</p>
-		              </button>
-		            </div>
-		          </div>
-		        </div>
+
+				<input type="hidden" name="SUPP_CD_1" id="SUPP_CD_1"> <input
+					type="hidden" name="SUPP_NM_1" id="SUPP_NM_1"> <input
+					type="hidden" name="SUPP_CD_2" id="SUPP_CD_2"> <input
+					type="hidden" name="SUPP_NM_2" id="SUPP_NM_2"> <input
+					type="hidden" name="SUPP_CD_3" id="SUPP_CD_3"> <input
+					type="hidden" name="SUPP_NM_3" id="SUPP_NM_3"> <input
+					type="hidden" name="SUPP_CD_4" id="SUPP_CD_4"> <input
+					type="hidden" name="SUPP_NM_4" id="SUPP_NM_4">
+
+				<!-- 보철 종류 modal -->
+				<div class="modal fade" id="prostheticsModal"
+					data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+					aria-labelledby="staticBackdropLabel" aria-hidden="true"
+					style="z-index: 9999;">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content" style="width: fit-content;">
+							<div class="dropbox_tribute_request_etc_chosen"
+								style="min-height: 280px; height: auto;">
+								<div
+									class="dropbox_tribute_request_prosthetics_select_button_etc_chosen">
+									<p class="tribute_request_prosthetics_select_button_typo">
+										보철종류</p>
+									<a href="javascript:void(0)" data-bs-dismiss="modal"
+										aria-label="Close" onclick="closeSuppModal();"> <img
+										class="dropbox_tribute_request_prosthetics_select_button_close_button"
+										src="/public/assets/images/dialog_close_button.svg" />
+									</a>
+								</div>
+								<div
+									class="dropbox_tribute_request_prosthetics_select_button_container">
+									<div class="dropbox_prosthetics_type">
+										<div class="dropbox_select_button_large"
+											onclick="fnSelect(this);" style="cursor: pointer;">
+											<div class="dropbox_select_button_typo_container">
+												<p class="dropbox_select_button_typo">선택</p>
+												<img class="dropbox_select_button_arrow"
+													src="/public/assets/images/info_select_button_arrow.svg" />
+											</div>
+										</div>
+										<div class="dropbox_select_button_item_container hidden">
+										</div>
+									</div>
+									<div class="dropbox_prosthetics_type">
+										<div class="dropbox_select_button_large"
+											onclick="fnSelect(this);" style="cursor: pointer;">
+											<div class="dropbox_select_button_typo_container">
+												<p class="dropbox_select_button_typo">선택</p>
+												<img class="dropbox_select_button_arrow"
+													src="/public/assets/images/info_select_button_arrow.svg" />
+											</div>
+										</div>
+										<div class="dropbox_select_button_item_container hidden">
+										</div>
+									</div>
+									<div class="dropbox_prosthetics_type">
+										<div class="dropbox_select_button_large"
+											onclick="fnSelect(this);" style="cursor: pointer;">
+											<div class="dropbox_select_button_typo_container">
+												<p class="dropbox_select_button_typo">선택</p>
+												<img class="dropbox_select_button_arrow"
+													src="/public/assets/images/info_select_button_arrow.svg" />
+											</div>
+										</div>
+										<div class="dropbox_select_button_item_container hidden">
+										</div>
+									</div>
+									<div class="dropbox_prosthetics_type">
+										<div class="dropbox_select_button_large"
+											onclick="fnSelect(this);" style="cursor: pointer;">
+											<div class="dropbox_select_button_typo_container">
+												<p class="dropbox_select_button_typo">선택</p>
+												<img class="dropbox_select_button_arrow"
+													src="/public/assets/images/info_select_button_arrow.svg" />
+											</div>
+										</div>
+										<div class="dropbox_select_button_item_container hidden">
+										</div>
+									</div>
+								</div>
+								<div class="prosthetics_select_etc_container hidden">
+									<div class="dropbox_tribute_request_divider"></div>
+									<div
+										class="dropbox_tribute_request_prosthetics_select_button_container">
+										<div class="dropbox_prosthetics_type"></div>
+										<div class="dropbox_prosthetics_type">
+											<input type="text"
+												class="dropbox_prosthetics_type_etc_chosen_direct_input"
+												id="ETC_SUPP_NM_2" placeholder="직접입력" />
+										</div>
+										<div class="dropbox_prosthetics_type">
+											<input type="text"
+												class="dropbox_prosthetics_type_etc_chosen_direct_input"
+												id="ETC_SUPP_NM_3" placeholder="직접입력" />
+										</div>
+										<div class="dropbox_prosthetics_type">
+											<input type="text"
+												class="dropbox_prosthetics_type_etc_chosen_direct_input"
+												id="ETC_SUPP_NM_4" placeholder="직접입력" />
+										</div>
+									</div>
+								</div>
+								<div class="dropbox_tribute_request_button_wrapper"
+									style="margin-bottom: 35px;">
+									<button type="button" class="dropbox_tribute_request_button"
+										onclick="saveSuppModal();" data-bs-dismiss="modal">
+										<div class="dropbox_tribute_request_button_typo">입력완료</div>
+									</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
+				<!-- 보철 종류 modal end -->
+
+
+				<div class="tribute_request_info_selected_dental_container">
+					<p class="tribute_request_info_typo">선택된 치식</p>
+					<div class="tribute_request_info_selected_dental">
+						<div class="tribute_request_info_selected_dental_blank">
+							<p class="tribute_request_info_selected_dental_blank_typo"
+								style="margin-bottom: 5px;">치식을 선택해 주세요.</p>
+							<div class="selected_dental_container hidden"></div>
+						</div>
+					</div>
+				</div>
+				<div id="pro_meth_container"
+					class="tribute_request_info_with_select_button_container">
+					<input class="required" type="hidden" name="PRO_METH_CD"
+						id="PRO_METH_CD" />
+					<p class="tribute_request_info_typo">가공방법</p>
+					<div class="tribute_request_info_select_button_container">
+						<div class="dropbox_tribute_request">
+							<div class="dropbox_select_button" style="cursor: pointer;"
+								onclick="fnSelect(this);">
+								<div class="dropbox_select_button_typo_container">
+									<p class="dropbox_select_button_typo">선택</p>
+									<img class="dropbox_select_button_arrow"
+										src="/public/assets/images/info_select_button_arrow.svg" />
+								</div>
+							</div>
+							<div class="dropbox_select_button_item_container hidden"
+								data-div="PRO_METH_CD">
+								<c:forEach items="${PRO_METH_CD_LIST}" var="pro">
+									<div class="dropbox_select_button_item">
+										<p class="dropbox_select_button_item_typo"
+											onclick="fnSelect('${pro.CODE_CD}', '${pro.CODE_NM}');"
+											data-code="${pro.CODE_CD}">${pro.CODE_NM}</p>
+									</div>
+								</c:forEach>
+							</div>
+						</div>
+						<div class="tribute_request_info_blank">
+							<div class="tribute_request_info_blank_typo_container">
+								<p class="tribute_request_info_blank_typo being_entered"></p>
+							</div>
+						</div>
+						<div class="tribute_request_direct_input_container hidden">
+							<div class="tribute_request_direct_input">
+								<input class="tribute_request_direct_input_blank"
+									name="PRO_METH_ETC" id="PRO_METH_ETC"
+									placeholder="기타 가공방법을 입력해 주세요." style="font-size: smaller;" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="shade_container"
+					class="tribute_request_info_with_select_button_container">
+					<input class="required" type="hidden" name="SHADE_CD" id="SHADE_CD" />
+					<p class="tribute_request_info_typo">Shade</p>
+					<div class="tribute_request_info_select_button_container">
+						<div class="dropbox_tribute_request">
+							<div class="dropbox_select_button" style="cursor: pointer;"
+								onclick="fnSelect(this);">
+								<div class="dropbox_select_button_typo_container">
+									<p class="dropbox_select_button_typo">선택</p>
+									<img class="dropbox_select_button_arrow"
+										src="/public/assets/images/info_select_button_arrow.svg" />
+								</div>
+							</div>
+							<div class="dropbox_select_button_item_container hidden"
+								data-div="SHADE_CD">
+								<c:forEach items="${SHADE_CD_LIST}" var="shade">
+									<div class="dropbox_select_button_item">
+										<p class="dropbox_select_button_item_typo"
+											onclick="fnSelect('${shade.CODE_CD}', '${shade.CODE_NM}');"
+											data-code="${shade.CODE_CD}">${shade.CODE_NM}</p>
+									</div>
+								</c:forEach>
+							</div>
+						</div>
+						<div class="tribute_request_direct_input_container hidden">
+							<div class="tribute_request_direct_input">
+								<input class="tribute_request_direct_input_blank"
+									name="SHADE_ETC" id="SHADE_ETC" placeholder="Shade를 입력해 주세요."
+									style="font-size: smaller;" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<img class="dotted_divider"
+					src="/public/assets/images/dotted_divider.svg" />
+				<textarea class="tribute_request_detail_info" name="DTL_TXT"
+					id="DTL_TXT" placeholder="상세내용"></textarea>
+				<div class="tribute_request_info_more_container">
+					<div class="tribute_request_info_more_header">
+						<p class="tribute_request_info_more_header_typo">자주 쓰는 말</p>
+						<div class="tribute_request_info_more_header_blank_container">
+							<div class="tribute_request_info_more_header_blank">
+								<p class="tribute_request_info_more_header_blank_typo">선택</p>
+							</div>
+							<a href="#oftenWordModal"
+								class="tribute_request_info_more_header_button"
+								data-bs-toggle="modal">
+								<p class="tribute_request_info_more_header_button_typo">자주
+									쓰는 말 관리</p>
+							</a>
+						</div>
+					</div>
+					<div class="main_container_divider"></div>
+					<div class="tribute_request_info_more_body">
+						<c:forEach items="${OFTEN_WORD_LIST}" var="word">
+							<div class="tribute_request_info_more_item">
+								<p class="tribute_request_info_more_item_typo"
+									style="cursor: pointer;" onclick="fnSetDtlTxt(this);">${word.WORD_TXT}</p>
+								<img class="tribute_request_info_more_item_close_button"
+									src="/public/assets/images/tribute_request_info_more_item_close_button.svg"
+									style="cursor: pointer;"
+									onclick="deleteWord('${word.MNG_NO}');" />
+							</div>
+						</c:forEach>
+					</div>
+				</div>
+
+				<!-- 자주 쓰는 말 modal -->
+				<div class="modal fade" id="oftenWordModal"
+					data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+					style="z-index: 9999;" aria-labelledby="staticBackdropLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content" style="width: fit-content;">
+							<div
+								class="dialog_tribute_request_frequently_used_word_container">
+								<div class="dialog_tribute_request_frequently_used_word_header">
+									<p
+										class="dialog_tribute_request_frequently_used_word_header_typo">자주
+										쓰는 말</p>
+									<a href="javascript:void(0)" data-bs-dismiss="modal"
+										aria-label="Close"> <img
+										class="dialog_tribute_request_frequently_used_word_close_button"
+										src="/public/assets/images/dialog_close_button.svg" />
+									</a>
+								</div>
+								<div class="dialog_tribute_request_frequently_used_word_body">
+									<input
+										class="dialog_tribute_request_frequently_used_word_direct_input"
+										name="WORD_TXT" id="WORD_TXT" placeholder="자주 쓰는 말 입력" />
+									<div
+										class="dialog_tribute_request_frequently_used_word_button_wrapper">
+										<button type="button"
+											class="dialog_tribute_request_frequently_used_word_button"
+											onclick="saveOftenWordModal();">
+											<p
+												class="dialog_tribute_request_frequently_used_word_button_typo">입력완료</p>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 자주 쓰는 말 modal end -->
 			</div>
-			<!-- 자주 쓰는 말 modal end -->
-    </div>
-	</div>
-</form>
+		</div>
+	</form>
 </div>
 <div class="tribute_request_preview_body hidden">
-            <div class="teeth_model_container">
-                <div class="teeth_model_title">
-                    <img class="teeth_model_title_icon" src="/public/assets/images/teeth_model_title_icon.svg"/>
-                    <p class="teeth_model_title_typo"></p>
-                </div>
-                <div class="teeth_model_preview_wrapper">
-                  
-                  <div class="hidden p_bridge p_one_one_one_two"></div>
-                  <div class="hidden p_bridge p_one_two_one_three"></div>
-                  <div class="hidden p_bridge p_one_three_one_four"></div>
-                  <div class="hidden p_bridge p_one_four_one_five"></div>
-                  <div class="hidden p_bridge p_one_five_one_six"></div>
-                  <div class="hidden p_bridge p_one_six_one_seven"></div>
-                  <div class="hidden p_bridge p_one_seven_one_eight"></div>
-                  <div class="hidden p_bridge p_one_one_two_one"></div>
-                  <div class="hidden p_bridge p_two_one_two_two"></div>
-                  <div class="hidden p_bridge p_two_two_two_three"></div>
-                  <div class="hidden p_bridge p_two_three_two_four"></div>
-                  <div class="hidden p_bridge p_two_four_two_five"></div>
-                  <div class="hidden p_bridge p_two_five_two_six"></div>
-                  <div class="hidden p_bridge p_two_six_two_seven"></div>
-                  <div class="hidden p_bridge p_two_seven_two_eight"></div>
-                  <div class="hidden p_bridge p_three_one_three_two"></div>
-                  <div class="hidden p_bridge p_three_two_three_three"></div>
-                  <div class="hidden p_bridge p_three_three_three_four"></div>
-                  <div class="hidden p_bridge p_three_four_three_five"></div>
-                  <div class="hidden p_bridge p_three_five_three_six"></div>
-                  <div class="hidden p_bridge p_three_six_three_seven"></div>
-                  <div class="hidden p_bridge p_three_seven_three_eight"></div>
-                  <div class="hidden p_bridge p_three_one_four_one"></div>
-                  <div class="hidden p_bridge p_four_one_four_two"></div>
-                  <div class="hidden p_bridge p_four_two_four_three"></div>
-                  <div class="hidden p_bridge p_four_three_four_four"></div>
-                  <div class="hidden p_bridge p_four_four_four_five"></div>
-                  <div class="hidden p_bridge p_four_five_four_six"></div>
-                  <div class="hidden p_bridge p_four_six_four_seven"></div>
-                  <div class="hidden p_bridge p_four_seven_four_eight"></div>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_one">
-                      <p class="teeth_model_tooth_numb">11</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_one" src="/public/assets/images/tooth/gray/11.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_two">
-                      <p class="teeth_model_tooth_numb">12</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_two" src="/public/assets/images/tooth/gray/12.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_three">
-                      <p class="teeth_model_tooth_numb">13</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_three" src="/public/assets/images/tooth/gray/13.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_four">
-                      <p class="teeth_model_tooth_numb">14</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_four" src="/public/assets/images/tooth/gray/14.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_five">
-                      <p class="teeth_model_tooth_numb">15</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_five" src="/public/assets/images/tooth/gray/15.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_six">
-                      <p class="teeth_model_tooth_numb">16</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_six" src="/public/assets/images/tooth/gray/16.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_seven">
-                      <p class="teeth_model_tooth_numb">17</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_seven" src="/public/assets/images/tooth/gray/17.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_one_eight">
-                      <p class="teeth_model_tooth_numb">18</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_one_eight" src="/public/assets/images/tooth/gray/18.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_one">
-                      <p class="teeth_model_tooth_numb">21</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_one" src="/public/assets/images/tooth/gray/21.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_two">
-                      <p class="teeth_model_tooth_numb">22</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_two" src="/public/assets/images/tooth/gray/22.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_three">
-                      <p class="teeth_model_tooth_numb">23</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_three" src="/public/assets/images/tooth/gray/23.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_four">
-                      <p class="teeth_model_tooth_numb">24</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_four" src="/public/assets/images/tooth/gray/24.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_five">
-                      <p class="teeth_model_tooth_numb">25</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_five" src="/public/assets/images/tooth/gray/25.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_six">
-                      <p class="teeth_model_tooth_numb">26</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_six" src="/public/assets/images/tooth/gray/26.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_seven">
-                      <p class="teeth_model_tooth_numb">27</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_seven" src="/public/assets/images/tooth/gray/27.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_two_eight">
-                      <p class="teeth_model_tooth_numb">28</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_two_eight" src="/public/assets/images/tooth/gray/28.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_one">
-                      <p class="teeth_model_tooth_numb">31</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_one" src="/public/assets/images/tooth/gray/31.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_two">
-                      <p class="teeth_model_tooth_numb">32</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_two" src="/public/assets/images/tooth/gray/32.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_three">
-                      <p class="teeth_model_tooth_numb">33</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_three" src="/public/assets/images/tooth/gray/33.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_four">
-                      <p class="teeth_model_tooth_numb">34</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_four" src="/public/assets/images/tooth/gray/34.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_five">
-                      <p class="teeth_model_tooth_numb">35</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_five" src="/public/assets/images/tooth/gray/35.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_six">
-                      <p class="teeth_model_tooth_numb">36</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_six" src="/public/assets/images/tooth/gray/36.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_seven">
-                      <p class="teeth_model_tooth_numb">37</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_seven" src="/public/assets/images/tooth/gray/37.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_three_eight">
-                      <p class="teeth_model_tooth_numb">38</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_three_eight" src="/public/assets/images/tooth/gray/38.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_one">
-                      <p class="teeth_model_tooth_numb">41</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_one" src="/public/assets/images/tooth/gray/41.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_two">
-                      <p class="teeth_model_tooth_numb">42</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_two" src="/public/assets/images/tooth/gray/42.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_three">
-                      <p class="teeth_model_tooth_numb">43</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_three" src="/public/assets/images/tooth/gray/43.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_four">
-                      <p class="teeth_model_tooth_numb">44</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_four" src="/public/assets/images/tooth/gray/44.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_five">
-                      <p class="teeth_model_tooth_numb">45</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_five" src="/public/assets/images/tooth/gray/45.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_six">
-                      <p class="teeth_model_tooth_numb">46</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_six" src="/public/assets/images/tooth/gray/46.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_seven">
-                      <p class="teeth_model_tooth_numb">47</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_seven" src="/public/assets/images/tooth/gray/47.png"/>
-                  <div class="p_teeth_model_tooth p_tooth_numb_four_eight">
-                      <p class="teeth_model_tooth_numb">48</p>
-                  </div>
-                  <img class="p_teeth_model_tooth_img p_img_four_eight" src="/public/assets/images/tooth/gray/48.png"/>
-              </div>
-            </div>
-            <div class="tribute_request_preview_main_container">
-                <div class="tribute_request_card">
-                    <div class="tribute_request_card_chip_container">
-                        <!-- <div class="tribute_request_card_chip_not_selected">
+	<div class="teeth_model_container">
+		<div class="teeth_model_title">
+			<img class="teeth_model_title_icon"
+				src="/public/assets/images/teeth_model_title_icon.svg" />
+			<p class="teeth_model_title_typo"></p>
+		</div>
+		<div class="teeth_model_preview_wrapper">
+
+			<div class="hidden p_bridge p_one_one_one_two"></div>
+			<div class="hidden p_bridge p_one_two_one_three"></div>
+			<div class="hidden p_bridge p_one_three_one_four"></div>
+			<div class="hidden p_bridge p_one_four_one_five"></div>
+			<div class="hidden p_bridge p_one_five_one_six"></div>
+			<div class="hidden p_bridge p_one_six_one_seven"></div>
+			<div class="hidden p_bridge p_one_seven_one_eight"></div>
+			<div class="hidden p_bridge p_one_one_two_one"></div>
+			<div class="hidden p_bridge p_two_one_two_two"></div>
+			<div class="hidden p_bridge p_two_two_two_three"></div>
+			<div class="hidden p_bridge p_two_three_two_four"></div>
+			<div class="hidden p_bridge p_two_four_two_five"></div>
+			<div class="hidden p_bridge p_two_five_two_six"></div>
+			<div class="hidden p_bridge p_two_six_two_seven"></div>
+			<div class="hidden p_bridge p_two_seven_two_eight"></div>
+			<div class="hidden p_bridge p_three_one_three_two"></div>
+			<div class="hidden p_bridge p_three_two_three_three"></div>
+			<div class="hidden p_bridge p_three_three_three_four"></div>
+			<div class="hidden p_bridge p_three_four_three_five"></div>
+			<div class="hidden p_bridge p_three_five_three_six"></div>
+			<div class="hidden p_bridge p_three_six_three_seven"></div>
+			<div class="hidden p_bridge p_three_seven_three_eight"></div>
+			<div class="hidden p_bridge p_three_one_four_one"></div>
+			<div class="hidden p_bridge p_four_one_four_two"></div>
+			<div class="hidden p_bridge p_four_two_four_three"></div>
+			<div class="hidden p_bridge p_four_three_four_four"></div>
+			<div class="hidden p_bridge p_four_four_four_five"></div>
+			<div class="hidden p_bridge p_four_five_four_six"></div>
+			<div class="hidden p_bridge p_four_six_four_seven"></div>
+			<div class="hidden p_bridge p_four_seven_four_eight"></div>
+			<div class="p_teeth_model_tooth p_tooth_numb_one_one">
+				<p class="teeth_model_tooth_numb">11</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_one"
+				src="/public/assets/images/tooth/gray/11.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_two">
+				<p class="teeth_model_tooth_numb">12</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_two"
+				src="/public/assets/images/tooth/gray/12.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_three">
+				<p class="teeth_model_tooth_numb">13</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_three"
+				src="/public/assets/images/tooth/gray/13.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_four">
+				<p class="teeth_model_tooth_numb">14</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_four"
+				src="/public/assets/images/tooth/gray/14.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_five">
+				<p class="teeth_model_tooth_numb">15</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_five"
+				src="/public/assets/images/tooth/gray/15.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_six">
+				<p class="teeth_model_tooth_numb">16</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_six"
+				src="/public/assets/images/tooth/gray/16.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_seven">
+				<p class="teeth_model_tooth_numb">17</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_seven"
+				src="/public/assets/images/tooth/gray/17.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_one_eight">
+				<p class="teeth_model_tooth_numb">18</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_one_eight"
+				src="/public/assets/images/tooth/gray/18.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_one">
+				<p class="teeth_model_tooth_numb">21</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_one"
+				src="/public/assets/images/tooth/gray/21.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_two">
+				<p class="teeth_model_tooth_numb">22</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_two"
+				src="/public/assets/images/tooth/gray/22.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_three">
+				<p class="teeth_model_tooth_numb">23</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_three"
+				src="/public/assets/images/tooth/gray/23.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_four">
+				<p class="teeth_model_tooth_numb">24</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_four"
+				src="/public/assets/images/tooth/gray/24.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_five">
+				<p class="teeth_model_tooth_numb">25</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_five"
+				src="/public/assets/images/tooth/gray/25.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_six">
+				<p class="teeth_model_tooth_numb">26</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_six"
+				src="/public/assets/images/tooth/gray/26.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_seven">
+				<p class="teeth_model_tooth_numb">27</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_seven"
+				src="/public/assets/images/tooth/gray/27.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_two_eight">
+				<p class="teeth_model_tooth_numb">28</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_two_eight"
+				src="/public/assets/images/tooth/gray/28.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_one">
+				<p class="teeth_model_tooth_numb">31</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_one"
+				src="/public/assets/images/tooth/gray/31.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_two">
+				<p class="teeth_model_tooth_numb">32</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_two"
+				src="/public/assets/images/tooth/gray/32.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_three">
+				<p class="teeth_model_tooth_numb">33</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_three"
+				src="/public/assets/images/tooth/gray/33.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_four">
+				<p class="teeth_model_tooth_numb">34</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_four"
+				src="/public/assets/images/tooth/gray/34.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_five">
+				<p class="teeth_model_tooth_numb">35</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_five"
+				src="/public/assets/images/tooth/gray/35.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_six">
+				<p class="teeth_model_tooth_numb">36</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_six"
+				src="/public/assets/images/tooth/gray/36.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_seven">
+				<p class="teeth_model_tooth_numb">37</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_seven"
+				src="/public/assets/images/tooth/gray/37.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_three_eight">
+				<p class="teeth_model_tooth_numb">38</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_three_eight"
+				src="/public/assets/images/tooth/gray/38.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_one">
+				<p class="teeth_model_tooth_numb">41</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_one"
+				src="/public/assets/images/tooth/gray/41.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_two">
+				<p class="teeth_model_tooth_numb">42</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_two"
+				src="/public/assets/images/tooth/gray/42.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_three">
+				<p class="teeth_model_tooth_numb">43</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_three"
+				src="/public/assets/images/tooth/gray/43.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_four">
+				<p class="teeth_model_tooth_numb">44</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_four"
+				src="/public/assets/images/tooth/gray/44.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_five">
+				<p class="teeth_model_tooth_numb">45</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_five"
+				src="/public/assets/images/tooth/gray/45.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_six">
+				<p class="teeth_model_tooth_numb">46</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_six"
+				src="/public/assets/images/tooth/gray/46.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_seven">
+				<p class="teeth_model_tooth_numb">47</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_seven"
+				src="/public/assets/images/tooth/gray/47.png" />
+			<div class="p_teeth_model_tooth p_tooth_numb_four_eight">
+				<p class="teeth_model_tooth_numb">48</p>
+			</div>
+			<img class="p_teeth_model_tooth_img p_img_four_eight"
+				src="/public/assets/images/tooth/gray/48.png" />
+		</div>
+	</div>
+	<div class="tribute_request_preview_main_container">
+		<div class="tribute_request_card">
+			<div class="tribute_request_card_chip_container">
+				<!-- <div class="tribute_request_card_chip_not_selected">
                             <p class="tribute_request_card_chip_not_selected_typo">환자명 의뢰서</p>
                             <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg"/>
                         </div>
@@ -2693,27 +2977,28 @@ if(request.getParameter("groupCd") != null){
                             <p class="tribute_request_card_chip_selected_typo">홍길동 의뢰서</p>
                             <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg"/>
                         </div> -->
-                        <button class="tribute_request_card_chip_numb">
-                          <p class="tribute_request_card_chip_numb_typo">2</p>
-                      </button>
-                    </div>
-                    <div class="tribute_request_preview_info_wrapper">
-                        <div class="tribute_request_preview_info_container" style="margin-bottom: 80px;">
-                            <div id="p_supp_container" class="tribute_request_preview_info">
-                                <div class="tribute_request_preview_info_title">
-                                    <p class="tribute_request_preview_info_title_typo">보철종류</p>
-                                </div> 
-                                <div class="tribute_request_preview_info_context">
-                                    <p class="tribute_request_preview_info_context_typo">의치</p>
-                                </div>    
-                            </div>
-                            <div class="tribute_request_preview_info">
-                                <div class="tribute_request_preview_info_title">
-                                    <p class="tribute_request_preview_info_title_typo">선택된 치식</p>
-                                </div> 
-                                <div class="tribute_request_preview_info_context">
-                                    <div class="selected_dental_preview_container">
-                                        <!-- <div class="selected_dental_preview_item">
+				<button class="tribute_request_card_chip_numb">
+					<p class="tribute_request_card_chip_numb_typo">2</p>
+				</button>
+			</div>
+			<div class="tribute_request_preview_info_wrapper">
+				<div class="tribute_request_preview_info_container"
+					style="margin-bottom: 80px;">
+					<div id="p_supp_container" class="tribute_request_preview_info">
+						<div class="tribute_request_preview_info_title">
+							<p class="tribute_request_preview_info_title_typo">보철종류</p>
+						</div>
+						<div class="tribute_request_preview_info_context">
+							<p class="tribute_request_preview_info_context_typo">의치</p>
+						</div>
+					</div>
+					<div class="tribute_request_preview_info">
+						<div class="tribute_request_preview_info_title">
+							<p class="tribute_request_preview_info_title_typo">선택된 치식</p>
+						</div>
+						<div class="tribute_request_preview_info_context">
+							<div class="selected_dental_preview_container">
+								<!-- <div class="selected_dental_preview_item">
                                             <p class="selected_dental_preview_item_typo">26</p>
                                         </div>
                                         <div class="selected_dental_preview_item">
@@ -2722,83 +3007,101 @@ if(request.getParameter("groupCd") != null){
                                         <div class="selected_dental_preview_item">
                                             <p class="selected_dental_preview_item_typo">34</p>
                                         </div> -->
-                                    </div>
-                                </div>    
-                            </div>
-                            <div id="p_pro_meth_container" class="tribute_request_preview_info">
-                                <div class="tribute_request_preview_info_title">
-                                    <p class="tribute_request_preview_info_title_typo">가공방법</p>
-                                </div> 
-                                <div class="tribute_request_preview_info_context">
-                                    <p class="tribute_request_preview_info_context_typo">3D프린팅(레진)</p>
-                                </div>    
-                            </div>
-                            <div id="p_shade_container" class="tribute_request_preview_info">
-                                <div class="tribute_request_preview_info_title">
-                                    <p class="tribute_request_preview_info_title_typo">Shade</p>
-                                </div> 
-                                <div class="tribute_request_preview_info_context">
-                                    <p class="tribute_request_preview_info_context_typo"></p>
-                                </div>    
-                            </div>
-                        </div>
-                        <!-- <div class="tribute_request_preview_info_more">
+							</div>
+						</div>
+					</div>
+					<div id="p_pro_meth_container" class="tribute_request_preview_info">
+						<div class="tribute_request_preview_info_title">
+							<p class="tribute_request_preview_info_title_typo">가공방법</p>
+						</div>
+						<div class="tribute_request_preview_info_context">
+							<p class="tribute_request_preview_info_context_typo">3D프린팅(레진)</p>
+						</div>
+					</div>
+					<div id="p_shade_container" class="tribute_request_preview_info">
+						<div class="tribute_request_preview_info_title">
+							<p class="tribute_request_preview_info_title_typo">Shade</p>
+						</div>
+						<div class="tribute_request_preview_info_context">
+							<p class="tribute_request_preview_info_context_typo"></p>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="tribute_request_preview_info_more">
                             <div class="tribute_request_preview_info_more_typo">군인은 현역을 면한 후가 아니면 국무위원으로 임명될 수 없다.</div>
                         </div> -->
-                        <img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
-                        <textarea class="tribute_request_preview_info_more_detail" placeholder="상세내용" readonly="readonly"></textarea>
-                        <div class="tribute_request_preview_button_wrapper">
-                            <a href="javascript:fnWriteView();" class="tribute_request_preview_button">
-                            	<p class="tribute_request_preview_button_typo">수정하기</p>
-                            </a>
-                            <%if(groupCd.equals("")){ %>
-                            <a href="javascript:fnSave();" class="tribute_request_preview_button">
-                                <p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
-                            </a>
-                            <%}else{ %>
-                            <a href="javascript:fnRewrite();" class="tribute_request_preview_button">
-                                <p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
-                            </a>
-                            <%} %>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body" style="padding:0">
-        <img style="width:100%;" src="/public/assets/images/SELECTTIP.png">
-      </div>
-      <div class="modal-footer" style="background-color:#FFF3F4;justify-content:normal;height: 49px;">
- 
-        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color:black!important;backtround-color:#FFF3F4;">오늘하루 열지 않기</button> --><!-- onclick="closePopup()" -->
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="closePopup()" style="margin-top: -7px;color:black!important;background-color:#FFF3F4!important;float:right;margin-left:398px;border-color:#FFF3F4!important;">닫기 X</button>
-      </div>
-    </div>
-  </div>
+				<img class="dotted_divider"
+					src="/public/assets/images/dotted_divider.svg" />
+				<textarea class="tribute_request_preview_info_more_detail"
+					placeholder="상세내용" readonly="readonly"></textarea>
+				<div class="tribute_request_preview_button_wrapper">
+					<a href="javascript:fnWriteView();"
+						class="tribute_request_preview_button">
+						<p class="tribute_request_preview_button_typo">수정하기</p>
+					</a>
+					<%
+						if (groupCd.equals("")) {
+					%>
+					<a href="javascript:fnSave();"
+						class="tribute_request_preview_button">
+						<p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
+					</a>
+					<%
+						} else {
+					%>
+					<a href="javascript:fnRewrite();"
+						class="tribute_request_preview_button">
+						<p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
+					</a>
+					<%
+						}
+					%>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1"
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body" style="padding: 0">
+				<img style="width: 100%;" src="/public/assets/images/SELECTTIP.png">
+			</div>
+			<div class="modal-footer"
+				style="background-color: #FFF3F4; justify-content: normal; height: 49px;">
+
+				<!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color:black!important;backtround-color:#FFF3F4;">오늘하루 열지 않기</button> -->
+				<!-- onclick="closePopup()" -->
+				<button type="button" class="btn btn-primary"
+					data-bs-dismiss="modal" onclick="closePopup()"
+					style="margin-top: -7px; color: black !important; background-color: #FFF3F4 !important; float: right; margin-left: 398px; border-color: #FFF3F4 !important;">닫기
+					X</button>
+			</div>
+		</div>
+	</div>
 </div>
 <style>
-#exampleModal{
-    display: block;
-    padding-left: 0px;
-    max-width: 500px;
-    z-index:-1;
-    /* overflow: hidden; */
-    margin-left: auto;
-    margin-right: auto;
-    left: 50%;
-    transform: translate(-50%, 0);
-     -ms-overflow-style: none;
-}
- #exampleModal.show{
-    z-index:9999;
- }
-#exampleModal::-webkit-scrollbar { 
-    display: none;
-    width: 0 !important;
+#exampleModal {
+	display: block;
+	padding-left: 0px;
+	max-width: 500px;
+	z-index: -1;
+	/* overflow: hidden; */
+	margin-left: auto;
+	margin-right: auto;
+	left: 50%;
+	transform: translate(-50%, 0);
+	-ms-overflow-style: none;
 }
 
+#exampleModal.show {
+	z-index: 9999;
+}
+
+#exampleModal::-webkit-scrollbar {
+	display: none;
+	width: 0 !important;
+}
 </style>

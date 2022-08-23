@@ -72,9 +72,9 @@ public class CheesignerController extends BaseController {
 
       mv.addObject("LIST", service.list("getList10", parameter));
       if(userTypeCd.equals("3")) {
-        mv.setViewName("page/mypage/profile_management_cheesigner_show");
+        mv.setViewName("page/cheesigner/cheesigner_info");
       } else {
-        mv.setViewName("redirect:" + "/" + apiUrl + "/mypage/profile_management");
+        mv.setViewName("redirect:" + "/" + apiUrl + "/cheesigner/cheesigner_info");
       }
     } else {
       mv.setViewName("redirect:" + "/" + apiUrl + "/login/view");

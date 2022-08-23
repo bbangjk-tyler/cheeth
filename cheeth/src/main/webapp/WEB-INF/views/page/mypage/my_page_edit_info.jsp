@@ -4,10 +4,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <c:if test="${empty sessionInfo.user}">
-  <script>
-   alert('로그인 후 이용가능 합니다.');
-   location.href = '/api/login/view';
-</script>
+	<script>
+	   alert('로그인 후 이용가능 합니다.');
+	   location.href = '/api/login/view';
+	</script>
 </c:if>
 <style>
 	.valid-nick { border: 1px solid #10c110; }
@@ -306,8 +306,13 @@ function fnSetSelect() {
 }
 
 $(document).ready(function() {
- fnSetSelect();
- 
+ //fnSetSelect();
+ var code = '${DATA.COMP_GROUP_CD}';
+ var codeNm = '${DATA.COMP_GROUP_NM}';
+ setTimeout(function(){
+	 $("#COMP_GROUP_CD_P_1").text(codeNm);
+ },600);
+ //fnSelect(code, codeNm);
  $('#compFileBtn').click(function() {
 	  $('input[id=COMP_FILE]').trigger('click');
  });
@@ -479,7 +484,7 @@ function keyupAccounNm() {
 				<div class="dropbox_sign_up_expert_bank">
 					<div id="BANK_CD_DIV_1" class="dropbox_select_button codebox1" onclick="fnSelect2(this);" style="cursor: pointer;">
 						<div class="dropbox_select_button_typo_container">
-							<p class="dropbox_select_button_typo">선택</p>
+							<p class="dropbox_select_button_typo" id="banknm">선택</p>
 							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
 						</div>
 					</div>
@@ -561,7 +566,7 @@ function keyupAccounNm() {
 			</div>
 			<div class="sign_up_info_item">
 				<p class="sign_up_info_item_typo">예금주</p>
-				<input class="sign_up_info_item_blank_with_button required" style="width: 142px;" type="text" name="ACCOUNT_NM" id="ACCOUNT_NM" onkeyup="keyupAccounNm()" data-field="예금주" value="${DATA.ACCOUNT_NM}" required/>
+				<input class="sign_up_info_item_blank_with_button valid-account required" style="width: 142px;" type="text" name="ACCOUNT_NM" id="ACCOUNT_NM" onkeyup="keyupAccounNm()" data-field="예금주" value="${DATA.ACCOUNT_NM}" required/>
  				<button class="sign_up_info_item_button" type="button" onclick="chkAccountName()">
 					<p class="sign_up_info_item_button_typo">본인인증</p>
 				</button>
@@ -584,6 +589,10 @@ function keyupAccounNm() {
 				}else if(JOB_CD == "J002"){
 					$("#jabnm").text("치과기공사");
 				}				
+				setTimeout(function(){
+					bankbool = 1;
+					isValidAccount = true;
+				},300);
 			});
 
 			</script>
@@ -601,13 +610,23 @@ function keyupAccounNm() {
 						</div>
 					</div>
 					<div id="JOB_CD_DIV_2_CHEESIGNER" class="dropbox_select_button_item_container hidden codebox2 cheesigner" style="cursor: pointer;">
-						<c:forEach items="${jobCdList1}" var="job">
+						<div class="dropbox_select_button_item">
+								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('J001', '치과의사');" data-div="JOB_CD">
+								  치과의사
+								</p>
+							</div>
+							<div class="dropbox_select_button_item">
+								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('J002', '치과기공사');" data-div="JOB_CD">
+								  치과기공사
+								</p>
+							</div>
+						<%-- <c:forEach items="${jobCdList1}" var="job">
 							<div class="dropbox_select_button_item">
 								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('${job.CODE_CD}', '${job.CODE_NM}');" data-div="JOB_CD">
 								  ${job.CODE_NM}
 								</p>
 							</div>
-						</c:forEach>
+						</c:forEach> --%>
 					</div>
 				</div>
 			</div>
@@ -650,27 +669,92 @@ function keyupAccounNm() {
 				<p class="sign_up_info_item_typo">면허증 첨부</p>
 				<input class="sign_up_info_item_blank_with_button required" style="width: 341px;" value="${DATA.LICENSE_FILE}" data-field="면허증"/>
 				<input type="file" name="LICENSE_FILE" id="LICENSE_FILE" style="display: none;" onchange="fnSetFile();"/>
+				<input type="hidden" name="licensecd" value="${DATA.LICENSE_FILE_CD}">
 				<button class="sign_up_info_item_button" type="button" id="licenseFileBtn">
 					<p class="sign_up_info_item_button_typo">파일첨부</p>
 				</button>
 			</div>
 			<div class="sign_up_info_item">
 				<p class="sign_up_info_item_typo">면허증 번호</p>
+				<input type="hidden" name="licenseNO" value="${DATA.LICENSE_NO}">
 				<input class="sign_up_info_item_blank required" type="text" name="LICENSE_NO" value="${DATA.LICENSE_NO}" id="LICENSE_NO" data-field="면허증 번호" />
 			</div>
 			</div>
 			</div>
         </c:if>
+        
+        <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
+        <input type="file" name="LICENSE_FILE" id="LICENSE_FILE" style="display: none;" onchange="fnSetFile();"/>
+        </c:if>
+        	    <script>
+	    var aaa = "${DATA.ACCOUNT_NM}";
+	    var bbb = "${DATA.ACCOUNT_NO}";
+	    var ccc = "${DATA.BANK_CD}";
+	    var banknm = "";
+	    var bankcd = "${DATA.BANK_CD}";
+	      if(bankcd == "0003") {
+	    	  banknm = "기업";
+	      }else if(bankcd=="0004") {
+	    	  banknm = "국민";
+	      }else if(bankcd=="0011") {
+	    	  banknm = "농협";
+	      }else if(bankcd=="0020") {
+	    	  banknm = "우리";
+	      }else if(bankcd=="0081") {
+	    	  banknm = "하나";
+	      }else if(bankcd=="0088") {
+	    	  banknm = "신한";
+	      }else if(bankcd=="0090") {
+	    	  banknm = "카카오뱅크";
+	      }else if(bankcd=="0027") {
+	    	  banknm = "한국시티은행";
+	      }else if(bankcd=="0023") {
+	    	  banknm = "SC제일은행";
+	      }else if(bankcd=="0039") {
+	    	  banknm = "경남은행";
+	      }else if(bankcd=="0034") {
+	    	  banknm = "광주은행";
+	      }else if(bankcd=="0031") {
+	    	  banknm = "대구은행";
+	      }else if(bankcd=="0032") {
+	    	  banknm = "부산은행";
+	      }else if(bankcd=="0037") {
+	    	  banknm = "전북은행";
+	      }else if(bankcd=="0035") {
+	    	  banknm = "제주은행";
+	      }else if(bankcd=="0011") {
+	    	  banknm = "농협은행";
+	      }else if(bankcd=="0012") {
+	    	  banknm = "지역농축협";
+	      }else if(bankcd=="0007") {
+	    	  banknm = "수협은행";
+	      }else if(bankcd=="0002") {
+	    	  banknm = "산업은행";
+	      }else if(bankcd=="0071") {
+	    	  banknm = "우체국";
+	      }else if(bankcd=="0045") {
+	    	  banknm = "새마을금고";
+	      }else if(bankcd=="0050") {
+	    	  banknm = "SBI저축은행";
+	      }else if(bankcd=="0089") {
+	    	  banknm = "케이뱅크";
+	      }else if(bankcd=="0098") {
+	    	  banknm = "토스뱅크";
+	      }
+	      $(document).ready(function(){
+	    	  $("#banknm").text(banknm);
+	      });
+	    </script>
                 <div class="equipment_estimator_edit_info_container">
                     <p class="equipment_estimator_edit_info_container_title">추가정보</p>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">업종선택</p>
-                        <input type="hidden" name="COMP_GROUP_NM" id="COMP_GROUP_NM" />
-				        <input type="hidden" name="COMP_GROUP_CD" id="COMP_GROUP_CD" />
+                        <input type="hidden" name="COMP_GROUP_NM" id="COMP_GROUP_NM" value="${DATA.COMP_GROUP_NM}"/>
+				        <input type="hidden" name="COMP_GROUP_CD" id="COMP_GROUP_CD" value="${DATA.COMP_GROUP_CD}"/>
                         <div class="dropbox_equipment_estimator_edit_info">
                             <div id="COMP_GROUP_CD_DIV_1" class="dropbox_select_button" onclick="fnSelect();" style="cursor: pointer;">
 					            <div class="dropbox_select_button_typo_container">
-					              <p id="COMP_GROUP_CD_P_1" class="dropbox_select_button_typo">선택</p>
+					              <p id="COMP_GROUP_CD_P_1" class="dropbox_select_button_typo">${DATA.COMP_GROUP_NM}</p>
 					              <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
 					            </div>
 					          </div>
@@ -711,7 +795,7 @@ function keyupAccounNm() {
                     
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title">사업자등록증 첨부</p>
-                        
+                        <input type="hidden" name="compfile" value="${DATA.COMP_FILE_CD}">
                         <input class="equipment_estimator_edit_info_item_blank" data-field="사업자등록증" style="width: 341px;" value="${DATA.FILE_ORIGIN_NM}"/>
 						<input type="file" name="COMP_FILE" id="COMP_FILE" style="display: none;" onchange="fnSetFile();" />
 						<button class="equipment_estimator_edit_info_item_button" type="button" id="compFileBtn">
@@ -738,3 +822,13 @@ function keyupAccounNm() {
             </div>
         </div>
     </div>
+        <style>
+    .swiper-slide{
+        width: 214px;
+    height: 180px;
+    margin-right: 24px;
+    }
+    #IMAGE_FILE{
+    	width: 100%;
+    }
+    </style>

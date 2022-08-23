@@ -387,10 +387,20 @@
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
 				      <p class="side_menu_list_typo">진행내역</p>
 				    </a>
-				    <a href="javascript:alert('프로필 관리');" class="side_menu_list">
-				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo">프로필 관리</p>
-				    </a>
+            <c:choose>
+              <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 or sessionInfo.user.USER_TYPE_CD eq 2}">
+                <a href="/${api}/mypage/profile_management" class="side_menu_list">
+                  <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
+                  <p class="side_menu_list_typo">프로필 관리</p>
+                </a>
+              </c:when>
+              <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
+                <a href="/${api}/mypage/profile_management_cheesigner_show" class="side_menu_list">
+                  <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
+                  <p class="side_menu_list_typo">프로필 관리</p>
+                </a>
+              </c:when>
+            </c:choose>
 				    <a href="/${api}/review/client_review" class="side_menu_list">
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
 				      <p class="side_menu_list_typo">후기관리</p>

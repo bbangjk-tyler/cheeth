@@ -120,7 +120,7 @@ if(request.getParameter("alreadychk") !=null){
    });
   }
   
-/*   function fnOpenFileModal() {
+  function fnOpenFileModal() {
     const fileCd = arguments[0];
     $.ajax({
       url: '/' + API + '/common/getFiles',
@@ -146,7 +146,7 @@ if(request.getParameter("alreadychk") !=null){
     
     fileModal.show();
   }
-   */
+
   function fnFileChange() {
     var target = arguments[0];
     var rqstNo = arguments[1];
@@ -191,12 +191,13 @@ if(request.getParameter("alreadychk") !=null){
             html += `</div>`;
             <% if(alreadychk.equals("1")){%>
             if(isNotEmpty(rtnArray[0]['WR_FILE_CD'])) {
-                html += `<button class="receive_estimator_attatchment_download_button" onclick="fnFileDownload('\${rtnArray[0]['WR_FILE_CD']}', '1');">`;
+                html += `<button type="button" class="receive_estimator_attatchment_download_button" onclick="fnFileDownload('\${rtnArray[0]['WR_FILE_CD']}', '1');">`;
+                //html += `<button class="receive_estimator_attatchment_download_button" onclick="fnFileDownload2('22', '1');">`;
                 html += `<p class="receive_estimator_attatchment_download_button_typo">CAD파일 다운로드</p>`;
                 html += `</button>`;
               }
             <% }else{ %>
-            html += `<div style="background-color: black;color: white;text-align: center;height: 38px;width: 150px; margin-left: 20px;line-height: 38px;border-radius: 5px;">CAD파일 업로드<input type="file" style="padding:9px 45px;opacity:0;" onchange="fnFileChange(this, ` + rtnArray[0]['RQST_NO'] + `);" title="의뢰서 첨부"></div>`;
+            html += `<div style="background-color: black;color: white;text-align: center;height: 38px;width: 138px; margin-left: 20px;line-height: 38px;border-radius: 5px;font-family: 'Pretendard';font-weight: 800;font-size: 14px;">CAD파일 업로드<input type="file" style="padding:9px 45px;opacity:0;margin-top: -38px;margin-left:-21px;" onchange="fnFileChange(this, ` + rtnArray[0]['RQST_NO'] + `);" title="의뢰서 첨부"></div>`;
             <% } %>
             html += `</div>`;
             $('.receive_estimator_request_wrapper').append(html);
@@ -408,7 +409,7 @@ if(request.getParameter("alreadychk") !=null){
 	  </div>
 	</div>
 </form:form>
-<form:form id="fileDownloadForm" name="fileDownloadForm" action="/${api}/file/download" method="POST">
+<form id="fileDownloadForm" name="fileDownloadForm" action="/${api}/file/download" method="POST">
   <input type="hidden" id="FILE_CD" name="FILE_CD" value="">
   <input type="hidden" id="FILE_NO" name="FILE_NO" value="">
-</form:form>
+</form>

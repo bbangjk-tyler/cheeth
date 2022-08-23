@@ -463,6 +463,68 @@
   ]]>
   </select>
   
+    <select id="getEstimatorList2" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* project.getEstimatorList */
+    SELECT A.ESTIMATOR_NO
+         , A.PROJECT_NO
+         , DATE_FORMAT(A.DELIVERY_POS_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_POS_DATE
+         , A.ESTIMATOR_DEL_YN
+         , A.CLIENT_DEL_YN
+         , A.MATCHING_YN
+         , A.FILE_CD
+         , A.CADSW_CD_1
+         , A.CADSW_NM_1
+         , A.CADSW_CD_2
+         , A.CADSW_NM_2
+         , A.CADSW_CD_3
+         , A.CADSW_NM_3
+         , A.CREATE_ID
+         , A.CREATE_DATE
+         , A.UPDATE_ID
+         , A.UPDATE_DATE
+         , B.USER_NM
+         , B.USER_NICK_NAME
+         , @ESTIMATOR_CNT := ( SELECT COUNT(ESTIMATOR_NO)
+                                 FROM TB_ESTIMATOR
+                                WHERE CREATE_ID = B.USER_ID
+                             ) AS ESTIMATOR_CNT
+         , @COMPLETE_CNT := ( SELECT COUNT(WR_NO)
+                                FROM TB_WRITTEN_REQUEST
+                               WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                                        FROM TB_ELECTRONIC_CONTRACT
+                                                       WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                                 FROM TB_ESTIMATOR
+                                                                                WHERE CREATE_ID = B.USER_ID ) )
+                                 AND FILE_RECEIVE_YN = 'Y'
+                            ) AS COMPLETE_CNT
+         , ( SELECT FORMAT(IFNULL(SUM(LAST_AMOUNT), 0), 0)
+               FROM TB_WRITTEN_REQUEST
+              WHERE CONTRACT_NO IN ( SELECT CONTRACT_NO
+                                       FROM TB_ELECTRONIC_CONTRACT
+                                      WHERE ESTIMATOR_NO IN ( SELECT ESTIMATOR_NO
+                                                                FROM TB_ESTIMATOR
+                                                               WHERE CREATE_ID = B.USER_ID ) )
+                AND FILE_RECEIVE_YN = 'Y'
+           ) AS COMPLETE_AMOUNT
+         , IFNULL(ROUND((@COMPLETE_CNT / @ESTIMATOR_CNT * 100 )), 0) AS COMPLETE_RATIO
+         , ( SELECT IFNULL(ROUND(SUM(SCORE)/COUNT(1)),0) AS SOCRE_AVG
+               FROM TB_REVIEW
+              WHERE PROJECT_NO IN ( SELECT PROJECT_NO
+                                      FROM TB_ELECTRONIC_CONTRACT
+                                     WHERE CHEESIGNER_ID  = B.USER_ID ) ) AS SCORE_AVG
+         , IFNULL(C.TAX_BILL_YN, 'N') AS TAX_BILL_YN
+      FROM TB_ESTIMATOR A
+      JOIN TB_USER_INFO B
+        ON A.CREATE_ID = B.USER_ID
+      LEFT OUTER JOIN TB_USER_INFO_DTL C
+        ON A.CREATE_ID = C.USER_ID
+        , (SELECT @ESTIMATOR_CNT := 0, @COMPLETE_CNT := 0) V_TB
+     WHERE A.ESTIMATOR_NO = #{ESTIMATOR_NO}
+       AND A.CLIENT_DEL_YN = 'N'
+  ]]>
+  </select>
+  
   <select id="getEstimatorDtlInfo" parameterType="map" resultType="hashmap">
   <![CDATA[
   	/* project.getEstimatorDtlInfo */
