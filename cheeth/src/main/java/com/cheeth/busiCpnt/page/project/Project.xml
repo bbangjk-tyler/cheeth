@@ -401,6 +401,15 @@
      WHERE PROJECT_NO = #{PROJECT_NO}
   ]]>
   </select>
+  
+  <select id="getData06" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* reply.getData06 */
+     SELECT * 
+     	FROM TB_REPLY 
+     WHERE targetID = #{TARGET_ID} AND boardLevel = #{LEVEL}
+  ]]>
+  </select>
   <select id="getEstimatorList" parameterType="map" resultType="hashmap">
   <![CDATA[
     /* project.getEstimatorList */
@@ -848,7 +857,42 @@
   )
   ]]>
   </insert>
-  
+  <insert id="insert07" parameterType="map">
+  <![CDATA[
+    /* TB_REPLY.insert07 */
+	INSERT INTO TB_REPLY 
+	VALUES (
+		null, 
+		#{TARGET_ID}, 
+		#{USER_ID}, 
+		#{CONTENT}, 
+		NOW(), 
+		0, 
+		0, 
+		#{LEVEL}, 
+		1, 
+		#{MAIN_ID}
+	)
+  ]]>
+  </insert>
+  <insert id="insert08" parameterType="map">
+  <![CDATA[
+    /* TB_REPLY.insert08 */
+	INSERT INTO TB_REPLY 
+	VALUES (
+		null, 
+		#{TARGET_ID}, 
+		#{USER_ID}, 
+		#{CONTENT}, 
+		NOW(), 
+		0, 
+		0, 
+		1, 
+		1, 
+		#{MAIN_ID}
+	)
+  ]]>
+  </insert>
   <update id="update01" parameterType="map">
   <![CDATA[
     /* project.update01 */
@@ -942,6 +986,15 @@
        AND CREATE_ID = #{CREATE_ID}
   ]]>
   </delete>
+  
+  <delete id="delete04" parameterType="map">
+  <![CDATA[
+    /* reply.delete04 */
+    DELETE FROM TB_REPLY
+     WHERE seqID = #{TARGET_ID}
+  ]]>
+  </delete>
+  
   <!-- <delete id="delete04" parameterType="map">
   <![CDATA[
     /* project.delete04 */

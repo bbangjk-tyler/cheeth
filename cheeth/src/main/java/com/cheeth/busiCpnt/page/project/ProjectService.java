@@ -68,7 +68,13 @@ public class ProjectService extends AbstractService {
     
     return rtnMap;
   }
-  
+
+  public Map<?, ?> getData03(Map<String, Object> parameter) throws Exception {
+	    
+    Map<?, ?> rtnMap = map("getData06", parameter);
+    
+    return rtnMap;
+  }
   @Transactional(propagation=Propagation.REQUIRED)
   public Map<String, String> save01(Map<String, Object> parameter) throws Exception {
     
@@ -178,10 +184,9 @@ public class ProjectService extends AbstractService {
 		  String result = sendSMS(parameter);
       }
     }
-    
-    
     return rtnMap;
   }
+  
   public String sendSMS(Map<String, Object> parameter) throws Exception {
 	  String sender = "02-2273-2822";
 	  String receiver = String.valueOf(parameter.get("userPhone"));
@@ -253,6 +258,27 @@ public class ProjectService extends AbstractService {
 
     return rtnMap;
   }
+  @Transactional(propagation=Propagation.REQUIRED)
+  public Map<String, String> save03(Map<String, Object> parameter) throws Exception {
+    
+    Map<String, String> user = getUserInfo();
+    String userId = user.get("USER_ID");
+    
+    String projectNo = ObjectUtils.isEmpty(parameter.get("PROJECT_NO")) ? "" : parameter.get("PROJECT_NO").toString();
+    
+    Map<String, String> rtnMap = new HashMap<String, String>();
+    rtnMap.put("result", "Y");
+    
+    if(ObjectUtils.isEmpty(projectNo)) {
+    	String level = ObjectUtils.isEmpty(parameter.get("level")) ? "0" : parameter.get("level").toString();
+    	parameter.put("LEVEL", level);
+    	parameter.put("MAIN_ID", projectNo);
+    	insert("insert07", parameter);
+    }
+    rtnMap.put("projectNo", projectNo);
+
+    return rtnMap;
+  }
   
   @Transactional(propagation=Propagation.REQUIRED)
   public Map<String, String> delete01(Map<String, Object> parameter) throws Exception {
@@ -271,6 +297,18 @@ public class ProjectService extends AbstractService {
     
     return rtnMap;
   }
+
+  @Transactional(propagation=Propagation.REQUIRED)
+  public Map<String, String> delete02(Map<String, Object> parameter) throws Exception {
+    
+    Map<String, String> rtnMap = new HashMap<String, String>();
+    delete("delete04", parameter);
+    
+    rtnMap.put("result", "Y");
+    
+    return rtnMap;
+  }
+  
   @Transactional(propagation=Propagation.REQUIRED)
   public Map<String, String> updateHit(Map<String, Object> parameter) throws Exception {
     

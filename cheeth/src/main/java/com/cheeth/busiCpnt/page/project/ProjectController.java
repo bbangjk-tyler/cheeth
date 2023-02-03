@@ -175,7 +175,20 @@ public class ProjectController extends BaseController {
     }
     return resultMap;
   }
-  
+  @PostMapping(value="/save03")
+  public Map<?, ?> save03(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getMultipartParameterMap(request);
+    Map<String, String> resultMap = new HashMap<String, String>();
+
+    try {
+      resultMap = service.save03(parameter);
+    } catch(Exception e) {
+      resultMap.put("result", "N");
+      logger.error(e.getMessage());
+    }
+    return resultMap;
+  }
   // 계약취소
   @PostMapping(value="/delete01")
   public Map<?, ?> delete01(HttpServletRequest request) throws Exception {
@@ -197,7 +210,20 @@ public class ProjectController extends BaseController {
     }
     return resultMap;
   }
-  
+  @PostMapping(value="/delete02")
+  public Map<?, ?> delete02(HttpServletRequest request) throws Exception {
+    
+    Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    Map<String, String> resultMap = new HashMap<String, String>();
+
+    try {
+      resultMap = service.delete02(parameter);
+    } catch(Exception e) {
+      resultMap.put("result", "N");
+      logger.error(e.getMessage());
+    }
+    return resultMap;
+  }
   @GetMapping(value = "/getReqInfo", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<Map<String, Object>> getReqInfo(HttpServletRequest request) throws Exception {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
