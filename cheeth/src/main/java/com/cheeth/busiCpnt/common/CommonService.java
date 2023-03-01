@@ -8,15 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.LocaleResolver;
 
 import com.cheeth.busiCpnt.sam0101.Sam0101Service;
 import com.cheeth.comAbrt.service.AbstractService;
@@ -42,14 +46,34 @@ public class CommonService extends AbstractService {
   private MessageService messageService;
 
   @Autowired
-  private FileUtil fileUtil;
+  private MessageSource messagesource;
+
+  @Autowired
+  private LocaleResolver localeResolver;
   
+  @Autowired
+  private FileUtil fileUtil;
+
   public List<?> getList(Map<String, Object> parameter) throws Exception {
 
     List<?> list = list("getCode", parameter);
 
     return list;
   }
+  
+  public String geti18n(HttpServletRequest request, String property) throws Exception {
+	String msg = messagesource.getMessage(property, null, localeResolver.resolveLocale(request));
+	if(msg == null)
+		msg = "";
+	return msg;
+  }
+  
+  public List<?> getListLang(Map<String, Object> parameter) throws Exception {
+
+	    List<?> list = list("getCodeLang", parameter);
+
+	    return list;
+	  }
 
   public Integer checkId(Map<String, Object> parameter) throws Exception {
     Integer result = integer("checkId", parameter);

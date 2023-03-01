@@ -54,6 +54,14 @@ public class CommonController extends BaseController {
     return list;
   }
 
+  @GetMapping(value="/getCodeLang", produces=MediaType.APPLICATION_JSON_VALUE)
+  public List<?> getCodeLang(HttpServletRequest request) throws Exception {
+    Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    List<?> list = service.getListLang(parameter);
+
+    return list;
+  }
+
   @GetMapping(value="/checkId", produces=MediaType.APPLICATION_JSON_VALUE)
   public Map<String, Object> checkId(HttpServletRequest request) throws Exception {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);

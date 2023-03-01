@@ -23,6 +23,19 @@
   ]]>
   </select>
   
+  <select id="getCodeLang" parameterType="map" resultType="hashmap">
+  <![CDATA[
+    /* common.getCodeLang */
+    SELECT A.GROUP_CD
+         , A.CODE_CD
+         , if(#{LANG}='en',CODE_NM_EN,CODE_NM) AS CODE_NM 
+         , A.SORT
+      FROM TB_CODE A
+     WHERE A.GROUP_CD = #{GROUP_CD}
+     ORDER BY A.SORT
+  ]]>
+  </select>
+  
   <select id="checkId" parameterType="map" resultType="integer">
   <![CDATA[
     /* common.checkId */
