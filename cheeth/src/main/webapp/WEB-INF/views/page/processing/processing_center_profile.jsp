@@ -4,13 +4,13 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+   alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
 <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
   <script>
-  alert("의뢰인, 치자이너 회원만 이용 가능합니다.");
+  alert(getI8nMsg("alert.onlyCnT"));//의뢰인, 치자이너 회원만 이용 가능합니다.
   history.back();
 </script>
 </c:if>
@@ -38,38 +38,38 @@
     var areaCd = $('#AREA_CD').val();
     if(isEmpty(areaCd)) {
     	$('#AREA_CD_DIV_2').removeClass('hidden');
-      alert('지역을 선택하세요.');
+    	alert(getI8nMsg("alert.selectArea"));//지역을 선택하세요.
       return;
     }
     
     var centerNm = $('#CENTER_NM').val();
     if(isEmpty(centerNm)) {
       $('#CENTER_NM').focus();
-      alert('센터이름을 입력하세요.');
+      alert(getI8nMsg("alert.enterCenterNm"));//센터이름을 입력하세요.
       return;
     }
     
     if(isEmpty(workItem)) {
     	$('#WORK_ITEM_DIV_2').removeClass('hidden');
-      alert('가공 가능 품목을 선택하세요.');
+    	alert(getI8nMsg("alert.selectWorkable"));//가공 가능 품목을 선택하세요.
       return;
     }
     
     var intro = $('#INTRO').val();
     if(isEmpty(intro)) {
       $('#INTRO').focus();
-      alert('프로필 홍보 및 소개를 입력하세요.');
+      alert(getI8nMsg("alert.enterProfProm"));//프로필 홍보 및 소개를 입력하세요.
       return;
     }
     
     var serviceDesc = $('#SERVICE_DESC').val();
     if(isEmpty(serviceDesc)) {
       $('#SERVICE_DESC').focus();
-      alert('서비스 설명을 입력하세요.');
+      alert(getI8nMsg("alert.enterServDesc"));//서비스 설명을 입력하세요.
       return;
     }
     
-    var isConfirm = window.confirm('저장 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.save")); //저장하시겠습니까?
     if(!isConfirm) return;
     
     var saveObj = getSaveObj('saveForm');
@@ -123,7 +123,7 @@
   
   function fnDelete() {
     
-    var isConfirm = window.confirm('삭제 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.delete")); //삭제하시겠습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -242,7 +242,7 @@
   function fnEtc() {
     var workItemEtc = $('#WORK_ITEM_ETC').val().trim();
     if(isEmpty(workItemEtc)) {
-      alert('가공 가능 품목을 입력해 주세요.');
+    	alert(getI8nMsg("alert.enterWorkable"));//가공 가능 품목을 입력해 주세요.
       $('#WORK_ITEM_ETC').focus();
     } else {
       var item = new Object();
@@ -273,7 +273,7 @@
         fileArray = new Array();
         fileArray.push(obj);
       } else {
-        alert('이미지 파일이 아닙니다.');
+    	  alert(getI8nMsg("alert.notImage"));//이미지 파일이 아닙니다.
         fileArray = new Array();
         $('#IMAGE_FILE').prop('src', defaultImgSrc);
       }

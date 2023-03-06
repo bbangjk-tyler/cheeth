@@ -96,7 +96,9 @@ public class SignController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
 
     parameter.put("GROUP_CD", "JOB_CD_01");
-    List<Map<String, String>> jobCdList = (List<Map<String, String>>) commonService.getList(parameter);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    List<Map<String, String>> jobCdList = (List<Map<String, String>>) commonService.getListLang(parameter);
 
     parameter.put("GROUP_CD", ""); // 은행코드
     List<Map<String, String>> bankCdList = (List<Map<String, String>>) commonService.getList(parameter);
@@ -115,7 +117,9 @@ public class SignController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
 
     parameter.put("GROUP_CD", "JOB_CD_02");
-    List<Map<String, String>> jobCdList = (List<Map<String, String>>) commonService.getList(parameter);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    List<Map<String, String>> jobCdList = (List<Map<String, String>>) commonService.getListLang(parameter);
 
     ModelAndView mv = new ModelAndView("page/sign/sign_up_expert_client");
     mv.addObject("jobCdList", jobCdList);
@@ -129,9 +133,11 @@ public class SignController extends BaseController {
   	Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
   	
   	parameter.put("GROUP_CD", "JOB_CD_01");
-    List<Map<String, String>> jobCdList1 = (List<Map<String, String>>) commonService.getList(parameter);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    List<Map<String, String>> jobCdList1 = (List<Map<String, String>>) commonService.getListLang(parameter);
   	parameter.put("GROUP_CD", "JOB_CD_02");
-  	List<Map<String, String>> jobCdList2 = (List<Map<String, String>>) commonService.getList(parameter);
+  	List<Map<String, String>> jobCdList2 = (List<Map<String, String>>) commonService.getListLang(parameter);
   	
   	ModelAndView mv = new ModelAndView("page/sign/sign_up_sns");
   	Map<String, Object> snsInfo = new HashMap<>();

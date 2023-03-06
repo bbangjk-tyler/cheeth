@@ -4,7 +4,7 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -60,14 +60,14 @@ if(request.getParameter("alreadychk") !=null){
     var lastAmount = $('#LAST_AMOUNT').val();
     var isNum = /^[0-9]+$/;
     if(!isNum.test(lastAmount)) {
-      alert('숫자만 입력 가능합니다.');
+      alert(getI8nMsg("alert.onlyNum"));//숫자만 입력 가능합니다.
       $('#LAST_AMOUNT').focus();
       return;
     }
     
     var changeCause = $('#CHANGE_CAUSE').val();
     if(lastAmount !== '${DATA_02.ESTIMATE_AMOUNT}' && isEmpty(changeCause)) {
-      alert('금액변동시 사유발생원인을 입력하세요.');
+    	alert(getI8nMsg("alert.enterReasonAmount"));//금액변동시 사유발생원인을 입력하세요.
       $('#CHANGE_CAUSE').focus();
       return;
     }
@@ -76,11 +76,11 @@ if(request.getParameter("alreadychk") !=null){
     var cnt2 = fileArray.length;
     
     if(cnt1 !== cnt2) {
-      alert('의뢰서 첨부파일이 누락되었습니다.');
+    	alert(getI8nMsg("alert.missReqAttach"));//의뢰서 첨부파일이 누락되었습니다.
       return;
     }
     
-    var isConfirm = window.confirm('결제를 요청하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.reqPaym"));//결제를 요청하시겠습니까?
     if(!isConfirm) return;
     
     var formData = new FormData(document.getElementById('saveForm'));
@@ -111,7 +111,7 @@ if(request.getParameter("alreadychk") !=null){
      success: function(data) {
     	
        if(data.cnt === 0) {
-         alert('업데이트 실패하였습니다.');
+    	   alert(getI8nMsg("alert.updateFail"));//업데이트 실패하였습니다.
        }
        location.href = '/' + API + '/mypage/equipment_estimator_my_page_progress';
      }, complete: function() {

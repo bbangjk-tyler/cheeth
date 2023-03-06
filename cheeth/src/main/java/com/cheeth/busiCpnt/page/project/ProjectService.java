@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cheeth.comAbrt.service.AbstractService;
 import com.cheeth.comUtils.ParameterUtil;
 import com.cheeth.comUtils.file.FileUtil;
+import com.cheeth.busiCpnt.common.CommonService;
 import com.cheeth.busiCpnt.page.talk.TalkService;
 
 import com.google.gson.JsonElement;
@@ -180,6 +181,7 @@ public class ProjectService extends AbstractService {
 		  String userPhone  = string("common", "getPhoneNum02", parameter);
 		  
 		  parameter.put("userPhone", userPhone);
+		  
 		  parameter.put("content", "[덴트너] 지정견적 요청이 왔습니다.");
 		  String result = sendSMS(parameter);
       }

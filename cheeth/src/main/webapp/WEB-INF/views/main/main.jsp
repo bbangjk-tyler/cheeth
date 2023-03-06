@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <script>
 function getCookie(name) {
     var cookie = document.cookie;
@@ -43,6 +44,24 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 $(document).ready(function(){
+	var lang = localStorage.getItem('lang');
+	if(lang == null || lang == ""){
+		lang = navigator.language;
+	}
+	$.ajax({
+	      url: '/' + API + '/message/i18n',
+	      type: 'GET',
+	      data: { lang : lang },
+	      cache: false,
+	      async: false,
+	      success: function(data) {
+	    	localStorage.setItem('lang',lang);
+	      },
+	      error: function(err){
+	    	  alert(JSON.stringify(err));
+	      }
+	    });
+	
     var cookieCheck = getCookie("popupYN");
     if (cookieCheck != "N"){
     	$("#EventePopupBTN").trigger('click');
@@ -198,36 +217,36 @@ jQuery(function($){
     <div class="main_main_banner_button_container">
       <c:choose>
         <c:when test="${empty sessionInfo.user}">
-          <a href="javascript:alert('로그인 후 이용해 주시기 바랍니다.');" class="main_main_banner_button main_main_banner_button_01">
-            <p class="main_main_banner_button_typo">견적 · 의뢰 내역</p>
+          <a href="javascript:alert(getI8nMsg('alert.plzlogin'));" class="main_main_banner_button main_main_banner_button_01">
+            <p class="main_main_banner_button_typo"><spring:message code="main.estimate" text="견적 · 의뢰 내역" /></p>
           </a>
         </c:when>
         <c:otherwise>
           <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
           <a href="/${api}/mypage/equipment_estimator_my_page_cad" class="main_main_banner_button main_main_banner_button_01">
-            <p class="main_main_banner_button_typo">나의 견적 / 의뢰 내역</p>
+            <p class="main_main_banner_button_typo"><spring:message code="main.estimate" text="나의 견적 / 의뢰 내역" /></p>
           </a>
 		  </c:if>
 		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 3}">
           <a href="/${api}/mypage/equipment_estimator_my_page_sent" class="main_main_banner_button main_main_banner_button_01">
-            <p class="main_main_banner_button_typo">나의 견적 / 의뢰 내역</p>
+            <p class="main_main_banner_button_typo"><spring:message code="main.estimate" text="나의 견적 / 의뢰 내역" /></p>
           </a>
 		  </c:if>
 		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1 && !empty sessionInfo.user.COMP_FILE_CD}">
           <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="main_main_banner_button main_main_banner_button_01">
-            <p class="main_main_banner_button_typo">나의 견적 / 의뢰 내역</p>
+            <p class="main_main_banner_button_typo"><spring:message code="main.estimate" text="나의 견적 / 의뢰 내역" /></p>
           </a>
 		  </c:if>
 		  <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1 && empty sessionInfo.user.COMP_FILE_CD}">
-          <a href="javascript:alert('추가정보 입력 시 이용이 가능합니다.');location.href=('/${api}/mypage/my_page_edit_info')" class="main_main_banner_button main_main_banner_button_01">
-            <p class="main_main_banner_button_typo">나의 견적 / 의뢰 내역</p>
+          <a href="javascript:alert(getI8nMsg('alert.enterAddInfo'));location.href=('/${api}/mypage/my_page_edit_info')" class="main_main_banner_button main_main_banner_button_01">
+            <p class="main_main_banner_button_typo"><spring:message code="main.estimate" text="나의 견적 / 의뢰 내역" /></p>
           </a>
 		  </c:if>
         </c:otherwise>
       </c:choose>
       
       <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="main_main_banner_button main_main_banner_button_02">
-        <p class="main_main_banner_button_typo">진행내역</p>
+        <p class="main_main_banner_button_typo"><spring:message code="main.progress" text="진행내역" /></p>
       </a>
 <%--       <c:choose>
         <c:when test="${empty sessionInfo.user}">
@@ -242,49 +261,49 @@ jQuery(function($){
         </c:otherwise>
       </c:choose> --%>
           <a href="/${api}/tribute/tribute_request" class="main_main_banner_button main_main_banner_button_03">
-            <p class="main_main_banner_button_typo">전자치과기공물 <br/>의뢰서 작성하기</p>
+            <p class="main_main_banner_button_typo"><spring:message code="main.submitreq" text="전자치과기공물 <br/>의뢰서 작성하기" /></p>
           </a>
     </div>
   </div>
   <div class="main_main_menu_list_container">
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P001'">
       <img class="main_main_menu_item_img_01" src="/public/assets/images/main_menu_icon_1.png" />
-      <p class="main_main_menu_item_typo">크라운&캡</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.crown" text="크라운&캡" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P002'">
       <img class="main_main_menu_item_img_02" src="/public/assets/images/main_menu_icon_2.png" />
-      <p class="main_main_menu_item_typo">인레이(온레이)</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.inlay" text="인레이(온레이)" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P003'">
       <img class="main_main_menu_item_img_03" src="/public/assets/images/main_menu_icon_3.png" />
-      <p class="main_main_menu_item_typo">프레임</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.frame" text="프레임" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P004'">
       <img class="main_main_menu_item_img_04" src="/public/assets/images/main_menu_icon_4.png" />
-      <p class="main_main_menu_item_typo">의치 및 배열</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.dentures" text="의치 및 배열" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P005'">
       <img class="main_main_menu_item_img_05" src="/public/assets/images/main_menu_icon_5.png" />
-      <p class="main_main_menu_item_typo">스프린트 및 서지컬 가이드</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.splint" text="스프린트 및 서지컬 가이드" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P006'">
       <img class="main_main_menu_item_img_06" src="/public/assets/images/main_menu_icon_6.png" />
-      <p class="main_main_menu_item_typo">교정</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.aligner" text="교정" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P007'">
       <img class="main_main_menu_item_img_07" src="/public/assets/images/main_menu_icon_7.png" />
-      <p class="main_main_menu_item_typo">어버트먼트</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.abutment" text="어버트먼트" /></p>
     </div>
     <div class="main_main_menu_item_container" onclick="javascript:location.href='/${api}/project/project_view_all?SEARCH_PROJECT_CD=P008'">
       <img class="main_main_menu_item_img_08" src="/public/assets/images/main_menu_icon_8.png" />
-      <p class="main_main_menu_item_typo">기타</p>
+      <p class="main_main_menu_item_typo"><spring:message code="main.etc" text="기타" /></p>
     </div>
   </div>
   <div class="main_main_divider"></div>
   <div class="main_main_center_container">
     <div class="main_main_center_title_container">
       <div class="main_main_center_left_container">
-        <div class="main_main_center_title_typo">가공센터</div>
+        <div class="main_main_center_title_typo"><spring:message code="main.dental" text="가공센터" /></div>
         <div class="main_main_center_carousel_button_container">
           <button type="button" class="main_main_center_carousel_button" onclick="fnSearchProg('prev');">
             <img class="main_main_center_carousel_button_img" id="prevBTN" src="/public/assets/images/main_carousel_arrow_left2.svg" />
@@ -295,7 +314,7 @@ jQuery(function($){
           </button>
         </div>
       </div>
-      <p class="main_main_center_see_more_typo" style="cursor: pointer;" onclick="javascript:location.href='/${api}/processing/processing_center'">지역별 보기 ></p>
+      <p class="main_main_center_see_more_typo" style="cursor: pointer;" onclick="javascript:location.href='/${api}/processing/processing_center'"><spring:message code="main.veiw" text="지역별 보기" /> ></p>
     </div>
     <c:if test="${empty sessionInfo.user}">
     <div class="main_main_center_carousel_card_container" style="filter: blur(4px);">
@@ -423,9 +442,9 @@ jQuery(function($){
 <div class="main_footer_body">
   <div class="main_footer_body_header">
     <div class="main_footer_body_typo_container">
-      <p class="main_footer_body_header_typo">치과/치과기공 장비 견적소</p>
+      <p class="main_footer_body_header_typo"><spring:message code="main.dentalequipm" text="치과/치과기공 장비 견적소" /></p>
       <a href="/${api}/equipment/equipment_estimator_list">
-      	<p class="main_footer_body_header_see_all">모두보기 ></p>
+      	<p class="main_footer_body_header_see_all"><spring:message code="main.viewall" text="모두보기" /> ></p>
       </a>
     </div>
     <c:if test="${empty sessionInfo.user}">
@@ -435,19 +454,19 @@ jQuery(function($){
     <div class="main_footer_body_item_container">
     </c:if>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E001" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">3D프린터</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.3dprinter" text="3D프린터" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E002" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">밀링머신</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.milling" text="밀링머신" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E003" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">퍼네스</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.furness" text="퍼네스" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E004" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">스캐너</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.scanner" text="스캐너" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E005" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">폴리싱장비</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.polishing" text="폴리싱장비" /></p>
       </a>  
     </div>
     <c:if test="${empty sessionInfo.user}">
@@ -457,19 +476,19 @@ jQuery(function($){
     <div class="main_footer_body_item_container">
     </c:if>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E006" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">S/W</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.sw" text="S/W" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E007" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">스팀기</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.steam" text="스팀기" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E008" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">캐스팅머신</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.casting" text="캐스팅머신" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E009" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">큐링장비</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.curing" text="큐링장비" /></p>
       </a>
       <a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=E010" class="main_footer_body_item">
-        <p class="main_footer_body_item_typo">기타</p>
+        <p class="main_footer_body_item_typo"><spring:message code="main.etc" text="기타" /></p>
       </a>  
     </div>
     <div class="main_footer_body_divider"></div>
@@ -477,22 +496,22 @@ jQuery(function($){
 
   <div class="main_project_youtube_container">
     <div class="main_project">
-        <p class="main_project_typo">Project 현황</p>
+        <p class="main_project_typo"><spring:message code="main.project" text="Project 현황" /></p>
         <div class="main_project_box">
           <div class="main_project_box_item">
             <img class="main_project_box_item_img" src="/public/assets/images/main_project_1.svg" />
             <p class="main_project_box_item_main_typo">${PJT.USER_CNT}</p>
-            <p class="main_project_box_item_sub_typo">회원가입 수</p>
+            <p class="main_project_box_item_sub_typo"><spring:message code="main.membernum" text="회원가입 수" /></p>
           </div>
           <div class="main_project_box_item">
             <img class="main_project_box_item_img" src="/public/assets/images/main_project_2.svg" />
             <p class="main_project_box_item_main_typo">${PJT.PJT_CNT}</p>
-            <p class="main_project_box_item_sub_typo">등록된 총 프로젝트 수</p>
+            <p class="main_project_box_item_sub_typo"><spring:message code="main.totproj" text="등록된 총 프로젝트 수" /></p>
           </div>
           <div class="main_project_box_item">
             <img class="main_project_box_item_img" src="/public/assets/images/main_project_3.svg" />
             <p class="main_project_box_item_main_typo">${PJT.PJT_AMOUNT}</p>
-            <p class="main_project_box_item_sub_typo">누적 프로젝트 총 금액</p>
+            <p class="main_project_box_item_sub_typo"><spring:message code="main.cumproj" text="누적 프로젝트 총 금액" /></p>
           </div>
         </div>
       </div>
@@ -523,12 +542,12 @@ jQuery(function($){
       <div class="form-check" style="margin-top: -7px;">
 		  <input class="form-check-input" type="checkbox" value="" onclick="checkPopupbye()" id="flexCheckDefault" style="margin-top:3px;margin-left:-2px;">
 		  <label class="form-check-label" for="flexCheckDefault">
-		   	 오늘하루 열지 않기
+		   	 <spring:message code="pop.today" text="오늘하루 열지 않기" />
 		  </label>
 		</div>
  
         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color:black!important;backtround-color:#FFF3F4;">오늘하루 열지 않기</button> --><!-- onclick="closePopup()" -->
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="closePopup()" style="margin-top: -7px;color:black!important;background-color:#FFF3F4!important;float:right;margin-left:204px;border-color:#FFF3F4!important;">닫기 X</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="closePopup()" style="margin-top: -7px;color:black!important;background-color:#FFF3F4!important;float:right;margin-left:204px;border-color:#FFF3F4!important;"><spring:message code="close" text="닫기" /> X</button>
       </div>
     </div>
   </div>

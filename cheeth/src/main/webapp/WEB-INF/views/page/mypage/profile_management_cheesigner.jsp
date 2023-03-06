@@ -4,7 +4,7 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -17,12 +17,12 @@
     
     var userNickName = $('#USER_NICK_NAME').val();
     if(isEmpty(userNickName)) {
-      alert('닉네임을 입력하세요.');
+    	alert(getI8nMsg("alert.enterUserNm"));//닉네임을 입력하세요.
       $('#USER_NICK_NAME').focus();
       return;
     }
     
-    var isConfirm = window.confirm('닉네임을 변경 하시겠습니까?\n닉네임 변경 시 새로고침 됩니다.');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.chgNickNm"));//닉네임을 변경 하시겠습니까?\n닉네임 변경 시 새로고침 됩니다.
     if(!isConfirm) return;
     
     $.ajax({
@@ -49,12 +49,12 @@
     var projectNm8 = $('#PROJECT_NM_8').val();
     
     if(projectCd8 && isEmpty(projectNm8)) {
-      alert('기타를 입력하세요.');
+    	alert(getI8nMsg("alert.enterOther"));//기타를 입력하세요.
       $('#PROJECT_NM_8').focus();
       return;
     }
     
-    var isConfirm = window.confirm('저장 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.save")); //저장하시겠습니까?
     if(!isConfirm) return;
     
     var formData = new FormData(document.getElementById('saveForm'));
@@ -114,7 +114,7 @@
           imageFileArray.push(obj);
         }
       } else {
-        alert('이미지 파일이 아닙니다.');
+    	  alert(getI8nMsg("alert.notImage"));//이미지 파일이 아닙니다.
         if(target === 'profile') {
           profileFileArray = new Array();
           $('#PROFILE_FILE').prop('src', defaultImgSrc);

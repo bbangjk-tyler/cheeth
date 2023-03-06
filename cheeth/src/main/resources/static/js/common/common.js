@@ -103,27 +103,27 @@ function fnCheckSpecial(){
   var checkSpecial = str.search(/[~!@#$%^*_+=]/gi);
 
   if(str.length < 8 || str.length > 15){
-    alert("8~15자를 입력해주세요.");
+    alert(getI8nMsg("alert.815char"));//8~15자를 입력해주세요.
     return false;
   }
 
   if(checkNumber < 0){
-    alert("숫자가 포함되어야 합니다.");
+    alert(getI8nMsg("alert.mustNum"));//숫자가 포함되어야 합니다.
     return false;
   }
 
   if(checkCapitalLetter < 0){
-    alert("대문자가 포함되어야 합니다.");
+    alert(getI8nMsg("alert.mustUpper"));//"대문자가 포함되어야 합니다."
     return false;
   }
 
   if(checkSmallLetter < 0){
-    alert("소문자가 포함되어야 합니다.");
+    alert(getI8nMsg("alert.mustLower"));//"소문자가 포함되어야 합니다."
     return false;
   }
 
   if(checkSpecial < 0){
-    alert("특수문자가 포함되어야 합니다. \n허용 특수문자 : ~!@#$%^*_+=");
+    alert(getI8nMsg("alert.mustSpec")); //특수문자가 포함되어야 합니다. \n허용 특수문자 : ~!@#$%^*_+=
     return false;
   }
 
@@ -407,13 +407,12 @@ function fnGetSuppCd() {
     { SUPP_CD: 'SP102', SUPP_NM: 'Inlay(onlay)', LVL: 1, P_SUPP_CD: '' },
     { SUPP_CD: 'SP103', SUPP_NM: 'Frame', LVL: 1, P_SUPP_CD: '' },
     { SUPP_CD: 'SP104', SUPP_NM: 'Splint', LVL: 1, P_SUPP_CD: '' },
-    { SUPP_CD: 'SP105', SUPP_NM: '의치', LVL: 1, P_SUPP_CD: '' },
+    { SUPP_CD: 'SP105', SUPP_NM: getI8nMsg('dialog.req.denture', '의치'), LVL: 1, P_SUPP_CD: '' },
     { SUPP_CD: 'SP106', SUPP_NM: 'Custom abutment', LVL: 1, P_SUPP_CD: '' },
-    { SUPP_CD: 'SP107', SUPP_NM: '교정', LVL: 1, P_SUPP_CD: '' },
-    { SUPP_CD: 'SP108', SUPP_NM: '트레이', LVL: 1, P_SUPP_CD: '' },
-    { SUPP_CD: 'SP109', SUPP_NM: '기타', LVL: 1, P_SUPP_CD: '' },
-    
-    { SUPP_CD: 'SP201', SUPP_NM: '지르코니아', LVL: 2, P_SUPP_CD: 'SP101' },
+    { SUPP_CD: 'SP107', SUPP_NM: getI8nMsg('main.aligner', '교정'), LVL: 1, P_SUPP_CD: '' },
+    { SUPP_CD: 'SP108', SUPP_NM: getI8nMsg('tray', '트레이'), LVL: 1, P_SUPP_CD: '' },
+    { SUPP_CD: 'SP109', SUPP_NM: getI8nMsg('main.etc', '기타'), LVL: 1, P_SUPP_CD: '' },
+    { SUPP_CD: 'SP201', SUPP_NM: getI8nMsg('main.etc', '지르코니아'), LVL: 2, P_SUPP_CD: 'SP101' },
     { SUPP_CD: 'SP202', SUPP_NM: 'Metal', LVL: 2, P_SUPP_CD: 'SP101' },
     { SUPP_CD: 'SP203', SUPP_NM: 'Temp Cr.', LVL: 2, P_SUPP_CD: 'SP101' },
     { SUPP_CD: 'SP204', SUPP_NM: 'Full', LVL: 2, P_SUPP_CD: 'SP103' },
@@ -698,4 +697,31 @@ function toNumber() {
   if(isNaN(rtnValue)) rtnValue = 0;
 
   return Number(rtnValue);
+}
+
+function getI8nMsg(){
+	var property = arguments[0];
+	var msg = "";
+	var param = "";
+	if(arguments.length == 3){
+		param = arguments[2];
+	}
+	  $.ajax({
+	    url: '/' + API + '/message/getI18nMsg',
+	    type: 'GET',
+	    data: { property: property, param: param },
+	    cache: false,
+	    async: false,
+	    success: function(data) {
+	      msg = data;
+	    }, complete: function() {
+	
+	    }, error: function() {
+	      
+	    }
+	  });
+    if(msg == ""){
+		msg = arguments[1];
+	}
+	return msg;
 }

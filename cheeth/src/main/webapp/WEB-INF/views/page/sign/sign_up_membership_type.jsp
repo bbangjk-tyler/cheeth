@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <meta name ="google-signin-client_id" content="424263397710-33kiaq16joefkfn7cdeffjmvg0vvg5jr.apps.googleusercontent.com">
 
@@ -215,22 +216,22 @@
 
 <div class="sign_up_sign_up_container membership_type_container">
   <div class="sign_up_sign_up_typo_container">
-    <p class="sign_up_sign_up_typo">회원가입</p>
+    <p class="sign_up_sign_up_typo"><spring:message code="join" text="회원가입" /></p>
    </div>
   <div class="sign_up_sign_up_step_container">
      <div class="sign_up_sign_up_step" style="color: #2093EB;">
        <p class="sign_up_sign_up_step_number">STEP 1</p>
-       <p class="sign_up_sign_up_step_title">회원유형 선택</p>
+       <p class="sign_up_sign_up_step_title"><spring:message code="join.step1" text="회원유형 선택" /></p>
      </div>
      <img class="sign_up_sign_up_step_arrow" src="/public/assets/images/sign_up_steps_right_arrow.svg">
      <div class="sign_up_sign_up_step">
        <p class="sign_up_sign_up_step_number">STEP 2</p>
-       <p class="sign_up_sign_up_step_title">약관동의</p>
+       <p class="sign_up_sign_up_step_title"><spring:message code="join.step2" text="약관동의" /></p>
      </div>
        <img class="sign_up_sign_up_step_arrow" src="/public/assets/images/sign_up_steps_right_arrow.svg">
        <div class="sign_up_sign_up_step">
          <p class="sign_up_sign_up_step_number">STEP 3</p>
-         <p class="sign_up_sign_up_step_title">정보입력</p>
+         <p class="sign_up_sign_up_step_title"><spring:message code="join.step3" text="정보입력" /></p>
        </div>
   </div>
 </div>
@@ -240,33 +241,33 @@
     <div class="membership_type_normal">
       <img class="membership_type_normal_image" src="/public/assets/images/sign_up_normal.svg"/>
        <a href="/${api}/sign/accept_conditions?dvsn=type01" class="membership_type_normal_button">
-         <p class="membership_type_normal_button_typo">일반 회원가입</p>
+         <p class="membership_type_normal_button_typo"><spring:message code="join.signG" text="일반 회원가입" /></p>
        </a>
     </div>
     <div class="membership_type_expert">
       <img class="membership_type_expert_image" src="/public/assets/images/sign_up_expert.svg"/>
       <a href="javascript:fnViewType();" class="membership_type_expert_button">
-        <p class="membership_type_expert_button_typo">전문가 회원가입</p>
+        <p class="membership_type_expert_button_typo"><spring:message code="join.signE" text="전문가 회원가입" /></p>
       </a>
       <div class="sign_up_popover hidden">
          <div class="sign_up_popover_item">
-           <a href="/${api}/sign/accept_conditions?dvsn=type02" id="expertClient" onclick="selectExpertType(this);">의뢰인</a>
+           <a href="/${api}/sign/accept_conditions?dvsn=type02" id="expertClient" onclick="selectExpertType(this);"><spring:message code="join.client" text="의뢰인" /></a>
          </div>
         <div class="sign_up_popover_item">
-          <a href="/${api}/sign/accept_conditions?dvsn=type03" id="expertCheesigner" onclick="selectExpertType(this);">치자이너(CAD디자이너)</a>
+          <a href="/${api}/sign/accept_conditions?dvsn=type03" id="expertCheesigner" onclick="selectExpertType(this);"><spring:message code="join.tesigner" text="치자이너(CAD디자이너)" /></a>
         </div>
        </div>
     </div>
   </div>
   <div class="login_platform_container">
     <button class="login_platform_button login_platform_button_kakao" style="cursor: pointer;" onclick="kakaoLogin();">
-      <p class="login_platform_button_kakao_typo"><img src="/public/assets/images/kakao.png" alt="">카카오 계정으로 로그인</p>
+      <p class="login_platform_button_kakao_typo"><img src="/public/assets/images/kakao.png" alt=""><spring:message code="login.loginKakao" text="카카오 계정으로 로그인" /></p>
     </button>
     <button id="naverIdLogin_loginButton" class="login_platform_button login_platform_button_naver" style="cursor: pointer;">
-    	<p class="login_platform_button_naver_typo"><img src="/public/assets/images/naver.png" alt="">네이버 계정으로 로그인</p>
+    	<p class="login_platform_button_naver_typo"><img src="/public/assets/images/naver.png" alt=""><spring:message code="login.loginNaver" text="네이버 계정으로 로그인" /></p>
     </button>
     <button id="GgCustomLogin" class="login_platform_button login_platform_button_google" style="cursor: pointer;">
-      <p class="login_platform_button_google_typo"><img src="/public/assets/images/google.png" alt="">구글 계정으로 로그인</p>
+      <p class="login_platform_button_google_typo"><img src="/public/assets/images/google.png" alt=""><spring:message code="login.loginGoogle" text="구글 계정으로 로그인" /></p>
     </button>
   </div>
   <form name="snsForm" id="snsForm" action="/${api}/sign/accept_conditions" method="post">

@@ -6,7 +6,7 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -14,7 +14,7 @@
 
   <script>
 
-   alert('접근 권한이 없습니다.');
+   alert(getI8nMsg("alert.nhaveAccess"));//접근 권한이 없습니다.
 
    history.back();
 
@@ -45,7 +45,7 @@ function confirmModal() {
 	</c:when>
 <c:otherwise>
  <script>
- alert("의뢰인 회원만 이용 가능합니다.");
+ alert(getI8nMsg("alert.onlyC"));//의뢰인 회원만 이용 가능합니다.
    history.back();
 </script>
 </c:otherwise>
@@ -69,8 +69,7 @@ var flag = 0;
 	function CategoryChkBtn(){
 		if(flag == 0){
 			if(CategoryChoiceBool == 0){
-				alert("보철종류 입력이 필요합니다.");
-				
+				alert(getI8nMsg("alert.inputProsth"));//보철종류 입력이 필요합니다.
 				$("#tribute_request_button_displaynone").trigger("click");
 			}
 		}
@@ -2037,7 +2036,7 @@ var flag = 0;
 
 		if(isEmpty(wordTxt)) {
 
-			alert('자주 쓰는 말을 입력해주세요.');
+			alert(getI8nMsg("alert.enterFrequWord"));//자주 쓰는 말을 입력해주세요.
 
 			return;
 
@@ -2195,7 +2194,7 @@ var flag = 0;
 
 				  if(resp.result == 'Y') {
 
-					  alert('저장되었습니다.');
+					  alert(getI8nMsg("alert.save"));//저장되었습니다.
 
 					  fileNmEl.text(file.name);
 
@@ -2263,7 +2262,7 @@ var flag = 0;
 
 		if(isEmpty($('#PANT_NM').val())) {
 
-			alert('환자명을 입력해주세요.');
+			alert(getI8nMsg("alert.enterPatiNm"));//환자명을 입력해주세요.
 
 			$('#PANT_NM').focus();
 
@@ -2557,7 +2556,7 @@ var flag = 0;
 
 		if(isEmpty($('#PANT_NM').val())) {
 
-			alert('환자명을 입력해주세요.');
+			alert(getI8nMsg("alert.enterPatiNm"));//환자명을 입력해주세요.
 
 			return;
 
@@ -2567,7 +2566,7 @@ var flag = 0;
 
 		if(cardArr.some(s => isEmpty(s.SUPP_INFO)) || cardArr.some(s => isEmpty(s.SUPP_INFO['SUPP_CD_1']))) {
 
-			alert('보철종류를 선택해주세요.');
+			alert(getI8nMsg("alert.selectProsth"));//보철종류를 선택해주세요.
 
 			return;
 
@@ -2577,7 +2576,7 @@ var flag = 0;
 
 		if(cardArr.some(s => isEmpty(s.TRIBUTE_DTL))) {
 
-			alert('치식을 선택해주세요.');
+			alert(getI8nMsg("alert.selectDentFor"));//치식을 선택해주세요.
 
 			return;
 
@@ -2587,7 +2586,7 @@ var flag = 0;
 
 		if(cardArr.some(s => isEmpty(s.PRO_METH_CD))) {
 
-			alert('가공방법을 선택해주세요.');
+			alert(getI8nMsg("alert.selectProcesMeth"));//가공방법을 선택해주세요.
 
 			return;
 
@@ -2603,7 +2602,7 @@ var flag = 0;
 
 			})) {
 
-				alert('기타 가공방법을 입력해주세요.');
+				alert(getI8nMsg("alert.enterProcesMeth"));//기타 가공방법을 입력해주세요.
 
 				return;
 
@@ -2623,7 +2622,7 @@ var flag = 0;
 
 		})) {
 
-			alert('Shade를 입력해주세요.');
+			alert(getI8nMsg("alert.enterShade"));//Shade를 입력해주세요.
 
 			return;
 
@@ -2631,7 +2630,7 @@ var flag = 0;
 
 	
 
-		if(confirm('저장하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.save"))) { //저장하시겠습니까?
 
 			/* $.ajax({
 
@@ -2673,7 +2672,7 @@ var flag = 0;
 
 					if(resp.result == 'Y') {
 
-						alert('저장되었습니다.');
+						alert(getI8nMsg("alert.save"));//저장되었습니다.
 
 						location.href = '/' + API + '/tribute/request_basket';
 

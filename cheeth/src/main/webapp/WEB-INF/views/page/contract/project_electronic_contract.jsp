@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+   alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -153,7 +154,7 @@ function fnGetEstimators() {
 		  success: function(data) {
 				estimatorArr = data.estimatorList;
 				if(isEmpty(estimatorArr)) {
-					alert('받은 견적서가 존재하지 않습니다.');
+					alert(getI8nMsg("alert.noQuo"));
 					estimatorViewModal.hide();
 				} else {
 					fnSetEstimator(0);
@@ -259,7 +260,7 @@ function fnSetEstimator() {
   function fnApproval() {
     var estimatorNo = '${ESTIMATOR_NO}';
     if(isEmpty(estimatorNo)) {
-      alert('올바른 요청이 아닙니다.');
+      alert(getI8nMsg("alert.notValidReq"));//올바른 요청이 아닙니다.
     } else {
       
       var agreementYn1 = $('#AGREEMENT_YN_1').val();
@@ -268,17 +269,17 @@ function fnSetEstimator() {
       var agreementYn4 = $('#AGREEMENT_YN_4').val();
       
       if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y') {
-        alert('필수 동의 항목을 동의해야 승인이 가능합니다.');
+    	alert(getI8nMsg("alert.mustAgree"));//필수 동의 항목을 동의해야 승인이 가능합니다.
         return;
       }
       
       if($('#SP_CHANGE').val() === 'Y') {
-        alert('특수계약 조건이 변경되었습니다. 수정요청 하시기 바랍니다.');
+    	alert(getI8nMsg("alert.changedPlzReq"));//특수계약 조건이 변경되었습니다. 수정요청 하시기 바랍니다.
         $('#SPECIAL_CONDITION').focus();
         return;
       }
       
-      var isConfirm = window.confirm('승인 하시겠습니까?');
+      var isConfirm = window.confirm(getI8nMsg("alert.confirm.aprrove")); //승인하시겠습니까?
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
@@ -304,7 +305,7 @@ function fnSetEstimator() {
   function fnModifyRequest() {
     var estimatorNo = '${ESTIMATOR_NO}';
     if(isEmpty(estimatorNo)) {
-    	alert('올바른 요청이 아닙니다.');
+    	alert(getI8nMsg("alert.notValidReq"));//올바른 요청이 아닙니다.
     } else {
       
       var agreementYn1 = $('#AGREEMENT_YN_1').val();
@@ -313,11 +314,11 @@ function fnSetEstimator() {
       var agreementYn4 = $('#AGREEMENT_YN_4').val();
       
       if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y') {
-        alert('필수 동의 항목을 동의해야 수정요청이 가능합니다.');
+    	  alert(getI8nMsg("alert.mustAgree"));//alert('필수 동의 항목을 동의해야 수정요청이 가능합니다.');
         return;
       }
-        
-      var isConfirm = window.confirm('수정요청 하시겠습니까?');
+      
+      var isConfirm = window.confirm(getI8nMsg("alert.confirm.correct"));//수정요청 하시겠습니까?
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
@@ -344,7 +345,7 @@ function fnSetEstimator() {
   function fnApprovalRequest() {
     var estimatorNo = '${ESTIMATOR_NO}';
     if(isEmpty(estimatorNo)) {
-    	alert('올바른 요청이 아닙니다.');
+    	alert(getI8nMsg("alert.notValidReq"));//올바른 요청이 아닙니다.
     } else {
       
     	var contractNo = $('#CONTRACT_NO').val(); 
@@ -354,17 +355,17 @@ function fnSetEstimator() {
       var agreementYn4 = $('#AGREEMENT_YN_4').val();
       
       if(agreementYn1 !== 'Y' || agreementYn2 !== 'Y' || agreementYn3 !== 'Y') {
-        alert('필수 동의 항목을 동의해야 승인요청이 가능합니다.');
+    	  alert(getI8nMsg("alert.mustAgree"));//alert('필수 동의 항목을 동의해야 승인요청이 가능합니다.');
         return;
       }      
       
       if(isNotEmpty(contractNo) && $('#SP_CHANGE').val() === 'Y') {
-        alert('특수계약 조건이 변경되었습니다. 수정요청 하시기 바랍니다.');
+    	  alert(getI8nMsg("alert.changedPlzReq"));//특수계약 조건이 변경되었습니다. 수정요청 하시기 바랍니다.
         $('#SPECIAL_CONDITION').focus();
         return;
       }
         
-      var isConfirm = window.confirm('승인요청 하시겠습니까?');
+      var isConfirm = window.confirm(getI8nMsg("alert.confirm.aprroval"));//승인요청 하시겠습니까?
       if(!isConfirm) return;
       
       var saveObj = getSaveObj('saveForm');
@@ -389,9 +390,9 @@ function fnSetEstimator() {
   function fnCancel() {
     var estimatorNo = '${ESTIMATOR_NO}';
     if(isEmpty(estimatorNo)) {
-      alert('올바른 요청이 아닙니다.');
+    	alert(getI8nMsg("alert.notValidReq"));//올바른 요청이 아닙니다.
     } else {
-      var isConfirm = window.confirm('계약취소 하시겠습니까?');
+      var isConfirm = window.confirm(getI8nMsg("alert.confirm.cancelContr"));//계약취소 하시겠습니까?
       if(!isConfirm) return;
       
       $.ajax({
@@ -481,7 +482,7 @@ function fnSetEstimator() {
   }
   
   function fnSpReset() {
-    var isConfirm = window.confirm('특수 계약조건을 초기화 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.init"));//특수 계약조건을 초기화 하시겠습니까?
     if(!isConfirm) return;
     var temp = $('#SPECIAL_CONDITION_TEMP').val();
     $('#SPECIAL_CONDITION').val(temp);
@@ -533,51 +534,51 @@ function fnSetEstimator() {
   <input type="hidden" id="SP_CHANGE" name="SP_CHANGE" value="N">
 
 	<div class="project_header">
-	  <p class="project_header_typo">전자계약서</p>
+	  <p class="project_header_typo"><spring:message code="econtact" text="전자계약서" /></p>
 	</div>
 	
 	<div class="project_body">
     <div class="side_menu">
       <div class="side_menu_title">
-        <p class="side_menu_title_typo">전체보기</p>
+        <p class="side_menu_title_typo"><spring:message code="main.seeAll" text="전체보기" /></p>
       </div>
       <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-        <p class="side_menu_list_typo">견적·의뢰내역</p>
+        <p class="side_menu_list_typo"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
       </a>
       <a href="/${api}/tribute/request_basket" class="side_menu_list">
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-        <p class="side_menu_list_typo">의뢰서 바구니</p>
+        <p class="side_menu_list_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
       </a>
       <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="side_menu_list">
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-        <p class="side_menu_list_typo_blue">진행내역</p>
+        <p class="side_menu_list_typo_blue"><spring:message code="req.progD" text="진행내역" /></p>
       </a>
       <c:choose>
         <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 or sessionInfo.user.USER_TYPE_CD eq 2}">
           <a href="/${api}/mypage/profile_management" class="side_menu_list">
             <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-            <p class="side_menu_list_typo">프로필 관리</p>
+            <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
           </a>
         </c:when>
         <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
           <a href="/${api}/mypage/profile_management_cheesigner" class="side_menu_list">
             <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-            <p class="side_menu_list_typo">프로필 관리</p>
+            <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
           </a>
         </c:when>
       </c:choose>
       <a href="/${api}/review/client_review" class="side_menu_list">
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-        <p class="side_menu_list_typo">후기관리</p>
+        <p class="side_menu_list_typo"><spring:message code="req.myReview" text="후기관리" /></p>
       </a>
       <a href="/${api}/mypage/my_page_edit_info" class="side_menu_list">
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-        <p class="side_menu_list_typo">내정보 수정</p>
+        <p class="side_menu_list_typo"><spring:message code="req.manInfo" text="내정보 수정" /></p>
       </a>
       <a href="javascript:fnLogOut();" class="side_menu_list">
         <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-        <p class="side_menu_list_typo">로그아웃</p>
+        <p class="side_menu_list_typo"><spring:message code="logout" text="로그아웃" /></p>
       </a>
     </div>
 	  <div class="electronic_contract_main_container">
@@ -587,15 +588,15 @@ function fnSetEstimator() {
 	      </a>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
-	        <p class="project_connection_location_typo">마이페이지</p>
+	        <p class="project_connection_location_typo"><spring:message code="req.myPage" text="마이페이지" /></p>
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
-	        <p class="project_connection_location_typo">진행내역</p>
+	        <p class="project_connection_location_typo"><spring:message code="req.progD" text="진행내역" /></p>
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
-	        <p class="project_connection_location_typo_bold">전자계약서</p>
+	        <p class="project_connection_location_typo_bold"><spring:message code="econtact" text="전자계약서" /></p>
 	      </div>
 	    </div>
 	    <div class="connection_location_divider"></div>

@@ -45,13 +45,16 @@ public class CheesignerController extends BaseController {
       }
     }
     parameter.put("PAGE", page);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     
     mv.addObject("TOTAL_CNT", service.integer("getCnt01", parameter));
     
     mv.addObject("LIST", service.list("getList01", parameter));
     
     parameter.put("GROUP_CD", "PROJECT_CD");
-    mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
+    mv.addObject("PROJECT_CD_LIST", service.list("common", "getCodeLang", parameter));
+    //mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
       
     return mv;
   }
@@ -64,6 +67,8 @@ public class CheesignerController extends BaseController {
     parameter.put("USER_ID", UserID);
     parameter.put("CREATE_ID", parameter.get("USER_ID"));
     parameter.put("PAGE", 0);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     ModelAndView mv = new ModelAndView();
     if(isSession()) {
       Map<String, Object> data = service.getData07(parameter);

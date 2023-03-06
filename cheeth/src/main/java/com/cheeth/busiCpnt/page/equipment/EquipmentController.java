@@ -50,14 +50,17 @@ public class EquipmentController extends BaseController {
     parameter.put("PAGE", page);
     
     mv.addObject("TOTAL_CNT", service.integer("getCnt01", parameter)); // 총건수
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     
     mv.addObject("LIST", service.list("getList01", parameter)); // 목록조회
     
     parameter.put("GROUP_CD", "EQ_CD");
-    mv.addObject("EQ_CD_LIST", service.list("common", "getCode", parameter)); // 게시판 코드
+    mv.addObject("EQ_CD_LIST", service.list("common", "getCodeLang", parameter));
+    //mv.addObject("EQ_CD_LIST", service.list("common", "getCode", parameter)); // 게시판 코드
     
     parameter.put("GROUP_CD", "AREA_CD");
-    mv.addObject("AREA_CD_LIST", service.list("common", "getCode", parameter)); // 지역코드
+    mv.addObject("AREA_CD_LIST", service.list("common", "getCodeLang", parameter)); // 지역코드
     
     mv.addObject("SEARCH_EQ_CD", parameter.get("SEARCH_EQ_CD"));
 
@@ -75,7 +78,9 @@ public class EquipmentController extends BaseController {
     mv.addObject("SEARCH_EQ_CD", parameter.get("SEARCH_EQ_CD"));
     
     parameter.put("GROUP_CD", "EQ_CD");
-    mv.addObject("EQ_CD_LIST", service.list("common", "getCode", parameter)); // 게시판 코드
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    mv.addObject("EQ_CD_LIST", service.list("common", "getCodeLang", parameter)); // 게시판 코드
     
     Map<?, ?> data = service.getData01(parameter);
     mv.addObject("DATA", data);
@@ -97,13 +102,15 @@ public class EquipmentController extends BaseController {
     ModelAndView mv = new ModelAndView("page/equipment/equipment_estimator_writing");
     
     parameter.put("GROUP_CD", "EQ_CD");
-    mv.addObject("EQ_CD_LIST", service.list("common", "getCode", parameter)); // 게시판 코드
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    mv.addObject("EQ_CD_LIST", service.list("common", "getCodeLang", parameter)); // 게시판 코드
     
     parameter.put("GROUP_CD", "AREA_CD");
-    mv.addObject("AREA_CD_LIST", service.list("common", "getCode", parameter)); // 지역코드
+    mv.addObject("AREA_CD_LIST", service.list("common", "getCodeLang", parameter)); // 지역코드
     
     parameter.put("GROUP_CD", "TIME_CD");
-    mv.addObject("TIME_CD_LIST", service.list("common", "getCode", parameter)); // 시간 코드
+    mv.addObject("TIME_CD_LIST", service.list("common", "getCodeLang", parameter)); // 시간 코드
     
     Map<?, ?> data = service.getData01(parameter);
     mv.addObject("DATA", data);

@@ -11,7 +11,7 @@ if(request.getParameter("reviewbool") != null){
 %>
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -31,7 +31,7 @@ if(request.getParameter("reviewbool") != null){
   
   function fnReceive() {
     
-    var isConfirm = window.confirm('파일 수령확인 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.confirmFile"));//파일 수령확인 하시겠습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -42,7 +42,7 @@ if(request.getParameter("reviewbool") != null){
      async: false,
      success: function(data) {
        if(data.cnt === 0) {
-    	   alert('업데이트 실패하였습니다.');
+    	   alert(getI8nMsg("alert.updateFail"));//업데이트 실패하였습니다.
        }
        location.href = '/' + API + '/mypage/equipment_estimator_my_page_progress';
      }, complete: function() {
@@ -190,7 +190,7 @@ if(request.getParameter("reviewbool") != null){
 		      </a>
 	      </c:if>
 	     <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
-	      <a href="javascript:alert('서비스 준비 중입니다. 재제작 요청 시 쪽지 보내기 기능을 이용해주세요.');" class="receive_file_button_white">
+	      <a href="javascript:alert(getI8nMsg('alert.preparingServ'));" class="receive_file_button_white">
 	        <p class="receive_file_button_white_typo">재제작 요청</p>
 	      </a>
         </c:if>
@@ -214,7 +214,7 @@ if(request.getParameter("reviewbool") != null){
             	</c:when>
             	<c:otherwise>
             	<script>
-            		alert("리뷰를 작성하셨습니다.");
+            		alert(getI8nMsg("alert.wroteReview")); //리뷰를 작성하셨습니다.
             	</script>
             	</c:otherwise>
             </c:choose>

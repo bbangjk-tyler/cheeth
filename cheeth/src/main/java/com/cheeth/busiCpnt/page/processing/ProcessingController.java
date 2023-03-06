@@ -62,10 +62,12 @@ public class ProcessingController extends BaseController {
     parameter.put("PAGE", page);
     
     parameter.put("GROUP_CD", "AREA_CD");
-    mv.addObject("AREA_CD_LIST", service.list("common", "getCode", parameter)); // 지역코드
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    mv.addObject("AREA_CD_LIST", service.list("common", "getCodeLang", parameter)); // 지역코드
     
     parameter.put("GROUP_CD", "WORK_ITEM_CD");
-    mv.addObject("WORK_ITEM_CD_LIST", service.list("common", "getCode", parameter)); // 가공 가능 품목
+    mv.addObject("WORK_ITEM_CD_LIST", service.list("common", "getCodeLang", parameter)); // 가공 가능 품목
     
     mv.addObject("TOTAL_CNT", service.integer("getCnt01", parameter)); // 총건수
     
@@ -82,10 +84,12 @@ public class ProcessingController extends BaseController {
     ModelAndView mv = new ModelAndView("page/processing/processing_center_profile");
     
     parameter.put("GROUP_CD", "AREA_CD");
-    mv.addObject("AREA_CD_LIST", service.list("common", "getCode", parameter)); // 지역코드
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    mv.addObject("AREA_CD_LIST", service.list("common", "getCodeLang", parameter)); // 지역코드
     
     parameter.put("GROUP_CD", "WORK_ITEM_CD");
-    mv.addObject("WORK_ITEM_CD_LIST", service.list("common", "getCode", parameter)); // 가공 가능 품목
+    mv.addObject("WORK_ITEM_CD_LIST", service.list("common", "getCodeLang", parameter)); // 가공 가능 품목
     
     mv.addObject("DATA", service.map("getData01", parameter));
     

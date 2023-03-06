@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!-- <script type="text/javascript">
   	var locations = document.location.href;
   	locations += ""; 
@@ -14,7 +15,7 @@
 </script> -->
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+   alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -178,7 +179,7 @@
 		
 		var regCheck = /^[0-9]*$/g;
 		if(!regCheck.test(value)) {
-			alert('숫자만 입력 가능합니다.');
+			alert(getI8nMsg("alert.onlyNum"));//숫자만 입력 가능합니다.
 			input.value = '';
 		} else {
 			sumAmount = value;
@@ -196,7 +197,7 @@
 	
 	function previewImage() {
 		if(uploadImgArr.length >= MAX_UPLOAD_CNT) {
-			alert('최대 ' + MAX_UPLOAD_CNT + '장까지 업로드 가능합니다.');
+			alert(getI8nMsg("alert.param.uploadPhoto", null, MAX_UPLOAD_CNT)); //'최대 ' +  + '장까지 업로드 가능합니다.'
 			return;
 		}
 		
@@ -266,20 +267,20 @@
 		  var dateStr = year + '-' + month + '-' + day + ' ' + hh + ':' + mm + ':00';
 		  formData.append('DELIVERY_POS_DATE', JSON.stringify(dateStr));
 	  } else {
-	    alert('선택한 일자가 올바르지 않습니다.');
+		  alert(getI8nMsg("alert.selectDtnV"));//선택한 일자가 올바르지 않습니다
 	    return;
 	  }
 	  
 	  if([...document.querySelectorAll('input[name=ARTICLE_NM]')].some(s => isEmpty(s.value))) {
-		  alert('보철종류를 입력해주세요.');
+		  alert(getI8nMsg("alert.enterProsth"));//보철종류를 입력해주세요.
 		  return;
 	  }
 	  if([...document.querySelectorAll('input[name=UNIT_PRICE]')].some(s => isEmpty(s.value))) {
-		  alert('단가를 입력해주세요.');
+		  alert(getI8nMsg("alert.enterUnit"));//단가를 입력해주세요.
 		  return;
 	  }
 	  if([...document.querySelectorAll('input[name=AMOUNT]')].some(s => isEmpty(s.value))) {
-		  alert('갯수를 입력해주세요.');
+		  alert(getI8nMsg("alert.enterNum"));//갯수를 입력해주세요.
 		  return;
 	  }
 	  
@@ -298,7 +299,7 @@
 	  });
 		formData.append('dtlInfo', JSON.stringify(dtlInfo));
 	  
-		if(confirm('저장하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.save"))) { //저장하시겠습니까?
 		  $.ajax({
 			  url: '/' + API + '/equipment/save02',
 			  type: 'POST',
@@ -309,7 +310,7 @@
 			  processData: false,
 			  success: function(data) {
 				  if(data.result == 'Y') {
-					  alert('발송되었습니다.');
+					  alert(getI8nMsg("alert.sent"));//발송되었습니다.
 					  estimatorModal.hide();
 					  location.reload();
 				  } else if(data.result == 'N') {
@@ -373,7 +374,7 @@
 	    success: function(data) {
 	 	 		estimatorArr = data.estimatorList;
 		 	 	if(isEmpty(estimatorArr)) {
-		 	 		alert('받은 견적서가 존재하지 않습니다.');
+		 	 		alert(getI8nMsg("alert.quoteNotExi"));//받은 견적서가 존재하지 않습니다.
 		 	 		estimatorViewModal.hide();
 		 	 	} else {
 		 	 		//$('#nick_p_1').html(data.estimatorList[0].USER_NICK_NAME);
@@ -454,7 +455,7 @@
 	}
 	
 	function fnDeleteEstimator() {
-		if(confirm('삭제하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.delete"))) { //삭제하시겠습니까?
 		  $.ajax({
 			  url: '/' + API + '/equipment/deleteEstimator',
 			  type: 'POST',
@@ -463,7 +464,7 @@
 			  async: false,
 			  success: function(data) {
 		    	if(data.result == 'Y') {
-		    		alert('삭제되었습니다.');
+		    		alert(getI8nMsg("alert.delete"));//삭제되었습니다.
 		    		fnGetEstimators();
 		    	}
 		    }, complete: function() {
@@ -487,7 +488,7 @@
 		  success: function(data) {
 	    	if(data.result == 'Y') {
 	    		//location.href = '/' + API + '/contract/project_electronic_contract?ESTIMATOR_NO=' + estimatorNo;
-	    		alert('저장되었습니다.');
+	    		alert(getI8nMsg("alert.save"));//저장되었습니다.
 	    		estimatorViewModal.hide();
 	    	} else if(data.result == 'N') {
 	    		if(isNotEmpty(data.msg)) {
@@ -503,7 +504,7 @@
 	
 	function fnEquipmentDelete() {
    
-  	var isConfirm = window.confirm('삭제 하시겠습니까?');
+  	var isConfirm = window.confirm(getI8nMsg("alert.confirm.delete")); //삭제하시겠습니까?
 	  if(!isConfirm) return;
 	  
 	  $.ajax({
@@ -564,14 +565,14 @@
 
 <div class="equipment_estimator_header">
 	<p class="equipment_estimator_header_typo">
-		치과 / 치과기공 장비 견적소
+		<spring:message code="main.dentalequipm" text="치과 / 치과기공 장비 견적소" />
 	</p>
 </div>
     <div class="equipment_estimator_body">
         <div class="side_menu">
             <div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
                 <p class="side_menu_title_typo">
-                    전체보기
+                    <spring:message code="main.seeAll" text="전체보기" />
                 </p>
             </div>
             <c:forEach var="item" items="${EQ_CD_LIST}" varStatus="status">
@@ -594,21 +595,28 @@
                 </a>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo">치과/치과기공 장비 견적소</p>
+                    <p class="equipment_estimator_connection_location_typo"><spring:message code="main.dentalequipm" text="치과 / 치과기공 장비 견적소" /></p>
                 </div>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo_bold">${empty SEARCH_EQ_NM ? '전체보기' : SEARCH_EQ_NM}</p>
+                    <p class="equipment_estimator_connection_location_typo_bold">
+	                    <c:if test="${SEARCH_EQ_NM eq null }">
+	                    	<spring:message code="main.seeAll" text="전체보기" />
+	                    </c:if>
+	                    <c:if test="${SEARCH_EQ_NM ne null }">
+	                    	${SEARCH_EQ_NM}
+	                    </c:if>
+                    </p>
                 </div>
             </div> 
             <div class="equipment_estimator_view_info_button_container equipment_estimator_view_below_button">
             	<c:if test="${CNT04 eq 0}">
 					      <c:if test="${DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
 					        <a href="javascript:fnModify()" class="equipment_estimator_view_info_button_edit">
-	                	<p class="equipment_estimator_view_info_button_edit_typo">수정</p>
+	                	<p class="equipment_estimator_view_info_button_edit_typo"><spring:message code="edit" text="수정" /></p>
 	                </a>
 	                <a href="javascript:fnEquipmentDelete()" class="equipment_estimator_view_info_button_delete">
-	                	<p class="equipment_estimator_view_info_button_delete_typo">삭제</p>
+	                	<p class="equipment_estimator_view_info_button_delete_typo"><spring:message code="delete" text="삭제" /></p>
 	                </a>
 					      </c:if>
 					    </c:if>
@@ -622,17 +630,17 @@
                     <div class="equipment_estimator_view_info_etc_container">
                         <div class="equipment_estimator_view_info_etc">
                             <p class="equipment_estimator_view_info_etc_typo">
-                                게시판: ${DATA.EQ_CD_NM}
+                                <spring:message code="proj.board" text="게시판" />: ${DATA.EQ_CD_NM}
                             </p>
                         </div>
                         <div class="equipment_estimator_view_info_etc">
                             <p class="equipment_estimator_view_info_etc_typo">
-                                작성일 : ${DATA.CREATE_DATE}
+                                <spring:message code="" text="작성일" /> : ${DATA.CREATE_DATE}
                             </p>
                         </div>
                         <div class="equipment_estimator_view_info_etc">
                             <p class="equipment_estimator_view_info_etc_typo">
-                                조회수 : ${DATA.HITS_COUNT}
+                                <spring:message code="proj.views" text="조회수" /> : ${DATA.HITS_COUNT}
                             </p>
                         </div>
                     </div>
@@ -643,7 +651,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    브랜드
+                                    <spring:message code="equ.brand" text="브랜드" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -655,7 +663,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    장비이름
+                                    <spring:message code="" text="장비이름" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -669,7 +677,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    견적수
+                                    <spring:message code="proj.quot" text="견적수" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -681,7 +689,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    지역
+                                    <spring:message code="proj.region" text="지역" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -695,7 +703,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    작성일
+                                    <spring:message code="" text="작성일" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -707,7 +715,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    견적요청 만료시간
+                                    <spring:message code="equ.estimReq" text="견적요청 만료시간" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -757,19 +765,19 @@
                    	     <c:if test="${CNT04 eq 0}">
 			              <c:if test="${not empty sessionInfo.user and DATA.CREATE_ID ne sessionInfo.user.USER_ID}">
 			                <a href="#estimatorModal" class="equipment_estimator_view_info_button_right_submit" data-bs-toggle="modal">
-	                       		<p class="equipment_estimator_view_info_button_right_submit_typo">견적 보내기</p>
+	                       		<p class="equipment_estimator_view_info_button_right_submit_typo"><spring:message code="proj.sendQuot" text="견적 보내기" /></p>
 	                       	</a>
 			              </c:if>
 			              <c:if test="${DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
 			                <a href="javascript:fnViewEstimators();" class="project_request_button white">
-			                  <p class="project_request_button_typo white_typo">받은 견적서 보기</p>
+			                  <p class="project_request_button_typo white_typo"><spring:message code="proj.viewQuot" text="받은 견적서 보기" /></p>
 			                </a>
 			              </c:if>
 			            </c:if>
                    </c:when>
                    <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 and empty sessionInfo.user.COMP_FILE_CD}">
 					  <a href="javascript:confirmModal()" class="project_request_button blue">
-                        <p class="project_request_button_typo blue">견적서 보내기</p>
+                        <p class="project_request_button_typo blue"><spring:message code="proj.sendQuot" text="견적서 보내기" /></p>
                       </a>
                    </c:when>
                    <c:otherwise>
@@ -777,7 +785,7 @@
 			        </c:otherwise>
 			        </c:choose>
                       	<a href="/${api}/equipment/equipment_estimator_list?SEARCH_EQ_CD=${SEARCH_EQ_CD}" class="equipment_estimator_view_info_button_right_list">
-                        	<p class="equipment_estimator_view_info_button_right_list_typo">목록</p>
+                        	<p class="equipment_estimator_view_info_button_right_list_typo"><spring:message code="list" text="목록" /></p>
                         </a>
                     </div>
                 </div>
@@ -789,7 +797,7 @@
 										  <div class="send_estimator_container">
 									        <div class="dialog_header">
 									            <p class="dialog_header_typo">
-									            	장비 견적서 보내기
+									            	<spring:message code="" text="장비 견적서 보내기" />
 									            </p>
 									            <a href="javascript:void(0)" class="dialog_close_button_wrapper" data-bs-dismiss="modal" aria-label="Close">
 									            	<img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
@@ -798,7 +806,7 @@
 									        <div class="send_estimator_dialog_item">
 									            <div class="send_estimator_dialog_item_title wide">
 									                <p class="dialog_item_title_typo">
-									                    납품가능시간
+									                    <spring:message code="" text="납품가능시간" />
 									                </p>
 									                <p class="send_estimator_dialog_item_sub_title">
 									                    납품까지 소요시간이 아닌 예상 날짜와 시간을 입력하세요
@@ -1071,12 +1079,12 @@
 									        <div class="button_container">
 									            <a href="javascript:void(0)" class="button_white" data-bs-dismiss="modal">
 									            	<p class="button_white_typo">
-									              	취소
+									              	<spring:message code="cancel" text="취소" />
 									              </p>
 									            </a>
 									            <a href="javascript:fnSave();" class="button_blue">
 									                <p class="button_blue_typo">
-									                	보내기
+									                	<spring:message code="send" text="보내기" />
 									                </p>
 									            </a>
 									        </div>

@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -79,7 +80,7 @@
         reviewFileArray.push(obj);
         
       } else {
-        alert('이미지 파일이 아닙니다.');
+    	  alert(getI8nMsg("alert.notImage"));//이미지 파일이 아닙니다.
         reviewFileArray = new Array();
         $('#reviewImg').prop('src', defaultImgSrc);
       }
@@ -90,12 +91,12 @@
    
    var reviewContent = $('#REVIEW_CONTENT').val();
    if(isEmpty(reviewContent)) {
-     alert('후기를 입력하세요.');
+	   alert(getI8nMsg("alert.enterRev"));//후기를 입력하세요.
      $('#REVIEW_CONTENT').focus();
      return;
    }
    
-   var isConfirm = window.confirm('저장 하시겠습니까?');
+   var isConfirm = window.confirm(getI8nMsg("alert.confirm.save")); //저장하시겠습니까?
    if(!isConfirm) return;
    
    var wrNo = '<%= wrNo %>';
@@ -152,7 +153,7 @@
 	    <div class="modal-content" style="width: fit-content;">
 	      <div class="cad_container">
 	        <div class="dialog_header">
-	          <p class="dialog_header_typo">후기 작성</p>
+	          <p class="dialog_header_typo"><spring:message code="rev.writeRev" text="후기 작성" /></p>
 	          <a href="javascript:void(0);" data-bs-dismiss="modal" aria-label="Close">
 	            <img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
 	          </a>
@@ -161,7 +162,7 @@
 	          <div class="equipment_estimator_my_page_progress_writing_review_main_container">
 	            <p class="equipment_estimator_my_page_progress_writing_review_category"></p>
 	            <div class="equipment_estimator_my_page_progress_writing_review_satisfaction">
-	              <p class="equipment_estimator_my_page_progress_writing_review_satisfaction_typo">만족도</p>
+	              <p class="equipment_estimator_my_page_progress_writing_review_satisfaction_typo"><spring:message code="tesign.satisf" text="만족도" /></p>
 	              <div class="equipment_estimator_my_page_progress_writing_review_star_container">
 	                <button id="score_02" type="button" class="star active" onclick="fnScore(2);">
 	                  <span class="sr-only">2점</span>
@@ -182,7 +183,7 @@
 	              <p class="equipment_estimator_my_page_progress_writing_review_star_numb">10</p>
 	              <p class="equipment_estimator_my_page_progress_writing_review_star_unit">/10</p>
 	            </div>
-	            <textarea id="REVIEW_CONTENT" name="REVIEW_CONTENT" class="equipment_estimator_my_page_progress_writing_review_context" rows="10" maxlength="1300" placeholder="후기를 입력해주세요."></textarea>
+	            <textarea id="REVIEW_CONTENT" name="REVIEW_CONTENT" class="equipment_estimator_my_page_progress_writing_review_context" rows="10" maxlength="1300" placeholder="<spring:message code="rev.plz.leaveRev" text="후기를 입력해주세요." />"></textarea>
 	          </div>
 	      </div>
 	      <div class="qna_pic_attatchment_pic_upload_container">
@@ -191,17 +192,17 @@
 	        </div>
 	        <div style="display: flex;">
 	          <button class="qna_pic_attachment_pic_upload_button">
-	            <p class="qna_pic_attachment_pic_upload_button_typo">이미지 업로드</p>
+	            <p class="qna_pic_attachment_pic_upload_button_typo"><spring:message code="equ.upload" text="이미지 업로드" /></p>
 	          </button>
 	          <input type="file" id="IMG_FILE" name="IMG_FILE" onchange="fnPreviewImage();">
 	        </div>
 	      </div>
 	        <div class="qna_pic_attatchment_button_container">
 	          <a href="javascript:void(0);" class="qna_pic_attatchment_button_blue" onclick="fnSaveReview();">
-	            <p class="qna_pic_attatchment_button_blue_typo">저장</p>
+	            <p class="qna_pic_attatchment_button_blue_typo"><spring:message code="save" text="저장" /></p>
 	          </a>
 	          <a href="javascript:reviewWritingModal.hide();" class="qna_pic_attatchment_button_white">
-	            <p class="qna_pic_attatchment_button_white_typo">취소</p>
+	            <p class="qna_pic_attatchment_button_white_typo"><spring:message code="cancel" text="취소" /></p>
 	          </a>
 	        </div>
 	      </div>

@@ -11,7 +11,7 @@
     	 document.location.href = document.location.href.replace('http:', 'https:');
      }else if(locations.includes('https://www.')){
     	 document.location.href = document.location.href.replace('https://www.', 'https://');
-     }
+     } 
 </script> 
 <script>
 $(document).ready(function(){
@@ -99,8 +99,8 @@ function fnChangeLang(lang){
       </c:choose>
       <div class="header_left_menu_etc_container">
         <p class="header_left_menu_etc_typo" onclick="javascript:window('https://www.youtube.com/channel/UCKtPCLapHeXqhfYW_IyFQug')"><img src="/public/assets/images/youtube-icon.png" style="width:60px;"></p>
-  <!--          <p class="header_left_menu_etc_typo" onclick="javascript:fnChangeLang('kr');">kr</p>
-            <p class="header_left_menu_etc_typo" onclick="javascript:fnChangeLang('en');">en</p> -->
+            <p class="header_left_menu_etc_typo" onclick="javascript:fnChangeLang('ko');">kr</p>
+            <p class="header_left_menu_etc_typo" onclick="javascript:fnChangeLang('en');">en</p>
       </div>
     </div>
   </div>

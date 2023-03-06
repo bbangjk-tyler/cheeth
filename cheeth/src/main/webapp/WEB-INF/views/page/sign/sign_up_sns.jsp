@@ -96,11 +96,11 @@
 		  if(bankCd && accountNm && accountNo && !isValidAccount) {
 		    if(checkAccount(bankCd, accountNm, accountNo)) {
 		      isValidAccount = true;
-		      alert('계좌 실명 인증 되었습니다.');
+		      alert(getI8nMsg("alert.accountVerifSu"));//계좌 실명 인증 되었습니다.
 			    $('input[id=ACCOUNT_NM]').addClass('valid-account');
 		    } else {
 		      isValidNickname = false;
-		      alert('잘못된 계좌 정보입니다. 다시 인증해 주세요');
+		      alert(getI8nMsg("alert.accountInvalid"));//잘못된 계좌 정보입니다. 다시 인증해 주세요
 		      $('input[id=ACCOUNT_NM]').focus();
 			    $('input[id=ACCOUNT_NM]').addClass('invalid-account');
 		    }
@@ -207,11 +207,11 @@
 	  if(nickName && !isValidNickname) {
 	    if(checkNickName(nickName)) {
 	      isValidNickname = true;
-	      alert('사용 가능한 닉네임 입니다.');
+	      alert(getI8nMsg("alert.availUserNm"));//사용 가능한 닉네임 입니다.
 		    $('input[id=USER_NICK_NAME]').addClass('valid-nick');
 	    } else {
 	      isValidNickname = false;
-	      alert('중복된 닉네임 입니다.');
+	      alert(getI8nMsg("alert.nickDupli"));//중복된 닉네임 입니다.
 	      $('input[id=USER_NICK_NAME]').focus();
 		    $('input[id=USER_NICK_NAME]').addClass('invalid-nick');
 	    }
@@ -227,37 +227,37 @@
 		  }
 		  
 		  if(!userPhone){
-			  alert('휴대폰 번호가 입력되지 않았습니다.');
+			  alert(getI8nMsg("alert.nEnterPhone"));//휴대폰 번호가 입력되지 않았습니다.
 		  } else {
 			  
 			  if(flag == '0'){
 				  checkPhoneNo(userPhone, flag, '');
-				  alert('인증번호가 발송 되었습니다.')
+				  alert(getI8nMsg("alert.certNumSent"));//인증번호가 발송 되었습니다.
 			  } else {
 				  var authNo = $('input[id=AUTH_NO]').val();
 				  if(!authNo){
-					  alert('인증번호가 입력되지 않았습니다.');
+					  alert(getI8nMsg("alert.nEnterAuthNum"));//인증번호가 입력되지 않았습니다.
 					  return;
 				  }
 				  var result = checkPhoneNo(userPhone, flag, authNo);
 				  if('A' == result){
 					  isValidPhone = false;
-					  alert('유효기간이 초과 하였습니다.');
+					  alert(getI8nMsg("alert.dtExceed"));//유효기간이 초과 하였습니다.
 					  $('input[id=USER_PHONE]').addClass('invalid-phone');
 				  } else if('B' == result) {
 					  isValidPhone = false;
 					  $('input[id=USER_PHONE]').addClass('invalid-phone');
-					  alert('인증번호가 올바르지 않습니다.');
+					  alert(getI8nMsg("alert.certNumInval"));//인증번호가 올바르지 않습니다.
 				  } else if('Y' == result){
 					  isValidPhone = true;
 					  $('input[id=USER_PHONE]').removeClass('invalid-phone');
 					  $('input[id=USER_PHONE]').addClass('valid-phone');
 					  $('input[id=USER_PHONE]').prop('readonly',true);
-					  alert('인증되었습니다.');
+					  alert(getI8nMsg("alert.certified"));//인증되었습니다.
 				  } else{
 					  isValidPhone = false;
 					  $('input[id=USER_PHONE]').addClass('invalid-phone');
-					  alert('인증에 실패하였습니다.');
+					  alert(getI8nMsg("alert.authFail"));//인증에 실패하였습니다.
 				  }
 			  }
 		  }
@@ -266,54 +266,54 @@
 	var Choicebool = 0;
 	function fnSave() {
 		if(!$('input[id=USER_TYPE_CD]').val()) {
-			alert('회원 유형을 선택해주세요.');
+			alert(getI8nMsg("alert.selectMembT"));//회원 유형을 선택해주세요.
 			return;
 		}
 		
 		if(isEmpty(isValidNickname)) {
-			alert('닉네임 중복 확인이 되지 않았습니다.');
+			alert(getI8nMsg("alert.userNmChkFail"));//닉네임 중복 확인이 되지 않았습니다.
 			$('input[id=USER_NICK_NAME]').focus();
 			return;
 		} else {
 			if(!isValidNickname) {
-				alert('중복된 닉네임 입니다.');
+				alert(getI8nMsg("alert.nickDupli"));//중복된 닉네임 입니다.
 				$('input[id=USER_NICK_NAME]').focus();
 				return;
 			}
 		}
 		if(cheebool == 1){
 		if(isEmpty(isValidAccount)){
-    		alert('계좌 본인 인증이 되지 않았습니다.');
+			alert(getI8nMsg("alert.accountAuthFail"));//계좌 본인 인증이 되지 않았습니다.
 			$('input[id=ACCOUNT_NM]').focus();
 			return;
     	} else {
 			if(!isValidAccount) {
-				alert('계좌 본인 인증이 되지 않았습니다.');
+				alert(getI8nMsg("alert.accountAuthFail"));//계좌 본인 인증이 되지 않았습니다.
 				$('input[id=USER_NICK_NAME]').focus();
 				return;
 			}
 		}
 		}
 		if(isEmpty(isValidPhone)) {
-            alert('휴대폰 인증이 되지 않았습니다.');
+			alert(getI8nMsg("alert.phoneNotAuth"));//휴대폰 인증이 되지 않았습니다.
             $('input[id=USER_PHONE]').focus();
             return;
         } else {
             if(!isValidPhone) {
-                alert('휴대폰 인증이 되지 않았습니다.');
+            	alert(getI8nMsg("alert.phoneNotAuth"));//휴대폰 인증이 되지 않았습니다.
                 $('input[id=USER_PHONE]').focus();
                 return;
             }
         }
 		var type = 1;
         if(!checkSign($('input[id=USER_PHONE]').val(), type)) {
-    		alert('이미 가입된 휴대폰 번호 입니다.');
+        	alert(getI8nMsg("alert.alreadyMobNum"));//이미 가입된 휴대폰 번호 입니다.
     	  $('input[id=USER_PHONE]').focus();
     	  return;
     	}
 		
 	  if(validate()) {
-	    if(confirm('가입하시겠습니까?')) {
+	    if(confirm(getI8nMsg("alert.confirm.signUp"))) {//'가입하시겠습니까?'
 	  	  /* var form = document.sign_up_form;
 	      form.action = '/' + API + '/sign/sign_up';
 	      form.submit(); */
@@ -335,7 +335,7 @@
 				  processData: false,
 				  success: function(data) {
 					  if(data.result == 'Y') {
-						  alert('가입이 완료되었습니다.');
+						  alert(getI8nMsg("alert.subsComp"));//가입이 완료되었습니다.
 						  location.href = '/' + API + '/login/view';
 					  }
 				  }, complete: function() {
@@ -369,7 +369,7 @@
 				  processData: false,
 				  success: function(data) {
 					  if(data.result == 'Y') {
-						  alert('가입이 완료되었습니다.');
+						  alert(getI8nMsg("alert.subsComp"));//가입이 완료되었습니다.
 						  location.href = '/' + API + '/login/view';
 					  }
 				  }, complete: function() {
@@ -402,13 +402,13 @@
 		        regExp = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
 		      }
 		      if(regExp && !regCheck(regExp, value)) {
-		        alert('올바른 ' + field + ' 을(를) 입력해주세요.');
+		    	alert(getI8nMsg("alert.param.plzValid", null, field)); //올바른 ' + field + ' 을(를) 입력해주세요.
 		        $elm.focus();
 		        result = false;
 		        return false;
 		      }
 		    } else {
-		      alert(field + ' 을(를) 입력해주세요.');
+		    	alert(getI8nMsg("alert.param.plzEnter", null, field)); //field + ' 을(를) 입력해주세요.
 		      $elm.focus();
 		      result = false;
 		      return false;

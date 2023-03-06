@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -232,7 +233,7 @@
   
   function fnDeleteCadEstimator() {
 	  const projectNo = currEstimator['PROJECT_NO'];
-	  if(confirm('삭제하시겠습니까?')) {
+	  if(confirm(getI8nMsg("alert.confirm.delete"))) { //삭제하시겠습니까?
 		  $.ajax({
 			  url: '/' + API + '/project/deleteEstimator',
 			  type: 'POST',
@@ -241,7 +242,7 @@
 			  async: false,
 			  success: function(data) {
 		    	if(data.result == 'Y') {
-		    		alert('삭제되었습니다.');
+		    		alert(getI8nMsg("alert.delete"));//삭제되었습니다.
 		    		location.reload();
 		    	}
 		    }, complete: function() {
@@ -302,7 +303,7 @@
 		  <div class="cad_container">
         <div class="dialog_header">
          	<p class="dialog_header_typo">
-          	CAD 견적서 보기
+          	<spring:message code="equ.viewCAD" text="CAD 견적서 보기" />
           </p>
           <a href="javascript:void(0)" data-bs-dismiss="modal" aria-label="Close">
           	<img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
@@ -323,7 +324,7 @@
         <div class="cad_estimator_dialog_item_column">
 					<div class="dialog_item_title cad_title">
 						<p class="dialog_item_title_typo">
-							금액
+							<spring:message code="amount" text="금액" />
 						</p>
 					</div>
           <div class="cad_estimaotor_dialog_item_context_container_price_area">
@@ -339,13 +340,13 @@
 							<div class="prosthetics_type_data_type_container">
 								<div class="prosthetics_type_data_type">
 									<p class="prosthetics_type_data_type_typo">
-										보철종류
+										<spring:message code="req.prosthT" text="보철종류" />
 									</p>
 								</div>
 								<div class="prosthetics_type_data_type_divider"></div>
 								<div class="prosthetics_type_data_type">
 									<p class="prosthetics_type_data_type_typo">
-										개수
+										<spring:message code="req.quant" text="개수" />
 									</p>
 								</div>
 							</div>
@@ -358,7 +359,7 @@
 						<div class="cad_estimator_dialog_item_context_wrapper"></div>
 						<div class="cad_estimator_total_price_wrapper">
 							<div class="dialog_item_context_typo_container total_price_area">
-								<p class="dialog_item_context_typo total_price">총 금액</p>
+								<p class="dialog_item_context_typo total_price"><spring:message code="equ.totA" text="총 금액" /></p>
 								<p id="totalPriceNum" class="dialog_item_context_typo price_num">
 									2,500,000
 								</p>
@@ -373,7 +374,7 @@
 				<div class="cad_estimator_dialog_item">
 					<div class="dialog_item_title cad_title">
 						<p class="dialog_item_title_typo">
-							구동가능한 CAD S/W
+							<spring:message code="" text="구동가능한 CAD S/W" />
 						</p>
 					</div>
 					<div class="dialog_item_context_container without_padding">
@@ -386,7 +387,7 @@
 				<div class="cad_estimator_dialog_item">
 					<div class="cad_estimator_dialog_item_title cad_title">
 						<p class="dialog_item_title_typo">
-							사진 업로드
+							<spring:message code="equ.upload" text="사진 업로드" />
 						</p>
 					</div>
 					<div class="cad_estimator_pic_upload_wrapper">
@@ -416,7 +417,7 @@
 				<div class="main_container_divider without_margin"></div>
 				<div class="cad_estimator_dialog_item">
 					<div class="dialog_item_title cad_title">
-						<p class="dialog_item_title_typo">치자이너 정보</p>
+						<p class="dialog_item_title_typo"><spring:message code="equ.tesignInfo" text="치자이너 정보" /></p>
 					</div>
 					<div class="cad_estimator_dialog_item_context">
 						<div class="cad_estimator_profile_pic_upload"></div>
@@ -430,7 +431,7 @@
 							<div class="cad_estimator_profile_info_container">
 								<div class="cad_estimator_profile_info">
 									<p class="cad_estimator_profile_info_typo">
-									    거래 성공률
+									    <spring:message code="tesign.successR" text="거래성공률" />
 									</p>
 									<p class="cad_estimator_profile_info_typo">
 									    100 %
@@ -438,7 +439,7 @@
 								</div>
 								<div class="cad_estimator_profile_info">
 									<p class="cad_estimator_profile_info_typo">
-									    만족도
+									    <spring:message code="tesign.satisf" text="만족도" />
 									</p>
 									<p class="cad_estimator_profile_info_typo">
 									    82 %
@@ -446,7 +447,7 @@
 								</div>
 								<div class="cad_estimator_profile_info without_margin">
 									<p class="cad_estimator_profile_info_typo">
-									    현재까지 거래 총 금액
+									    <spring:message code="tesign.totalA" text="현재까지 거래 총 금액" />
 									</p>
 									<p class="cad_estimator_profile_info_typo">
 									    1234,567 원

@@ -33,7 +33,9 @@ public class ContractController extends BaseController {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
     
     ModelAndView mv = new ModelAndView("page/contract/project_electronic_contract");
-    
+
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     Map<?, ?> data = service.getData01(parameter);
     
     mv.addObject("PROJECT_CD_LIST", data.get("PROJECT_CD_LIST")); // 프로젝트 코드

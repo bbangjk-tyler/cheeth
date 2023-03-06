@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -54,9 +55,13 @@
 		previewBodyEl.find('.rework_request_preview_teeth_model_title_typo').text(pantNm);
 		
 		var html = '';
+		var lang = localStorage.getItem('lang');
+		var req= getI8nMsg("proj.request");
+		
+		
 		cardArr.map((v, i) => {
 			html += '<div class="p_card_chip tribute_request_card_chip' + ((i == cardArr.length - 1) ? '' : '_not') + '_selected">';
-	    html += '  <p class="p_card_title tribute_request_card_chip' + ((i == cardArr.length - 1) ? '' : '_not') + '_selected_typo" onclick="setPreviewCard(this);">의뢰서&nbsp;' + (i + 1) + '</p>';
+	    html += '  <p class="p_card_title tribute_request_card_chip' + ((i == cardArr.length - 1) ? '' : '_not') + '_selected_typo" onclick="setPreviewCard(this);">'+req+'&nbsp;' + (i + 1) + '</p>';
 	    html += '</div>';
 		});
 		previewBodyEl.find('.tribute_request_card_chip_numb').before(html);
@@ -245,10 +250,10 @@
 <div class="modal fade" id="requestModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="width: fit-content;">
-		<button id="Rewritebtn" style="display:none" onclick="fnRewriteLink()">수정하기</button>
+		<button id="Rewritebtn" style="display:none" onclick="fnRewriteLink()"><spring:message code="edit" text="수정하기" /></button>
 			<div class="rework_request_preview_dialog_container">
 				<div class="rework_request_preview_dialog_header">
-					<p class="rework_request_preview_dialog_header_typo">의뢰서 미리보기</p>
+					<p class="rework_request_preview_dialog_header_typo"><spring:message code="dialog.req.previReq" text="의뢰서 미리보기" /></p>
 					<a href="javascript:void(0);" data-bs-dismiss="modal">
 						<img class="rework_request_preview_dialog_header_close_button" src="/public/assets/images/dialog_close_button.svg"/>
 					</a>
@@ -439,15 +444,15 @@
 								<div class="tribute_request_preview_info_container">
 									<div id="p_supp_container" class="tribute_request_preview_info">
 									  <div class="tribute_request_preview_info_title">
-									    <p class="tribute_request_preview_info_title_typo">보철종류</p>
+									    <p class="tribute_request_preview_info_title_typo"><spring:message code="req.prosthT" text="보철 종류" /></p>
 									  </div> 
 									  <div class="tribute_request_preview_info_context">
-									    <p class="tribute_request_preview_info_context_typo">의치</p>
+									    <p class="tribute_request_preview_info_context_typo"><spring:message code="dialog.req.denture" text="의치" /></p>
 									  </div>    
 									</div>
 									<div class="tribute_request_preview_info">
 									  <div class="tribute_request_preview_info_title">
-									  	<p class="tribute_request_preview_info_title_typo">선택된 치식</p>
+									  	<p class="tribute_request_preview_info_title_typo"><spring:message code="dialog.req.seleT" text="선택된 치식" /></p>
 									  </div> 
 									  <div class="tribute_request_preview_info_context">
 									    <div class="selected_dental_preview_container">
@@ -456,7 +461,7 @@
 									</div>
 									<div id="p_pro_meth_container" class="tribute_request_preview_info">
 									  <div class="tribute_request_preview_info_title">
-									  	<p class="tribute_request_preview_info_title_typo">가공방법</p>
+									  	<p class="tribute_request_preview_info_title_typo"><spring:message code="" text="가공방법" /></p>
 									  </div> 
 									  <div class="tribute_request_preview_info_context">
 									    <p class="tribute_request_preview_info_context_typo"></p>
@@ -475,7 +480,7 @@
 								  <div class="tribute_request_preview_info_more_typo"></div>
 								</div>
 								<img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
-								<textarea class="tribute_request_preview_info_more_detail" placeholder="상세내용" readonly></textarea>
+								<textarea class="tribute_request_preview_info_more_detail" placeholder="<spring:message code="header.about" text="상세내용" />" readonly></textarea>
               </div>
             </div>
 					</div>

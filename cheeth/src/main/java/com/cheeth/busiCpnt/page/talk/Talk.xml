@@ -86,7 +86,7 @@
               WHERE USER_ID = A.RECEIVE_ID
            ) AS RECEIVE_NM
          , ( CASE WHEN RECEIVE_DATE IS NULL
-                 THEN '읽지않음'
+                 THEN IF(#{LANG}='en','Unread','읽지않음')
                  ELSE DATE_FORMAT(A.RECEIVE_DATE, '%y-%m-%d %H:%i')
                   END ) AS RECEIVE_DATE
          , A.RECEIVE_DEL_YN
@@ -131,7 +131,7 @@
               WHERE USER_ID = A.RECEIVE_ID
            ) AS RECEIVE_NM
          , ( CASE WHEN RECEIVE_DATE IS NULL
-                 THEN '읽지않음'
+                 THEN IF(#{LANG}='en','Unread','읽지않음')
                  ELSE DATE_FORMAT(A.RECEIVE_DATE, '%y-%m-%d %H:%i')
                   END ) AS RECEIVE_DATE
          , A.RECEIVE_DEL_YN
@@ -176,7 +176,7 @@
               WHERE USER_ID = A.RECEIVE_ID
            ) AS RECEIVE_NM
          , ( CASE WHEN RECEIVE_DATE IS NULL
-                 THEN '읽지않음'
+                 THEN IF(#{LANG}='en','Unread','읽지않음')
                  ELSE DATE_FORMAT(A.RECEIVE_DATE, '%y-%m-%d %H:%i')
                   END ) AS RECEIVE_DATE
          , A.RECEIVE_DEL_YN
@@ -210,7 +210,7 @@
               WHERE USER_ID = A.RECEIVE_ID
            ) AS RECEIVE_NM
          , ( CASE WHEN RECEIVE_DATE IS NULL
-                 THEN '읽지않음'
+                 THEN IF(#{LANG}='en','Unread','읽지않음')
                  ELSE DATE_FORMAT(A.RECEIVE_DATE, '%y-%m-%d %H:%i')
                   END ) AS RECEIVE_DATE
          , A.RECEIVE_DEL_YN

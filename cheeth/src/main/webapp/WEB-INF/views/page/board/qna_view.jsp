@@ -4,7 +4,7 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -65,12 +65,12 @@
 	function fnSave() {
 		
 		if(isEmpty($('#BOARD_TITLE').val().trim())) {
-			alert('제목을 입력해주세요.');
+			alert(getI8nMsg("alert.enterTitle"));//제목을 입력해주세요.
 			return;
 		}
 
 		if(isEmpty($('#BOARD_CONTENT').val().trim())) {
-			alert('내용을 입력해주세요.');
+			alert(getI8nMsg("alert.enterContent"));//내용을 입력해주세요.
 			return;
 		}
 	 	
@@ -95,7 +95,7 @@
 		  processData: false,
 	    success: function(data) {
 			  if(data.result == 'Y') {
-				  alert('저장되었습니다.');
+				  alert(getI8nMsg("alert.save"));//저장되었습니다.
 				  writingModal.hide();
 				  closeWritingModal();
 				  location.href = '/' + API + '/board/list?BOARD_TYPE=${BOARD.BOARD_TYPE}';
@@ -108,7 +108,7 @@
 	
 	function previewImage() {
 		if(uploadImgArr.length >= MAX_UPLOAD_CNT) {
-			alert('최대 ' + MAX_UPLOAD_CNT + '장까지 업로드 가능합니다.');
+			alert(getI8nMsg("alert.param.uploadPhoto", null, MAX_UPLOAD_CNT)); //'최대 ' +  + '장까지 업로드 가능합니다.'
 			return;
 		}
 		

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!-- <script type="text/javascript">
   	var locations = document.location.href;
   	locations += ""; 
@@ -29,13 +30,13 @@ $(document).ready(function(){
 </script>
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+   alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
 <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
 <script>
-   alert('접근 권한이 없습니다.');
+	alert(getI8nMsg("alert.nhaveAccess"));//접근 권한이 없습니다.
    history.back();
 </script>
 </c:if>
@@ -49,7 +50,7 @@ $(document).ready(function(){
 	  </c:when>
 	  <c:otherwise>
 	  <script>
-	  	alert("작성자 혹은 지정 견적 요청자만 열람할 수 있습니다.");
+	 	alert(getI8nMsg("alert.onlyCanView"));//작성자 혹은 지정 견적 요청자만 열람할 수 있습니다.
 	  	history.back();
 	  </script>
 	  </c:otherwise>
@@ -310,7 +311,7 @@ $(document).ready(function(){
 	  
 	  var regCheck = /^[0-9]*$/g;
 	  if(!regCheck.test(price)) {
-		  alert('숫자만 입력 가능합니다.');
+		  alert(getI8nMsg("alert.onlyNum"));//숫자만 입력 가능합니다.
 		  priceInput.value = '';
 	  } else {
 		  sumAmount = price * amount;
@@ -349,7 +350,7 @@ $(document).ready(function(){
   
   function previewImage() {
 		if(uploadImgArr.length >= MAX_UPLOAD_CNT) {
-			alert('최대 ' + MAX_UPLOAD_CNT + '장까지 업로드 가능합니다.');
+			alert(getI8nMsg("alert.param.uploadPhoto", null, MAX_UPLOAD_CNT)); //'최대 ' +  + '장까지 업로드 가능합니다.'
 			return;
 		}
 		
@@ -371,7 +372,7 @@ $(document).ready(function(){
 					target.append('<img class="electronic_estimator_pic_attatchment_remove_button" src="/public/assets/images/dialog_close_button.svg" onclick="removeImage(this);"/>');
 				};
 			} else {
-				alert('이미지 파일만 업로드 가능 합니다.');
+				alert(getI8nMsg("alert.onlyImgFile"));//이미지 파일만 업로드 가능 합니다.
 			}
 		}
 	}
@@ -421,12 +422,12 @@ $(document).ready(function(){
 		  var dateStr = year + '-' + month + '-' + day + ' ' + hh + ':' + mm + ':00';
 		  formData.append('DELIVERY_POS_DATE', JSON.stringify(dateStr));
 	  } else {
-	    alert('선택한 일자가 올바르지 않습니다.');
+		  alert(getI8nMsg("alert.selectDtnV"));//선택한 일자가 올바르지 않습니다.
 	    return;
 	  }
 	  
 	  if([...document.querySelectorAll('input[id^=UNIT_PRICE]')].some(s => isEmpty(s.value))) {
-		  alert('단가를 입력해주세요.');
+		  alert(getI8nMsg("alert.enterUnit"));//단가를 입력해주세요.
 		  return;
 	  }
 	  
@@ -438,8 +439,8 @@ $(document).ready(function(){
 	  });
 	  
 	  if(!ing) {
-		  alert('단가 및 합계를 확인해 주세요.');
-      return;
+		 alert(getI8nMsg("alert.chkPricenSum"));//단가 및 합계를 확인해 주세요.
+     	 return;
 	  }
 	  
 	  var cadswCdArr = new Array();
@@ -447,7 +448,7 @@ $(document).ready(function(){
 		  if(isNotEmpty($(this).val())) cadswCdArr.push($(this).val());
 	  });
 	  if(new Set(cadswCdArr).size !== cadswCdArr.length) {
-		  alert('구동 가능한 CAD S/W가 중복되었습니다.');
+		  alert(getI8nMsg("alert.dupCADSW"));//구동 가능한 CAD S/W가 중복되었습니다.
 		  return;
 	  }
 	  
@@ -464,7 +465,7 @@ $(document).ready(function(){
 	  });
 		formData.append('suppInfo', JSON.stringify(suppInfo));
 	  
-		if(confirm('저장하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.save"))) { //저장하시겠습니까?
 		  $.ajax({
 			  url: '/' + API + '/project/save02',
 			  type: 'POST',
@@ -475,7 +476,7 @@ $(document).ready(function(){
 			  processData: false,
 			  success: function(data) {
 				  if(data.result == 'Y') {
-					  alert('발송되었습니다.');
+					  alert(getI8nMsg("alert.sent"));//발송되었습니다
 					  estimatorModal.hide();
 				  } else if(data.result == 'N') {
 						if(isNotEmpty(data.msg)) {
@@ -609,7 +610,7 @@ $(document).ready(function(){
 			}).join(', ');
 			
 			reqHtml += '<div class="cad_estimator_dialog_request">';
-			reqHtml += '  <p class="cad_estimator_dialog_request_title">의뢰서' + (index + 1) + '</p>';
+			reqHtml += '  <p class="cad_estimator_dialog_request_title"><spring:message code="proj.request" text="의뢰서" />' + (index + 1) + '</p>';
 			reqHtml += '	 <p class="cad_estimator_dialog_request_name">' + req.PANT_NM + '</p>';
 			reqHtml += '	 <p class="cad_estimator_dialog_request_context">' + suppStr + '</p>';
 			reqHtml += '</div>';
@@ -647,7 +648,7 @@ $(document).ready(function(){
 		  success: function(data) {
 				estimatorArr = data.estimatorList;
 				if(isEmpty(estimatorArr)) {
-					alert('받은 견적서가 존재하지 않습니다.');
+					alert(getI8nMsg("alert.quoteNotExi"));//받은 견적서가 존재하지 않습니다.
 					estimatorViewModal.hide();
 				} else {
 					fnSetEstimator(0);
@@ -764,7 +765,7 @@ $(document).ready(function(){
 		  async: false,
 		  success: function(data) {
 	    	if(data.result == 'Y') {
-	    		alert('삭제되었습니다.');
+	    		alert(getI8nMsg("alert.delete"));//삭제되었습니다.
 	    		fnGetEstimators();
 	    	}
 	    }, complete: function() {
@@ -819,7 +820,7 @@ $(document).ready(function(){
 	}
   function fnProjectDelete() {
    
-	var isConfirm = window.confirm('삭제 하시겠습니까?');
+	var isConfirm = window.confirm(getI8nMsg("alert.confirm.delete")); //삭제하시겠습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -865,7 +866,7 @@ $(document).ready(function(){
       }).join(', ');
       
       reqHtml += '<div class="project_request_request">';
-      reqHtml += '  <p class="project_request_request_title">의뢰서' + (index + 1) + '</p>';
+      reqHtml += '  <p class="project_request_request_title"><spring:message code="proj.request" text="의뢰서" />' + (index + 1) + '</p>';
       reqHtml += '  <p class="project_request_request_context">' + suppStr + '</p>';
       reqHtml += '</div>';
     });
@@ -957,7 +958,7 @@ $(document).ready(function(){
 </script>
 
 <div class="project_header">
-  <p class="project_header_typo">프로젝트 보기</p>
+  <p class="project_header_typo"><spring:message code="header.project" text="프로젝트 보기" /></p>
 </div>
 
 <jsp:include page="/WEB-INF/views/dialog/profile_dialog.jsp" flush="true" />
@@ -966,7 +967,7 @@ $(document).ready(function(){
 <div class="project_body">
   <div class="side_menu">
     <div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
-      <p class="side_menu_title_typo">전체보기</p>
+      <p class="side_menu_title_typo"><spring:message code="main.seeAll" text="전체보기" /></p>
     </div>
     <c:forEach var="item" items="${PROJECT_CD_LIST}" varStatus="status">
       <a href="/${api}/project/project_view_all?SEARCH_PROJECT_CD=${item.CODE_CD}" class="side_menu_list">
@@ -991,15 +992,15 @@ $(document).ready(function(){
 			</a>
 			<img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 			<div class="project_connection_location">
-			  <p class="project_connection_location_typo">프로젝트 보기</p>
+			  <p class="project_connection_location_typo"><spring:message code="header.project" text="프로젝트 보기" /></p>
 			</div>
 			<img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 			<div class="project_connection_location">
-			  <p class="project_connection_location_typo">프로젝트 전체보기</p>
+			  <p class="project_connection_location_typo"><spring:message code="proj.allProj" text="프로젝트 전체보기" /></p>
 			</div>
 			<img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 			<div class="project_connection_location">
-			  <p class="project_connection_location_typo_bold">의뢰서</p>
+			  <p class="project_connection_location_typo_bold"><spring:message code="proj.request" text="의뢰서" /></p>
 			</div>
 		</div>
 		<div class="connection_location_divider"></div>
@@ -1015,27 +1016,27 @@ $(document).ready(function(){
 				    <div class="project_request_profile_button_container">
 				      <c:if test="${sessionInfo.user.USER_ID ne DATA.CREATE_ID}">
 					      <button type="button" class="project_request_profile_button" onclick="javascript:fnOpenTalk('${DATA.CREATE_ID}', '${DATA.CREATE_NICK_NAME}');">
-					        <p class="project_request_profile_button_typo">문의하기</p>
+					        <p class="project_request_profile_button_typo"><spring:message code="proj.inquiry" text="문의하기" /></p>
 					      </button>
 				      </c:if>
 				      <button type="button" class="project_request_profile_button" onclick="javascript:profileModal.show();">
-				        <p class="project_request_profile_button_typo">프로필보기</p>
+				        <p class="project_request_profile_button_typo"><spring:message code="proj.viewP" text="프로필보기" /></p>
 				      </button>
 				    </div>
 				    <div class="project_request_reading_info_etc_container">
 				      <div class="project_request_reading_info_etc">
 				        <p class="project_request_reading_info_etc_typo">
-				          게시판: ${DATA.PROJECT_NM}
+				          <spring:message code="proj.board" text="게시판" />: ${DATA.PROJECT_NM}
 				        </p>
 				      </div>
 				      <div class="project_request_reading_info_etc">
 				        <p class="project_request_reading_info_etc_typo">
-				          작성일 : ${DATA.CREATE_DATE}
+				          <spring:message code="proj.reqDate" text="작성일" /> : ${DATA.CREATE_DATE}
 				        </p>
 				      </div>
 				      <div class="project_request_reading_info_etc">
 				        <p class="project_request_reading_info_etc_typo">
-				          조회수 : ${DATA.HITS_COUNT}
+				          <spring:message code="proj.views" text="조회수" /> : ${DATA.HITS_COUNT}
 				        </p>
 				      </div>
 				    </div>
@@ -1048,7 +1049,7 @@ $(document).ready(function(){
             <div class="project_request_reading_info_item">
               <div class="project_request_reading_info_item_title">
                 <p class="project_request_reading_info_item_title_typo">
-                  견적요청 만료시간
+                  <spring:message code="proj.estReqExpiT" text="견적요청 만료시간" />
                 </p>
               </div>
               <div class="project_request_reading_info_item_context">
@@ -1060,7 +1061,7 @@ $(document).ready(function(){
             <div class="project_request_reading_info_item">
               <div class="project_request_reading_info_item_title">
                 <p class="project_request_reading_info_item_title_typo">
-                  납품 마감일
+                  <spring:message code="proj.delivDl" text="납품 마감일" />
                 </p>
               </div>
               <div class="project_request_reading_info_item_context">
@@ -1074,19 +1075,19 @@ $(document).ready(function(){
 						<div class="project_request_reading_info_item">
 							<div class="project_request_reading_info_item_title">
 							  <p class="project_request_reading_info_item_title_typo">
-							    보철 종류
+							    <spring:message code="proj.typeProsth" text="보철 종류" />
 							  </p>
 							</div>
 							<a href="#supplementViewModal" class="project_request_reading_info_item_context" data-bs-toggle="modal" onclick="fnSupplementModal();">
 							  <button type="button" class="project_request_view_prosthetics_type_button">
-							    <p class="project_request_view_prosthetics_type_button_typo">보철종류 보기</p>
+							    <p class="project_request_view_prosthetics_type_button_typo"><spring:message code="proj.viewProsth" text="보철종류 보기" /></p>
 							  </button>
 							</a>
 						</div>
 						<div class="project_request_reading_info_item">
 						  <div class="project_request_reading_info_item_title">
 						    <p class="project_request_reading_info_item_title_typo">
-						      선호 CAD S/W
+						      <spring:message code="proj.preferCADSW" text="선호 CAD S/W" />
 						    </p>
 						  </div>
 						  <div class="project_request_reading_info_item_context">
@@ -1122,26 +1123,26 @@ $(document).ready(function(){
                   <c:when test="${DATA.PUBLIC_CD eq 'U001'}"> <!-- 지정견적 -->
                     <c:if test="${fn:contains(DATA.APPOINT_USER, sessionInfo.user.USER_ID)}">
                       <a href="#estimatorModal" class="project_request_button blue" data-bs-toggle="modal" onclick="fnWriteEstimator();">
-                        <p class="project_request_button_typo blue">견적서 보내기</p>
+                        <p class="project_request_button_typo blue"><spring:message code="proj.sendQuot" text="견적서 보내기" /></p>
                       </a>
                     </c:if>
                   </c:when>
                   <c:when test="${DATA.PUBLIC_CD eq 'U002'}"> <!-- 공개견적 -->
                     <a href="#estimatorModal" class="project_request_button blue" data-bs-toggle="modal" onclick="fnWriteEstimator();">
-                      <p class="project_request_button_typo blue">견적서 보내기</p>
+                      <p class="project_request_button_typo blue"><spring:message code="proj.sendQuot" text="견적서 보내기" /></p>
                     </a>
                   </c:when>
                 </c:choose>
               </c:if>
               <c:if test="${DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
                 <a href="javascript:fnViewEstimators();" class="project_request_button white">
-                  <p class="project_request_button_typo white_typo">받은 견적서 보기</p>
+                  <p class="project_request_button_typo white_typo"><spring:message code="proj.viewQuot" text="받은 견적서 보기" /></p>
                 </a>
                 <a href="javascript:fnModify();" class="project_request_button white">
-                  <p class="project_request_button_typo white_typo">수정</p>
+                  <p class="project_request_button_typo white_typo"><spring:message code="edit" text="수정" /></p>
                 </a>
                 <a href="javascript:fnProjectDelete();" class="project_request_button white">
-                  <p class="project_request_button_typo white_typo">삭제</p>
+                  <p class="project_request_button_typo white_typo"><spring:message code="delete" text="삭제" /></p>
                 </a>
               </c:if>
             </c:if>
@@ -1149,7 +1150,7 @@ $(document).ready(function(){
           
 					<div class="project_request_button_container right">
 					  <a href="/${api}/project/project_view_all" class="project_request_button white without_margin_right">
-					    <p class="project_request_button_typo white_typo">목록</p>
+					    <p class="project_request_button_typo white_typo"><spring:message code="list" text="목록" /></p>
 					  </a>
 					</div>
 				</div>
@@ -1788,7 +1789,7 @@ $(document).ready(function(){
     <div class="modal-content" style="width: fit-content;">
       <div class="project_request_view_container">
         <div class="project_request_view_header">
-          <p class="project_request_view_header_typo">보철종류</p>
+          <p class="project_request_view_header_typo"><spring:message code="req.prosthT" text="보철종류" /></p>
           <a href="javascript:void(0);" data-bs-dismiss="modal" aria-label="Close">
             <img class="project_request_view_close_button" src="/public/assets/images/dialog_close_button.svg"/>
           </a>
@@ -1813,11 +1814,11 @@ $(document).ready(function(){
           <div class="prosthetics_type_container">
             <div class="prosthetics_type_data_type_container">
               <div class="prosthetics_type_data_type">
-                <p class="prosthetics_type_data_type_typo">보철종류</p>
+                <p class="prosthetics_type_data_type_typo"><spring:message code="req.prosthT" text="보철종류" /></p>
               </div>
               <div class="prosthetics_type_data_type_divider"></div>
               <div class="prosthetics_type_data_type">
-                <p class="prosthetics_type_data_type_typo">개수</p>
+                <p class="prosthetics_type_data_type_typo"><spring:message code="req.quant" text="개수" /></p>
               </div>
             </div>
             <div id="supplementListDiv"></div>

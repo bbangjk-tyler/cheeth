@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -64,18 +65,18 @@
   function fnSend() {
     
     if(isEmpty(sendUserList)) {
-     alert('받는사람이 존재하지 않습니다.');
-     return;
+    	alert(getI8nMsg("alert.nExistRecip"));//받는사람이 존재하지 않습니다.
+     	return;
    }
    
    var content = $('#CONTENT').val();
    if(isEmpty(content)) {
-     alert('내용을 입력하세요.');
+	 alert(getI8nMsg("alert.enterContent"));//내용을 입력해주세요.
      $('#CONTENT').focus();
      return;
    }
    
-   var isConfirm = window.confirm('쪽지를 보내시겠습니까?');
+   var isConfirm = window.confirm(getI8nMsg("alert.confirm.sendNote"));//쪽지를 보내시겠습니까?
    if(!isConfirm) return;
    
    $('#RECEIVE_ID_LIST').val(JSON.stringify(sendUserList));
@@ -135,7 +136,7 @@
     <input type="hidden" id="RECEIVE_ID_LIST" name="RECEIVE_ID_LIST">
     <div class="send_note_container">
       <div class="send_note_header">
-        <p class="send_note_header_typo">쪽지 보내기</p>
+        <p class="send_note_header_typo"><spring:message code="talk.sendMsg" text="쪽지 보내기" /></p>
         <a href="javascript:fnDialogClose();">
           <img class="send_note_dialog_close_button" src="/public/assets/images/send_note_dialog_close_button.svg"/>
         </a>
@@ -144,16 +145,16 @@
         <div class="send_note_button_container">
           <a href="javascript:void(0);" class="send_note_send_button" onclick="fnSend();">
             <img class="send_note_send_button_icon" src="/public/assets/images/note_box_sending_icon.svg"/>
-            <p class="send_note_send_button_typo">보내기</p>
+            <p class="send_note_send_button_typo"><spring:message code="talk.send" text="보내기" /></p>
           </a>
           <a href="javascript:void(0);" class="send_note_attatch_button" onclick="fnAddFile();">
-            <p class="send_note_attatch_button_typo">파일첨부</p>
+            <p class="send_note_attatch_button_typo"><spring:message code="talk.attachF" text="파일첨부" /></p>
           </a>
         </div>
         <div class="send_note_attatchment_container hidden"></div>
         <div class="main_container_divider without_margin"></div>
         <div class="send_note_receiver">
-          <p class="send_note_receiver_typo">받는사람</p>
+          <p class="send_note_receiver_typo"><spring:message code="talk.receiver" text="받는사람" /></p>
           <div class="send_note_receiver_blank">
             <p class="send_note_receiver_blank_typo"></p>
           </div>

@@ -3,6 +3,8 @@ package com.cheeth.busiCpnt.page.contract;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,8 @@ public class ContractService extends AbstractService {
     Map<String, Object> rtnMap = new HashMap<String, Object>();
     
     parameter.put("GROUP_CD", "PROJECT_CD");
-    rtnMap.put("PROJECT_CD_LIST", list("common", "getCode", parameter));
+    rtnMap.put("PROJECT_CD_LIST", list("common", "getCodeLang", parameter));
+    //rtnMap.put("PROJECT_CD_LIST", list("common", "getCode", parameter));
     
     Integer cnt01 = integer("getCnt01", parameter);
     Integer cnt02 = integer("getCnt02", parameter);

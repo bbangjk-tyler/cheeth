@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -232,7 +233,7 @@
     var gcs = Array.from(new Set(reqArr.map(m => m.GROUP_CD))).join('l');
     var reqs = Array.from(new Set(rqstNoArr.map(m => m.RQST_NO))).join('l');
     if(isEmpty(gcs)) {
-      alert('선택된 의뢰서가 없습니다.');
+      alert(getI8nMsg("alert.nselectReq")); //선택된 의뢰서가 없습니다.
       return;
     }
     var url = '/' + API + '/project/project_request?GCS=' + gcs + '&REQS=' + reqs;
@@ -249,7 +250,7 @@
 		});
 		
 		if(isEmpty(deleteArr)) {
-			alert('의뢰서를 선택해주세요.');
+			alert(getI8nMsg("alert.selectReq"));//의뢰서를 선택해주세요.
 			return;
 		} else {
 			if(confirm('의뢰서를 삭제하시겠습니까?')) {
@@ -262,7 +263,7 @@
 				  async: false,
 				  success: function(data) {
 					  if(data.result == 'Y') {
-						  alert('삭제되었습니다.');
+						  alert(getI8nMsg("alert.delete"));//삭제되었습니다.
 						  location.href = '/' + API + '/tribute/request_basket';
 					  }
 				  }, complete: function() {
@@ -312,14 +313,14 @@
 </script>
 <jsp:include page="/WEB-INF/views/dialog/request_preview_dialog.jsp" flush="true" />
 <div class="request_basket_header">
-        <p class="request_basket_header_typo">의뢰서 바구니</p>
+        <p class="request_basket_header_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
     </div>
     
     <div class="request_basket_body">
         <div class="side_menu">
             <div class="side_menu_title">
                 <p class="side_menu_title_typo">
-                    전체보기
+                    <spring:message code="main.seeAll" text="전체보기" />
                 </p>
             </div>
                         <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
@@ -332,41 +333,41 @@
           <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
 		  </c:if>
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">견적·의뢰내역</p>
+                <p class="side_menu_list_typo"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
             </a>
             <a href="/${api}/tribute/request_basket" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo_blue">의뢰서 바구니</p>
+                <p class="side_menu_list_typo_blue"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
             </a>
             <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">진행내역</p>
+                <p class="side_menu_list_typo"><spring:message code="req.progD" text="진행내역" /></p>
             </a>
             <c:choose>
               <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 or sessionInfo.user.USER_TYPE_CD eq 2}">
                 <a href="/${api}/mypage/profile_management" class="side_menu_list">
                   <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                  <p class="side_menu_list_typo">프로필 관리</p>
+                  <p class="side_menu_list_typo"><spring:message code="prof.mamP" text="프로필 관리" /></p>
                 </a>
               </c:when>
               <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
                 <a href="/${api}/mypage/profile_management_cheesigner" class="side_menu_list">
                   <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                  <p class="side_menu_list_typo">프로필 관리</p>
+                  <p class="side_menu_list_typo"><spring:message code="prof.mamP" text="프로필 관리" /></p>
                 </a>
               </c:when>
             </c:choose>
             <a href="/${api}/review/client_review" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">후기관리</p>
+                <p class="side_menu_list_typo"><spring:message code="req.myReview" text="후기관리" /></p>
             </a>
             <a href="/${api}/mypage/my_page_edit_info" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">내정보 수정</p>
+                <p class="side_menu_list_typo"><spring:message code="req.manInfo" text="내정보 수정" /></p>
             </a>
             <a href="javascript:void(0);" class="side_menu_list" onclick="fnLogOut();">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">로그아웃</p>
+                <p class="side_menu_list_typo"><spring:message code="logout" text="로그아웃" /></p>
             </a>
         </div>
         <div class="request_basket_list_main_container">
@@ -376,18 +377,18 @@
             </a>
             <img class="request_basket_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
             <div class="request_basket_connection_location">
-              <p class="request_basket_connection_location_typo">마이페이지</p>
+              <p class="request_basket_connection_location_typo"><spring:message code="req.myPage" text="마이페이지" /></p>
             </div>
             <img class="request_basket_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
             <div class="request_basket_connection_location">
-              <p class="request_basket_connection_location_typo_bold">의뢰서 바구니</p>
+              <p class="request_basket_connection_location_typo_bold"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
             </div>
           </div>
           <div class="request_basket_filter_container">
             <div class="request_basket_button_container">
               <div class="request_basket_button_white">
                 <p class="request_basket_button_white_typo" style="cursor: pointer;" onclick="fnDeleteReq();">
-                  삭제하기
+                  <spring:message code="delete" text="삭제하기" />
                 </p>
               </div>
             </div>
@@ -407,16 +408,16 @@
               </div>
               <div class="request_basket_list_data_type_margin"></div>
               <div class="request_basket_list_data_type request_basket_name_vol2">
-                <p class="request_basket_list_data_type_typo">환자명</p>
+                <p class="request_basket_list_data_type_typo"><spring:message code="req.patientNm" text="환자명" /></p>
               </div>
               <div class="request_basket_list_data_type request_basket_prosthetics_type_vol2">
-                <p class="request_basket_list_data_type_typo">보철 종류</p>
+                <p class="request_basket_list_data_type_typo"><spring:message code="req.prosthT" text="보철 종류" /></p>
               </div>
               <div class="request_basket_list_data_type request_basket_count">
-                <p class="request_basket_list_data_type_typo">개수</p>
+                <p class="request_basket_list_data_type_typo"><spring:message code="req.quant" text="개수" /></p>
               </div>
               <div class="request_basket_list_data_type request_basket_attatchment">
-                <p class="request_basket_list_data_type_typo">첨부파일</p>
+                <p class="request_basket_list_data_type_typo"><spring:message code="req.attach" text="첨부파일" /></p>
               </div>
             </div>
             <script>
@@ -492,7 +493,7 @@
 	                  <p class="request_basket_list_typo">${item.TOOTH_CNT}</p>
 	                </div>
 	                <div class="request_basket_list request_basket_attatchment">
-	                  <p class="request_basket_list_typo" style="cursor: pointer;" onclick="fnOpenFileModal('${item.FILE_CD}');">확인하기 (${item.FILE_CNT})</p>
+	                  <p class="request_basket_list_typo" style="cursor: pointer;" onclick="fnOpenFileModal('${item.FILE_CD}');"><spring:message code="req.see" text="확인하기" /> (${item.FILE_CNT})</p>
 	                </div>
 	              </div>
               </c:forEach>
@@ -511,7 +512,7 @@
 							<div class="modal-content" style="width: fit-content;">
 								<div class="dialog_tribute_request_container">
 					        <div class="dialog_tribute_request_header">
-					          <p class="dialog_tribute_request_header_typo">파일 첨부</p>
+					          <p class="dialog_tribute_request_header_typo"><spring:message code="req.attach" text="파일 첨부" /></p>
 					          <a href="javascript:void(0)" class="dialog_tribute_request_header_close_button_wrapper" data-bs-dismiss="modal">
 					            <img class="dialog_tribute_request_header_close_button" src="/public/assets/images/tribute_request_dialog_close_button.svg"/>
 					          </a>
@@ -523,19 +524,19 @@
 												    <p class="dialog_tribute_request_table_data_type_typo">NO.</p>
 												</div>
 												<div class="dialog_tribute_request_table_data_type_document">
-												    <p class="dialog_tribute_request_table_data_type_typo">문서유형</p>
+												    <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="docType" text="문서유형" /></p>
 												</div>
 												<div class="dialog_tribute_request_table_data_type_necessary">
-												    <p class="dialog_tribute_request_table_data_type_typo">필수</p>
+												    <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="nece" text="필수" /></p>
 												</div>
 												<div class="dialog_tribute_request_table_data_type_file_name">
-												    <p class="dialog_tribute_request_table_data_type_typo">파일명</p>
+												    <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="fileNm" text="파일명" /></p>
 												</div>
 												<div class="dialog_tribute_request_table_data_type_download">
-												    <p class="dialog_tribute_request_table_data_type_typo">다운로드</p>
+												    <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="download" text="다운로드" /></p>
 												</div>
 												<div class="dialog_tribute_request_table_data_type_note">
-												    <p class="dialog_tribute_request_table_data_type_typo">비고</p>
+												    <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="note" text="비고" /></p>
 												</div>
 											</div>
 											<div class="dialog_tribute_request_table_data_container file_modal_item">
@@ -543,7 +544,7 @@
 											    <p class="dialog_tribute_request_table_data_typo">1</p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_document">
-											    <p class="dialog_tribute_request_table_data_typo">스캔파일</p>
+											    <p class="dialog_tribute_request_table_data_typo"><spring:message code="scanfile" text="스캔파일" /></p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_necessary">
 											    <p class="dialog_tribute_request_table_data_typo">Y</p>
@@ -553,7 +554,7 @@
 											  </div>
 											  <div class="dialog_tribute_request_table_data_download">
 											  	<div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-												    <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+												    <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
 												    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
 											    </div> 
 											  </div>
@@ -566,7 +567,7 @@
 											    <p class="dialog_tribute_request_table_data_typo">2</p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_document">
-											    <p class="dialog_tribute_request_table_data_typo">기타</p>
+											    <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_necessary">
 											    <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -576,7 +577,7 @@
 											  </div>
 											  <div class="dialog_tribute_request_table_data_download">
 											  	<div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-												    <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+												    <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
 												    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
 											    </div> 
 											  </div>
@@ -589,7 +590,7 @@
 											    <p class="dialog_tribute_request_table_data_typo">3</p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_document">
-											    <p class="dialog_tribute_request_table_data_typo">기타</p>
+											    <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_necessary">
 											    <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -599,7 +600,7 @@
 											  </div>
 											  <div class="dialog_tribute_request_table_data_download">
 											  	<div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-												    <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+												    <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
 												    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
 											    </div> 
 											  </div>
@@ -612,7 +613,7 @@
 											    <p class="dialog_tribute_request_table_data_typo">4</p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_document">
-											    <p class="dialog_tribute_request_table_data_typo">기타</p>
+											    <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_necessary">
 											    <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -622,7 +623,7 @@
 											  </div>
 											  <div class="dialog_tribute_request_table_data_download">
 											  	<div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-												    <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+												    <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
 												    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
 											    </div> 
 											  </div>
@@ -635,7 +636,7 @@
 											    <p class="dialog_tribute_request_table_data_typo">5</p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_document">
-											    <p class="dialog_tribute_request_table_data_typo">기타</p>
+											    <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 											  </div>
 											  <div class="dialog_tribute_request_table_data_necessary">
 											    <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -645,7 +646,7 @@
 											  </div>
 											  <div class="dialog_tribute_request_table_data_download">
 											  	<div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-												    <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+												    <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
 												    <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
 											    </div> 
 											  </div>
@@ -656,7 +657,7 @@
 					          </div>
 					          <div class="dialog_tribute_request_button_wrapper">
 					            <button class="dialog_tribute_request_button" type="button" data-bs-dismiss="modal">
-					            	<p class="dialog_tribute_request_button_typo">닫기</p>
+					            	<p class="dialog_tribute_request_button_typo"><spring:message code="close" text="닫기" /></p>
 					            </button>
 					          </div>
 					        </div>
@@ -672,7 +673,7 @@
             
             <div class="pagination"></div>
             <div class="request_basket_item">
-                <p class="request_basket_title">의뢰서</p>
+                <p class="request_basket_title"><spring:message code="proj.request" text="의뢰서" /></p>
                 <div class="request_basket_context">
                     <p class="request_basket_context_typo">
                     	선택된 의뢰서가 없습니다.
@@ -686,11 +687,11 @@
                 <img class="dotted_divider without_margin" src="/public/assets/images/dotted_divider.svg"/>
             </div>
             <div class="request_basket_item">
-                <p class="request_basket_title">총 개수</p>
+                <p class="request_basket_title"><spring:message code="req.totNum" text="총 개수" /></p>
                 <div class="request_basket_total_prosthetics">
                     <div class="request_basket_total_prosthetics_data_type_container">
-                        <p class="request_basket_total_prosthetics_data_type">보철종류</p>
-                        <p class="request_basket_total_prosthetics_data_type">개수</p>
+                        <p class="request_basket_total_prosthetics_data_type"><spring:message code="req.prosthT" text="보철종류" /></p>
+                        <p class="request_basket_total_prosthetics_data_type"><spring:message code="req.quant" text="개수" /></p>
                     </div>
                     <div class="request_basket_total_prosthetics_divider"></div>
                     <div class="request_basket_total_prosthetics_info_container_wrapper" style="min-height: 45px;"></div>
@@ -698,10 +699,10 @@
             </div>
             <div class="request_basket_button_wrapper">
                 <a href="/${api}/tribute/tribute_request" class="request_basket_tribute_request_writing_button">
-                    <p class="request_basket_tribute_request_writing_button_typo">전자치과기공물 의뢰서 작성하기</p>
+                    <p class="request_basket_tribute_request_writing_button_typo"><spring:message code="req.submReq" text="전자치과기공물 의뢰서 작성하기" /></p>
                 </a>
                 <button class="request_basket_request_button" onclick="fnMoveProject();">
-                    <p class="request_basket_request_button_typo">견적 요청하기</p>
+                    <p class="request_basket_request_button_typo"><spring:message code="req.reqQuotat" text="견적 요청하기" /></p>
                 </button>
             </div>
         </div>

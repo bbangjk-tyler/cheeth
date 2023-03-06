@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!-- <script type="text/javascript">
   	var locations = document.location.href;
   	locations += ""; 
@@ -14,12 +15,13 @@
 </script> -->
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+   alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
 
 <script>
+var lang = localStorage.getItem("lang");
 function confirmModal() {
 	  if (window.confirm("\n 해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?")) {
 	    location.href = ('/api/mypage/my_page_edit_info');
@@ -62,15 +64,15 @@ function confirmModal() {
       fnSearch();
     }
   }
-  
+
   function fnSelectNm_1() {
     var code = arguments[0];
     if(isNotEmpty(code)) {
       var codeNm = '';
       if(code === 'A') {
-        codeNm = '작성일 순';
+    	  codeNm = getI8nMsg("proj.byDate"); 
       } else if(code === 'B') {
-        codeNm = '견적만료시간 순';
+    	  codeNm = getI8nMsg("proj.byExpirat"); 
       }
       if(isNotEmpty(codeNm)) $('#SEARCH_ORDER_DIV_1').find('p').html(codeNm);
     }
@@ -111,9 +113,10 @@ function confirmModal() {
     fnSetPageInfo('${PAGE}', '${TOTAL_CNT}', 10);
     
   });
+  
   $(document).ready(function(){
 	 $("#ProjectCategory").text(CategoryName); 
-	 console.log(CategoryName);
+	 //console.log(CategoryName);
   });
 </script>
 
@@ -126,13 +129,13 @@ function confirmModal() {
   <input type="hidden" id="SEARCH_OPTION_2" name="SEARCH_OPTION_2" value="${param.SEARCH_OPTION_2}">
 
   <div class="project_header">
-	  <p class="project_header_typo">프로젝트 보기</p>
+	  <p class="project_header_typo"><spring:message code="header.project" text="프로젝트 보기" /></p>
 	</div>
 	
 	<div class="project_body">
 	  <div class="side_menu">
 	    <div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
-	      <p class="side_menu_title_typo">전체보기</p>
+	      <p class="side_menu_title_typo"><spring:message code="main.seeAll" text="전체보기" /></p>
 	    </div>
 	    <c:forEach var="item" items="${PROJECT_CD_LIST}" varStatus="status">
 	      <a href="/${api}/project/project_view_all?SEARCH_PROJECT_CD=${item.CODE_CD}" class="side_menu_list">
@@ -156,11 +159,11 @@ function confirmModal() {
 	      </a>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location">
-	        <p class="project_connection_location_typo">프로젝트 보기</p>
+	        <p class="project_connection_location_typo"><spring:message code="header.project" text="프로젝트 보기" /></p>
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location" style="cursor: pointer;" onclick="fnAllView();">
-	        <p class="project_connection_location_typo">프로젝트 전체보기</p>
+	        <p class="project_connection_location_typo"><spring:message code="proj.allProj" text="프로젝트 전체보기" /></p>
 	      </div>
 	      <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	      <div class="project_connection_location" style="cursor: pointer;" onclick="fnAllView();">
@@ -171,26 +174,26 @@ function confirmModal() {
 	      <c:if test="${not empty sessionInfo.user}">
 		      <div class="project_filter">
 		        <input type="checkbox" id="SEARCH_OPTION_1_CHK" onchange="fnSearchcheCkbox(this, 'SEARCH_OPTION_1');">
-		        <p class="project_filter_typo">내가 쓴 글 보기</p>
+		        <p class="project_filter_typo"><spring:message code="proj.seePost" text="내가 쓴 글 보기" /></p>
 		      </div>
 	      </c:if>
 	      <div class="project_filter">
 	        <input type="checkbox" id="SEARCH_OPTION_2_CHK" onchange="fnSearchcheCkbox(this, 'SEARCH_OPTION_2');">
-	        <p class="project_filter_typo">미체결건만 보기</p>
+	        <p class="project_filter_typo"><spring:message code="proj.pending" text="미체결건만 보기" /></p>
 	      </div>
 	      <div class="dropbox_project_view_all">
 	        <div class="dropbox_select_button">
 	          <div id="SEARCH_ORDER_DIV_1" class="dropbox_select_button_typo_container" onclick="fnSelect_1();" style="cursor: pointer;">
-	            <p class="dropbox_select_button_typo">작성일 순</p>
+	            <p class="dropbox_select_button_typo"><spring:message code="proj.byDate" text="작성일 순" /></p>
 	            <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
 	          </div>
 	        </div>
 	        <div id="SEARCH_ORDER_DIV_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
-	          <div class="dropbox_select_button_item" onclick="fnSelect_1('A', '작성일 순')">
-	            <p class="dropbox_select_button_item_typo">작성일 순</p>
+	          <div class="dropbox_select_button_item" onclick="fnSelect_1('A', '<spring:message code="proj.byDate" text="작성일 순" />')">
+	            <p class="dropbox_select_button_item_typo"><spring:message code="proj.byDate" text="작성일 순" /></p>
 	          </div>
-	          <div class="dropbox_select_button_item" onclick="fnSelect_1('B', '견적만료시간 순')">
-	            <p class="dropbox_select_button_item_typo">견적만료시간 순</p>
+	          <div class="dropbox_select_button_item" onclick="fnSelect_1('B', '<spring:message code="proj.byExpirat" text="견적만료시간 순" />')">
+	            <p class="dropbox_select_button_item_typo"><spring:message code="proj.byExpirat" text="견적만료시간 순" /></p>
 	          </div>
 	        </div>
 	      </div>
@@ -202,22 +205,22 @@ function confirmModal() {
 	          <p class="project_list_order_typo">NO</p>
 	        </div>
 	        <div class="project_list_data_type project_list_title">
-	          <p class="project_list_data_type_title_typo">글제목</p>
+	          <p class="project_list_data_type_title_typo"><spring:message code="proj.title" text="글제목" /></p>
 	        </div>
 	        <div class="project_list_data_type project_list_nickname">
-	          <p class="project_list_data_type_location_typo">닉네임</p>
+	          <p class="project_list_data_type_location_typo"><spring:message code="proj.userNm" text="닉네임" /></p>
 	        </div>
 	        <div class="project_list_data_type project_list_nickname">
-            <p class="project_list_data_type_location_typo">진행상태</p>
+            <p class="project_list_data_type_location_typo"><spring:message code="proj.progStatus" text="진행상태" /></p>
           </div>
 	        <div class="project_list_data_type project_list_numb">
-	          <p class="project_list_data_type_numb_typo">견적수</p>
+	          <p class="project_list_data_type_numb_typo"><spring:message code="proj.quot" text="견적수" /></p>
 	        </div>
 	        <div class="project_list_data_type project_list_date_created">
-	          <p class="project_list_data_type_date_created_typo">작성일</p>
+	          <p class="project_list_data_type_date_created_typo"><spring:message code="proj.reqDate" text="작성일" /></p>
 	        </div>
 	        <div class="project_list_data_type project_list_date_expiry">
-	          <p class="project_list_data_type_date_expiry_typo">견적요청 만료시간</p>
+	          <p class="project_list_data_type_date_expiry_typo"><spring:message code="proj.estimReq" text="견적요청 만료시간" /></p>
 	        </div>
 	      </div>
 	      <div class="list_divider"></div>
@@ -254,7 +257,7 @@ function confirmModal() {
 		      <div class="project_writing_button_container">
 		        <a href="/${api}/project/project_request" class="project_writing_button">
 		          <img class="project_writing_button_icon" src="/public/assets/images/writing_button.svg">
-		          <p class="project_writing_button_typo">견적요청 하기</p>
+		          <p class="project_writing_button_typo"><spring:message code="proj.toReq" text="견적요청 하기" /></p>
 		        </a>
 		      </div>
 	      </c:if>
@@ -262,7 +265,7 @@ function confirmModal() {
 		      <div class="project_writing_button_container">
 		        <a href="javascript:confirmModal()" class="project_writing_button">
 		          <img class="project_writing_button_icon" src="/public/assets/images/writing_button.svg">
-		          <p class="project_writing_button_typo">견적요청 하기</p>
+		          <p class="project_writing_button_typo"><spring:message code="proj.toReq" text="견적요청 하기" /></p>
 		        </a>
 		      </div>
 	      </c:if>
@@ -271,14 +274,14 @@ function confirmModal() {
 	      <div class="pagination"></div>
 	      <div class="search">
 	        <select id="SEARCH_TYPE" name="SEARCH_TYPE" class="search_select">
-	          <option value="ALL" <c:if test="${empty param.SEARCH_TYPE or param.SEARCH_TYPE eq 'ALL'}">selected="selected"</c:if>>전체</option>
-	          <option value="TITLE" <c:if test="${param.SEARCH_TYPE eq 'TITLE'}">selected="selected"</c:if>>제목</option>
-	          <option value="NICK" <c:if test="${param.SEARCH_TYPE eq 'NICK'}">selected="selected"</c:if>>닉네임</option>
+	          <option value="ALL" <c:if test="${empty param.SEARCH_TYPE or param.SEARCH_TYPE eq 'ALL'}">selected="selected"</c:if>><spring:message code="proj.all" text="전체" /></option>
+	          <option value="TITLE" <c:if test="${param.SEARCH_TYPE eq 'TITLE'}">selected="selected"</c:if>><spring:message code="proj.title" text="제목" /></option>
+	          <option value="NICK" <c:if test="${param.SEARCH_TYPE eq 'NICK'}">selected="selected"</c:if>><spring:message code="proj.userNm" text="닉네임" /></option>
           </select>
 	        <input type="text" class="search_bar" id="SEARCH_TXT" name="SEARCH_TXT" value="${SEARCH_TXT}">
 	        <button class="search_button" onclick="fnSearch();">
 	          <img class="Search_button_icon" src="/public/assets/images/search_button_icon.svg"/>
-	          <p class="search_button_typo">검색</p>
+	          <p class="search_button_typo"><spring:message code="search" text="검색" /></p>
 	        </button>
 	      </div>
 	    </div>

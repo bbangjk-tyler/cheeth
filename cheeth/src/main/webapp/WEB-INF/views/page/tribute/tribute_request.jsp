@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%
 	String groupCd = "";
 	if (request.getParameter("groupCd") != null) {
@@ -9,13 +10,13 @@
 %>
 <c:if test="${empty sessionInfo.user}">
 	<script>
-   alert('로그인 후 이용가능 합니다.');
+	alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
 <%-- <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2 and not empty sessionInfo.user.COMP_FILE_CD}">
   <script>
-   alert('접근 권한이 없습니다.');
+   alert(getI8nMsg("alert.nhaveAccess"));//접근 권한이 없습니다.
    history.back();
 </script>
 </c:if> --%>
@@ -45,9 +46,9 @@
 	</c:when>
 	<c:otherwise>
 		<script>
- alert("의뢰인 회원만 이용 가능합니다.");
-   history.back();
-</script>
+			alert(getI8nMsg("alert.onlyC"));//의뢰인 회원만 이용 가능합니다.
+		   	history.back();
+		</script>
 	</c:otherwise>
 </c:choose>
 <%
@@ -80,7 +81,7 @@
 	
 	function CategoryChkBtn(){
 		if(CATEGORYCHOICEBOOL == 0){
-			alert("보철종류 입력이 필요합니다.");
+			alert(getI8nMsg("alert.inputProsth"));//보철종류 입력이 필요합니다.
 			flag = 1;
 			$("#tribute_request_button_displaynone").trigger("click");
 		}
@@ -113,6 +114,7 @@
 	/* shift 키 start */
 	var preClcikToothNum = 0;
 	var shiftbool = 0;
+	var req = getI8nMsg("proj.request");
 	function fnTSave(){
 		console.log("뭐양");
 		//cardArr.push({...currCardObj});
@@ -120,7 +122,7 @@
 		for(const [key, value] of Object.entries(cardArr)) {
 			console.log(cardArr[key]);
 		} 
-		if(confirm('임시 저장하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.tempSave"))) {//임시 저장하시겠습니까?
 			$.ajax({
 				url: '/' + API + '/tribute/save02',
 			  type: 'POST',
@@ -130,7 +132,7 @@
 			  async: false,
 			  success: function(resp) {
 					if(resp.result == 'Y') {
-						alert('임시 저장되었습니다.');
+						alert(getI8nMsg("alert.tempSave"));//임시 저장되었습니다.
 						location.href = '/' + API + '/tribute/request_basket';
 					}
 			  }, 
@@ -138,7 +140,7 @@
 				  //alert('오류가 발생하였습니다.')
 			  }, 
 			  error: function() {
-				  alert('오류가 발생하였습니다.')
+				  alert(getI8nMsg("alert.error"));//오류가 발생하였습니다.
 			  }
 			});
 		}
@@ -358,7 +360,7 @@
 				 saveCard5(cardArr2.length);
 		  }
 				  html += '<div class="tribute_request_card_chip_selected card_chip">';
-				  html += '  <p class="tribute_request_card_chip_selected_typo card_title" id="' + m.TAB_NO +'" onclick="setCard(this);">의뢰서&nbsp;' + m.TAB_NO + '</p>';
+				  html += '  <p class="tribute_request_card_chip_selected_typo card_title" id="' + m.TAB_NO +'" onclick="setCard(this);">'+req+'&nbsp;' + m.TAB_NO + '</p>';
 				  html += '  <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg" onclick="deleteCard();"/>';
 				  html += '</div>';
 
@@ -943,7 +945,7 @@
 
 		var html = '';
 		html += '<div class="tribute_request_card_chip_selected card_chip">';
-	  html += '  <p class="tribute_request_card_chip_selected_typo card_title" id="' + (cardCnt + 1) +'" onclick="setCard(this);">의뢰서&nbsp;' + (cardCnt + 1) + '</p>';
+	  html += '  <p class="tribute_request_card_chip_selected_typo card_title" id="' + (cardCnt + 1) +'" onclick="setCard(this);">'+req+'&nbsp;' + (cardCnt + 1) + '</p>';
 	  html += '  <img class="tribute_request_card_chip_close_button" src="/public/assets/images/tribute_request_card_chip_close_button.svg" onclick="deleteCard();"/>';
 	  html += '</div>';
 	  $('.card_chip:last').after(html);
@@ -999,14 +1001,14 @@
 		currCardObj['PRO_METH_CD'] = $('input[id=PRO_METH_CD]').val();
 		currCardObj['PRO_METH_NM'] = $('#pro_meth_container').find('.dropbox_select_button_typo').text();
 		currCardObj['PRO_METH_ETC'] = $('input[id=PRO_METH_ETC]').val();
-		if(currCardObj['PRO_METH_NM'] == '선택') {
+		if(currCardObj['PRO_METH_NM'] == getI8nMsg("select")) {
 			currCardObj['PRO_METH_NM'] = '';
 		}
 		
 		currCardObj['SHADE_CD'] = $('input[id=SHADE_CD]').val();
 		currCardObj['SHADE_NM'] = $('#shade_container').find('.dropbox_select_button_typo').text();
 		currCardObj['SHADE_ETC'] = $('input[id=SHADE_ETC]').val();
-		if(currCardObj['SHADE_NM'] == '선택') {
+		if(currCardObj['SHADE_NM'] == getI8nMsg("select")) {
 			currCardObj['SHADE_NM'] = '';
 		}
 		
@@ -1341,7 +1343,7 @@
 		cardChipEl.remove();
 		
 		$('.card_title').each(function(index) {
-			$(this).text('의뢰서 ' + (index + 1));
+			$(this).text(req+' ' + (index + 1));
 		});
 		
 		cardArr.splice(tabIndex, 1);
@@ -1505,7 +1507,7 @@
 			} else {
 				$(this).removeClass('dropbox_select_button_inactive');
 			}
-			$(this).find('p').html('선택');
+			$(this).find('p').html('<spring:message code="select" text="선택" />');
 		});
 		
 		var subContainers = $('.dropbox_tribute_request_prosthetics_select_button_container:eq(0) div.dropbox_select_button_item_container:gt(' + currLevel + ')');
@@ -1571,7 +1573,8 @@
 			specialCategory = specialCategory.split("-")[0];
 			specialCategory = specialCategory.replaceAll(" ", "");
 		}
-		if(specialCategory == 'Frame' || specialCategory == 'Splint' || specialCategory == '의치'|| specialCategory == '교정'|| specialCategory == '트레이'){
+		if(specialCategory == 'Frame' || specialCategory == 'Splint' || 
+				specialCategory == getI8nMsg("dialog.req.denture") || specialCategory == getI8nMsg("main.aligner")|| specialCategory == getI8nMsg("tray")){
 			justonebool = 1;
 		}else{
 			justonebool = 0;
@@ -1612,7 +1615,7 @@
 	function saveOftenWordModal() {
 		var wordTxt = $('input[id=WORD_TXT]').val().trim();
 		if(isEmpty(wordTxt)) {
-			alert('자주 쓰는 말을 입력해주세요.');
+			alert(getI8nMsg("alert.plzEnterFreq"));
 			return;
 		} else {
 			$.ajax({
@@ -1691,7 +1694,7 @@
 			  processData: false,
 			  success: function(resp) {
 				  if(resp.result == 'Y') {
-					  alert('저장되었습니다.');
+					  alert(getI8nMsg("alert.save"));//저장되었습니다.
 					  fileNmEl.text(file.name);
 				  }
 			  }, 
@@ -1704,7 +1707,7 @@
 	function fnPreview() {
 		
 		if(isEmpty($('#PANT_NM').val())) {
-			alert('환자명을 입력해주세요.');
+			alert(getI8nMsg("alert.plzEnterPaiNm"));
 			$('#PANT_NM').focus();
 			return;
 		}
@@ -1718,9 +1721,10 @@
 		previewBodyEl.find('.teeth_model_title_typo').text(pantNm);
 		
 		var html = '';
+		var req = getI8nMsg("proj.request");
 		cardArr.map((v, i) => {
 			html += '<div class="p_card_chip tribute_request_card_chip' + ((i == cardArr.length - 1) ? '' : '_not') + '_selected">';
-	    html += '  <p class="p_card_title tribute_request_card_chip' + ((i == cardArr.length - 1) ? '' : '_not') + '_selected_typo" onclick="setPreviewCard(this);">의뢰서&nbsp;' + (i + 1) + '</p>';
+	    html += '  <p class="p_card_title tribute_request_card_chip' + ((i == cardArr.length - 1) ? '' : '_not') + '_selected_typo" onclick="setPreviewCard(this);">'+req+'&nbsp;' + (i + 1) + '</p>';
 	    html += '</div>';
 		});
 		previewBodyEl.find('.tribute_request_card_chip_numb').before(html);
@@ -1856,22 +1860,22 @@
 	function fnSave() {
 		
 		if(isEmpty($('#PANT_NM').val())) {
-			alert('환자명을 입력해주세요.');
+			alert(getI8nMsg("alert.enterPatiNm"));//환자명을 입력해주세요.
 			return;
 		}
 		
 		if(cardArr.some(s => isEmpty(s.SUPP_INFO)) || cardArr.some(s => isEmpty(s.SUPP_INFO['SUPP_CD_1']))) {
-			alert('보철종류를 선택해주세요.');
+			alert(getI8nMsg("alert.selectProsth"));//보철종류를 선택해주세요.
 			return;
 		}
 		
 		if(cardArr.some(s => isEmpty(s.TRIBUTE_DTL))) {
-			alert('치식을 선택해주세요.');
+			alert(getI8nMsg("alert.selectDentFor"));//치식을 선택해주세요.
 			return;
 		}
 		
 		if(cardArr.some(s => isEmpty(s.PRO_METH_CD))) {
-			alert('가공방법을 선택해주세요.');
+			alert(getI8nMsg("alert.selectProcesMeth"));//가공방법을 선택해주세요.
 			return;
 		} else {
 			if(cardArr.some(s => {
@@ -1879,7 +1883,7 @@
 					if(isEmpty(s.PRO_METH_ETC)) return true;
 				}
 			})) {
-				alert('기타 가공방법을 입력해주세요.');
+				alert(getI8nMsg("alert.enterProcesMeth"));//기타 가공방법을 입력해주세요.
 				return;
 			}
 		}
@@ -1889,11 +1893,11 @@
 				if(isEmpty(s.SHADE_ETC)) return true;
 			}
 		})) {
-			alert('Shade를 입력해주세요.');
+			alert(getI8nMsg("alert.enterShade"));//Shade를 입력해주세요.
 			return;
 		}
 	
-		if(confirm('저장하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.save"))) { //저장하시겠습니까?
 			$.ajax({
 				url: '/' + API + '/tribute/save',
 			  type: 'POST',
@@ -1903,7 +1907,7 @@
 			  async: false,
 			  success: function(resp) {
 					if(resp.result == 'Y') {
-						alert('저장되었습니다.');
+						alert(getI8nMsg("alert.save"));//저장되었습니다.
 						location.href = '/' + API + '/tribute/request_basket';
 					}
 			  }, 
@@ -1916,22 +1920,22 @@
 	function fnRewrite() {
 		
 		if(isEmpty($('#PANT_NM').val())) {
-			alert('환자명을 입력해주세요.');
+			alert(getI8nMsg("alert.enterPatiNm"));//환자명을 입력해주세요.
 			return;
 		}
 		
 		if(cardArr.some(s => isEmpty(s.SUPP_INFO)) || cardArr.some(s => isEmpty(s.SUPP_INFO['SUPP_CD_1']))) {
-			alert('보철종류를 선택해주세요.');
+			alert(getI8nMsg("alert.selectProsth"));//보철종류를 선택해주세요.
 			return;
 		}
 		
 		if(cardArr.some(s => isEmpty(s.TRIBUTE_DTL))) {
-			alert('치식을 선택해주세요.');
+			alert(getI8nMsg("alert.selectDentFor"));//치식을 선택해주세요.
 			return;
 		}
 		
 		if(cardArr.some(s => isEmpty(s.PRO_METH_CD))) {
-			alert('가공방법을 선택해주세요.');
+			alert(getI8nMsg("alert.selectProcesMeth"));//가공방법을 선택해주세요.
 			return;
 		} else {
 			if(cardArr.some(s => {
@@ -1939,7 +1943,7 @@
 					if(isEmpty(s.PRO_METH_ETC)) return true;
 				}
 			})) {
-				alert('기타 가공방법을 입력해주세요.');
+				alert(getI8nMsg("alert.enterProcesMeth"));//기타 가공방법을 입력해주세요.
 				return;
 			}
 		}
@@ -1948,11 +1952,11 @@
 				if(isEmpty(s.SHADE_ETC)) return true;
 			}
 		})) {
-			alert('Shade를 입력해주세요.');
+			alert(getI8nMsg("alert.enterShade"));//Shade를 입력해주세요.
 			return;
 		}
 	
-		if(confirm('저장하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.save"))) { //저장하시겠습니까?
 			$.ajax({
 				url: '/' + API + '/tribute/rewrite',
 			  type: 'POST',
@@ -1962,7 +1966,7 @@
 			  async: false,
 			  success: function(resp) {
 					if(resp.result == 'Y') {
-						alert('저장되었습니다.');
+						alert(getI8nMsg("alert.save"));//저장되었습니다.
 						location.href = '/' + API + '/tribute/request_basket';
 					}
 			  }, 
@@ -1973,7 +1977,7 @@
 	}
 </script>
 <div class="tribute_request_header">
-	<p class="tribute_request_header_typo">전자치과기공물의뢰서</p>
+	<p class="tribute_request_header_typo"><spring:message code="req.reqForm" text="전자치과기공물의뢰서" /></p>
 	<div class="tribute_request_connection_location_container">
 		<a href="/" class="tribute_request_connection_location_typo"> <img
 			class="tribute_request_connection_location_home_button"
@@ -1986,12 +1990,12 @@
 					if (!groupCd.equals("")) {
 				%>
 				<a href="/${api}/tribute/request_basket"
-					class="tribute_request_connection_location_typo">의뢰서 바구니</a>
+					class="tribute_request_connection_location_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></a>
 				<%
 					} else {
 				%>
 				<a href="/${api}/tribute/request_basket"
-					class="tribute_request_connection_location_typo">의뢰서 바구니</a>
+					class="tribute_request_connection_location_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></a>
 				<%
 					}
 				%>
@@ -2000,8 +2004,7 @@
 		<img class="tribute_request_connection_location_arrow"
 			src="/public/assets/images/connection_location_arrow.svg" />
 		<div class="tribute_request_connection_location">
-			<p class="tribute_request_connection_location_typo_bold">전자치과기공물
-				의뢰서 작성하기</p>
+			<p class="tribute_request_connection_location_typo_bold"><spring:message code="req.reqForm" text="전자치과 기공물 의뢰서" /></p>
 		</div>
 	</div>
 </div>
@@ -2012,7 +2015,7 @@
 				<img class="teeth_model_title_icon"
 					src="/public/assets/images/teeth_model_title_icon.svg" /> <input
 					class="teeth_model_title_typo" type="text" name="PANT_NM"
-					id="PANT_NM" onkeyup="fnSetPantNm(this);" placeholder="환자명을 입력하세요." />
+					id="PANT_NM" onkeyup="fnSetPantNm(this);" placeholder="<spring:message code="req.enter.patientNm" text="환자명을 입력하세요." />" />
 				<button id="EventePopupBTN" type="button" class="btn btn-primary"
 					style="color: #fff !important; font-size: 13px; font-weight: 800; position: absolute; margin-left: 402px; margin-top: 6px;"
 					data-bs-toggle="modal" data-bs-target="#exampleModal">작성
@@ -2262,10 +2265,10 @@
 				<div class="tribute_request_button_container">
 					<a href="#fileModal" class="tribute_request_button"
 						data-bs-toggle="modal">
-						<p class="tribute_request_button_typo">파일 첨부하기</p>
+						<p class="tribute_request_button_typo"><spring:message code="talk.attachF" text="파일 첨부하기" /></p>
 					</a> <a href="javascript:void(0)" class="tribute_request_button"
 						onclick="fnPreview();">
-						<p class="tribute_request_button_typo">의뢰서 미리보기</p>
+						<p class="tribute_request_button_typo"><spring:message code="dialog.req.previReq" text="의뢰서 미리보기" /></p>
 					</a>
 				</div>
 				<%
@@ -2273,7 +2276,7 @@
 				%>
 				<a href="javascript:void(0)" class="tribute_request_button"
 					onclick="fnTSave()">
-					<p class="tribute_request_button_typo">임시저장</p>
+					<p class="tribute_request_button_typo"><spring:message code="draft" text="임시저장" /></p>
 				</a>
 				<%
 					}
@@ -2290,7 +2293,7 @@
 				<div class="modal-content" style="width: fit-content;">
 					<div class="dialog_tribute_request_container">
 						<div class="dialog_tribute_request_header">
-							<p class="dialog_tribute_request_header_typo">파일 첨부</p>
+							<p class="dialog_tribute_request_header_typo"><spring:message code="talk.attachF" text="파일 첨부" /></p>
 							<a href="javascript:void(0)"
 								class="dialog_tribute_request_header_close_button_wrapper"
 								data-bs-dismiss="modal"> <img
@@ -2299,9 +2302,7 @@
 							</a>
 						</div>
 						<div class="dialog_tribute_request_body">
-							<font style="margin-left: 10px; color: #444; font-size: 14px;">※
-								파일 최대 용량 <span style="color: #005fa8;">500MB</span> (zip 형식의
-								압축파일을 권장합니다.)
+							<font style="margin-left: 10px; color: #444; font-size: 14px;">※파일 최대 용량 <span style="color: #005fa8;">500MB</span> (zip 형식의 압축파일을 권장합니다.)
 							</font>
 							<div class="dialog_tribute_request_table"
 								style="margin-top: 10px">
@@ -2310,19 +2311,19 @@
 										<p class="dialog_tribute_request_table_data_type_typo">NO.</p>
 									</div>
 									<div class="dialog_tribute_request_table_data_type_document">
-										<p class="dialog_tribute_request_table_data_type_typo">문서유형</p>
+										<p class="dialog_tribute_request_table_data_type_typo"><spring:message code="req.reqForm" text="문서유형" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_type_necessary">
-										<p class="dialog_tribute_request_table_data_type_typo">필수</p>
+										<p class="dialog_tribute_request_table_data_type_typo"><spring:message code="nece" text="필수" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_type_file_name">
-										<p class="dialog_tribute_request_table_data_type_typo">파일명</p>
+										<p class="dialog_tribute_request_table_data_type_typo"><spring:message code="fileNm" text="파일명" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_type_download">
-										<p class="dialog_tribute_request_table_data_type_typo">업로드</p>
+										<p class="dialog_tribute_request_table_data_type_typo"><spring:message code="upload" text="업로드" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_type_note">
-										<p class="dialog_tribute_request_table_data_type_typo">비고</p>
+										<p class="dialog_tribute_request_table_data_type_typo"><spring:message code="note" text="비고" /></p>
 									</div>
 								</div>
 								<div class="dialog_tribute_request_table_data_container">
@@ -2330,7 +2331,7 @@
 										<p class="dialog_tribute_request_table_data_typo">1</p>
 									</div>
 									<div class="dialog_tribute_request_table_data_document">
-										<p class="dialog_tribute_request_table_data_typo">스캔파일</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="scanfile" text="스캔파일" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_necessary">
 										<p class="dialog_tribute_request_table_data_typo">Y</p>
@@ -2341,7 +2342,7 @@
 									<div class="dialog_tribute_request_table_data_download">
 										<input type="file" id="file1" class="tribute_file"
 											onchange="fnUpload('1');">
-										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="upload" text="업로드" /></p>
 										<img class="dialog_tribute_request_table_data_download_img"
 											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
 									</div>
@@ -2354,7 +2355,7 @@
 										<p class="dialog_tribute_request_table_data_typo">2</p>
 									</div>
 									<div class="dialog_tribute_request_table_data_document">
-										<p class="dialog_tribute_request_table_data_typo">기타</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_necessary">
 										<p class="dialog_tribute_request_table_data_typo">N</p>
@@ -2365,7 +2366,7 @@
 									<div class="dialog_tribute_request_table_data_download">
 										<input type="file" id="file2" class="tribute_file"
 											onchange="fnUpload('2');">
-										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="upload" text="업로드" /></p>
 										<img class="dialog_tribute_request_table_data_download_img"
 											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
 									</div>
@@ -2378,7 +2379,7 @@
 										<p class="dialog_tribute_request_table_data_typo">3</p>
 									</div>
 									<div class="dialog_tribute_request_table_data_document">
-										<p class="dialog_tribute_request_table_data_typo">기타</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_necessary">
 										<p class="dialog_tribute_request_table_data_typo">N</p>
@@ -2389,7 +2390,7 @@
 									<div class="dialog_tribute_request_table_data_download">
 										<input type="file" id="file3" class="tribute_file"
 											onchange="fnUpload('3');">
-										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="upload" text="업로드" /></p>
 										<img class="dialog_tribute_request_table_data_download_img"
 											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
 									</div>
@@ -2402,7 +2403,7 @@
 										<p class="dialog_tribute_request_table_data_typo">4</p>
 									</div>
 									<div class="dialog_tribute_request_table_data_document">
-										<p class="dialog_tribute_request_table_data_typo">기타</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_necessary">
 										<p class="dialog_tribute_request_table_data_typo">N</p>
@@ -2413,7 +2414,7 @@
 									<div class="dialog_tribute_request_table_data_download">
 										<input type="file" id="file4" class="tribute_file"
 											onchange="fnUpload('4');">
-										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="upload" text="업로드" /></p>
 										<img class="dialog_tribute_request_table_data_download_img"
 											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
 									</div>
@@ -2426,7 +2427,7 @@
 										<p class="dialog_tribute_request_table_data_typo">5</p>
 									</div>
 									<div class="dialog_tribute_request_table_data_document">
-										<p class="dialog_tribute_request_table_data_typo">기타</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
 									</div>
 									<div class="dialog_tribute_request_table_data_necessary">
 										<p class="dialog_tribute_request_table_data_typo">N</p>
@@ -2437,7 +2438,7 @@
 									<div class="dialog_tribute_request_table_data_download">
 										<input type="file" id="file5" class="tribute_file"
 											onchange="fnUpload('5');">
-										<p class="dialog_tribute_request_table_data_typo">업로드</p>
+										<p class="dialog_tribute_request_table_data_typo"><spring:message code="upload" text="업로드" /></p>
 										<img class="dialog_tribute_request_table_data_download_img"
 											src="/public/assets/images/tribute_request_table_data_download_img.svg" />
 									</div>
@@ -2449,7 +2450,7 @@
 							<div class="dialog_tribute_request_button_wrapper">
 								<button class="dialog_tribute_request_button" type="button"
 									data-bs-dismiss="modal">
-									<p class="dialog_tribute_request_button_typo">닫기</p>
+									<p class="dialog_tribute_request_button_typo"><spring:message code="close" text="닫기" /></p>
 								</button>
 							</div>
 						</div>
@@ -2463,7 +2464,7 @@
 			<div class="tribute_request_card_chip_container">
 				<div class="tribute_request_card_chip_selected card_chip">
 					<p class="tribute_request_card_chip_selected_typo card_title"
-						onclick="setCard(this);">의뢰서 1</p>
+						onclick="setCard(this);"><spring:message code="proj.request" text="의뢰서" /> 1</p>
 					<img class="tribute_request_card_chip_close_button"
 						src="/public/assets/images/tribute_request_card_chip_close_button.svg"
 						onclick="deleteCard();" />
@@ -2475,17 +2476,15 @@
 			</div>
 			<div class="tribute_request_info_container">
 				<div class="tribute_request_info_prosthetics_container">
-					<p class="tribute_request_info_typo">보철종류</p>
+					<p class="tribute_request_info_typo"><spring:message code="req.prosthT" text="보철종류" /></p>
 					<div class="tribute_request_info_prosthetics">
 						<div class="tribute_request_info_prosthetics_blank">
-							<p class="tribute_request_info_prosthetics_blank_typo">보철 종류를
-								선택해 주세요.</p>
+							<p class="tribute_request_info_prosthetics_blank_typo"><spring:message code="req.enter.prosthT" text="보철 종류를 선택해 주세요." /></p>
 						</div>
 						<a href="#prostheticsModal"
 							class="tribute_request_info_prosthetics_button"
 							data-bs-toggle="modal">
-							<p class="tribute_request_info_prosthetics_button_typo">보철종류
-								선택</p>
+							<p class="tribute_request_info_prosthetics_button_typo"><spring:message code="req.select.prosthT" text="보철종류 선택" /></p>
 						</a>
 					</div>
 				</div>
@@ -2511,7 +2510,7 @@
 								<div
 									class="dropbox_tribute_request_prosthetics_select_button_etc_chosen">
 									<p class="tribute_request_prosthetics_select_button_typo">
-										보철종류</p>
+										<spring:message code="req.prosthT" text="보철종류" /></p>
 									<a href="javascript:void(0)" data-bs-dismiss="modal"
 										aria-label="Close" onclick="closeSuppModal();"> <img
 										class="dropbox_tribute_request_prosthetics_select_button_close_button"
@@ -2524,7 +2523,7 @@
 										<div class="dropbox_select_button_large"
 											onclick="fnSelect(this);" style="cursor: pointer;">
 											<div class="dropbox_select_button_typo_container">
-												<p class="dropbox_select_button_typo">선택</p>
+												<p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
 												<img class="dropbox_select_button_arrow"
 													src="/public/assets/images/info_select_button_arrow.svg" />
 											</div>
@@ -2536,7 +2535,7 @@
 										<div class="dropbox_select_button_large"
 											onclick="fnSelect(this);" style="cursor: pointer;">
 											<div class="dropbox_select_button_typo_container">
-												<p class="dropbox_select_button_typo">선택</p>
+												<p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
 												<img class="dropbox_select_button_arrow"
 													src="/public/assets/images/info_select_button_arrow.svg" />
 											</div>
@@ -2548,7 +2547,7 @@
 										<div class="dropbox_select_button_large"
 											onclick="fnSelect(this);" style="cursor: pointer;">
 											<div class="dropbox_select_button_typo_container">
-												<p class="dropbox_select_button_typo">선택</p>
+												<p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
 												<img class="dropbox_select_button_arrow"
 													src="/public/assets/images/info_select_button_arrow.svg" />
 											</div>
@@ -2560,7 +2559,7 @@
 										<div class="dropbox_select_button_large"
 											onclick="fnSelect(this);" style="cursor: pointer;">
 											<div class="dropbox_select_button_typo_container">
-												<p class="dropbox_select_button_typo">선택</p>
+												<p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
 												<img class="dropbox_select_button_arrow"
 													src="/public/assets/images/info_select_button_arrow.svg" />
 											</div>
@@ -2577,17 +2576,17 @@
 										<div class="dropbox_prosthetics_type">
 											<input type="text"
 												class="dropbox_prosthetics_type_etc_chosen_direct_input"
-												id="ETC_SUPP_NM_2" placeholder="직접입력" />
+												id="ETC_SUPP_NM_2" placeholder="<spring:message code="req.enter.input" text="직접입력" />" />
 										</div>
 										<div class="dropbox_prosthetics_type">
 											<input type="text"
 												class="dropbox_prosthetics_type_etc_chosen_direct_input"
-												id="ETC_SUPP_NM_3" placeholder="직접입력" />
+												id="ETC_SUPP_NM_3" placeholder="<spring:message code="req.enter.input" text="직접입력" />" />
 										</div>
 										<div class="dropbox_prosthetics_type">
 											<input type="text"
 												class="dropbox_prosthetics_type_etc_chosen_direct_input"
-												id="ETC_SUPP_NM_4" placeholder="직접입력" />
+												id="ETC_SUPP_NM_4" placeholder="<spring:message code="req.enter.input" text="직접입력" />" />
 										</div>
 									</div>
 								</div>
@@ -2595,7 +2594,7 @@
 									style="margin-bottom: 35px;">
 									<button type="button" class="dropbox_tribute_request_button"
 										onclick="saveSuppModal();" data-bs-dismiss="modal">
-										<div class="dropbox_tribute_request_button_typo">입력완료</div>
+										<div class="dropbox_tribute_request_button_typo"><spring:message code="ok" text="입력완료" /></div>
 									</button>
 								</div>
 							</div>
@@ -2606,11 +2605,11 @@
 
 
 				<div class="tribute_request_info_selected_dental_container">
-					<p class="tribute_request_info_typo">선택된 치식</p>
+					<p class="tribute_request_info_typo"><spring:message code="dialog.req.seleT" text="선택된 치식" /></p>
 					<div class="tribute_request_info_selected_dental">
 						<div class="tribute_request_info_selected_dental_blank">
 							<p class="tribute_request_info_selected_dental_blank_typo"
-								style="margin-bottom: 5px;">치식을 선택해 주세요.</p>
+								style="margin-bottom: 5px;"><spring:message code="req.enter.toothF" text="치식을 선택해 주세요." /></p>
 							<div class="selected_dental_container hidden"></div>
 						</div>
 					</div>
@@ -2619,13 +2618,13 @@
 					class="tribute_request_info_with_select_button_container">
 					<input class="required" type="hidden" name="PRO_METH_CD"
 						id="PRO_METH_CD" />
-					<p class="tribute_request_info_typo">가공방법</p>
+					<p class="tribute_request_info_typo"><spring:message code="req.procMeth" text="가공방법" /></p>
 					<div class="tribute_request_info_select_button_container">
 						<div class="dropbox_tribute_request">
 							<div class="dropbox_select_button" style="cursor: pointer;"
 								onclick="fnSelect(this);">
 								<div class="dropbox_select_button_typo_container">
-									<p class="dropbox_select_button_typo">선택</p>
+									<p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
 									<img class="dropbox_select_button_arrow"
 										src="/public/assets/images/info_select_button_arrow.svg" />
 								</div>
@@ -2650,7 +2649,7 @@
 							<div class="tribute_request_direct_input">
 								<input class="tribute_request_direct_input_blank"
 									name="PRO_METH_ETC" id="PRO_METH_ETC"
-									placeholder="기타 가공방법을 입력해 주세요." style="font-size: smaller;" />
+									placeholder="<spring:message code="req." text="기타 가공방법을 입력해 주세요." />" style="font-size: smaller;" />
 							</div>
 						</div>
 					</div>
@@ -2664,7 +2663,7 @@
 							<div class="dropbox_select_button" style="cursor: pointer;"
 								onclick="fnSelect(this);">
 								<div class="dropbox_select_button_typo_container">
-									<p class="dropbox_select_button_typo">선택</p>
+									<p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
 									<img class="dropbox_select_button_arrow"
 										src="/public/assets/images/info_select_button_arrow.svg" />
 								</div>
@@ -2683,7 +2682,7 @@
 						<div class="tribute_request_direct_input_container hidden">
 							<div class="tribute_request_direct_input">
 								<input class="tribute_request_direct_input_blank"
-									name="SHADE_ETC" id="SHADE_ETC" placeholder="Shade를 입력해 주세요."
+									name="SHADE_ETC" id="SHADE_ETC" placeholder="<spring:message code="req.enter.shade" text="Shade를 입력해 주세요." />"
 									style="font-size: smaller;" />
 							</div>
 						</div>
@@ -2692,19 +2691,18 @@
 				<img class="dotted_divider"
 					src="/public/assets/images/dotted_divider.svg" />
 				<textarea class="tribute_request_detail_info" name="DTL_TXT"
-					id="DTL_TXT" placeholder="상세내용"></textarea>
+					id="DTL_TXT" placeholder="<spring:message code="detail" text="상세내용" />"></textarea>
 				<div class="tribute_request_info_more_container">
 					<div class="tribute_request_info_more_header">
-						<p class="tribute_request_info_more_header_typo">자주 쓰는 말</p>
+						<p class="tribute_request_info_more_header_typo"><spring:message code="req.enter.frequenWord" text="자주 쓰는 말" /></p>
 						<div class="tribute_request_info_more_header_blank_container">
 							<div class="tribute_request_info_more_header_blank">
-								<p class="tribute_request_info_more_header_blank_typo">선택</p>
+								<p class="tribute_request_info_more_header_blank_typo"><spring:message code="select" text="선택" /></p>
 							</div>
 							<a href="#oftenWordModal"
 								class="tribute_request_info_more_header_button"
 								data-bs-toggle="modal">
-								<p class="tribute_request_info_more_header_button_typo">자주
-									쓰는 말 관리</p>
+								<p class="tribute_request_info_more_header_button_typo"><spring:message code="req.enter.manFrequenWord" text="자주 쓰는 말 관리" /></p>
 							</a>
 						</div>
 					</div>
@@ -2734,8 +2732,7 @@
 								class="dialog_tribute_request_frequently_used_word_container">
 								<div class="dialog_tribute_request_frequently_used_word_header">
 									<p
-										class="dialog_tribute_request_frequently_used_word_header_typo">자주
-										쓰는 말</p>
+										class="dialog_tribute_request_frequently_used_word_header_typo"><spring:message code="req.enter.frequenWord" text="자주 쓰는 말" /></p>
 									<a href="javascript:void(0)" data-bs-dismiss="modal"
 										aria-label="Close"> <img
 										class="dialog_tribute_request_frequently_used_word_close_button"
@@ -2745,14 +2742,14 @@
 								<div class="dialog_tribute_request_frequently_used_word_body">
 									<input
 										class="dialog_tribute_request_frequently_used_word_direct_input"
-										name="WORD_TXT" id="WORD_TXT" placeholder="자주 쓰는 말 입력" />
+										name="WORD_TXT" id="WORD_TXT" placeholder="<spring:message code="req.enter.patientNm2" text="자주 쓰는 말 입력" />" />
 									<div
 										class="dialog_tribute_request_frequently_used_word_button_wrapper">
 										<button type="button"
 											class="dialog_tribute_request_frequently_used_word_button"
 											onclick="saveOftenWordModal();">
 											<p
-												class="dialog_tribute_request_frequently_used_word_button_typo">입력완료</p>
+												class="dialog_tribute_request_frequently_used_word_button_typo"><spring:message code="ok" text="입력완료" /></p>
 										</button>
 									</div>
 								</div>
@@ -2986,15 +2983,15 @@
 					style="margin-bottom: 80px;">
 					<div id="p_supp_container" class="tribute_request_preview_info">
 						<div class="tribute_request_preview_info_title">
-							<p class="tribute_request_preview_info_title_typo">보철종류</p>
+							<p class="tribute_request_preview_info_title_typo"><spring:message code="req.prosthT" text="보철종류" /></p>
 						</div>
 						<div class="tribute_request_preview_info_context">
-							<p class="tribute_request_preview_info_context_typo">의치</p>
+							<p class="tribute_request_preview_info_context_typo"><spring:message code="dialog.req.denture" text="의치" /></p>
 						</div>
 					</div>
 					<div class="tribute_request_preview_info">
 						<div class="tribute_request_preview_info_title">
-							<p class="tribute_request_preview_info_title_typo">선택된 치식</p>
+							<p class="tribute_request_preview_info_title_typo"><spring:message code="dialog.req.seleT" text="선택된 치식" /></p>
 						</div>
 						<div class="tribute_request_preview_info_context">
 							<div class="selected_dental_preview_container">
@@ -3012,10 +3009,10 @@
 					</div>
 					<div id="p_pro_meth_container" class="tribute_request_preview_info">
 						<div class="tribute_request_preview_info_title">
-							<p class="tribute_request_preview_info_title_typo">가공방법</p>
+							<p class="tribute_request_preview_info_title_typo"><spring:message code="req.procMeth" text="가공방법" /></p>
 						</div>
 						<div class="tribute_request_preview_info_context">
-							<p class="tribute_request_preview_info_context_typo">3D프린팅(레진)</p>
+							<p class="tribute_request_preview_info_context_typo"><spring:message code="req.3DPrintRe" text="3D프린팅(레진)" /></p>
 						</div>
 					</div>
 					<div id="p_shade_container" class="tribute_request_preview_info">
@@ -3033,25 +3030,25 @@
 				<img class="dotted_divider"
 					src="/public/assets/images/dotted_divider.svg" />
 				<textarea class="tribute_request_preview_info_more_detail"
-					placeholder="상세내용" readonly="readonly"></textarea>
+					placeholder="<spring:message code="detail" text="상세내용" />" readonly="readonly"></textarea>
 				<div class="tribute_request_preview_button_wrapper">
 					<a href="javascript:fnWriteView();"
 						class="tribute_request_preview_button">
-						<p class="tribute_request_preview_button_typo">수정하기</p>
+						<p class="tribute_request_preview_button_typo"><spring:message code="edit" text="수정하기" /></p>
 					</a>
 					<%
 						if (groupCd.equals("")) {
 					%>
 					<a href="javascript:fnSave();"
 						class="tribute_request_preview_button">
-						<p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
+						<p class="tribute_request_preview_button_typo"><spring:message code="req.reqCart" text="의뢰서 바구니에 담기" /></p>
 					</a>
 					<%
 						} else {
 					%>
 					<a href="javascript:fnRewrite();"
 						class="tribute_request_preview_button">
-						<p class="tribute_request_preview_button_typo">의뢰서 바구니에 담기</p>
+						<p class="tribute_request_preview_button_typo"><spring:message code="req.reqCart" text="의뢰서 바구니에 담기" /></p>
 					</a>
 					<%
 						}
@@ -3076,7 +3073,7 @@
 				<!-- onclick="closePopup()" -->
 				<button type="button" class="btn btn-primary"
 					data-bs-dismiss="modal" onclick="closePopup()"
-					style="margin-top: -7px; color: black !important; background-color: #FFF3F4 !important; float: right; margin-left: 398px; border-color: #FFF3F4 !important;">닫기
+					style="margin-top: -7px; color: black !important; background-color: #FFF3F4 !important; float: right; margin-left: 398px; border-color: #FFF3F4 !important;"><spring:message code="close" text="닫기" />
 					X</button>
 			</div>
 		</div>

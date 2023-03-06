@@ -94,7 +94,7 @@
          , A.REVIEW_CONTENT
          , A.FILE_CD
          , A.CREATE_ID
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = B.PROJECT_CD
@@ -132,7 +132,7 @@
               WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
          , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
          , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = B.PROJECT_CD
@@ -179,7 +179,7 @@
               WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
          , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
          , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = B.PROJECT_CD

@@ -1,10 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -15,7 +17,7 @@
     var reviewNo = arguments[0];
     var projectNo = arguments[1];
 	  
-    var isConfirm = window.confirm('삭제 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.delete")); //삭제하시겠습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -38,12 +40,12 @@
     var replyContent = $('#' + 'REPLY_CONTENT_' + reviewNo).val();
     
     if(isEmpty(replyContent)) {
-      alert('답변을 입력하세요.');
+      alert(getI8nMsg("alert.enterAnsw"));//답변을 입력하세요.	
       $('#' + 'REPLY_CONTENT_' + reviewNo).focus();
       return;
     }
     
-    var isConfirm = window.confirm('등록 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.regis"));//등록 하시겠습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -54,7 +56,7 @@
       async: false,
       success: function(data) {
         if(data.result === 'Y') {
-          alert('답변이 등록되었습니다.');
+        	alert(getI8nMsg("alert.registAnsw"));//답변이 등록되었습니다.
         }
       }, complete: function() {
       }, error: function() {
@@ -91,12 +93,12 @@
 </script>
 
 <div class="review_management_header">
-  <p class="review_management_header_typo">후기관리</p>
+  <p class="review_management_header_typo"><spring:message code="req.myReview" text="후기관리" /></p>
 </div>
 <div class="review_management_body">
   <div class="side_menu">
     <div class="side_menu_title">
-      <p class="side_menu_title_typo">전체보기</p>
+      <p class="side_menu_title_typo"><spring:message code="seeAll" text="전체보기" /></p>
     </div>
                 <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
           <a href="/${api}/mypage/equipment_estimator_my_page_cad" class="side_menu_list">
@@ -108,41 +110,41 @@
           <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
 		  </c:if>
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-      <p class="side_menu_list_typo">견적·의뢰내역</p>
+      <p class="side_menu_list_typo"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
     </a>
     <a href="/${api}/tribute/request_basket" class="side_menu_list">
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-      <p class="side_menu_list_typo">의뢰서 바구니</p>
+      <p class="side_menu_list_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
     </a>
     <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="side_menu_list">
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-      <p class="side_menu_list_typo">진행내역</p>
+      <p class="side_menu_list_typo"><spring:message code="req.progD" text="진행내역" /></p>
     </a>
     <c:choose>
       <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 or sessionInfo.user.USER_TYPE_CD eq 2}">
         <a href="/${api}/mypage/profile_management" class="side_menu_list">
           <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-          <p class="side_menu_list_typo">프로필 관리</p>
+          <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
         </a>
       </c:when>
       <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
         <a href="/${api}/mypage/profile_management_cheesigner" class="side_menu_list">
           <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-          <p class="side_menu_list_typo">프로필 관리</p>
+          <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
         </a>
       </c:when>
     </c:choose>
     <a href="/${api}/review/client_review" class="side_menu_list">
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-      <p class="side_menu_list_typo_blue">후기관리</p>
+      <p class="side_menu_list_typo_blue"><spring:message code="req.myReview" text="후기관리" /></p>
     </a>
     <a href="/${api}/mypage/my_page_edit_info" class="side_menu_list">
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-      <p class="side_menu_list_typo">내정보 수정</p>
+      <p class="side_menu_list_typo"><spring:message code="req.manInfo" text="내정보 수정" /></p>
     </a>
     <a href="javascript:fnLogOut();" class="side_menu_list">
       <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-      <p class="side_menu_list_typo">로그아웃</p>
+      <p class="side_menu_list_typo"><spring:message code="logout" text="로그아웃" /></p>
     </a>
   </div>
   <div class="review_management_main_container">
@@ -152,25 +154,25 @@
       </a>
       <img class="profile_management_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="profile_management_connection_location">
-        <p class="profile_management_connection_location_typo">마이페이지</p>
+        <p class="profile_management_connection_location_typo"><spring:message code="req.myPage" text="마이페이지" /></p>
       </div>
       <img class="profile_management_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="profile_management_connection_location">
-        <p class="profile_management_connection_location_typo_bold">후기관리</p>
+        <p class="profile_management_connection_location_typo_bold"><spring:message code="req.myReview" text="후기관리" /></p>
       </div>
     </div>
     <div class="review_management_review_container">
       <div class="review_management_card_chip_container">
         <button type="button" class="review_management_card_chip seleted" onclick="location.href='/${api}/review/client_review'">
-          <p class="review_management_card_chip_typo">고객후기</p>
+          <p class="review_management_card_chip_typo"><spring:message code="equ.custRev" text="고객후기" /></p>
         </button>
         <button type="button" class="review_management_card_chip" onclick="location.href='/${api}/review/my_review'">
-          <p class="review_management_card_chip_typo">내가 쓴 후기</p>
+          <p class="review_management_card_chip_typo"><spring:message code="equ.myRev" text="내가 쓴 후기" /></p>
         </button>
       </div>
       <c:if test="${empty DATA.LIST}">
         <div class="review_management_no_review">
-          <p class="review_management_no_review_typo">아직 등록된 후기가 없습니다</p>
+          <p class="review_management_no_review_typo"><spring:message code="tesign.noReview" text="아직 등록된 후기가 없습니다" /></p>
         </div>
       </c:if>
       <c:forEach var="item" items="${DATA.LIST}" varStatus="status">
@@ -190,7 +192,7 @@
          <div class="review_management_customer_review_info_container">
            <div class="review_management_customer_review_info_top_container">
               <c:if test="${not empty item.FILE_CD}">
-              <p class="review_management_customer_review_photo_review">포토리뷰</p>
+              <p class="review_management_customer_review_photo_review"><spring:message code="equ.photoRev" text="포토리뷰" /></p>
               </c:if>
              <div class="review_management_customer_review_star_rating">
                <div class="review_management_customer_review_star_rating_star">
@@ -225,18 +227,18 @@
                <div class="review_management_customer_review_writer_info_divider"></div>
                <p class="review_management_customer_review_writer_name">${item.CREATE_NICK_NAME}</p>
                <div class="review_management_customer_review_writer_info_divider"></div>
-               <p class="review_management_customer_review_date_wrote">작성일 ${item.CREATE_DATE}</p>
+               <p class="review_management_customer_review_date_wrote"><spring:message code="rev.createD" text="작성일" /> ${item.CREATE_DATE}</p>
                <c:if test="${item.CREATE_DATE ne item.UPDATE_DATE}">
                 <div class="review_management_customer_review_writer_info_divider"></div>
-                <p class="review_management_customer_review_date_wrote">수정일 ${item.UPDATE_DATE}</p>
+                <p class="review_management_customer_review_date_wrote"><spring:message code="rev.updateD" text="수정일" /> ${item.UPDATE_DATE}</p>
                </c:if>
              </div>
              <div class="review_management_customer_review_button_container">
                <button type="button" class="review_management_customer_review_button_white" onclick="fnDelete(${item.REVIEW_NO}, ${item.PROJECT_NO});">
-                 <p class="review_management_customer_review_button_white_typo">삭제하기</p>
+                 <p class="review_management_customer_review_button_white_typo"><spring:message code="delete" text="삭제하기" /></p>
                </button>
                <button type="button" class="review_management_customer_review_button_black" onclick="fnReplyOpen(${item.REVIEW_NO});">
-                 <p class="review_management_customer_review_button_black_typo">답장하기</p>
+                 <p class="review_management_customer_review_button_black_typo"><spring:message code="talk.reply" text="답장하기" /></p>
                </button>
              </div>
            </div>
@@ -244,13 +246,13 @@
        </div>
        <div class="main_container_divider without_margin"></div>
        <div id="reply_${item.REVIEW_NO}" class="review_management_customer_review_reply">
-         <textarea id="REPLY_CONTENT_${item.REVIEW_NO}" class="review_management_customer_review_reply_blank" maxlength="1300" placeholder="답장하기">${item.REPLY_CONTENT}</textarea>
+         <textarea id="REPLY_CONTENT_${item.REVIEW_NO}" class="review_management_customer_review_reply_blank" maxlength="1300" placeholder="<spring:message code="equ.photoRev" text="reply" />">${item.REPLY_CONTENT}</textarea>
          <div class="review_management_customer_review_button_container">
            <button type="button" class="review_management_customer_review_button_white" onclick="fnReplyClose(${item.REVIEW_NO});">
-             <p class="review_management_customer_review_button_white_typo">닫기</p>
+             <p class="review_management_customer_review_button_white_typo"><spring:message code="close" text="닫기" /></p>
            </button>
            <button type="button" class="review_management_customer_review_button_black" style="background: #444;" onclick="fnReplySave(${item.REVIEW_NO});">
-             <p class="review_management_customer_review_button_black_typo">등록하기</p>
+             <p class="review_management_customer_review_button_black_typo"><spring:message code="submit" text="등록하기" /></p>
            </button>
          </div>
        </div>

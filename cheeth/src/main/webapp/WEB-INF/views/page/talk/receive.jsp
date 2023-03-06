@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));//'로그인 후 이용가능 합니다.'
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -110,11 +111,11 @@
     });
     
     if(talkItem.length === 0) {
-      alert('삭제 대상을 선택하세요.');
+    	alert(getI8nMsg("alert.selectDel"));//삭제 대상을 선택하세요.
       return;
     }
     
-    var isConfirm = window.confirm('삭제 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.delete")); //삭제하시겠습니까?
     if(!isConfirm) return;
     
     var saveObj = new Object();
@@ -138,7 +139,7 @@
   
   function fnOneDelete() {
     var talkNo = $('#d_talk_no').val();
-    var isConfirm = window.confirm('삭제 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.delete")); //삭제하시겠습니까?
     if(!isConfirm) return;
     $.ajax({
       url: '/' + API + '/talk/delete02',
@@ -230,18 +231,18 @@
   function fnSend() {
    
    if(isEmpty(sendUserList)) {
-     alert('받는사람이 존재하지 않습니다.');
+	   alert(getI8nMsg("alert.nExistRecip"));//받는사람이 존재하지 않습니다.
      return;
    }
    
    var content = $('#CONTENT').val();
    if(isEmpty(content)) {
-     alert('내용을 입력하세요.');
+	   alert(getI8nMsg("alert.enterContent"));//내용을 입력해주세요.
      $('#CONTENT').focus();
      return;
    }
    
-   var isConfirm = window.confirm('쪽지를 보내시겠습니까?');
+   var isConfirm = window.confirm(getI8nMsg("alert.confirm.sendNote"));//쪽지를 보내시겠습니까?
    if(!isConfirm) return;
      var formData = new FormData(document.getElementById('saveForm'));
      for(var key of formData.keys()) {
@@ -407,34 +408,34 @@
 <input type="hidden" id="TALK_CD" name="TALK_CD" value="">
 
 <div class="note_box_header">
-  <p class="note_box_header_typo">받은 쪽지함</p>
+  <p class="note_box_header_typo"><spring:message code="talk.inbox" text="받은 쪽지함" /></p>
 </div>
 
 <div class="note_box_body">
   <div class="note_box_side_menu">
     <a href="javascript:void(0);" class="note_box_side_menu_title" onclick="fnOpenTalk();">
       <img class="note_box_sending_icon" src="/public/assets/images/note_box_sending_icon.svg"/>
-      <p class="note_box_side_menu_title_typo">쪽지보내기</p>
+      <p class="note_box_side_menu_title_typo"><spring:message code="talk.sendMsg" text="쪽지보내기" /></p>
     </a>
     <div class="note_box_side_menu_list_main">
-      <p class="note_box_side_menu_list_main_typo_title">전체 쪽지</p>
+      <p class="note_box_side_menu_list_main_typo_title"><spring:message code="talk.allMsg" text="전체 쪽지" /></p>
       <p class="note_box_side_menu_list_main_typo_context">${TOTAL_RECEIVE_CNT}</p>
-      <p class="note_box_side_menu_list_main_typo_title">안읽음</p>
+      <p class="note_box_side_menu_list_main_typo_title"><spring:message code="talk.unread" text="안읽음" /></p>
       <p class="note_box_side_menu_list_main_typo_context">${NREAD_RECEIVE_CNT}</p>
     </div>
     <a href="/${api}/talk/receive" class="note_box_side_menu_list_sub">
       <img class="note_box_side_menu_list_sub_icon" src="/public/assets/images/received_note_box.svg"/>
-      <p class="note_box_side_menu_list_sub_typo_title_selected">받은쪽지함</p>
+      <p class="note_box_side_menu_list_sub_typo_title_selected"><spring:message code="talk.inbox" text="받은쪽지함" /></p>
       <p class="note_box_side_menu_list_sub_typo_context"></p>
     </a>
     <a href="javascript:fnOpenAdress();" class="note_box_side_menu_list_sub">
       <img class="note_box_side_menu_list_sub_icon" src="/public/assets/images/view_address_list.svg" style="margin-right: 14px;"/>
-      <p class="note_box_side_menu_list_sub_typo_title">주소록 보기</p>
+      <p class="note_box_side_menu_list_sub_typo_title"><spring:message code="talk.seeAddr" text="주소록 보기" /></p>
       <p class="note_box_side_menu_list_sub_typo_context"></p>
     </a>
     <a href="/${api}/talk/send" class="note_box_side_menu_list_sub">
       <img class="note_box_side_menu_list_sub_icon" src="/public/assets/images/sent_note_box.svg"/>
-      <p class="note_box_side_menu_list_sub_typo_title">보낸쪽지함</p>
+      <p class="note_box_side_menu_list_sub_typo_title"><spring:message code="talk.sentMsg" text="보낸쪽지함" /></p>
       <p class="note_box_side_menu_list_sub_typo_context">${SEND_CNT}</p>
     </a>
   </div>
@@ -443,19 +444,19 @@
       <div class="note_box_button_container" style="cursor: pointer;">
         <div class="note_box_button" onclick="fnDelete();">
           <img class="note_box_delete_button_icon" src="/public/assets/images/note_box_delete_button_icon.svg"/> 
-          <p class="note_box_button_typo">삭제</p>
+          <p class="note_box_button_typo"><spring:message code="talk.delete" text="삭제" /></p>
         </div>
       </div>
       <div class="dropbox_note_box">
         <div id="TALK_CD_DIV_1" class="dropbox_select_button" onclick="fnSelect();" style="cursor: pointer;">
           <div class="dropbox_select_button_typo_container">
-            <p class="dropbox_select_button_typo">전체쪽지</p>
+            <p class="dropbox_select_button_typo"><spring:message code="talk.allMsg" text="전체쪽지" /></p>
             <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
           </div>
         </div>
         <div id="TALK_CD_DIV_2" class="dropbox_select_button_item_container hidden">
           <div class="dropbox_select_button_item" style="cursor: pointer;" onclick="fnSelect('ALL', '전체쪽지')">
-            <p class="dropbox_select_button_item_typo">전체쪽지</p>
+            <p class="dropbox_select_button_item_typo"><spring:message code="talk.allMsg" text="전체쪽지" /></p>
           </div>
           <c:forEach var="item" items="${TALK_CD_LIST}" varStatus="status">
             <div class="dropbox_select_button_item" style="cursor: pointer;" onclick="fnSelect('${item.CODE_CD}', '${item.CODE_NM}')">
@@ -469,19 +470,19 @@
       <div class="note_box_list_data_type_container">
         <input type="checkbox" id="checkAll" onchange="fnCheckAll(this, 'dataListDiv');">
         <div class="note_box_list_data_type_receiver">
-          <p class="note_box_list_data_type_typo">보낸사람</p>
+          <p class="note_box_list_data_type_typo"><spring:message code="talk.sender" text="보낸사람" /></p>
         </div>
         <div class="note_box_attatchment invisible">
           <img class="note_box_attatchment" src="/public/assets/images/note_box_attatchment.svg"/>
         </div>
         <div class="note_box_list_data_type_context">
-          <p class="note_box_list_data_type_typo">내용</p>
+          <p class="note_box_list_data_type_typo"><spring:message code="talk.content" text="내용" /></p>
         </div>
         <div class="note_box_list_data_type_date_sent">
-          <p class="note_box_list_data_type_typo">보낸날짜</p>
+          <p class="note_box_list_data_type_typo"><spring:message code="talk.sentDate" text="보낸날짜" /></p>
         </div>
         <div class="note_box_list_data_type_date_received">
-          <p class="note_box_list_data_type_typo">받은날짜</p>
+          <p class="note_box_list_data_type_typo"><spring:message code="talk.dateRece" text="받은날짜" /></p>
         </div>
       </div>
       <div id="dataListDiv">
@@ -492,7 +493,7 @@
             <!-- 220710수정 start -->
               <c:choose>
               <c:when test="${empty item.SEND_NM}">
-              <p class="note_box_list_receiver_typo">운영자</p>
+              <p class="note_box_list_receiver_typo"><spring:message code="talk.operator" text="운영자" /></p>
               </c:when>
               <c:otherwise>
               <p class="note_box_list_receiver_typo">${item.SEND_NM}</p>
@@ -506,7 +507,7 @@
               </div>
             </c:if>
               <c:choose>
-              <c:when test="${empty item.SEND_NM and item.SEND_ID eq '관리자'}">
+              <c:when test="${empty item.SEND_NM and (item.SEND_ID eq '관리자' || item.SEND_ID eq 'Operator')}">
               <div onclick="fnDtlView('${item.TALK_NO}')">
               ${item.CONTENT}
               </div>
@@ -561,17 +562,17 @@
     <div class="received_note_body">
       <div class="received_note_button_wrapper">
         <a href="javascript:fnOpenTalk_Reply();" class="received_note_button_delete">
-          <p class="received_note_button_delete_typo">답장</p>
+          <p class="received_note_button_delete_typo"><spring:message code="talk.reply" text="답장" /></p>
         </a>
       </div>
       <div class="main_container_divider without_margin"></div>
       <div class="received_note_info_container">
         <div class="received_note_info">
-          <p class="received_note_info_title">보낸사람</p>
+          <p class="received_note_info_title"><spring:message code="talk.sender" text="보낸사람" /></p>
           <p class="received_note_info_context" id="dtl_r_nm"></p>
         </div>
         <div class="received_note_info">
-          <p class="received_note_info_title">보낸시간</p>
+          <p class="received_note_info_title"><spring:message code="talk.sentDate" text="보낸시간" /></p>
           <p class="received_note_info_context" id="dtl_s_date"></p>
         </div>
         <input type="hidden" id="dtl_SEND_ID">
@@ -589,7 +590,7 @@
     <input type="hidden" id="RECEIVE_ID_LIST" name="RECEIVE_ID_LIST">
     <div class="send_note_container">
       <div class="send_note_header">
-        <p class="send_note_header_typo">쪽지 보내기</p>
+        <p class="send_note_header_typo"><spring:message code="talk.sendMsg" text="쪽지보내기" /></p>
         <a href="javascript:fnDialogClose();">
           <img class="send_note_dialog_close_button" src="/public/assets/images/send_note_dialog_close_button.svg"/>
         </a>
@@ -598,22 +599,22 @@
         <div class="send_note_button_container">
           <a href="javascript:void(0);" class="send_note_send_button" onclick="fnSend();">
             <img class="send_note_send_button_icon" src="/public/assets/images/note_box_sending_icon.svg"/>
-            <p class="send_note_send_button_typo">보내기</p>
+            <p class="send_note_send_button_typo"><spring:message code="talk.send" text="보내기" /></p>
           </a>
           <a href="javascript:void(0);" class="send_note_attatch_button" onclick="fnAddFile();">
-            <p class="send_note_attatch_button_typo">파일첨부</p>
+            <p class="send_note_attatch_button_typo"><spring:message code="talk.attachF" text="파일첨부" /></p>
           </a>
           <font style="margin-left:10px;display: block;font-size:10px;">※ 파일 최대 용량 500MB<br>(zip 형식의 압축파일을 권장합니다.) </font>
         </div>
         <div class="send_note_attatchment_container hidden"></div>
         <div class="main_container_divider without_margin"></div>
         <div class="send_note_receiver">
-          <p class="send_note_receiver_typo">받는사람</p>
+          <p class="send_note_receiver_typo"><spring:message code="talk.receiver" text="받는사람" /></p>
           <div class="send_note_receiver_blank">
             <p class="send_note_receiver_blank_typo"></p>
           </div>
           <a href="javascript:void(0);" class="send_note_receiver_button" onclick="fnOpenAdress();">
-            <p class="send_note_receiver_button_typo">주소록</p>
+            <p class="send_note_receiver_button_typo"><spring:message code="talk.address" text="주소록" /></p>
           </a>
         </div>
         <textarea id="CONTENT" name="CONTENT" class="send_note_context" maxlength="1300"></textarea>
@@ -625,7 +626,7 @@
 <div id="adressDiv" class="sample_dialog_root hidden">
   <div class="address_list_container">
     <div class="address_list_header">
-      <p class="address_list_header_typo">주소록</p>
+      <p class="address_list_header_typo"><spring:message code="talk.address" text="주소록" /></p>
       <a href="javascript:fnDialogClose();" class="address_list_close_button_wrapper">
         <img  class="address_list_close_button" src="/public/assets/images/send_note_dialog_close_button.svg"/>
       </a>
@@ -639,9 +640,9 @@
       </div>
       <div class="address_list_main_container">
         <div class="address_list_search">
-          <input type="text" class="address_list_search_blank" id="findNickName" maxlength="30" placeholder="닉네임 찾기">
+          <input type="text" class="address_list_search_blank" id="findNickName" maxlength="30" placeholder="<spring:message code="talk.findUserNm" text="닉네임 찾기" />">
           <button class="address_list_search_button" onclick="fnFindNickName();">
-            <p class="address_list_search_button_typo">찾기</p>
+            <p class="address_list_search_button_typo"><spring:message code="find" text="찾기" /></p>
           </button>
         </div>
         <div class="dialog_main_container_divider"></div>
@@ -666,7 +667,7 @@
       </div>
       <div class="address_list_receiver">
         <div class="address_list_receiver_typo_container">
-          <p class="address_list_receiver_title">받는사람</p>
+          <p class="address_list_receiver_title"><spring:message code="talk.receiver" text="받는사람" /></p>
           <p class="address_list_receiver_context">0</p>
         </div>
         <div class="address_list_receiver_name_container"></div>
@@ -677,10 +678,10 @@
       <p class="address_list_tip"></p>
       <div class="address_list_button_container">
         <a href="javascript:fnAdressOk();" class="address_list_button">
-          <p class="address_list_button_typo">확인</p>
+          <p class="address_list_button_typo"><spring:message code="ok" text="확인" /></p>
         </a>
         <a href="javascript:fnAdressCancel();" class="address_list_button">
-          <p class="address_list_button_typo">취소</p>
+          <p class="address_list_button_typo"><spring:message code="cancel" text="취소" /></p>
         </a>
       </div>
     </div>

@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%
   String callback = request.getParameter("callback");
 %>
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -244,11 +245,11 @@
     	  if(fnIsCheckDate(yyyy + mm + dd)){
 	        fnDateDialogClose();
     	  }else{
-    		  alert('미래 일자를 선택해 주시기 바랍니다.');
+    		  alert(getI8nMsg("alert.selectFuDt"));//미래 일자를 선택해 주시기 바랍니다.
     	  }
       }
     } else {
-      alert('선택한 일자가 올바르지 않습니다.');
+    	alert(getI8nMsg("alert.selectDtnV"));//선택한 일자가 올바르지 않습니다.
     }
   }
   
@@ -386,7 +387,7 @@
 <div id="dateDialogDiv" class="sample_dialog_root hidden">
   <div class="dropbox_date_expiry_dialog">
     <div class="dropbox_date_expiry_dialog_header">
-      <p class="dropbox_date_expiry_dialog_header_typo">견적요청 만료시간</p>
+      <p class="dropbox_date_expiry_dialog_header_typo"><spring:message code="proj.estimReq" text="견적요청 만료시간" /></p>
       <a href="javascript:fnDateDialogClose();">
         <img class="dropbox_date_expiry_dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
       </a>
@@ -560,7 +561,7 @@
       </div>
       <div class="dropbox_date_expiry_dialog_button_wrapper">
         <a href="javascript:fnDateDialogSave();" class="dropbox_date_expiry_dialog_button">
-          <p class="dropbox_date_expiry_dialog_button_typo">입력완료</p>
+          <p class="dropbox_date_expiry_dialog_button_typo"><spring:message code="ok" text="입력완료" /></p>
         </a>
       </div>
     </div>

@@ -1,22 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+   alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
 <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
   <script>
-   alert('접근 권한이 없습니다.');
+   alert(getI8nMsg("alert.nhaveAccess"));//접근 권한이 없습니다.
    history.back();
 </script>
 </c:if>
 <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2 && empty sessionInfo.user.COMP_FILE_CD}">
   <script>
-   alert('추가 정보를 입력하세요.');
+   alert(getI8nMsg("alert.enterAddInfo"));//추가 정보를 입력하세요.
    history.back();
 </script>
 </c:if>
@@ -57,41 +58,41 @@
     // 정합성 체크
     var projectCd = $('#PROJECT_CD').val();
     if(isEmpty(projectCd)) {
-      alert('선택된 보철물이 없습니다.');
-      return;
+    	alert(getI8nMsg("alert.nselectProsth"));//선택된 보철물이 없습니다.
+      	return;
     }
     
     var publicCd = $('#PUBLIC_CD').val();
     if(isEmpty(publicCd)) {
-      alert('지정 견적/공개 견적을 선택하세요.');
-      return;
-    }
+    	alert(getI8nMsg("alert.selectQuoMeth"));//지정 견적/공개 견적을 선택하세요.
+      	return;
+    }	
     
     var title = $('#TITLE').val();
     if(isEmpty(title)) {
-      alert('제목을 입력하세요.');
+      alert(getI8nMsg("alert.enterTitle"));//제목을 입력해주세요.
       $('#TITLE').focus();
       return;
     }
     
     var title = $('#TITLE').val();
     if(isEmpty(title)) {
-      alert('제목을 입력하세요.');
+      alert(getI8nMsg("alert.enterTitle"));//제목을 입력해주세요.
       $('#TITLE').focus();
       return;
     }
     
     var projectExpDate = $('#PROJECT_EXP_DATE').val();
     if(isEmpty(projectExpDate)) {
-      alert('견적요청 만료시간을 선택하세요.');
-      return;
+    	alert(getI8nMsg("alert.selectExpirTm"));//견적요청 만료시간을 선택하세요.
+     	return;
     }
     
     var deliveryExpDate = $('#DELIVERY_EXP_DATE').val();
     var deliveryExpDate1 = $('#DELIVERY_EXP_DATE_1').val();
     var deliveryExpDate2 = $('#DELIVERY_EXP_DATE_2').val();
     if(isEmpty(deliveryExpDate) && (isEmpty(deliveryExpDate1) || isEmpty(deliveryExpDate2))) {
-      alert('납품 마감일을 선택 및 입력하세요.');
+    	alert(getI8nMsg("alert.selectDeadln"));//납품 마감일을 선택 및 입력하세요.
       return;
     }
     
@@ -123,29 +124,29 @@
     }
     
     if(pCnt > 0) {
-      alert('중복된 선호 CAD S/W가 존재 합니다.');
-      return;
+    	alert(getI8nMsg("alert.dupPrefCADSW"));//중복된 선호 CAD S/W가 존재 합니다.
+      	return;
     }
     
     if(preferCd1 === 'R004' && isEmpty(preferNm1)) {
-      alert('기타를 입력하세요.');
+      alert(getI8nMsg("alert.enterOther"));//기타를 입력하세요.
       $('#PREFER_NM_1').focus();
       return;
     } else if(preferCd2 === 'R004' && isEmpty(preferNm2)) {
-      alert('기타를 입력하세요.');
+    	alert(getI8nMsg("alert.enterOther"));//기타를 입력하세요.
       $('#PREFER_NM_2').focus();
       return;
     } else if(preferCd3 === 'R004' && isEmpty(preferNm3)) {
-      alert('기타를 입력하세요.');
+    	alert(getI8nMsg("alert.enterOther"));//기타를 입력하세요.
       $('#PREFER_NM_3').focus();
       return;
     } else if(preferCd4 === 'R004' && isEmpty(preferNm4)) {
-      alert('기타를 입력하세요.');
+    	alert(getI8nMsg("alert.enterOther"));//기타를 입력하세요.
       $('#PREFER_NM_4').focus();
       return;
     }
     
-    var isConfirm = window.confirm('저장 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.save")); //저장하시겠습니까?
     if(!isConfirm) return;
     
     if(isNotEmpty(preferCd1) && preferCd1 !== 'R004') $('#PREFER_NM_1').val(''); // 기타 아닐 경우
@@ -263,7 +264,7 @@
     if(isEmpty(gsc)) {
       location.href = url;
     } else {
-      var isConfirm = window.confirm('의뢰서 바구니로 이동 됩니다. 계속 하시겠습니까?\n저장되지 않는 데이터는 사라집니다.');
+      var isConfirm = window.confirm(getI8nMsg("alert.confirm.moveBasket"));//의뢰서 바구니로 이동 됩니다. 계속 하시겠습니까?\n저장되지 않는 데이터는 사라집니다.
       
       if(!isConfirm) return;
       location.href = url;
@@ -274,7 +275,7 @@
     var gsc = '${GCS}';
     if(isEmpty(gsc)) {
       setTimeout(() => {
-        alert('견적요청할 의뢰서를 선택하기 위해 의뢰서바구니로 이동됩니다.');
+    	alert(getI8nMsg("alert.moveReqB")); ;//견적요청할 의뢰서를 선택하기 위해 의뢰서바구니로 이동됩니다.
         setTimeout(() => {
           fnMoveBasket();
         }, 1000);
@@ -459,11 +460,11 @@
       $('#PUBLIC_CD_DIV_1').find('p').html('${DATA.PUBLIC_NM}');
       $('.equipment_estimator_writing_info_date_expiry_typo').html('${DATA.PROJECT_EXP_DATE2}');
       $('#TIME_CD_DIV_1').find('p').html('${DATA.DELIVERY_EXP_DATE3}');
-      
-      var preferNm1 = isEmpty('${DATA.PREFER_CD_NM_1}') ? '선택' : '${DATA.PREFER_CD_NM_1}';
-      var preferNm2 = isEmpty('${DATA.PREFER_CD_NM_2}') ? '선택' : '${DATA.PREFER_CD_NM_2}';
-      var preferNm3 = isEmpty('${DATA.PREFER_CD_NM_3}') ? '선택' : '${DATA.PREFER_CD_NM_3}';
-      var preferNm4 = isEmpty('${DATA.PREFER_CD_NM_4}') ? '선택' : '${DATA.PREFER_CD_NM_4}';
+      var select = getI8nMsg("select"); //선택
+      var preferNm1 = isEmpty('${DATA.PREFER_CD_NM_1}') ? select : '${DATA.PREFER_CD_NM_1}';
+      var preferNm2 = isEmpty('${DATA.PREFER_CD_NM_2}') ? select : '${DATA.PREFER_CD_NM_2}';
+      var preferNm3 = isEmpty('${DATA.PREFER_CD_NM_3}') ? select : '${DATA.PREFER_CD_NM_3}';
+      var preferNm4 = isEmpty('${DATA.PREFER_CD_NM_4}') ? select : '${DATA.PREFER_CD_NM_4}';
       $('#PREFER_CD_DIV_1_1').find('p').html(preferNm1);
       $('#PREFER_CD_DIV_2_1').find('p').html(preferNm2);
       $('#PREFER_CD_DIV_3_1').find('p').html(preferNm3);
@@ -504,11 +505,11 @@
     }else{//수정
     	
     	log = 1;
-   	 
+    	
 		 console.log("ggggg");
 		 setTimeout(function(){
 			 console.log("wwww");
-			 $(".equipment_estimator_writing_info_date_expiry_typo").html("견적요청 만료시간");	         
+			 $(".equipment_estimator_writing_info_date_expiry_typo").html(getI8nMsg("proj.estimReq")); //견적요청 만료시간     
          }, 100);
 
     }
@@ -552,7 +553,7 @@
            var toDayStr = year + month + day;
            if(args <= toDayStr){
              okbool =0;
-             alert('견적만료시간 이후 날짜를 선택해주세요.');
+             alert(getI8nMsg("alert.selectAfQuotT"));//견적만료시간 이후 날짜를 선택해주세요.
             var div = $(".datepicker-cell.day.selected.focused");
             console.log("div.length " + div.length);
             setTimeout(function(){
@@ -577,13 +578,13 @@
        });
         </script>
 <div class="project_header">
-  <p class="project_header_typo">프로젝트 작성하기</p>
+  <p class="project_header_typo"><spring:message code="proj.writeProj" text="프로젝트 작성하기" /></p>
 </div>
 
 <div class="project_body">
   <div class="side_menu">
     <div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
-      <p class="side_menu_title_typo">전체보기</p>
+      <p class="side_menu_title_typo"><spring:message code="main.seeAll" text="전체보기" /></p>
     </div>
     <c:forEach var="item" items="${PROJECT_CD_LIST}" varStatus="status">
       <a href="/${api}/project/project_view_all?SEARCH_PROJECT_CD=${item.CODE_CD}" class="side_menu_list">
@@ -614,11 +615,11 @@
         </a>
         <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
         <div class="project_connection_location">
-          <p class="project_connection_location_typo">프로젝트 보기</p>
+          <p class="project_connection_location_typo"><spring:message code="header.project" text="프로젝트 보기" /></p>
         </div>
         <img class="project_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
         <div class="project_connection_location">
-          <p class="project_connection_location_typo_bold">프로젝트 작성하기</p>
+          <p class="project_connection_location_typo_bold"><spring:message code="proj.writeProj" text="프로젝트 작성하기" /></p>
         </div>
       </div>
       <div class="connection_location_divider"></div>
@@ -627,7 +628,7 @@
           <div class="dropbox_project_request_select_board">
             <div class="dropbox_select_button_large">
               <div id="PROJECT_CD_DIV_1" class="dropbox_select_button_typo_container" onclick="fnSelect_1();" style="cursor: pointer;">
-                <p class="dropbox_select_button_typo">보철물 선택</p>
+                <p class="dropbox_select_button_typo"><spring:message code="proj.selectProsyh" text="보철물 선택" /></p>
                 <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
               </div>
             </div>
@@ -642,7 +643,7 @@
           <div class="dropbox_project_request_quote_type">
             <div class="dropbox_select_button_large">
               <div id="PUBLIC_CD_DIV_1" class="dropbox_select_button_typo_container" onclick="fnSelect_2();" style="cursor: pointer;">
-                <p class="dropbox_select_button_typo">지정 견적 / 공개 견적</p>
+                <p class="dropbox_select_button_typo"><spring:message code="" text="지정 견적 / 공개 견적" /></p>
                 <img class="project_request_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
               </div>
             </div>
@@ -659,12 +660,12 @@
         <div class="quote_list hidden"></div>
         <!-- //지정견적 선택 리스트 -->
         <div class="equipment_estimator_writing_info_sub_container">
-          <input id="TITLE" name="TITLE" class="equipment_estimator_writing_info_title" maxlength="50" placeholder="제목입력" value="${DATA.TITLE}">
+          <input id="TITLE" name="TITLE" class="equipment_estimator_writing_info_title" maxlength="50" placeholder="<spring:message code="proj.enter.title" text="제목입력" />" value="${DATA.TITLE}">
           <div class="equipment_estimator_writing_info_date_expiry">
-            <p class="equipment_estimator_writing_info_date_expiry_typo">견적요청 만료시간</p>
+            <p class="equipment_estimator_writing_info_date_expiry_typo"><spring:message code="proj.estimReq" text="견적요청 만료시간" /></p>
           </div>
           <a href="javascript:fnDateDialogOpen();" class="equipment_estimator_writing_info_date_expiry_button">
-            <p class="equipment_estimator_writing_info_date_expiry_button_typo">시간선택하기</p>
+            <p class="equipment_estimator_writing_info_date_expiry_button_typo"><spring:message code="proj.selectDT" text="시간선택하기" /></p>
           </a>
         </div>
         <div class="project_request_writing_info_main_container">
@@ -675,23 +676,23 @@
           </div>
           <div class="project_request_writing_info_item_container">
             <div class="request_basket_info_container" style="display: flex;">
-              <a href="javascript:fnMoveBasket();" class="project_request_move_button" style="height: 38px; color: #0083e8; font-size: 13px; font-weight: 500;">의뢰서 바구니가기</a>
+              <a href="javascript:fnMoveBasket();" class="project_request_move_button" style="height: 38px; color: #0083e8; font-size: 13px; font-weight: 500;"><spring:message code="req.reqCart" text="의뢰서 바구니가기" /></a>
               <div class="project_request_writing_info_container" style="width: 670px;"></div>
             </div>
             <div class="main_container_divider"></div>
             <div class="project_request_writing_info_item">
-              <p class="project_request_writing_info_item_typo">납품 마감일</p>
+              <p class="project_request_writing_info_item_typo"><spring:message code="proj.delivDl" text="납품 마감일" /></p>
                <div class="project_request_select_button_container">
                 <div class="dropbox_project_request_calendar">
                   <div id="datepickerContainer" class="dropbox_select_button">
-                    <input id="datepickerInput" type="text" placeholder="날짜선택" style="cursor: pointer;" autocomplete="off">
+                    <input id="datepickerInput" type="text" placeholder="<spring:message code="proj.date" text="날짜선택" />" style="cursor: pointer;" autocomplete="off">
                     <img class="project_request_calendar_image" src="/public/assets/images/calendar_image.svg" style="cursor: pointer;"/>
                   </div>
                 </div>
                 <div class="dropbox_project_request_time">
                   <div class="dropbox_select_button">
                     <div id="TIME_CD_DIV_1" class="dropbox_select_button_typo_container" onclick="fnSelect_3();" style="cursor: pointer;">
-                      <p class="dropbox_select_button_typo">시간</p>
+                      <p class="dropbox_select_button_typo"><spring:message code="proj.time" text="시간" /></p>
                       <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
                     </div>
                   </div>
@@ -706,12 +707,12 @@
               </div>
             </div>
             <div class="project_request_writing_info_item">
-              <p class="project_request_writing_info_item_typo">선호 CAD S/W</p>
+              <p class="project_request_writing_info_item_typo"><spring:message code="proj.preferCADSW" text="선호 CAD S/W" /></p>
               <div class="project_request_select_button_container">
                 <div class="dropbox_project_request_preference">
                   <div class="dropbox_select_button">
                     <div id="PREFER_CD_DIV_1_1" class="dropbox_select_button_typo_container" onclick="fnSelect_4('1');" style="cursor: pointer;">
-                      <p class="dropbox_select_button_typo">선택</p>
+                      <p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
                       <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
                     </div>
                   </div>
@@ -734,7 +735,7 @@
                 <div class="dropbox_project_request_preference">
                   <div class="dropbox_select_button">
                     <div id="PREFER_CD_DIV_2_1" class="dropbox_select_button_typo_container" onclick="fnSelect_4('2');" style="cursor: pointer;">
-                      <p class="dropbox_select_button_typo">선택</p>
+                      <p class="dropbox_select_button_typo"><spring:message code="select" text="선택" /></p>
                       <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
                     </div>
                   </div>
@@ -752,14 +753,14 @@
               </div>
             </div>
             <div class="project_request_writing_info_item project_request_detail">
-              <p class="project_request_writing_info_item_typo">추가내용</p>
-              <textarea id="ADD_CONTENT" name="ADD_CONTENT" class="project_request_writing_info_detail_blank" maxlength="1300" placeholder="상세내용을 적어주세요">${DATA.ADD_CONTENT}</textarea>
+              <p class="project_request_writing_info_item_typo"><spring:message code="proj.addCont" text="추가내용" /></p>
+              <textarea id="ADD_CONTENT" name="ADD_CONTENT" class="project_request_writing_info_detail_blank" maxlength="1300" placeholder="<spring:message code='proj.enter.detail' text='상세내용을 적어주세요' />">${DATA.ADD_CONTENT}</textarea>
             </div>
           </div>
         </div>
         <div class="project_request_writing_info_button_container">
           <a href="javascript:fnSave();" class="project_request_writing_info_button_right_submit">
-            <p class="project_request_writing_info_button_right_submit_typo">글쓰기</p>
+            <p class="project_request_writing_info_button_right_submit_typo"><spring:message code="submit" text="글쓰기" /></p>
           </a>
         </div>
       </div>
@@ -770,7 +771,7 @@
 <div id="adressDiv" class="sample_dialog_root hidden">
   <div class="address_list_container">
     <div class="address_list_header">
-      <p class="address_list_header_typo">주소록</p>
+      <p class="address_list_header_typo"><spring:message code="talk.address" text="주소록" /></p>
       <a href="javascript:fnDialogClose();" class="address_list_close_button_wrapper">
         <img  class="address_list_close_button" src="/public/assets/images/send_note_dialog_close_button.svg"/>
       </a>
@@ -778,15 +779,15 @@
     <div class="address_list_body">
       <div class="address_list_total_trader">
         <div class="address_list_total_trader_typo_container">
-          <p class="address_list_total_trader_title">전체 거래자</p>
+          <p class="address_list_total_trader_title"><spring:message code="" text="전체 거래자" /></p>
           <p class="address_list_total_trader_context">${USER_CNT}</p>
         </div>
       </div>
       <div class="address_list_main_container">
         <div class="address_list_search">
-          <input type="text" class="address_list_search_blank" id="findNickName" maxlength="30" placeholder="닉네임 찾기">
+          <input type="text" class="address_list_search_blank" id="findNickName" maxlength="30" placeholder="<spring:message code="proj.findUserNm" text="닉네임 찾기" />">
           <button class="address_list_search_button" onclick="fnFindNickName();">
-            <p class="address_list_search_button_typo">찾기</p>
+            <p class="address_list_search_button_typo"><spring:message code="search" text="찾기" /></p>
           </button>
         </div>
         <div class="dialog_main_container_divider"></div>
@@ -810,7 +811,7 @@
       </div>
       <div class="address_list_receiver">
         <div class="address_list_receiver_typo_container">
-          <p class="address_list_receiver_title">받는사람</p>
+          <p class="address_list_receiver_title"><spring:message code="" text="받는사람" /></p>
           <p class="address_list_receiver_context">0</p>
         </div>
         <div class="address_list_receiver_name_container"></div>
@@ -821,10 +822,10 @@
       <p class="address_list_tip"></p>
       <div class="address_list_button_container">
         <a href="javascript:fnAdressOk();" class="address_list_button">
-          <p class="address_list_button_typo">확인</p>
+          <p class="address_list_button_typo"><spring:message code="ok" text="확인" /></p>
         </a>
         <a href="javascript:fnAdressCancel();" class="address_list_button">
-          <p class="address_list_button_typo">취소</p>
+          <p class="address_list_button_typo"><spring:message code="cancel" text="취소" /></p>
         </a>
       </div>
     </div>

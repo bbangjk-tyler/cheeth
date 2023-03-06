@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <meta name ="google-signin-client_id" content="424263397710-33kiaq16joefkfn7cdeffjmvg0vvg5jr.apps.googleusercontent.com">
 
@@ -8,7 +9,6 @@
 <script src="https://apis.google.com/js/platform.js?onload=initGoogle" async defer></script>
 
 <script>
-  
   Kakao.init('4f8ae9cfa86e5822181be24a7663f424');
   
   $(function() {
@@ -17,7 +17,7 @@
     if(state === 'fail') {
 //       if(window.localStorage) window.localStorage.removeItem('login_save_id');
       setTimeout(function(){
-        alert('로그인 실패하였습니다.');
+        alert(getI8nMsg("alert.failLogin"));
         $('#id').focus();
       }, 500);
     }
@@ -73,13 +73,13 @@
     var pw = $('#pw').val();
     
     if(isEmpty(id)) {
-      alert('아이디를 입력하세요.');
+      alert(getI8nMsg("alert.plzEnterID"));
       $('#id').focus();
       return;
     }
     
     if(isEmpty(pw)) {
-      alert('비밀번호를 입력하세요.');
+    	alert(getI8nMsg("alert.plzEnterPw"));
       $('#pw').focus();
       return;
     }
@@ -220,33 +220,33 @@
 <form:form id="loginForm" nmame="loginForm" action="/${api}/login/login" method="post">
 	<div class="login_body">
 	  <div class="login_container">
-	    <p class="login_title_typo">로그인</p>
+	    <p class="login_title_typo"><spring:message code="login" text="로그인" /></p>
 	    <div class="login_editor_container">
-	      <input type="text" class="login_editor" id="id" name="id" placeholder="이메일 로그인" />
-	      <input type="password" class="login_editor" id="pw" name="pw" placeholder="비밀번호" />
+	      <input type="text" class="login_editor" id="id" name="id" placeholder="<spring:message code="login.email" text="이메일 로그인" />" />
+	      <input type="password" class="login_editor" id="pw" name="pw" placeholder="<spring:message code="login.passwd" text="비밀번호" />" />
 	    </div>
 	    <button type="button" class="login_submit_button" style="cursor: pointer;" onclick="fnLogin();">
-	      <p class="login_submit_button_typo">로그인</p>
+	      <p class="login_submit_button_typo"><spring:message code="login" text="로그인" /></p>
 	    </button>
 	    <div class="login_find_container">
 	      <div class="login_find_save_container">
 	        <input type="checkbox" id="login_save_id" name="login_save_id">
-	        <p class="login_find_save_typo"><label style="cursor: pointer;" for="login_save_id">아이디 저장</label></p>
+	        <p class="login_find_save_typo"><label style="cursor: pointer;" for="login_save_id"><spring:message code="login.saveID" text="아이디 저장" /></label></p>
 	      </div>
 	      <div class="login_find_info_container">
-	        <p class="login_find_info_typo" onclick="javascript:location.href='/api/login/IDfinder'">아이디 찾기</p>
-	        <p class="login_find_info_typo" onclick="javascript:location.href='/api/login/pwfinder'">비밀번호 찾기</p>
+	        <p class="login_find_info_typo" onclick="javascript:location.href='/api/login/IDfinder'"><spring:message code="login.findID" text="아이디 찾기" /></p>
+	        <p class="login_find_info_typo" onclick="javascript:location.href='/api/login/pwfinder'"><spring:message code="login.findPW" text="비밀번호 찾기" /></p>
 	      </div>
 	    </div>
 	    <div class="login_platform_container">
 	      <button type="button" class="login_platform_button login_platform_button_kakao" style="cursor: pointer;" onclick="kakaoLogin();">
-		      <p class="login_platform_button_kakao_typo"><img src="/public/assets/images/kakao.png" alt="카카오 계정으로 로그인">카카오 계정으로 로그인</p>
+		      <p class="login_platform_button_kakao_typo"><img src="/public/assets/images/kakao.png" alt="카카오 계정으로 로그인"><spring:message code="login.loginKakao" text="카카오 계정으로 로그인" /></p>
 		    </button>
 		    <button type="button" id="naverIdLogin_loginButton" class="login_platform_button login_platform_button_naver" style="cursor: pointer;">
-		    	<p class="login_platform_button_naver_typo"><img src="/public/assets/images/naver.png" alt="네이버 계정으로 로그인">네이버 계정으로 로그인</p>
+		    	<p class="login_platform_button_naver_typo"><img src="/public/assets/images/naver.png" alt="네이버 계정으로 로그인"><spring:message code="login.loginNaver" text="네이버 계정으로 로그인" /></p>
 		    </button>
 		    <button type="button" id="GgCustomLogin" class="login_platform_button login_platform_button_google" style="cursor: pointer;">
-		      <p class="login_platform_button_google_typo"><img src="/public/assets/images/google.png" alt="구글 계정으로 로그인">구글 계정으로 로그인</p>
+		      <p class="login_platform_button_google_typo"><img src="/public/assets/images/google.png" alt="구글 계정으로 로그인"><spring:message code="login.loginGoogle" text="구글 계정으로 로그인" /></p>
 		    </button>
 	    </div>
 	  </div>

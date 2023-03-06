@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +57,9 @@ public class TalkService extends AbstractService {
     
     rtnMap.put("TOTAL_CNT", integer("getCnt01", parameter)); // 총건수
     rtnMap.put("LIST", list("getList01", parameter)); // 목록조회
-    
+
     parameter.put("GROUP_CD", "TALK_CD");
-    rtnMap.put("TALK_CD_LIST", list("common", "getCode", parameter)); // 읽은쪽지, 안읽은쪽지 코드
+    rtnMap.put("TALK_CD_LIST", list("common", "getCodeLang", parameter)); // 읽은쪽지, 안읽은쪽지 코드
     
     Map<String, Object> searchMap = new HashMap<String, Object>();
     searchMap.put("SEND_ID", userId);
@@ -139,9 +141,9 @@ public class TalkService extends AbstractService {
     
     rtnMap.put("TOTAL_CNT", integer("getCnt02", parameter)); // 총건수
     rtnMap.put("LIST", list("getList02", parameter)); // 목록조회
-    
+
     parameter.put("GROUP_CD", "TALK_CD");
-    rtnMap.put("TALK_CD_LIST", list("common", "getCode", parameter)); // 읽은쪽지, 안읽은쪽지 코드
+    rtnMap.put("TALK_CD_LIST", list("common", "getCodeLang", parameter)); // 읽은쪽지, 안읽은쪽지 코드
     
     Map<String, Object> searchMap = new HashMap<String, Object>();
     searchMap.put("SEND_ID", userId);

@@ -2,10 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
 	<script>
-	   alert('로그인 후 이용가능 합니다.');
+	alert(getI8nMsg("alert.plzlogin"));
 	   location.href = '/api/login/view';
 	</script>
 </c:if>
@@ -23,6 +24,7 @@ isValidNickname = null;
 var compFile;
 var licenseFile;
 var bankbool = 0;
+var lang = localStorage.getItem('lang');
 function keyupNickName() {
   isValidNickname = null;
   $('input[id=USER_NICK_NAME]').removeClass('valid-nick invalid-nick');
@@ -33,16 +35,16 @@ function chkNickNameDuplication() {
   if(nickName && !isValidNickname) {
     if(checkNickName(nickName)) {
       isValidNickname = true;
-      alert('사용 가능한 닉네임 입니다.');
+      alert(getI8nMsg("alert.nickAvail")); //사용 가능한 닉네임 입니다.
 	    $('input[id=USER_NICK_NAME]').addClass('valid-nick');
     } else {
     	if('${DATA.USER_NICK_NAME}' == nickName){
     		isValidNickname = true;
-    		alert('기존 닉네임 입니다.');
+    		alert(getI8nMsg("alert.nickAlre")); //기존 닉네임 입니다.
     		$('input[id=USER_NICK_NAME]').addClass('valid-nick');
     	} else{
 	      isValidNickname = false;
-	      alert('중복된 닉네임 입니다.');
+	      alert(getI8nMsg("alert.nickDupli")); //중복된 닉네임 입니다.
 	      $('input[id=USER_NICK_NAME]').focus();
 		    $('input[id=USER_NICK_NAME]').addClass('invalid-nick');
     	}
@@ -56,11 +58,11 @@ function chkAccountName() {
 	  if(bankCd && accountNm && accountNo && !isValidAccount) {
 	    if(checkAccount(bankCd, accountNm, accountNo)) {
 	      isValidAccount = true;
-	      alert('계좌 실명 인증 되었습니다.');
+	      alert(getI8nMsg("alert.accountVerifSu"));//계좌 실명 인증 되었습니다.
 		    $('input[id=ACCOUNT_NM]').addClass('valid-account');
 	    } else {
 	      isValidNickname = false;
-	      alert('잘못된 계좌 정보입니다. 다시 인증해 주세요');
+	      alert(getI8nMsg("alert.accountInvalid"));//잘못된 계좌 정보입니다. 다시 인증해 주세요
 	      $('input[id=ACCOUNT_NM]').focus();
 		    $('input[id=ACCOUNT_NM]').addClass('invalid-account');
 	    }
@@ -107,31 +109,31 @@ function fnSave() {
 
     if (validate()) {
         if (isEmpty(isValidNickname)) {
-            alert('닉네임 중복 확인이 되지 않았습니다.');
+        	alert(getI8nMsg("alert.userNmChkFail"));//닉네임 중복 확인이 되지 않았습니다.
             $('input[id=USER_NICK_NAME]').focus();
             return;
         } else {
             if (!isValidNickname) {
-                alert('중복된 닉네임 입니다.');
+            	alert(getI8nMsg("alert.nickDupli")); //중복된 닉네임 입니다.
                 $('input[id=USER_NICK_NAME]').focus();
                 return;
             }
         }
         if(bankbool == 1){
         	if(isEmpty(isValidAccount)){
-        		alert('계좌 본인 인증이 되지 않았습니다.');
+        		alert(getI8nMsg("alert.accountAuthFail"));//계좌 본인 인증이 되지 않았습니다.
     			$('input[id=ACCOUNT_NM]').focus();
     			return;
         	} else {
     			if(!isValidAccount) {
-    				alert('계좌 본인 인증이 되지 않았습니다.');
+    				alert(getI8nMsg("alert.accountAuthFail"));//계좌 본인 인증이 되지 않았습니다.
     				$('input[id=USER_NICK_NAME]').focus();
     				return;
     			}
     		}
         }
 
-        if (confirm('정보를 변경 하시겠습니까?')) {
+        if (confirm(getI8nMsg("alert.confirm.chgInfo"))) {//정보를 변경 하시겠습니까?
             var formData = new FormData(document.getElementById('mypage_edit_form'));
 
             for (var key of formData.keys()) {
@@ -149,7 +151,7 @@ function fnSave() {
                 processData: false,
                 success: function(data) {
                     if (data.result == 'Y') {
-                        alert('변경이 완료되었습니다.');
+                    	alert(getI8nMsg("alert.change"));//변경이 완료되었습니다.
                         location.href = '/' + API + '/mypage/my_page_edit_info';
                     }
                 },
@@ -171,7 +173,7 @@ function fnSave() {
                 processData: false,
                 success: function(data) {
                     if (data.result == 'Y') {
-                        alert('변경이 완료되었습니다.');
+                    	alert(getI8nMsg("alert.change"));//변경이 완료되었습니다.
                         location.href = '/' + API + '/mypage/my_page_edit_info';
                     }
                 },
@@ -205,29 +207,29 @@ function validate() {
 
         if (value) {
             var regExp;
-            if (field == '이메일') {
+            if (field == getI8nMsg("email")) {//이메일
                 regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-            } else if (field == '휴대폰 번호') {
+            } else if (field == getI8nMsg("join.mobNum")) { //휴대폰 번호
                 regExp = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
             }
             if (regExp && !regCheck(regExp, value)) {
-                alert('올바른 ' + field + ' 을(를) 입력해주세요.');
+            	alert(getI8nMsg("alert.param.plzValid", null, field)); //올바른 ' + field + ' 을(를) 입력해주세요.
                 $elm.focus();
                 result = false;
                 return false;
             }
 
-            if (field == '비밀번호') {
+            if (field == getI8nMsg("login.passwd")) { //'비밀번호'
                 var pwChk = $('input[id=USER_PW_CHK]').val();
                 if (value != pwChk) {
-                    alert('비밀번호가 일치하지 않습니다.');
+                	alert(getI8nMsg("alert.wrongPw"));//비밀번호가 일치하지 않습니다.
                     $('input[id=USER_PW_CHK]').focus();
                     result = false;
                     return false;
                 }
             }
         } else {
-            alert(field + ' 을(를) 입력해주세요.');
+        	alert(getI8nMsg("alert.param.plzEnter", null, field)); //field + ' 을(를) 입력해주세요.'
             $elm.focus();
             result = false;
             return false;
@@ -306,6 +308,7 @@ function fnSetSelect() {
 }
 
 $(document).ready(function() {
+
  //fnSetSelect();
  var code = '${DATA.COMP_GROUP_CD}';
  var codeNm = '${DATA.COMP_GROUP_NM}';
@@ -345,14 +348,14 @@ function keyupAccounNm() {
 
 <div class="equipment_estimator_header">
         <p class="equipment_estimator_header_typo">
-            내 정보 수정
+            <spring:message code="req.manInfo" text="내 정보 수정" />
         </p>
     </div>
     <div class="equipment_estimator_body">
         <div class="side_menu">
             <div class="side_menu_title">
                 <p class="side_menu_title_typo">
-                    전체보기
+                    <spring:message code="seeAll" text="전체보기" />
                 </p>
             </div>
                         <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
@@ -365,43 +368,44 @@ function keyupAccounNm() {
           <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
 		  </c:if>
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">견적·의뢰내역</p>
+                <p class="side_menu_list_typo"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
             </a>
             <a href="/${api}/tribute/request_basket" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">의뢰서 바구니</p>
+                <p class="side_menu_list_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
             </a>
             <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">진행내역</p>
+                <p class="side_menu_list_typo"><spring:message code="req.progD" text="진행내역" /></p>
             </a>
             <c:choose>
               <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 or sessionInfo.user.USER_TYPE_CD eq 2}">
                 <a href="/${api}/mypage/profile_management" class="side_menu_list">
                   <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                  <p class="side_menu_list_typo">프로필 관리</p>
+                  <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
                 </a>
               </c:when>
               <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
                 <a href="/${api}/mypage/profile_management_cheesigner_show" class="side_menu_list">
                   <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                  <p class="side_menu_list_typo">프로필 관리</p>
+                  <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
                 </a>
               </c:when>
             </c:choose>
             <a href="/${api}/review/client_review" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">후기관리</p>
+                <p class="side_menu_list_typo"><spring:message code="req.myReview" text="후기관리" /></p>
             </a>
             <a href="/${api}/mypage/my_page_edit_info" class="side_menu_list">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo_blue">내정보 수정</p>
+                <p class="side_menu_list_typo_blue"><spring:message code="req.manInfo" text="내정보 수정" /></p>
             </a>
             <a href="javascript:void(0);" class="side_menu_list" onclick="fnLogOut();">
                 <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-                <p class="side_menu_list_typo">로그아웃</p>
+                <p class="side_menu_list_typo"><spring:message code="logout" text="로그아웃" /></p>
             </a>
         </div>
+        
         <div class="equipment_estimator_edit_info_main_container">
             <div class="equipment_estimator_connection_location_container">
                 <a href="./main.html" class="equipment_estimator_connection_location_typo">
@@ -409,11 +413,11 @@ function keyupAccounNm() {
                 </a>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo">마이페이지</p>
+                    <p class="equipment_estimator_connection_location_typo"><spring:message code="req.myPage" text="마이페이지" /></p>
                 </div>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo_bold">내정보 수정</p>
+                    <p class="equipment_estimator_connection_location_typo_bold"><spring:message code="req.manInfo" text="내정보 수정" /></p>
                 </div>
             </div>
             <div class="equipment_estimator_edit_info_wrapper">
@@ -423,17 +427,17 @@ function keyupAccounNm() {
                 <div class="connection_location_divider divider_without_margin"></div>
                 <div class="equipment_estimator_edit_info_container">
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">이메일(ID겸용)</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="equ.emailId" text="이메일(ID겸용)" /></p>
                         <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_ID}</p>
                     </div>
                     <c:choose>
 	                    <c:when test="${fn:contains(DATA.USER_ID, '@')}">
 	                    <div class="equipment_estimator_edit_info_item">
-	                        <p class="equipment_estimator_edit_info_item_title">비밀번호</p>
+	                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="equ.pw" text="비밀번호" /></p>
 	                        <input class="equipment_estimator_edit_info_item_blank required" type="password" name="USER_PW" id="USER_PW" data-field="비밀번호" />
 	                    </div>
 	                    <div class="equipment_estimator_edit_info_item">
-	                        <p class="equipment_estimator_edit_info_item_title">비밀번호 확인</p>
+	                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="equ.confirmPw" text="비밀번호 확인" /></p>
 	                        <input class="equipment_estimator_edit_info_item_blank required" type="password" name="USER_PW_CHK" id="USER_PW_CHK" />
 	                    </div>
 	                    </c:when>
@@ -447,20 +451,20 @@ function keyupAccounNm() {
                 <div class="equipment_estimator_edit_info_divider"></div>
                 <div class="equipment_estimator_edit_info_container">
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">이름</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="join.nm" text="이름" /></p>
                         <p class="equipment_estimator_edit_info_item_constant_context">${DATA.USER_NM}</p>
                     </div>
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">주소</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="join.addr" text="주소" /></p>
                         <input class="equipment_estimator_edit_info_item_blank required" style="margin-left: 37px;" type="text" name="USER_ADDRESS" id="USER_ADDRESS" data-field="주소" readonly value="${DATA.USER_ADDRESS}"/>
 						<input class="equipment_estimator_edit_info_item_blank required" type="text" name="USER_ADDRESS_DTL" id="USER_ADDRESS_DTL" data-field="주소 상세" value="${DATA.USER_ADDRESS_DTL}"/>
                     </div>
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">닉네임(중복조회)</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="equ.usrNmChk" text="닉네임(중복조회)" /></p>
                         <input class="equipment_estimator_edit_info_item_blank required" style="width: 177px;" type="text" name="USER_NICK_NAME" id="USER_NICK_NAME" data-field="닉네임"
 										onkeyup="keyupNickName()" value="${DATA.USER_NICK_NAME}"/>
 						<button class="equipment_estimator_edit_info_item_button" type="button" onclick="chkNickNameDuplication()" style="cursor: pointer;">
-							<p class="equipment_estimator_edit_info_item_button_typo">중복 확인</p>
+							<p class="equipment_estimator_edit_info_item_button_typo"><spring:message code="join.chkAvail" text="중복 확인" /></p>
 						</button>
                     </div>
                 </div>
@@ -479,12 +483,12 @@ function keyupAccounNm() {
                 	</script>
            <div class="sign_up_info_container">
 			<div class="sign_up_info_item" >
-				<p class="sign_up_info_item_typo">은행</p>
+				<p class="sign_up_info_item_typo"><spring:message code="bank" text="은행" /></p>
 				<input type="hidden" name="BANK_CD" id="BANK_CD" data-field="은행선택" value="${DATA.BANK_CD}" required/>
 				<div class="dropbox_sign_up_expert_bank">
 					<div id="BANK_CD_DIV_1" class="dropbox_select_button codebox1" onclick="fnSelect2(this);" style="cursor: pointer;">
 						<div class="dropbox_select_button_typo_container">
-							<p class="dropbox_select_button_typo" id="banknm">선택</p>
+							<p class="dropbox_select_button_typo" id="banknm"><spring:message code="req.manInfo" text="선택" /></p>
 							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
 						</div>
 					</div>
@@ -585,9 +589,9 @@ function keyupAccounNm() {
 				var JOB_CD = "${DATA.JOB_CD}";
 				
 				if(JOB_CD == "J001"){
-					$("#jabnm").text("치과의사");
+					$("#jabnm").text(getI8nMsg("dentist"));
 				}else if(JOB_CD == "J002"){
-					$("#jabnm").text("치과기공사");
+					$("#jabnm").text(getI8nMsg("dentalTech"));
 				}				
 				setTimeout(function(){
 					bankbool = 1;
@@ -605,19 +609,19 @@ function keyupAccounNm() {
 				<div class="dropbox_sign_up_expert_job">
 					<div id="JOB_CD_DIV_1_CHEESIGNER" class="dropbox_select_button codebox1" onclick="fnSelect3(this);" style="cursor: pointer;">
 						<div class="dropbox_select_button_typo_container">
-							<p class="dropbox_select_button_typo" id="jabnm">선택</p>
+							<p class="dropbox_select_button_typo" id="jabnm"><spring:message code="select" text="선택" /></p>
 							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
 						</div>
 					</div>
 					<div id="JOB_CD_DIV_2_CHEESIGNER" class="dropbox_select_button_item_container hidden codebox2 cheesigner" style="cursor: pointer;">
 						<div class="dropbox_select_button_item">
 								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('J001', '치과의사');" data-div="JOB_CD">
-								  치과의사
+								  <spring:message code="dentist" text="치과의사" />
 								</p>
 							</div>
 							<div class="dropbox_select_button_item">
 								<p class="dropbox_select_button_item_typo" onclick="fnSelect3('J002', '치과기공사');" data-div="JOB_CD">
-								  치과기공사
+								  <spring:message code="dentalTech" text="치과기공사" />
 								</p>
 							</div>
 						<%-- <c:forEach items="${jobCdList1}" var="job">
@@ -636,20 +640,20 @@ function keyupAccounNm() {
 			$(document).ready(function(){
 			var JOB_CD = "${DATA.JOB_CD}";
 			if(JOB_CD == "K001"){
-				$("#jabnm").text("치과의사");
+				$("#jabnm").text(getI8nMsg("dentist")); //치과의사
 			}else if(JOB_CD == "K002"){
-				$("#jabnm").text("치과기공사");
+				$("#jabnm").text(getI8nMsg("dentalTech")); //치과기공사
 			}else if(JOB_CD == "K003"){
-				$("#jabnm").text("치과위생사");
+				$("#jabnm").text(getI8nMsg("dentalHygi")); //치과위생사
 			}
 			});
 			</script>
 			<div id="client_job_container" class="sign_up_info_item">
-				<p class="sign_up_info_item_typo">직업선택</p>
+				<p class="sign_up_info_item_typo"><spring:message code="equ.select.profess" text="직업선택" /></p>
 				<div class="dropbox_sign_up_expert_job">
 					<div id="JOB_CD_DIV_1_CLIENT" class="dropbox_select_button codebox1" onclick="fnSelect3(this);" style="cursor: pointer;">
 						<div class="dropbox_select_button_typo_container">
-							<p class="dropbox_select_button_typo" id="jabnm">선택</p>
+							<p class="dropbox_select_button_typo" id="jabnm"><spring:message code="select" text="선택" /></p>
 							<img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg" />
 						</div>
 					</div>
@@ -666,16 +670,16 @@ function keyupAccounNm() {
 			</div>
 			</c:if>
            <div class="sign_up_info_item">
-				<p class="sign_up_info_item_typo">면허증 첨부</p>
+				<p class="sign_up_info_item_typo"><spring:message code="equ.attachL" text="면허증 첨부" /></p>
 				<input class="sign_up_info_item_blank_with_button required" style="width: 341px;" value="${DATA.LICENSE_FILE}" data-field="면허증"/>
 				<input type="file" name="LICENSE_FILE" id="LICENSE_FILE" style="display: none;" onchange="fnSetFile();"/>
 				<input type="hidden" name="licensecd" value="${DATA.LICENSE_FILE_CD}">
 				<button class="sign_up_info_item_button" type="button" id="licenseFileBtn">
-					<p class="sign_up_info_item_button_typo">파일첨부</p>
+					<p class="sign_up_info_item_button_typo"><spring:message code="join.attachF" text="파일첨부" /></p>
 				</button>
 			</div>
 			<div class="sign_up_info_item">
-				<p class="sign_up_info_item_typo">면허증 번호</p>
+				<p class="sign_up_info_item_typo"><spring:message code="equ.licenNum" text="면허증 번호" /></p>
 				<input type="hidden" name="licenseNO" value="${DATA.LICENSE_NO}">
 				<input class="sign_up_info_item_blank required" type="text" name="LICENSE_NO" value="${DATA.LICENSE_NO}" id="LICENSE_NO" data-field="면허증 번호" />
 			</div>
@@ -746,9 +750,9 @@ function keyupAccounNm() {
 	      });
 	    </script>
                 <div class="equipment_estimator_edit_info_container">
-                    <p class="equipment_estimator_edit_info_container_title">추가정보</p>
+                    <p class="equipment_estimator_edit_info_container_title"><spring:message code="join.addInfo" text="추가정보" /></p>
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">업종선택</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="join.selectBiz" text="업종선택" /></p>
                         <input type="hidden" name="COMP_GROUP_NM" id="COMP_GROUP_NM" value="${DATA.COMP_GROUP_NM}"/>
 				        <input type="hidden" name="COMP_GROUP_CD" id="COMP_GROUP_CD" value="${DATA.COMP_GROUP_CD}"/>
                         <div class="dropbox_equipment_estimator_edit_info">
@@ -772,10 +776,10 @@ function keyupAccounNm() {
 					          	</c:if>
 					          	<c:if test="${DATA.USER_TYPE_CD ne 1}">
 						            <div class="dropbox_select_button_item">
-										<p class="dropbox_select_button_item_typo" onclick="fnSelect('B001', '치과')" data-div="COMP_GROUP_CD">치과</p>
+										<p class="dropbox_select_button_item_typo" onclick="fnSelect('B001', '치과')" data-div="COMP_GROUP_CD"><spring:message code="join.dental" text="치과" /></p>
 									</div>
 									<div class="dropbox_select_button_item">
-										<p class="dropbox_select_button_item_typo" onclick="fnSelect('B002', '치과기공소')" data-div="COMP_GROUP_CD">치과기공소</p>
+										<p class="dropbox_select_button_item_typo" onclick="fnSelect('B002', '치과기공소')" data-div="COMP_GROUP_CD"><spring:message code="join.dentalLabor" text="치과기공소" /></p>
 									</div>
 					          	</c:if>
 					          </div>
@@ -784,27 +788,27 @@ function keyupAccounNm() {
 				              style="width: 253px; margin-left: 10px; height: 40px; display: none;" />
                     </div>
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">사업자등록번호</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="join.bizNum" text="사업자등록번호" /></p>
                         <input class="equipment_estimator_edit_info_item_blank" name="COMP_NO" id="COMP_NO" data-field="사업자등록번호" value="${DATA.COMP_NO}"/>
                     </div>
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">사업장 주소</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="join.compAddr" text="사업장 주소" /></p>
                         <input class="equipment_estimator_edit_info_item_blank" style="margin-left: 37px;" type="text" name="COMP_ADDRESS" id="COMP_ADDRESS" data-field="사업장 주소"  readonly value="${DATA.COMP_ADDRESS}"/>
                         <input class="equipment_estimator_edit_info_item_blank" type="text" name="COMP_ADDRESS_DTL" id="COMP_ADDRESS_DTL" data-field="사업장 주소 상세"  value="${DATA.COMP_ADDRESS_DTL}"/>
                     </div>
                     
                     <div class="equipment_estimator_edit_info_item">
-                        <p class="equipment_estimator_edit_info_item_title">사업자등록증 첨부</p>
+                        <p class="equipment_estimator_edit_info_item_title"><spring:message code="join.attachBizRegi" text="사업자등록증 첨부" /></p>
                         <input type="hidden" name="compfile" value="${DATA.COMP_FILE_CD}">
                         <input class="equipment_estimator_edit_info_item_blank" data-field="사업자등록증" style="width: 341px;" value="${DATA.FILE_ORIGIN_NM}"/>
 						<input type="file" name="COMP_FILE" id="COMP_FILE" style="display: none;" onchange="fnSetFile();" />
 						<button class="equipment_estimator_edit_info_item_button" type="button" id="compFileBtn">
-							<p class="equipment_estimator_edit_info_item_button_typo">파일첨부</p>
+							<p class="equipment_estimator_edit_info_item_button_typo"><spring:message code="join.attachF" text="파일첨부" /></p>
 						</button>
                     </div>
                     <div class="equipment_estimator_edit_info_item">
                         <p class="equipment_estimator_edit_info_item_title"></p>
-                        <p class="equipment_estimator_edit_info_item_caution">※ 소속된 사업장의 정보를 입력해주세요. 미입력시 서비스에 제한이 있을 수 있습니다.</p>
+                        <p class="equipment_estimator_edit_info_item_caution">※ <spring:message code="join.enter.bizInfo" text="소속된 사업장의 정보를 입력해주세요. 미입력시 서비스에 제한이 있을 수 있습니다." /></p>
                     </div>
                 </div>
                 </form>
@@ -813,11 +817,11 @@ function keyupAccounNm() {
             <div class="equipment_estimator_edit_info_button_container">
             	<a href="/${api}/main/main">
                 <button class="equipment_estimator_edit_info_button_white">
-                    <p class="equipment_estimator_edit_info_button_white_typo">취소</p>
+                    <p class="equipment_estimator_edit_info_button_white_typo"><spring:message code="cancel" text="취소" /></p>
                 </button>
                 </a>
                 <button class="equipment_estimator_edit_info_button_blue" onclick="fnSave();">
-                    <p class="equipment_estimator_edit_info_button_blue_typo">확인</p>
+                    <p class="equipment_estimator_edit_info_button_blue_typo"><spring:message code="save" text="확인" /></p>
                 </button>
             </div>
         </div>

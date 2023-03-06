@@ -246,7 +246,7 @@
               WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
          , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
          , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = B.PROJECT_CD
@@ -343,7 +343,7 @@
       FROM ( SELECT RQST_NO
                FROM TB_TRIBUTE
               WHERE CREATE_ID = #{USER_ID}
-              GROUP BY GROUP_CD ) A
+              GROUP BY RQST_NO ) A
   ]]>
   </select>
     <select id="getCnt02" parameterType="map" resultType="java.lang.Integer">
@@ -366,14 +366,14 @@
 							   , (SELECT COUNT(*)
 							        FROM TB_TRIBUTE_DTL DTL
 							       WHERE DTL.GROUP_CD = A.GROUP_CD) AS TOOTH_CNT
-							   , CAST(AES_DECRYPT(UNHEX(A.PANT_NM), 'NAME') AS CHAR) AS PANT_NM
+							   , MAX(CAST(AES_DECRYPT(UNHEX(A.PANT_NM), 'NAME') AS CHAR)) AS PANT_NM
 						     , GROUP_CONCAT(DISTINCT(A.SUPP_NM_1) SEPARATOR ', ') AS SUPP_NM_STR
 							   , A.FILE_CD
 							   , (SELECT COUNT(*) FROM TB_FILE_INFO F WHERE F.FILE_CD = A.FILE_CD) AS FILE_CNT
 						  FROM TB_TRIBUTE A
 						 WHERE A.CREATE_ID = #{USER_ID}
 						 AND A.STATE_CD = '1'
-						 GROUP BY A.GROUP_CD
+						 GROUP BY A.GROUP_CD, A.FILE_CD
 						 ORDER BY CAST(A.GROUP_CD AS UNSIGNED)
 					 ) B
 				 , (SELECT @ROWNUM := 0) RN_TB
@@ -441,14 +441,14 @@
          , A.SUPP_CD_4
          , A.SUPP_NM_4
          , A.PRO_METH_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PRO_METH_CD'
                 AND CODE_CD = A.PRO_METH_CD
          ) AS PRO_METH_NM
          , A.PRO_METH_ETC
          , A.SHADE_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'SHADE_CD'
                 AND CODE_CD = A.SHADE_CD

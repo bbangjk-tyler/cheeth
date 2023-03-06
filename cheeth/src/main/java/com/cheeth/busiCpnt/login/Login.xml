@@ -9,7 +9,7 @@
     SELECT A.USER_ID
          , A.USER_PW
          , A.USER_TYPE_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'USER_TYPE'
                 AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
@@ -49,7 +49,7 @@
     SELECT A.USER_ID
          , A.USER_PW
          , A.USER_TYPE_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'USER_TYPE'
                 AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
@@ -88,7 +88,7 @@
     SELECT A.USER_ID
          , A.USER_PW
          , A.USER_TYPE_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'USER_TYPE'
                 AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM

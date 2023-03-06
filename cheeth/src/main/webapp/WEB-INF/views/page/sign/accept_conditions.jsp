@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <script type="text/javascript">
   
@@ -10,7 +11,7 @@
     var choiceAgreementYn1 = $('#CHOICE_AGREEMENT_YN_1').val() ?? 'N';
     
     if(agreementYn1 !== 'Y') {
-      alert('서비스 약관, 개인정보 수집 및 이용 동의해야 합니다.');
+    	alert(getI8nMsg("alert.mustAgree2"));//서비스 약관, 개인정보 수집 및 이용 동의해야 합니다.
       return;
     }
     
@@ -94,22 +95,22 @@
 
 <div class="accept_conditions_sign_up_container">
   <div class="accept_conditions_sign_up_typo_container">
-    <p class="accept_conditions_sign_up_typo">회원가입</p>
+    <p class="accept_conditions_sign_up_typo"><spring:message code="join" text="회원가입" /></p>
   </div>
   <div class="accept_conditions_sign_up_step_container">
     <div class="accept_conditions_sign_up_step">
       <p class="accept_conditions_sign_up_step_number">STEP 1</p>
-      <p class="accept_conditions_sign_up_step_title">회원유형 선택</p>
+      <p class="accept_conditions_sign_up_step_title"><spring:message code="join.step1" text="회원유형 선택" /></p>
     </div>
     <img class="accept_conditions_sign_up_step_arrow" src="/public/assets/images/sign_up_steps_right_arrow.svg">
     <div class="accept_conditions_sign_up_step" style="color: #2093EB;">
       <p class="accept_conditions_sign_up_step_number">STEP 2</p>
-      <p class="accept_conditions_sign_up_step_title">약관동의</p>
+      <p class="accept_conditions_sign_up_step_title"><spring:message code="join.step2" text="약관동의" /></p>
     </div>
     <img class="accept_conditions_sign_up_step_arrow" src="/public/assets/images/sign_up_steps_right_arrow.svg">
     <div class="accept_conditions_sign_up_step">
       <p class="accept_conditions_sign_up_step_number">STEP 3</p>
-      <p class="accept_conditions_sign_up_step_title">정보입력</p>
+      <p class="accept_conditions_sign_up_step_title"><spring:message code="join.step3" text="정보입력" /></p>
     </div>
   </div>
 </div>
@@ -117,7 +118,7 @@
 <div class="accept_conditions_condition_container">
   <div class="accept_conditions_condition">
     <div class="accept_conditions_typo_and_check">
-      <p class="accept_conditions_condition_typo">서비스 약관, 개인정보 수집 및 이용 동의</p>
+      <p class="accept_conditions_condition_typo"><spring:message code="join.agree1" text="서비스 약관, 개인정보 수집 및 이용 동의" /></p>
       <label class="checkbox_large">
         <input type="checkbox" id="AGREEMENT_YN_1" name="AGREEMENT_YN_1" onchange="fnChangeCheck(this);" value="N">
       </label>
@@ -489,7 +490,7 @@
   </div>
   <div class="accept_conditions_condition">
     <div class="accept_conditions_typo_and_check">
-      <p class="accept_conditions_condition_typo">(선택) 플랫폼 서비스 혜택 및 정보 수신에 동의</p>
+      <p class="accept_conditions_condition_typo"><spring:message code="join.agree2" text="(선택) 플랫폼 서비스 혜택 및 정보 수신에 동의" /></p>
       <label class="checkbox_large">
         <input type="checkbox" id="CHOICE_AGREEMENT_YN_1" name="CHOICE_AGREEMENT_YN_1" onchange="fnChangeCheck(this);" value="N">
       </label>
@@ -504,36 +505,36 @@
   <label class="checkbox_large">
     <input type="checkbox" id="ALL_CHECKBOX" onchange="fnAllCheck(this);">
   </label>
-  <p class="accept_conditions_condition_typo">모두 동의</p>
+  <p class="accept_conditions_condition_typo"><spring:message code="join.allAgree" text="모두 동의" /></p>
 </div>
 
 <div class="accept_conditions_page_button_container">
   <a href="/${api}/sign/sign_up_membership_type" class="accept_conditions_page_before">
-    <p class="accept_conditions_page_before_typo">이전 페이지</p>
+    <p class="accept_conditions_page_before_typo"><spring:message code="join.pre" text="이전 페이지" /></p>
   </a>
   <c:choose>
     <c:when test="${dvsn eq 'type01'}">
     <!-- 개인 회원가입 -->
     <a href="javascript:fnNext('${dvsn}');" class="accept_conditions_page_after">
-      <p class="accept_conditions_page_after_typo">다음 페이지</p>
+      <p class="accept_conditions_page_after_typo"><spring:message code="join.next" text="다음 페이지" /></p>
     </a>
     </c:when>
     <c:when test="${dvsn eq 'type02'}">
       <!-- 전문가 회원(의뢰인) -->
       <a href="javascript:fnNext('${dvsn}');" class="accept_conditions_page_after">
-        <p class="accept_conditions_page_after_typo">다음 페이지</p>
+        <p class="accept_conditions_page_after_typo"><spring:message code="join.next" text="다음 페이지" /></p>
       </a>
     </c:when>
     <c:when test="${dvsn eq 'type03'}">
       <!-- 전문가 회원(치자이너) -->
       <a href="javascript:fnNext('${dvsn}');" class="accept_conditions_page_after">
-        <p class="accept_conditions_page_after_typo">다음 페이지</p>
+        <p class="accept_conditions_page_after_typo"><spring:message code="join.next" text="다음 페이지" /></p>
       </a>
     </c:when>
     <c:when test="${dvsn eq 'sns'}">
       <!-- sns -->
       <a href="javascript:fnNext('${dvsn}');" class="accept_conditions_page_after">
-        <p class="accept_conditions_page_after_typo">다음 페이지</p>
+        <p class="accept_conditions_page_after_typo"><spring:message code="join.next" text="다음 페이지" /></p>
       </a>
     </c:when>
   </c:choose>

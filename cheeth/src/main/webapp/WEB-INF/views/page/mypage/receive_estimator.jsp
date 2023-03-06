@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -35,7 +36,7 @@ if(request.getParameter("alreadychk") != null){
 
   function fnReceive() {
     
-    var isConfirm = window.confirm('수령확인 하시겠습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.confirmRece"));//수령확인 하시겠습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -46,7 +47,7 @@ if(request.getParameter("alreadychk") != null){
      async: false,
      success: function(data) {
        if(data.cnt > 0) {
-         alert('이미 수령 확인하였습니다.');
+    	   alert(getI8nMsg("alert.alreadyConfRec"));//이미 수령 확인하였습니다.
        }
        location.href = '/' + API + '/mypage/equipment_estimator_my_page_progress';
      }, complete: function() {
@@ -101,7 +102,7 @@ if(request.getParameter("alreadychk") != null){
             html += `<div class="receive_estimator_request_container">`;
             html += `<div class="receive_estimator_request">`;
             html += `<p class="receive_estimator_request_name">` + rtnArray[0]['PANT_NM'] + `</p>`;
-            html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button">의뢰서 보기</a>`;
+            html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button"><spring:message code="dialog.req.previReq" text="의뢰서 보기" /></a>`;
             html += `<p class="receive_estimator_request_context">`;
             rtnArray.map(m => {
              html += m.SUPP_NM + ' ' + m.CNT + '개, ';
@@ -111,7 +112,7 @@ if(request.getParameter("alreadychk") != null){
             html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + `개</p>`;
             html += `</div>`;
             html += `<button class="receive_estimator_attatchment_download_button" onclick="fnOpenFileModal('` + rtnArray[0]['FILE_CD'] + `');">`;
-            html += `<p class="receive_estimator_attatchment_download_button_typo">첨부파일 다운로드</p>`;
+            html += `<p class="receive_estimator_attatchment_download_button_typo"><spring:message code="prof.downAttach" text="첨부파일 다운로드" /></p>`;
             html += `</button>`;
             html += `</div>`;
             $('.receive_estimator_request_wrapper').append(html);
@@ -169,29 +170,29 @@ if(request.getParameter("alreadychk") != null){
 </script>
 
 <div class="receive_estimator_header">
-  <p class="receive_estimator_header_typo">의뢰서 수령</p>
+  <p class="receive_estimator_header_typo"><spring:message code="equ.receiReq" text="의뢰서 수령" /></p>
   <div class="receive_estimator_connection_location_container">
     <a href="/" class="receive_estimator_connection_location_typo">
       <img class="receive_estimator_connection_location_home_button" src="/public/assets/images/connection_location_home_button_white.svg"/>
     </a>
     <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
     <div class="receive_estimator_connection_location">
-      <p class="receive_estimator_connection_location_typo">견적·의뢰내역</p>
+      <p class="receive_estimator_connection_location_typo"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
     </div>
     <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
     <div class="receive_estimator_connection_location">
-      <p class="receive_estimator_connection_location_typo">진행내역</p>
+      <p class="receive_estimator_connection_location_typo"><spring:message code="req.progD" text="진행내역" /></p>
     </div>
     <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
     <div class="receive_estimator_connection_location">
-      <p class="receive_estimator_connection_location_typo_bold">의뢰서 수령</p>
+      <p class="receive_estimator_connection_location_typo_bold"><spring:message code="equ.receiReq" text="의뢰서 수령" /></p>
     </div>
   </div>
 </div>
 <div class="receive_estimator_body">
   <div class="receive_estimator_main_container">
     <div class="receive_estimator_item">
-      <p class="receive_estimator_title">의뢰서</p>
+      <p class="receive_estimator_title"><spring:message code="proj.request" text="의뢰서" /></p>
       <div class="receive_estimator_context">
         <div class="receive_estimator_request_wrapper"></div>
       </div>
@@ -204,17 +205,17 @@ if(request.getParameter("alreadychk") != null){
       <img class="dotted_divider without_margin" src="/public/assets/images/dotted_divider.svg"/>
     </div>
     <div class="receive_estimator_item">
-      <p class="receive_estimator_title">총 개수</p>
+      <p class="receive_estimator_title"><spring:message code="req.totNum" text="총 개수" /></p>
       <div class="receive_estimator_total_prosthetics">
         <div class="receive_estimator_total_prosthetics_data_type_container">
-          <p class="receive_estimator_total_prosthetics_data_type">보철종류</p>
-          <p class="receive_estimator_total_prosthetics_data_type">개수</p>
+          <p class="receive_estimator_total_prosthetics_data_type"><spring:message code="req.prosthT" text="보철종류" /></p>
+          <p class="receive_estimator_total_prosthetics_data_type"><spring:message code="req.quant" text="개수" /></p>
         </div>
         <div class="receive_estimator_total_prosthetics_divider"></div>
       </div>
     </div>
     <button type="button" class="receive_estimator_confirm_button" onclick="fnReceive();">
-      <p class="receive_estimator_confirm_button_typo">수령확인</p>
+      <p class="receive_estimator_confirm_button_typo"><spring:message code="equ.confReq" text="수령확인" /></p>
     </button>
   </div>
 </div>
@@ -225,7 +226,7 @@ if(request.getParameter("alreadychk") != null){
     <div class="modal-content" style="width: fit-content;">
       <div class="dialog_tribute_request_container">
         <div class="dialog_tribute_request_header">
-          <p class="dialog_tribute_request_header_typo">파일 첨부</p>
+          <p class="dialog_tribute_request_header_typo"><spring:message code="talk.attachF" text="파일 첨부" /></p>
           <a href="javascript:void(0);" class="dialog_tribute_request_header_close_button_wrapper" data-bs-dismiss="modal">
             <img class="dialog_tribute_request_header_close_button" src="/public/assets/images/tribute_request_dialog_close_button.svg"/>
           </a>
@@ -237,19 +238,19 @@ if(request.getParameter("alreadychk") != null){
                   <p class="dialog_tribute_request_table_data_type_typo">NO.</p>
               </div>
               <div class="dialog_tribute_request_table_data_type_document">
-                  <p class="dialog_tribute_request_table_data_type_typo">문서유형</p>
+                  <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="docType" text="문서유형" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_type_necessary">
-                  <p class="dialog_tribute_request_table_data_type_typo">필수</p>
+                  <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="nece" text="필수" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_type_file_name">
-                  <p class="dialog_tribute_request_table_data_type_typo">파일명</p>
+                  <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="fileNm" text="파일명" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_type_download">
-                  <p class="dialog_tribute_request_table_data_type_typo">다운로드</p>
+                  <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="download" text="다운로드" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_type_note">
-                  <p class="dialog_tribute_request_table_data_type_typo">비고</p>
+                  <p class="dialog_tribute_request_table_data_type_typo"><spring:message code="note" text="비고" /></p>
               </div>
             </div>
             <div class="dialog_tribute_request_table_data_container file_modal_item">
@@ -257,7 +258,7 @@ if(request.getParameter("alreadychk") != null){
                 <p class="dialog_tribute_request_table_data_typo">1</p>
               </div>
               <div class="dialog_tribute_request_table_data_document">
-                <p class="dialog_tribute_request_table_data_typo">스캔파일</p>
+                <p class="dialog_tribute_request_table_data_typo"><spring:message code="scanfile" text="스캔파일" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_necessary">
                 <p class="dialog_tribute_request_table_data_typo">Y</p>
@@ -267,7 +268,7 @@ if(request.getParameter("alreadychk") != null){
               </div>
               <div class="dialog_tribute_request_table_data_download">
                 <div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-                  <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+                  <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
                   <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
                 </div> 
               </div>
@@ -280,7 +281,7 @@ if(request.getParameter("alreadychk") != null){
                 <p class="dialog_tribute_request_table_data_typo">2</p>
               </div>
               <div class="dialog_tribute_request_table_data_document">
-                <p class="dialog_tribute_request_table_data_typo">기타</p>
+                <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_necessary">
                 <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -290,7 +291,7 @@ if(request.getParameter("alreadychk") != null){
               </div>
               <div class="dialog_tribute_request_table_data_download">
                 <div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-                  <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+                  <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
                   <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
                 </div> 
               </div>
@@ -303,7 +304,7 @@ if(request.getParameter("alreadychk") != null){
                 <p class="dialog_tribute_request_table_data_typo">3</p>
               </div>
               <div class="dialog_tribute_request_table_data_document">
-                <p class="dialog_tribute_request_table_data_typo">기타</p>
+                <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_necessary">
                 <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -313,7 +314,7 @@ if(request.getParameter("alreadychk") != null){
               </div>
               <div class="dialog_tribute_request_table_data_download">
                 <div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-                  <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+                  <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
                   <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
                 </div> 
               </div>
@@ -326,7 +327,7 @@ if(request.getParameter("alreadychk") != null){
                 <p class="dialog_tribute_request_table_data_typo">4</p>
               </div>
               <div class="dialog_tribute_request_table_data_document">
-                <p class="dialog_tribute_request_table_data_typo">기타</p>
+                <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_necessary">
                 <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -336,7 +337,7 @@ if(request.getParameter("alreadychk") != null){
               </div>
               <div class="dialog_tribute_request_table_data_download">
                 <div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-                  <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+                  <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
                   <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
                 </div> 
               </div>
@@ -349,7 +350,7 @@ if(request.getParameter("alreadychk") != null){
                 <p class="dialog_tribute_request_table_data_typo">5</p>
               </div>
               <div class="dialog_tribute_request_table_data_document">
-                <p class="dialog_tribute_request_table_data_typo">기타</p>
+                <p class="dialog_tribute_request_table_data_typo"><spring:message code="etc" text="기타" /></p>
               </div>
               <div class="dialog_tribute_request_table_data_necessary">
                 <p class="dialog_tribute_request_table_data_typo">N</p>
@@ -359,7 +360,7 @@ if(request.getParameter("alreadychk") != null){
               </div>
               <div class="dialog_tribute_request_table_data_download">
                 <div class="hidden file_modal_download" style="display: flex; cursor: pointer;">
-                  <p class="dialog_tribute_request_table_data_typo">다운로드</p>
+                  <p class="dialog_tribute_request_table_data_typo"><spring:message code="download" text="다운로드" /></p>
                   <img class="dialog_tribute_request_table_data_download_img" src="/public/assets/images/tribute_request_table_data_download_img.svg"/>
                 </div> 
               </div>
@@ -370,7 +371,7 @@ if(request.getParameter("alreadychk") != null){
           </div>
           <div class="dialog_tribute_request_button_wrapper">
             <button class="dialog_tribute_request_button" type="button" data-bs-dismiss="modal">
-              <p class="dialog_tribute_request_button_typo">닫기</p>
+              <p class="dialog_tribute_request_button_typo"><spring:message code="close" text="닫기" /></p>
             </button>
           </div>
         </div>

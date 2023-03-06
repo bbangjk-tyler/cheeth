@@ -43,6 +43,8 @@ public class LoginController extends BaseController {
   public ModelAndView setSession(HttpServletRequest request) throws Exception {
       
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     
     String result = service.login(request, parameter);
     
@@ -77,6 +79,8 @@ public class LoginController extends BaseController {
 	  // 디코딩
 	String userID =  URLDecoder.decode(parameter.get("code").toString());
 	parameter.put("id", userID);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     String result = service.login2(request, parameter);
     
     

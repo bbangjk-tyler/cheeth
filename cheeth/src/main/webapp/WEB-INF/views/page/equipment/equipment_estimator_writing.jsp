@@ -2,16 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
 <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1 && empty sessionInfo.user.COMP_FILE_CD}">
   <script>
-   alert('접근 권한이 없습니다.');
+   alert(getI8nMsg("alert.nhaveAccess"));//접근 권한이 없습니다.
    history.back();
 </script>
 </c:if>
@@ -71,7 +72,7 @@
 	
 	function previewImage() {
 		if(uploadImgArr.length >= MAX_UPLOAD_CNT) {
-			alert('최대 ' + MAX_UPLOAD_CNT + '장까지 업로드 가능합니다.');
+			alert(getI8nMsg("alert.param.uploadPhoto", null, MAX_UPLOAD_CNT)); //'최대 ' +  + '장까지 업로드 가능합니다.'
 			return;
 		}
 		
@@ -192,17 +193,17 @@
 			  processData: false,
 		    success: function(data) {
 				  if(data.result == 'Y') {
-					  alert('저장되었습니다.');
+					  alert(getI8nMsg("alert.save"));//저장되었습니다.
 					  fnAllView();
 				  }else{
-					  alert('오류가 발생했습니다. 다시 시도해주세요.');
+					  alert(getI8nMsg("alert.tryAgain"));//오류가 발생했습니다. 다시 시도해주세요.
 				  }
 		    }, complete: function() {
 		    }, error: function() {
 		    }
 		  });
 			}else{
-				alert('미래시간을 입력하세요.');
+				alert(getI8nMsg("alert.enterFuTime"));//미래시간을 입력하세요.
 			}
 		}else{
 			
@@ -231,17 +232,17 @@
 			  processData: false,
 		    success: function(data) {
 				  if(data.result == 'Y') {
-					  alert('저장되었습니다.');
+					  alert(getI8nMsg("alert.save"));//저장되었습니다.
 					  fnAllView();
 				  }else{
-					  alert('오류가 발생했습니다. 다시 시도해주세요.');
+					  alert(getI8nMsg("alert.tryAgain"));//오류가 발생했습니다. 다시 시도해주세요.
 				  }
 		    }, complete: function() {
 		    }, error: function() {
 		    }
 		  });
 			}else{
-				alert('미래시간을 입력하세요.');
+				alert(getI8nMsg("alert.enterFuTime"));//미래시간을 입력하세요.
 			}
 		}else{
 			
@@ -251,12 +252,12 @@
 		var chkValid = [...document.querySelectorAll('.required')].some(s => {
 			if(isEmpty(s.value) && s.id.includes('DELIVERY_EXP_DATE')) {
 				if(isEmpty(document.getElementById('DELIVERY_EXP_DATE').value)) {
-					alert(`\${s.title}을(를) 입력하세요.`);
+					alert(getI8nMsg("alert.param.plzEnter", null, '${s.title}')); //`\${s.title}을(를) 입력하세요.`
 					return true;
 				}
 			} else {
 				if(isEmpty(s.value)) {
-					alert(`\${s.title}을(를) 입력하세요.`);
+					alert(getI8nMsg("alert.param.plzEnter", null, '${s.title}')); //`\${s.title}을(를) 입력하세요.`
 					return true;
 				}
 			}
@@ -347,14 +348,14 @@
 
 <div class="equipment_estimator_header">
         <p class="equipment_estimator_header_typo">
-            치과 / 치과기공 장비 견적소
+            <spring:message code="main.dentalequipm" text="치과 / 치과기공 장비 견적소" />
         </p>
     </div>
     <div class="equipment_estimator_body">
         <div class="side_menu">
         	<div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
 	          <p class="side_menu_title_typo">
-	          	전체보기
+	          	<spring:message code="main.seeAll" text="전체보기" />
 	          </p>
           </div>
             <c:forEach var="item" items="${EQ_CD_LIST}" varStatus="status">
@@ -431,7 +432,7 @@
       	  console.log(args);
       	  if(args <= toDayStr){
       		 okbool =0;
-      		 alert('미래시간을 선택해주세요.');
+      		alert(getI8nMsg("alert.enterFuTime"));//미래시간을 입력하세요.
       		var div = $(".datepicker-cell.day.selected.focused");
       		console.log("div.length " + div.length);
       		setTimeout(function(){
@@ -464,7 +465,7 @@
                 </a>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo">치과/치과기공 장비 견적소</p>
+                    <p class="equipment_estimator_connection_location_typo"><spring:message code="main.dentalequipm" text="치과 / 치과기공 장비 견적소" /></p>
                 </div>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <!-- <div class="equipment_estimator_connection_location">
@@ -472,7 +473,7 @@
                 </div>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/> -->
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo_bold">글쓰기</p>
+                    <p class="equipment_estimator_connection_location_typo_bold"><spring:message code="write" text="글쓰기" /></p>
                 </div>
             </div> 
             <div class="connection_location_divider"></div>
@@ -481,7 +482,7 @@
                     <div class="dropbox_equipment_estimator_select_board">
                         <div class="dropbox_select_button_large">
                             <select id="EQ_CD" name="EQ_CD" class="boardtop_select large required" title="게시판">
-                            	<option value="">게시판 선택</option>
+                            	<option value=""><spring:message code="equ.selectB" text="게시판 선택" /></option>
                             	<c:forEach items="${EQ_CD_LIST}" var="eqpmt">
                             		<option value="${eqpmt.CODE_CD}" ${eqpmt.CODE_CD eq DATA.EQ_CD ? 'selected' : ''}>${eqpmt.CODE_NM}</option>
                             	</c:forEach>
@@ -491,7 +492,7 @@
                     <div class="dropbox_equipment_estimator_select_location">
                       <div class="dropbox_select_button_large">
                         <select id="AREA_CD" name="AREA_CD" class="boardtop_select large required" title="지역">
-                           <option value="">지역 선택</option>
+                           <option value=""><spring:message code="equ.selectR" text="지역 선택" /></option>
                            <c:forEach items="${AREA_CD_LIST}" var="area">
                            	<%-- <option value="${area.CODE_CD}" ${area.CODE_CD eq DATA.AREA_CD ? 'selected' : ''}>${area.CODE_NM}</option> --%>
                            	<option value="${area.CODE_CD}" <c:if test="${area.CODE_NM eq DATA.AREA_NM}">selected</c:if>>${area.CODE_NM}</option>
@@ -501,14 +502,14 @@
                     </div>
                 </div>
                 <div class="equipment_estimator_writing_info_sub_container">
-                    <input class="equipment_estimator_writing_info_title required" id="TITLE" name="TITLE" title="제목" placeholder="제목입력" value="${DATA.TITLE}"/>
+                    <input class="equipment_estimator_writing_info_title required" id="TITLE" name="TITLE" title="제목" placeholder="<spring:message code="equ.enter.title" text="제목입력" />" value="${DATA.TITLE}"/>
                     <div class="equipment_estimator_writing_info_date_expiry">
                         <p class="equipment_estimator_writing_info_date_expiry_typo">
-                            견적요청 만료시간
+                            <spring:message code="proj.estimReq" text="견적요청 만료시간" />
                         </p>
                     </div> 
                     <a href="javascript:fnDateDialogOpen();" class="equipment_estimator_writing_info_date_expiry_button">
-					            <p class="equipment_estimator_writing_info_date_expiry_button_typo">시간선택하기</p>
+					            <p class="equipment_estimator_writing_info_date_expiry_button_typo"><spring:message code="proj.selectDT" text="시간선택하기" /></p>
 					          </a>
                 </div>
                 <div class="equipment_estimator_writing_info_main_container">
@@ -524,31 +525,31 @@
                     <div class="equipment_estimator_writing_info_item_container">
                         <div class="equipment_estimator_writing_info_item">
                             <p class="equipment_estimator_writing_info_item_typo">
-                                브랜드
+                                <spring:message code="equ.brand" text="브랜드" />
                             </p>
-                            <input class="equipment_estimator_writing_info_item_blank required" id="BRAND_NM" name="BRAND_NM" title="브랜드" placeholder="브랜드를 입력해 주세요" value="${DATA.BRAND_NM}"/>
+                            <input class="equipment_estimator_writing_info_item_blank required" id="BRAND_NM" name="BRAND_NM" title="브랜드" placeholder="<spring:message code="equ.enter.brand" text="브랜드를 입력해 주세요" />" value="${DATA.BRAND_NM}"/>
                         </div>
                         <div class="equipment_estimator_writing_info_item">
                             <p class="equipment_estimator_writing_info_item_typo">
-                                장비 이름
+                                <spring:message code="" text="장비 이름" />
                             </p>
-                            <input class="equipment_estimator_writing_info_item_blank required" id="EQ_NM" name="EQ_NM" title="장비" placeholder="장비명을 입력해 주세요" value="${DATA.EQ_NM}"/>
+                            <input class="equipment_estimator_writing_info_item_blank required" id="EQ_NM" name="EQ_NM" title="장비" placeholder="<spring:message code="" text="장비명을 입력해 주세요" />" value="${DATA.EQ_NM}"/>
                         </div>
                         <div class="equipment_estimator_writing_info_item">
                             <p class="equipment_estimator_writing_info_item_typo">
-                                원하는 납품 날짜
+                                <spring:message code="" text="원하는 납품 날짜" />
                             </p>
                             <div class="equipment_estimator_writing_info_select_button_container">
 							                <div class="dropbox_project_request_calendar">
 							                  <div id="datepickerContainer" class="dropbox_select_button">
-							                    <input id="datepickerInput" type="text" placeholder="날짜선택"  style="cursor: pointer;" autocomplete="off">
+							                    <input id="datepickerInput" type="text" placeholder="<spring:message code="proj.date" text="날짜선택" />"  style="cursor: pointer;" autocomplete="off">
 							                    <img class="equipment_estimator_calendar_image" src="/public/assets/images/calendar_image.svg" style="cursor: pointer;"/>
 							                  </div>
 							                </div>
 							                <div class="dropbox_project_request_time">
 							                  <div class="dropbox_select_button">
 							                    <div id="TIME_CD_DIV_1" class="dropbox_select_button_typo_container" onclick="fnSelect_3();" style="cursor: pointer;">
-							                      <p class="dropbox_select_button_typo">시간</p>
+							                      <p class="dropbox_select_button_typo"><spring:message code="proj.time" text="시간" /></p>
 							                      <img class="dropbox_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
 							                    </div>
 							                  </div>
@@ -564,7 +565,7 @@
                         </div>
                         <div class="main_container_divider"></div>
                         <div class="equipment_estimator_writing_info_detail">
-                            <p class="equipment_estimator_writing_info_detail_typo">상세내용</p>
+                            <p class="equipment_estimator_writing_info_detail_typo"><spring:message code="details" text="상세내용" /></p>
 							<c:choose>
 							<c:when test="${not empty imgFileList}">
 	                        	<div id="imageSlider" class="carousel slide qna_writing_image_slider_wrapper" data-bs-ride="carousel">
@@ -607,7 +608,7 @@
 							</div>
                         </c:otherwise>
                         </c:choose>
-                            <textarea class="equipment_estimator_writing_info_detail_blank" maxlength="1300" id="ADD_CONTENT" name="ADD_CONTENT" placeholder="상세내용을 적어주세요">${DATA.ADD_CONTENT}</textarea>
+                            <textarea class="equipment_estimator_writing_info_detail_blank" maxlength="1300" id="ADD_CONTENT" name="ADD_CONTENT" placeholder="<spring:message code="proj.enter.detail" text="상세내용을 적어주세요" />">${DATA.ADD_CONTENT}</textarea>
                         </div>
                         
                     </div>
@@ -615,7 +616,7 @@
                 <div class="equipment_estimator_writing_info_button_container">
                     <button class="equipment_estimator_writing_info_button_left" type="button" data-bs-toggle="modal" data-bs-target="#picAttachModal">
                         <p class="equipment_estimator_writing_info_button_left_typo">
-                            사진첨부
+                            <spring:message code="equ.attachI" text="사진첨부" />
                         </p>
                     </button>
                     <div class="equipment_estimator_writing_info_button_right_container">
@@ -628,14 +629,14 @@
 							<c:when test="${empty DATA.EQ_NO}">
 	                        <a href="javascript:fnSave()" class="equipment_estimator_writing_info_button_right_submit">
 	                            <p class="equipment_estimator_writing_info_button_right_submit_typo">
-	                            	글쓰기
+	                            	<spring:message code="write" text="글쓰기" />
 	                            </p>
 	                        </a>
 	                        </c:when>
 	                        <c:otherwise>
 	                        <a href="javascript:fnUpdate()" class="equipment_estimator_writing_info_button_right_submit">
 	                            <p class="equipment_estimator_writing_info_button_right_submit_typo">
-	                            	글쓰기
+	                            	<spring:message code="write" text="글쓰기" />
 	                            </p>
 	                        </a>
 	                        </c:otherwise>
@@ -647,13 +648,13 @@
 										<div class="modal-content" style="width: fit-content;">
 											<div class="qna_pic_attachment_container">
 						            <div class="qna_pic_attachment_header">
-						                <p class="qna_pic_attachment_header_typo">사진 첨부</p>
+						                <p class="qna_pic_attachment_header_typo"><spring:message code="equ.attachI" text="사진 첨부" /></p>
 						                <a href="#" data-bs-dismiss="modal" aria-label="Close" onclick="">
 						                	<img class="qna_pic_attatchment_close_button" src="/public/assets/images/dialog_close_button.svg"/>
 						                </a>
 						            </div>
 						            <div class="qna_pic_attachment_body">
-						                <p class="qna_pic_attachment_title">사진 업로드</p>
+						                <p class="qna_pic_attachment_title"><spring:message code="equ.upload" text="사진 업로드" /></p>
 						                <p class="qna_pic_attachment_sub_title">최대 10장까지 업로드 가능합니다.</p>
 						                <font style="margin-left:10px;display: block;margin-bottom: 20px;margin-top: -10px;">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font>
 						                <div class="qna_pic_attatchment_pic_upload_container">
@@ -662,7 +663,7 @@
 						                  </div>
 						                  <div style="display: flex;">
 						                  	<button id="imgUploadBtn" class="qna_pic_attachment_pic_upload_button" type="button">
-						                    	<p class="qna_pic_attachment_pic_upload_button_typo">이미지 업로드</p>
+						                    	<p class="qna_pic_attachment_pic_upload_button_typo"><spring:message code="equ.upload" text="이미지 업로드" /></p>
 						                    </button>
 								                <input type="file" name="IMG_FILE" id="IMG_FILE" onchange="previewImage();" style="display: none;"/>
 								              </div>
@@ -720,10 +721,10 @@
 						                <div class="main_container_divider"></div>
 						                <div class="qna_pic_attatchment_button_container">
 						                    <a href="#" class="qna_pic_attatchment_button_white" data-bs-dismiss="modal" aria-label="Close" onclick="">
-						                    	<p class="qna_pic_attatchment_button_white_typo">취소</p>
+						                    	<p class="qna_pic_attatchment_button_white_typo"><spring:message code="cancel" text="취소" /></p>
 						                    </a>
 						                    <a href="#" class="qna_pic_attatchment_button_blue" data-bs-dismiss="modal" onclick="fnUpload();">
-						                    	<p class="qna_pic_attatchment_button_blue_typo">업로드</p>
+						                    	<p class="qna_pic_attatchment_button_blue_typo"><spring:message code="upload" text="업로드" /></p>
 						                    </a>
 						                </div>
 						            </div>

@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -41,9 +42,9 @@
             $('#PROFILE_TAX_BILL_YN').prev().removeClass('hidden');
             $('#PROFILE_TAX_BILL_YN').removeClass('hidden');
             if(data02.TAX_BILL_YN === 'Y') {
-              $('#PROFILE_TAX_BILL_YN').html('유');
+              $('#PROFILE_TAX_BILL_YN').html(getI8nMsg("enabled")); //유
             } else if(data02.TAX_BILL_YN === 'N') {
-              $('#PROFILE_TAX_BILL_YN').html('무');
+              $('#PROFILE_TAX_BILL_YN').html(getI8nMsg("disabled"));//무
             }
           }
           
@@ -175,7 +176,7 @@
     <div class="modal-content" style="width: fit-content;">
       <div class="cad_container">
         <div class="dialog_header">
-          <p class="dialog_header_typo">프로필 보기</p>
+          <p class="dialog_header_typo"><spring:message code="dialog.prof.view" text="프로필 보기" /></p>
           <a href="javascript:void(0);" data-bs-dismiss="modal" aria-label="Close">
             <img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
           </a>
@@ -189,9 +190,9 @@
               <div class="profile_management_profile_info_typo_container">
                 <p id="PROFILE_USER_NICK_NAME" class="profile_management_profile_info_name">홍길동</p>
                 <div class="profile_management_profile_info_sub_info_container">
-                  <p class="profile_management_profile_info_sub_info_title">회원구분</p>
+                  <p class="profile_management_profile_info_sub_info_title"><spring:message code="dialog.prof.memb" text="회원구분" /></p>
                   <p id="PROFILE_USER_TYPE_NM" class="profile_management_profile_info_sub_info_context">기업회원</p>
-                  <p class="profile_management_profile_info_sub_info_title hidden">세금계산서 발행가능 유무</p>
+                  <p class="profile_management_profile_info_sub_info_title hidden"><spring:message code="tesign.taxAvail" text="세금계산서 발행가능 유무" /></p>
                   <p id="PROFILE_TAX_BILL_YN" class="profile_management_profile_info_sub_info_context hidden"></p>
                 </div>
               </div>
@@ -199,7 +200,7 @@
           </div>
           <div class="profile_management_profile_item etc_info">
             <div class="profile_management_profile_etc_info_success_rate">
-              <p class="profile_management_profile_etc_info_title">거래성공률</p>
+              <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.successR" text="거래성공률" /></p>
               <div class="profile_management_profile_etc_info_context_container">
                 <img class="profile_management_profile_satisfaction_img" src="/public/assets/images/satisfaction_very_good.svg"/>
                 <p id="PROFILE_COMPLETE_RATIO" class="profile_management_profile_etc_info_context">0</p>
@@ -207,7 +208,7 @@
               </div>
             </div>
             <div class="profile_management_profile_etc_info_satisfaction">
-              <p class="profile_management_profile_etc_info_title">만족도</p>
+              <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.satisf" text="만족도" /></p>
               <div class="profile_management_profile_etc_info_context_container">
                 <img class="profile_management_profile_satisfaction_img" src="/public/assets/images/satisfaction_good.svg"/>
                 <p id="PROFILE_SCORE_AVG" class="profile_management_profile_etc_info_context">0</p>
@@ -215,14 +216,14 @@
               </div>
             </div>
             <div class="profile_management_profile_etc_info_total_project">
-              <p class="profile_management_profile_etc_info_title">거래 총 프로젝트 수</p>
+              <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.totalP" text="거래 총 프로젝트 수" /></p>
               <div class="profile_management_profile_etc_info_context_container">
                 <p id="PROFILE_COMPLETE_CNT" class="profile_management_profile_etc_info_context">0</p>
                 <p class="profile_management_profile_etc_info_context_unit ">건</p>
               </div>
             </div>
             <div class="profile_management_profile_etc_info_total_price">
-              <p class="profile_management_profile_etc_info_title">거래 총 금액</p>
+              <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.totalA" text="거래 총 금액" /></p>
               <div class="profile_management_profile_etc_info_context_container">
                 <p id="PROFILE_COMPLETE_AMOUNT" class="profile_management_profile_etc_info_context">0</p>
                 <p class="profile_management_profile_etc_info_context_unit ">원</p>
@@ -234,24 +235,24 @@
             <img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
           </div>
           <div class="profile_management_profile_item self_intro">
-            <p class="profile_management_profile_item_title">자기소개</p>
-            <p id="PROFILE_INTRO_CONTENT" class="profile_management_profile_self_intro_context">데이터가 존재하지 않습니다.</p>
+            <p class="profile_management_profile_item_title"><spring:message code="dialog.prof.introYrs" text="자기소개" /></p>
+            <p id="PROFILE_INTRO_CONTENT" class="profile_management_profile_self_intro_context"><spring:message code="msg.noData" text="데이터가 존재하지 않습니다." /></p>
           </div>
           <div class="main_container_divider"></div>
           <div class="profile_management_profile_item career">
-            <p class="profile_management_profile_item_title">경력</p>
+            <p class="profile_management_profile_item_title"><spring:message code="dialog.prof.career" text="경력" /></p>
             <div class="profile_management_profile_career_container">
-              <p id="PROFILE_CAREER_NM" class="profile_management_profile_career_typo">데이터가 존재하지 않습니다.</p>
+              <p id="PROFILE_CAREER_NM" class="profile_management_profile_career_typo"><spring:message code="msg.noData" text="데이터가 존재하지 않습니다." /></p>
             </div>
           </div>
           <div class="main_container_divider"></div>
           <div class="profile_management_profile_item design_field">
-            <p class="profile_management_profile_item_title">디자인 활동 분야</p>
+            <p class="profile_management_profile_item_title"><spring:message code="dialog.prof.designF" text="디자인 활동 분야" /></p>
             <div class="profile_management_profile_design_field_container"></div>
           </div>
           <div class="main_container_divider"></div>
           <div class="profile_management_profile_item pic">
-            <p class="profile_management_profile_item_title">뽐내기 사진</p>
+            <p class="profile_management_profile_item_title"><spring:message code="dialog.prof.showingPhoto" text="뽐내기 사진" /></p>
             <div class="profile_management_profile_pic_container">
               <div class="profile_management_profile_pic_main">
                 <img id="IMAGE_FILE_CD" class="profile_management_main_pic_upload" src="/public/assets/images/profile_image.svg" alt="no_image">

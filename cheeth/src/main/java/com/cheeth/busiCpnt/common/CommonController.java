@@ -153,7 +153,8 @@ public class CommonController extends BaseController {
 		  if(String.valueOf(parameter.get("flag")).equals("0")) {
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 인증번호는 ["+randDigit+"] 입니다.");
+			  String[] param = new String[] {randDigit};
+			  parameter.put("content", service.geti18nParam(request, "sms.authNum", param));//"[덴트너] 인증번호는 ["+randDigit+"] 입니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -203,7 +204,7 @@ public class CommonController extends BaseController {
 		  //userPhone
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 결제요청이 왔습니다.");
+			  parameter.put("content", service.geti18n(request, "sms.reqPayment"));//"[덴트너] 결제요청이 왔습니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -243,7 +244,8 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 입금확인이 완료되었습니다. 파일을 확인해주세요.");
+			  
+			  parameter.put("content", service.geti18n(request, "sms.depositCompli"));//"[덴트너] 입금확인이 완료되었습니다. 파일을 확인해주세요."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -282,7 +284,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 특수계약 요청을 하였습니다.");
+			  parameter.put("content", service.geti18n(request, "sms.reqSpe"));//"[덴트너] 특수계약 요청을 하였습니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -325,7 +327,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 전자계약이 승인되었습니다");
+			  parameter.put("content", service.geti18n(request, "sms.econtApprov"));//"[덴트너] 전자계약이 승인되었습니다"
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -371,7 +373,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 전자계약 승인 요청이 왔습니다");
+			  parameter.put("content", service.geti18n(request, "sms.econtApproReq"));//"[덴트너] 전자계약 승인 요청이 왔습니다"
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -411,7 +413,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 전자계약 수정요청이 왔습니다.");
+			  parameter.put("content", service.geti18n(request, "sms.econtModiReq"));//"[덴트너] 전자계약 수정요청이 왔습니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -450,7 +452,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 지정견적 요청이 왔습니다.");
+			  parameter.put("content", service.geti18n(request, "sms.reqQuote"));//"[덴트너] 지정견적 요청이 왔습니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -487,7 +489,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 의뢰인이 전자계약 작성을 요청했습니다.");
+			  parameter.put("content", service.geti18n(request, "sms.cCreateEcont"));//"[덴트너] 의뢰인이 전자계약 작성을 요청했습니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -526,7 +528,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 의뢰인이 입금 확인을 요청합니다. 확인 후 '진행내역'에서 입금 확인 버튼을 눌러주세요.");
+			  parameter.put("content", service.geti18n(request, "sms.cReqDepos"));//"[덴트너] 의뢰인이 입금 확인을 요청합니다. 확인 후 '진행내역'에서 입금 확인 버튼을 눌러주세요."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -565,7 +567,8 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 상대방이 계약 취소요청을 하였습니다.(제목: " + TITLE +")     '마이페이지 > 진행내역'에서 확인 가능합니다.");
+			  String[] param = new String[] {TITLE};
+			  parameter.put("content", service.geti18nParam(request, "sms.otherCancelReqT",param));//"[덴트너] 상대방이 계약 취소요청을 하였습니다.(제목: " + TITLE +")     '마이페이지 > 진행내역'에서 확인 가능합니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));
@@ -604,7 +607,7 @@ public class CommonController extends BaseController {
 		  //인증번호 SMS 전송
 			  Random random = new Random();
 			  String randDigit = String.format("%04d", random.nextInt(10000));
-			  parameter.put("content", "[덴트너] 상대방이 계약 취소요청을 하였습니다.");
+			  parameter.put("content", service.geti18n(request, "sms.otherCancelReq"));//"[덴트너] 상대방이 계약 취소요청을 하였습니다."
 			  String result = service.sendSMS(parameter);
 			  session.setAttribute("smsNo", randDigit);
 			  session.setAttribute("smsTime", now.format(formatter));

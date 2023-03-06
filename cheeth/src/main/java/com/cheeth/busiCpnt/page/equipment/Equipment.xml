@@ -79,7 +79,7 @@
     SELECT A.EQ_NO
          , A.EQ_CD
          , A.AREA_CD
-         , ( SELECT CODE_NM 
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM) 
          			 FROM TB_CODE 
          			WHERE GROUP_CD = 'AREA_CD' 
          			  AND CODE_CD = A.AREA_CD
@@ -201,12 +201,12 @@
   	/* equipment.getData01 */
   	SELECT A.EQ_NO
   			 , A.EQ_CD
-  			 , ( SELECT CODE_NM 
+  			 , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM) 
          			 FROM TB_CODE 
          			WHERE GROUP_CD = 'EQ_CD' 
          			  AND CODE_CD = A.EQ_CD
          	 ) AS EQ_CD_NM
-         , ( SELECT CODE_NM 
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM) 
          			 FROM TB_CODE 
          			WHERE GROUP_CD = 'AREA_CD' 
          			  AND CODE_CD = A.AREA_CD

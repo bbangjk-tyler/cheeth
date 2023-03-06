@@ -46,7 +46,9 @@ public class MypageController extends BaseController {
     ModelAndView mv = new ModelAndView("page/mypage/equipment_estimator_my_page_progress");
     if(isSession()) {
       mv.addObject("PAGE", ObjectUtils.isEmpty(parameter.get("PAGE")) ? "1" : parameter.get("PAGE")); // 현재 페이지
-      
+
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       Map<String, Object> data = service.getData01(parameter);
       mv.addObject("DATA", data);
       
@@ -66,7 +68,8 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView("page/mypage/receive_estimator");
     if(isSession()) {
-      
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       Map<?, ?> data = service.getData02(parameter);
       if(data == null || data.isEmpty()) {
         mv.setViewName("redirect:/");
@@ -87,6 +90,8 @@ public class MypageController extends BaseController {
     Map<String, Object> resultMap = new HashMap<String, Object>();
 
     try {
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       resultMap = service.save01(parameter);
     } catch(Exception e) {
       resultMap.put("result", "N");
@@ -103,7 +108,8 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView("page/mypage/cad_completed");
     if(isSession()) {
-      
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       Map<?, ?> data01 = service.getData02(parameter);
       Map<?, ?> data02 = service.getData04(parameter);
 
@@ -266,7 +272,8 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView("page/mypage/receive_file");
     if(isSession()) {
-      
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       Map<?, ?> data = service.getData02(parameter);
       Integer cnt = service.integer("getCnt07", parameter);
       if(data == null || data.isEmpty() || cnt == 0) {
@@ -318,6 +325,8 @@ public class MypageController extends BaseController {
     Map<String, Object> resultMap = new HashMap<String, Object>();
     
     Map<String, Object> data = new HashMap<String, Object>();
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     data.put("WR_NO", service.integer("getData21", parameter));
     data.put("CONTRACT_NO", service.integer("getData22", parameter));
     data.put("ESTIMATOR_NO", service.integer("getData23", parameter));
@@ -365,6 +374,8 @@ public class MypageController extends BaseController {
   public List<Map<String, Object>> getSuppInfo(HttpServletRequest request) throws Exception {
     
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getSuppInfo", parameter);
     int TotalFake = 0;
@@ -375,7 +386,9 @@ public class MypageController extends BaseController {
     	RealTotal = Integer.parseInt(obj.get("TOTAL_CNT").toString());
       obj.put("SUPP_NM", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM").toString()));
       if(obj.get("SUPP_NM").toString().contains("Frame") || obj.get("SUPP_NM").toString().contains("Splint") || obj.get("SUPP_NM").toString().contains("의치")
-			  || obj.get("SUPP_NM").toString().contains("교정") || obj.get("SUPP_NM").toString().contains("트레이")) {
+			  || obj.get("SUPP_NM").toString().contains("교정") || obj.get("SUPP_NM").toString().contains("트레이")
+			  || obj.get("SUPP_NM").toString().contains(commonService.geti18n(request, "dialog.req.denture"))
+    	  || obj.get("SUPP_NM").toString().contains(commonService.geti18n(request, "main.aligner")) ) {
 		  //SUPP_GROUP_CNT
 		  //Frame, Splint, 의치, 교정, 트레이
     	  TotalFake = Integer.parseInt(obj.get("CNT").toString());
@@ -401,14 +414,16 @@ public class MypageController extends BaseController {
     ModelAndView mv = new ModelAndView("page/mypage/my_page_edit_info");
     
     if(isSession()) {
+        String lang = request.getSession().getAttribute("language").toString();
+        parameter.put("LANG", lang);
       Map<?, ?> data = service.getData06(parameter);
       if(data == null || data.isEmpty()) {
         mv.setViewName("redirect:/");
       } else {
     	  	parameter.put("GROUP_CD", "JOB_CD_01");
-    	    List<Map<String, String>> jobCdList1 = (List<Map<String, String>>) commonService.getList(parameter);
+    	    List<Map<String, String>> jobCdList1 = (List<Map<String, String>>) commonService.getListLang(parameter);
     	  	parameter.put("GROUP_CD", "JOB_CD_02");
-    	  	List<Map<String, String>> jobCdList2 = (List<Map<String, String>>) commonService.getList(parameter);
+    	  	List<Map<String, String>> jobCdList2 = (List<Map<String, String>>) commonService.getListLang(parameter);
     	  	mv.addObject("DATA", data);
     	  	mv.addObject("jobCdList1", jobCdList1);
     	  	mv.addObject("jobCdList2", jobCdList2);
@@ -438,6 +453,8 @@ public class MypageController extends BaseController {
         }
       }
       parameter.put("PAGE", page);
+      String lang = request.getSession().getAttribute("language").toString();
+      parameter.put("LANG", lang);
       
       mv.addObject("TOTAL_CNT", service.integer("getCnt03", parameter));
       mv.addObject("LIST", service.list("getList02", parameter));
@@ -468,6 +485,8 @@ public class MypageController extends BaseController {
         }
       }
       parameter.put("PAGE", page);
+      String lang = request.getSession().getAttribute("language").toString();
+      parameter.put("LANG", lang);
       
       mv.addObject("TOTAL_CNT", service.integer("getCnt06", parameter));
       mv.addObject("LIST", service.list("getList03", parameter));
@@ -497,6 +516,8 @@ public class MypageController extends BaseController {
         }
       }
       parameter.put("PAGE", page);
+      String lang = request.getSession().getAttribute("language").toString();
+      parameter.put("LANG", lang);
       
       mv.addObject("TOTAL_CNT", service.integer("getCnt09", parameter));
       mv.addObject("LIST", service.list("getList04", parameter));
@@ -515,6 +536,8 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView();
     if(isSession()) {
+        String lang = request.getSession().getAttribute("language").toString();
+        parameter.put("LANG", lang);
       Map<String, Object> data = service.getData07(parameter);
       mv.addObject("DATA", data);
       String userTypeCd = ObjectUtils.isEmpty(((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD")) ? "" : ((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD").toString();
@@ -537,6 +560,8 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView();
     if(isSession()) {
+        String lang = request.getSession().getAttribute("language").toString();
+        parameter.put("LANG", lang);
       Map<String, Object> data = service.getData07(parameter);
       mv.addObject("DATA", data);
       String userTypeCd = ObjectUtils.isEmpty(((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD")) ? "" : ((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD").toString();
@@ -558,6 +583,8 @@ public class MypageController extends BaseController {
     
     ModelAndView mv = new ModelAndView();
     if(isSession()) {
+        String lang = request.getSession().getAttribute("language").toString();
+        parameter.put("LANG", lang);
       Map<String, Object> data = service.getData07(parameter);
       mv.addObject("DATA", data);
       String userTypeCd = ObjectUtils.isEmpty(((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD")) ? "" : ((Map<?, ?>) data.get("DATA_01")).get("USER_TYPE_CD").toString();
@@ -609,7 +636,8 @@ public class MypageController extends BaseController {
   public Map<?, ?> getProfile(HttpServletRequest request) throws Exception {
     
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
-    
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     Map<?, ?> data = service.getProfile(parameter);
     
     return data;

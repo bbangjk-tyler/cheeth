@@ -4,7 +4,7 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -109,7 +109,7 @@
 	
 	function fnDeleteEqEstimator() {
 		const eqNo = currEstimator['EQ_NO'];
-		if(confirm('삭제하시겠습니까?')) {
+		if(confirm(getI8nMsg("alert.confirm.delete"))) { //삭제하시겠습니까?
 		  $.ajax({
 			  url: '/' + API + '/equipment/deleteEstimator',
 			  type: 'POST',
@@ -118,7 +118,7 @@
 			  async: false,
 			  success: function(data) {
 		    	if(data.result == 'Y') {
-		    		alert('삭제되었습니다.');
+		    		alert(getI8nMsg("alert.delete"));//삭제되었습니다.
 		    		//fnGetEqEstimators(eqNo);
 		    		location.reload();
 		    	}
@@ -142,7 +142,7 @@
 		  async: false,
 		  success: function(data) {
 	    	if(data.result == 'Y') {
-	    		alert('매칭되었습니다.');
+	    		alert(getI8nMsg("alert.match"));//매칭되었습니다.
 	    		matchingModal.hide();
 	    		fnGetEqEstimators(eqNo);
 	    	} else if(data.result == 'N') {

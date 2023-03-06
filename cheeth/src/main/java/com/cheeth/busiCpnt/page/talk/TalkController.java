@@ -39,7 +39,9 @@ public class TalkController extends BaseController {
     ModelAndView mv = new ModelAndView("page/talk/receive");
     if(isSession()) {
       mv.addObject("PAGE", ObjectUtils.isEmpty(parameter.get("PAGE")) ? "1" : parameter.get("PAGE")); // 현재 페이지
-      
+
+      String lang = request.getSession().getAttribute("language").toString();
+      parameter.put("LANG", lang);
       Map<String, Object> rtnMap = service.getData01(parameter);
       
       mv.addObject("TALK_CD_LIST", rtnMap.get("TALK_CD_LIST")); // 읽은쪽지, 안읽은쪽지 코드
@@ -67,7 +69,9 @@ public class TalkController extends BaseController {
     ModelAndView mv = new ModelAndView("page/talk/send");
     if(isSession()) {
       mv.addObject("PAGE", ObjectUtils.isEmpty(parameter.get("PAGE")) ? "1" : parameter.get("PAGE")); // 현재 페이지
-      
+
+      String lang = request.getSession().getAttribute("language").toString();
+      parameter.put("LANG", lang);
       Map<String, Object> rtnMap = service.getData02(parameter);
       
       mv.addObject("TALK_CD_LIST", rtnMap.get("TALK_CD_LIST")); // 읽은쪽지, 안읽은쪽지 코드
@@ -190,6 +194,8 @@ public class TalkController extends BaseController {
   @GetMapping(value="/getData03")
   public Map<?, ?> getData03(HttpServletRequest request) throws Exception {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     Map<String, Object> resultMap = service.getData03(parameter);
     return resultMap;
   }
@@ -198,6 +204,8 @@ public class TalkController extends BaseController {
   @GetMapping(value="/getData04")
   public Map<?, ?> getData04(HttpServletRequest request) throws Exception {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     Map<String, Object> resultMap = service.getData04(parameter);
     return resultMap;
   }

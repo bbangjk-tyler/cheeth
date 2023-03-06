@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%
 	String alreadychk = "0";
@@ -11,7 +12,7 @@
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -35,7 +36,7 @@
   });
   function fnSend() {
     
-    var isConfirm = window.confirm('결제를 완료하셨습니까?');
+    var isConfirm = window.confirm(getI8nMsg("alert.confirm.complPaym"));//결제를 완료하셨습니까?
     if(!isConfirm) return;
     
     $.ajax({
@@ -48,7 +49,7 @@
     	 alert("결제를 완료하셨습니까? \n 치자이너 회원님의 입금확인 후에 완성된 캐드파일을 다운로드 하실 수 있습니다.");
     	 message07();
        if(data.cnt === 0) {
-    	   alert('업데이트 실패하였습니다.');
+    	   alert(getI8nMsg("alert.updateFail"));//업데이트 실패하였습니다.
        }
        location.href = '/' + API + '/mypage/equipment_estimator_my_page_progress';
      }, complete: function() {
@@ -161,29 +162,29 @@
   <input type="hidden" id="WR_NO" name="WR_NO" value="${DATA_02.WR_NO}">
   <input type="hidden" id="PROJECT_NO" name="PROJECT_NO" value="${DATA_01.PROJECT_NO}">
 	<div class="receive_estimator_header">
-	  <p class="receive_estimator_header_typo">결제</p>
+	  <p class="receive_estimator_header_typo"><spring:message code="payment" text="결제" /></p>
 	  <div class="receive_estimator_connection_location_container">
 	    <a href="/" class="receive_estimator_connection_location_typo">
 	      <img class="receive_estimator_connection_location_home_button" src="/public/assets/images/connection_location_home_button_white.svg"/>
 	    </a>
 	    <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	    <div class="receive_estimator_connection_location">
-	      <p class="receive_estimator_connection_location_typo">견적·의뢰내역</p>
+	      <p class="receive_estimator_connection_location_typo"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
 	    </div>
 	    <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	    <div class="receive_estimator_connection_location">
-	      <p class="receive_estimator_connection_location_typo">진행내역</p>
+	      <p class="receive_estimator_connection_location_typo"><spring:message code="req.progD" text="진행내역" /></p>
 	    </div>
 	    <img class="receive_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
 	    <div class="receive_estimator_connection_location">
-	      <p class="receive_estimator_connection_location_typo_bold">결제</p>
+	      <p class="receive_estimator_connection_location_typo_bold"><spring:message code="payment" text="결제" /></p>
 	    </div>
 	  </div>
 	</div>
 	<div class="receive_estimator_body">
 	  <div class="receive_estimator_main_container">
 	    <div class="receive_estimator_item">
-	      <p class="receive_estimator_title">의뢰서</p>
+	      <p class="receive_estimator_title"><spring:message code="proj.request" text="의뢰서" /></p>
 	      <div class="receive_estimator_context">
 	        <div class="receive_estimator_request_wrapper"></div>
 	      </div>
@@ -196,11 +197,11 @@
 	      <img class="dotted_divider without_margin" src="/public/assets/images/dotted_divider.svg"/>
 	    </div>
 	    <div class="receive_estimator_item">
-	      <p class="receive_estimator_title">총 개수</p>
+	      <p class="receive_estimator_title"><spring:message code="req.totNum" text="총 개수" /></p>
 	      <div class="receive_estimator_total_prosthetics">
 	        <div class="receive_estimator_total_prosthetics_data_type_container">
-	          <p class="receive_estimator_total_prosthetics_data_type">보철종류</p>
-	          <p class="receive_estimator_total_prosthetics_data_type">개수</p>
+	          <p class="receive_estimator_total_prosthetics_data_type"><spring:message code="req.prosthT" text="보철종류" /></p>
+	          <p class="receive_estimator_total_prosthetics_data_type"><spring:message code="req.quant" text="개수" /></p>
 	        </div>
 	        <div class="receive_estimator_total_prosthetics_divider"></div>
 	      </div>

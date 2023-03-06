@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
 <%-- <c:if test="${sessionInfo.user.USER_TYPE_CD eq 1}">
 	<script>
-		alert('접근 권한이 없습니다.');
+		alert(getI8nMsg("alert.nhaveAccess"));//접근 권한이 없습니다.
 		history.back();
 	</script>
 </c:if> --%>
@@ -75,7 +76,7 @@
 <div class="processing_center_body">
   <div class="side_menu">
     <div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
-      <p class="side_menu_title_typo">전체보기</p>
+      <p class="side_menu_title_typo"><spring:message code="main.seeAll" text="전체보기" /></p>
     </div>
     <c:forEach var="item" items="${AREA_CD_LIST}" varStatus="status">
       <a href="/${api}/processing/processing_center?AREA_CD=${item.CODE_CD}" class="side_menu_list">
@@ -136,14 +137,14 @@
 	      <c:when test="${not empty sessionInfo.user and sessionInfo.user.USER_TYPE_CD eq 2 and not empty sessionInfo.user.COMP_FILE_CD}">
 		      <div class="project_writing_button_container">
 		        <a href="/${api}/processing/processing_center_profile" class="processing_center_writing_button">
-		          <p class="processing_center_writing_button_typo">견적 요청</p>
+		          <p class="processing_center_writing_button_typo"><spring:message code="proj.toReq" text="견적 요청" /></p>
 		        </a>
 		      </div>
 	      </c:when>
 	      <c:when test="${not empty sessionInfo.user and sessionInfo.user.USER_TYPE_CD eq 3}">
 		      <div class="project_writing_button_container">
 		        <a href="/${api}/processing/processing_center_profile" class="processing_center_writing_button">
-		          <p class="processing_center_writing_button_typo">견적 요청</p>
+		          <p class="processing_center_writing_button_typo"><spring:message code="proj.toReq" text="견적 요청" /></p>
 		        </a>
 		      </div>
 	      </c:when>
@@ -151,7 +152,7 @@
 		      <div class="project_writing_button_container">
 		        <a href="javascript:confirmModal()" class="project_writing_button">
 		          <img class="project_writing_button_icon" src="/public/assets/images/writing_button.svg">
-		          <p class="project_writing_button_typo">견적 요청</p>
+		          <p class="project_writing_button_typo"><spring:message code="proj.toReq" text="견적 요청" /></p>
 		        </a>
 		      </div>
 	      </c:otherwise>
@@ -162,14 +163,14 @@
       <div class="search">
         <div class="search_field_wrapper">
           <select id="SEARCH_TYPE" name="SEARCH_TYPE" class="search_field search_field_typo">
-            <option value="ALL" <c:if test="${empty param.SEARCH_TYPE or param.SEARCH_TYPE eq 'ALL'}">selected="selected"</c:if>>센터이름</option>
+            <option value="ALL" <c:if test="${empty param.SEARCH_TYPE or param.SEARCH_TYPE eq 'ALL'}">selected="selected"</c:if>><spring:message code="cent.name" text="센터이름" /></option>
           </select>
           <img class="search_field_arrow" src="/public/assets/images/search_field_arrow.svg" style="float: right; margin: -20px 10px;"/>
         </div>
         <input type="text" class="search_bar" id="SEARCH_TXT" name="SEARCH_TXT" value="${param.SEARCH_TXT}">
         <button class="search_button" onclick="fnSearch();">
           <img class="Search_button_icon" src="/public/assets/images/search_button_icon.svg"/>
-          <p class="search_button_typo">검색</p>
+          <p class="search_button_typo"><spring:message code="search" text="검색" /></p>
         </button>
       </div>
     </div>

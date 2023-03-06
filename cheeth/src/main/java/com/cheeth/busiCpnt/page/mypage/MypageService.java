@@ -132,10 +132,10 @@ public class MypageService extends AbstractService {
 		rtnMap.put("DATA_03", data03);
 
 		parameter.put("GROUP_CD", "CAREER_CD");
-		rtnMap.put("CAREER_CD_LIST", list("common", "getCode", parameter)); // 경력코드
+		rtnMap.put("CAREER_CD_LIST", list("common", "getCodeLang", parameter)); // 경력코드
 
 		parameter.put("GROUP_CD", "PROJECT_CD");
-		rtnMap.put("PROJECT_CD_LIST", list("common", "getCode", parameter)); // 프로젝트 코드
+		rtnMap.put("PROJECT_CD_LIST", list("common", "getCodeLang", parameter)); // 프로젝트 코드
 
 		return rtnMap;
 	}
@@ -148,6 +148,7 @@ public class MypageService extends AbstractService {
 		if (!ObjectUtils.isEmpty(targetUserId)) {
 			Map<String, String> serachMap = new HashMap<String, String>();
 			serachMap.put("USER_ID", targetUserId);
+			serachMap.put("LANG", parameter.get("LANG").toString());
 			data.put("DATA_01", map("mypage", "getData07", serachMap));
 			data.put("DATA_02", map("mypage", "getData08", serachMap));
 			data.put("DATA_03", map("mypage", "getData09", serachMap));

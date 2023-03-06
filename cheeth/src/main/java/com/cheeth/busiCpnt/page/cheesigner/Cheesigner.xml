@@ -104,7 +104,7 @@
     SELECT A.USER_ID
          , A.USER_NM
          , A.USER_NICK_NAME
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'USER_TYPE'
                 AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
@@ -122,42 +122,42 @@
          , A.PROFILE_FILE_CD
          , A.IMAGE_FILE_CD
          , A.CAREER_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'CAREER_CD'
                 AND CODE_CD = A.CAREER_CD ) AS CAREER_NM
          , A.PROJECT_CD_1
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_1 ) AS PROJECT_NM_1
          , A.PROJECT_CD_2
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_2 ) AS PROJECT_NM_2
          , A.PROJECT_CD_3
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_3 ) AS PROJECT_NM_3
          , A.PROJECT_CD_4
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_4 ) AS PROJECT_NM_4
          , A.PROJECT_CD_5
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_5 ) AS PROJECT_NM_5
          , A.PROJECT_CD_6
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_6 ) AS PROJECT_NM_6
          , A.PROJECT_CD_7
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_7 ) AS PROJECT_NM_7
@@ -233,7 +233,7 @@
               WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
          , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
          , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = B.PROJECT_CD

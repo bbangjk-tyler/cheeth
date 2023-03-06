@@ -223,7 +223,7 @@
       FROM ( SELECT 'A' AS DVSN_CD
                   , A.PROJECT_NO
                   , A.PROJECT_CD
-                  , ( SELECT CODE_NM
+                  , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                         FROM TB_CODE
                        WHERE GROUP_CD = 'PROJECT_CD'
                          AND CODE_CD = A.PROJECT_CD ) AS PROJECT_NM
@@ -243,8 +243,8 @@
                   , A.HITS_COUNT
                   , C.PROGRESS_CD
                   , ( CASE WHEN D.FILE_RECEIVE_YN = 'Y'
-                           THEN '완료'
-                           ELSE '진행중'
+                           THEN if(#{LANG}='en','completed','완료')
+                           ELSE if(#{LANG}='en','progress','진행중')
                             END 
                     ) AS PROGRESS_NM
                   , B.USER_ID
@@ -272,7 +272,7 @@
              SELECT 'B' AS DVSN_CD
                   , A.PROJECT_NO
                   , A.PROJECT_CD
-                  , ( SELECT CODE_NM
+                  , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                         FROM TB_CODE
                        WHERE GROUP_CD = 'PROJECT_CD'
                          AND CODE_CD = A.PROJECT_CD ) AS PROJECT_NM
@@ -292,8 +292,8 @@
                   , A.HITS_COUNT
                   , C.PROGRESS_CD
                   , ( CASE WHEN D.FILE_RECEIVE_YN = 'Y'
-                           THEN '완료'
-                           ELSE '진행중'
+                           THEN if(#{LANG}='en','completed','완료')
+                           ELSE if(#{LANG}='en','progress','진행중')
                             END 
                     ) AS PROGRESS_NM
                   , B.USER_ID
@@ -350,7 +350,7 @@
   ]]>
   	SELECT A.EQ_NO
   	     , A.EQ_CD
-  	     , ( SELECT CODE_NM
+  	     , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
   	           FROM TB_CODE
   	          WHERE GROUP_CD = 'EQ_CD'
   	            AND CODE_CD = A.EQ_CD
@@ -379,7 +379,7 @@
     /* mypage.getList03 */
     SELECT A.PROJECT_NO
          , A.PROJECT_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD
@@ -419,7 +419,7 @@
   	SELECT 'EQ' AS REQ_TYPE
          , A.EQ_NO AS REQ_NO
   	     , A.EQ_CD AS REQ_CD
-  	     , ( SELECT CODE_NM
+  	     , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
   	           FROM TB_CODE
   	          WHERE GROUP_CD = 'EQ_CD'
   	            AND CODE_CD = A.EQ_CD
@@ -444,7 +444,7 @@
     SELECT 'PROJECT' AS REQ_TYPE
          , A.PROJECT_NO AS REQ_NO
 	       , A.PROJECT_CD AS REQ_CD
-  	     , ( SELECT CODE_NM
+  	     , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
   	           FROM TB_CODE
   	          WHERE GROUP_CD = 'PROJECT_CD'
   	            AND CODE_CD = A.PROJECT_CD
@@ -530,13 +530,13 @@
     /* mypage.getData02 */
     SELECT A.PROJECT_NO
          , A.PROJECT_CD 
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE CODE_CD = A.PROJECT_CD
                 AND GROUP_CD = 'PROJECT_CD'
            ) AS PROJECT_NM
          , A.PUBLIC_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE CODE_CD = A.PUBLIC_CD
                 AND GROUP_CD = 'PUBLIC_CD' 
@@ -550,28 +550,28 @@
          , IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간') AS DELIVERY_EXP_DATE3
          , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_EXP_DATE4
          , A.PREFER_CD_1
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE CODE_CD = A.PREFER_CD_1
                 AND GROUP_CD = 'PREFER_CD' 
            ) AS PREFER_CD_NM_1
          , A.PREFER_NM_1
          , A.PREFER_CD_2
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE CODE_CD = A.PREFER_CD_2
                 AND GROUP_CD = 'PREFER_CD' 
            ) AS PREFER_CD_NM_2
          , A.PREFER_NM_2
          , A.PREFER_CD_3
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE CODE_CD = A.PREFER_CD_3
                 AND GROUP_CD = 'PREFER_CD' 
            ) AS PREFER_CD_NM_3
          , A.PREFER_NM_3
          , A.PREFER_CD_4
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE CODE_CD = A.PREFER_CD_4
                 AND GROUP_CD = 'PREFER_CD' 
@@ -733,7 +733,7 @@
     SELECT A.USER_ID
          , A.USER_NM
          , A.USER_NICK_NAME
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'USER_TYPE'
                 AND CODE_CD = A.USER_TYPE_CD ) AS USER_TYPE_NM
@@ -751,42 +751,42 @@
          , A.PROFILE_FILE_CD
          , A.IMAGE_FILE_CD
          , A.CAREER_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'CAREER_CD'
                 AND CODE_CD = A.CAREER_CD ) AS CAREER_NM
          , A.PROJECT_CD_1
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_1 ) AS PROJECT_NM_1
          , A.PROJECT_CD_2
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_2 ) AS PROJECT_NM_2
          , A.PROJECT_CD_3
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_3 ) AS PROJECT_NM_3
          , A.PROJECT_CD_4
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_4 ) AS PROJECT_NM_4
          , A.PROJECT_CD_5
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_5 ) AS PROJECT_NM_5
          , A.PROJECT_CD_6
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_6 ) AS PROJECT_NM_6
          , A.PROJECT_CD_7
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = A.PROJECT_CD_7 ) AS PROJECT_NM_7
@@ -864,7 +864,7 @@
               WHERE USER_ID = A.CREATE_ID ) AS CREATE_NICK_NAME
          , DATE_FORMAT(A.CREATE_DATE, '%Y-%m-%d') AS CREATE_DATE
          , DATE_FORMAT(A.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_DATE
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'PROJECT_CD'
                 AND CODE_CD = B.PROJECT_CD

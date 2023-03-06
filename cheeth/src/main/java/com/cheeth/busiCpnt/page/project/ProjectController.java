@@ -3,12 +3,15 @@ package com.cheeth.busiCpnt.page.project;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tiles.jsp.taglib.GetAsStringTag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import com.cheeth.busiCpnt.common.CommonService;
 import com.cheeth.comAbrt.controller.BaseController;
 import com.cheeth.comUtils.ParameterUtil;
 
@@ -33,6 +38,9 @@ public class ProjectController extends BaseController {
   
   @Autowired
   private ProjectService service;
+  
+  @Autowired
+  private CommonService comm;
   
   @GetMapping(value="/project_view_all")
   public ModelAndView project_view_all(HttpServletRequest request) throws Exception {
@@ -52,16 +60,19 @@ public class ProjectController extends BaseController {
       }
     }
     parameter.put("PAGE", page);
+
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     
     mv.addObject("TOTAL_CNT", service.integer("getCnt01", parameter)); // 총건수
     
     mv.addObject("LIST", service.list("getList01", parameter)); // 목록조회
     
     parameter.put("GROUP_CD", "PROJECT_CD");
-    mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
-    
+
+    mv.addObject("PROJECT_CD_LIST", service.list("common", "getCodeLang", parameter));
+    //mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
     mv.addObject("SEARCH_TXT", parameter.get("SEARCH_TXT"));
-    
     return mv;
   }
   
@@ -77,10 +88,12 @@ public class ProjectController extends BaseController {
       mv.addObject("PROJECT_NO", parameter.get("PROJECT_NO"));
       
       parameter.put("GROUP_CD", "PROJECT_CD");
-      mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
+      String lang = request.getSession().getAttribute("language").toString();
+      parameter.put("LANG", lang);
+      mv.addObject("PROJECT_CD_LIST", service.list("common", "getCodeLang", parameter)); 
       
       parameter.put("GROUP_CD", "CADSW_CD");
-      mv.addObject("CADSW_CD_LIST", service.list("common", "getCode", parameter));
+      mv.addObject("CADSW_CD_LIST", service.list("common", "getCodeLang", parameter));
       
       Map<?, ?> data = service.getData02(parameter);
       mv.addObject("DATA", data); // 저장 데이터
@@ -101,16 +114,22 @@ public class ProjectController extends BaseController {
     ModelAndView mv = new ModelAndView("page/project/project_request");
     
     parameter.put("GROUP_CD", "PROJECT_CD");
-    mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
-    
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    mv.addObject("PROJECT_CD_LIST", service.list("common", "getCodeLang", parameter)); 
+    //mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 프로젝트 코드
+
     parameter.put("GROUP_CD", "PUBLIC_CD");
-    mv.addObject("PUBLIC_CD_LIST", service.list("common", "getCode", parameter)); // 공개 코드
+    mv.addObject("PUBLIC_CD_LIST", service.list("common", "getCodeLang", parameter)); 
+    //mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 공개 코드
     
     parameter.put("GROUP_CD", "TIME_CD");
-    mv.addObject("TIME_CD_LIST", service.list("common", "getCode", parameter)); // 시간 코드
+    mv.addObject("TIME_CD_LIST", service.list("common", "getCodeLang", parameter)); 
+    //mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter));// 시간 코드
     
     parameter.put("GROUP_CD", "PREFER_CD");
-    mv.addObject("PREFER_CD_LIST", service.list("common", "getCode", parameter)); // 선호 CAD S/W
+    mv.addObject("PREFER_CD_LIST", service.list("common", "getCodeLang", parameter)); 
+    //mv.addObject("PROJECT_CD_LIST", service.list("common", "getCode", parameter)); // 선호 CAD S/W
     
     Map<?, ?> data = service.getData01(parameter);
     mv.addObject("DATA", data); // 저장 데이터
@@ -238,7 +257,10 @@ public class ProjectController extends BaseController {
       }
       
  	  if(obj.get("SUPP_NM_STR").toString().contains("Frame") || obj.get("SUPP_NM_STR").toString().contains("Splint") || obj.get("SUPP_NM_STR").toString().contains("의치")
-		  || obj.get("SUPP_NM_STR").toString().contains("교정") || obj.get("SUPP_NM_STR").toString().contains("트레이")) {
+		  || obj.get("SUPP_NM_STR").toString().contains("교정") || obj.get("SUPP_NM_STR").toString().contains("트레이")
+		  || obj.get("SUPP_NM_STR").toString().contains(comm.geti18n(request, "dialog.req.denture"))
+		  || obj.get("SUPP_NM_STR").toString().contains(comm.geti18n(request, "main.aligner"))
+ 			  ) {
     	 
   		  String realctn = "1";
     	  if(obj.get("SUPP_NM_STR").toString().contains(",")) {
@@ -258,8 +280,11 @@ public class ProjectController extends BaseController {
 	  	  			int ft = 0;
 	  	  			int bool = 0;
 	  	  			int index = -1;
+			  	  	
+			  	  	
 	  	  			if(SUPP_NM_STR[i].contains("Frame") || SUPP_NM_STR[i].contains("Splint") || SUPP_NM_STR[i].contains("의치")
-	  	  					|| SUPP_NM_STR[i].toString().contains("교정") || SUPP_NM_STR[i].contains("트레이")) {
+	  	  					|| SUPP_NM_STR[i].toString().contains("교정") || SUPP_NM_STR[i].contains("트레이")
+	  	  				    || SUPP_NM_STR[i].contains(comm.geti18n(request, "dialog.req.denture")) || SUPP_NM_STR[i].contains(comm.geti18n(request, "main.aligner"))) {
 		  	  	  		  index = i;
 		  	  	  		  bool = 1;
 		  	  	  		  String GROUP_CD = obj.get("GROUP_CD").toString();
@@ -279,10 +304,10 @@ public class ProjectController extends BaseController {
 		  	               	if(obj2.get("SUPP_NM_1").toString().contains("Splint")) {
 		  	               		fsplint++;
 		  	               	}
-		  	               	if(obj2.get("SUPP_NM_1").toString().contains("의치")) {
+		  	               	if(obj2.get("SUPP_NM_1").toString().contains(comm.geti18n(request, "dialog.req.denture"))) {
 		  	               		fu++;
 		  	               	}
-		  	               	if(obj2.get("SUPP_NM_1").toString().contains("교정")) {
+		  	               	if(obj2.get("SUPP_NM_1").toString().contains(comm.geti18n(request, "main.aligner"))) {
 		  	               		fk++;
 		  	               	}
 		  	               	if(obj2.get("SUPP_NM_1").toString().contains("트레이")) {
@@ -296,10 +321,10 @@ public class ProjectController extends BaseController {
 	  	             	if(SUPP_NM_STR[i].contains("Splint")) {
 	  	             		cnt =fsplint;
 	  	             	}
-	  	             	if(SUPP_NM_STR[i].contains("의치")) {
+	  	             	if(SUPP_NM_STR[i].contains(comm.geti18n(request, "dialog.req.denture"))) {
 	  	             		cnt =fu;
 	  	             	}
-	  	             	if(SUPP_NM_STR[i].contains("교정")) {
+	  	             	if(SUPP_NM_STR[i].contains(comm.geti18n(request, "main.aligner"))) {
 	  	             		cnt =fk;
 	  	             	}
 	  	             	if(SUPP_NM_STR[i].contains("트레이")) {
@@ -351,8 +376,8 @@ public class ProjectController extends BaseController {
  	  	           int ft = 0;
 	  	           
  	             for(Map<String, Object> obj2 : list2) {
-	  	                if(obj2.get("SUPP_NM_1").toString().contains("Frame") || obj2.get("SUPP_NM_1").toString().contains("Splint") || obj2.get("SUPP_NM_1").toString().contains("의치")
-	  	                        || obj2.get("SUPP_NM_1").toString().contains("교정") || obj2.get("SUPP_NM_1").toString().contains("트레이")) {
+	  	                if(obj2.get("SUPP_NM_1").toString().contains("Frame") || obj2.get("SUPP_NM_1").toString().contains("Splint") || obj2.get("SUPP_NM_1").toString().contains(comm.geti18n(request, "dialog.req.denture"))
+	  	                        || obj2.get("SUPP_NM_1").toString().contains(comm.geti18n(request, "main.aligner")) || obj2.get("SUPP_NM_1").toString().contains("트레이")) {
 	  	               	 
 	  	               	String cat = obj2.get("SUPP_NM_1").toString();
 	  	               	if(cat.contains("Frame")) {
@@ -361,10 +386,10 @@ public class ProjectController extends BaseController {
 	  	               	if(cat.contains("Splint")) {
 	  	               		fsplint++;
 	  	               	}
-	  	               	if(cat.contains("의치")) {
+	  	               	if(cat.contains(comm.geti18n(request, "dialog.req.denture"))) {
 	  	               		fu++;
 	  	               	}
-	  	               	if(cat.contains("교정")) {
+	  	               	if(cat.contains(comm.geti18n(request, "main.aligner"))) {
 	  	               		fk++;
 	  	               	}
 	  	               	if(cat.contains("트레이")) {
@@ -380,10 +405,10 @@ public class ProjectController extends BaseController {
  	             	if(obj.get("SUPP_NM_STR").toString().contains("Splint")) {
  	             		cnt =fsplint;
  	             	}
- 	             	if(obj.get("SUPP_NM_STR").toString().contains("의치")) {
+ 	             	if(obj.get("SUPP_NM_STR").toString().contains(comm.geti18n(request, "dialog.req.denture"))) {
  	             		cnt =fu;
  	             	}
- 	             	if(obj.get("SUPP_NM_STR").toString().contains("교정")) {
+ 	             	if(obj.get("SUPP_NM_STR").toString().contains(comm.geti18n(request, "main.aligner"))) {
  	             		cnt =fk;
  	             	}
  	             	if(obj.get("SUPP_NM_STR").toString().contains("트레이")) {
@@ -522,8 +547,8 @@ public class ProjectController extends BaseController {
     for(Map<String, Object> obj : list) {
       obj.put("SUPP_NM", ParameterUtil.reverseCleanXSS(obj.get("SUPP_NM").toString()));
       System.out.println("SUPP_NM :: " + obj.get("SUPP_NM").toString());
-	  if(obj.get("SUPP_NM").toString().contains("Frame") || obj.get("SUPP_NM").toString().contains("Splint") || obj.get("SUPP_NM").toString().contains("의치")
-			  || obj.get("SUPP_NM").toString().contains("교정") || obj.get("SUPP_NM").toString().contains("트레이")) {
+	  if(obj.get("SUPP_NM").toString().contains("Frame") || obj.get("SUPP_NM").toString().contains("Splint") || obj.get("SUPP_NM").toString().contains(comm.geti18n(request, "dialog.req.denture"))
+			  || obj.get("SUPP_NM").toString().contains(comm.geti18n(request, "main.aligner")) || obj.get("SUPP_NM").toString().contains("트레이")) {
 		  
 				/* test */
 	  		  String GROUP_CD = obj.get("GROUP_CD").toString();
@@ -548,8 +573,8 @@ public class ProjectController extends BaseController {
 	             for(Map<String, Object> obj2 : list2) {
 	              
 	                cnt = Integer.parseInt(obj2.get("SUPP_GROUP_CNT").toString());
-	                if(obj2.get("SUPP_NM_1").toString().contains("Frame") || obj2.get("SUPP_NM_1").toString().contains("Splint") || obj2.get("SUPP_NM_1").toString().contains("의치")
-	                        || obj2.get("SUPP_NM_1").toString().contains("교정") || obj2.get("SUPP_NM_1").toString().contains("트레이")) {
+	                if(obj2.get("SUPP_NM_1").toString().contains("Frame") || obj2.get("SUPP_NM_1").toString().contains("Splint") || obj2.get("SUPP_NM_1").toString().contains(comm.geti18n(request, "dialog.req.denture"))
+	                        || obj2.get("SUPP_NM_1").toString().contains(comm.geti18n(request, "main.aligner")) || obj2.get("SUPP_NM_1").toString().contains("트레이")) {
 	               	 
 	             	   if(obj2.get("SUPP_NM_2") == null || obj2.get("SUPP_NM_2").toString().equals("")) {
 	               		  cat = obj2.get("SUPP_NM_1").toString();
@@ -571,13 +596,13 @@ public class ProjectController extends BaseController {
 	            	   if(cat.contains("Splint - Bite Splint")) {
 		            		fsplint2++;
 		            	}
-		            	if(cat.contains("의치 - Full")) {
+		            	if(cat.contains(comm.geti18n(request, "dialog.req.denture")+" - Full")) {
 		            		fu1++;
 		            	}
-		            	if(cat.contains("의치 - Partial")) {
+		            	if(cat.contains(comm.geti18n(request, "dialog.req.denture")+" - Partial")) {
 		            		fu2++;
 		            	}
-		            	if(cat.contains("교정")) {
+		            	if(cat.contains(comm.geti18n(request, "main.aligner"))) {
 		            		fk++;
 		            	}
 		            	if(cat.contains("트레이")) {
@@ -603,16 +628,16 @@ public class ProjectController extends BaseController {
 	           	   if(cat.contains("Splint - Bite Splint")) {
 	           		  cnt = fsplint2;
 	              	}
-	           	  if(cat.equals("의치")) {
+	           	  if(cat.equals(comm.geti18n(request, "dialog.req.denture"))) {
 	           		 cnt = fu0;
 	            	  }
-	              	if(cat.contains("의치 - Full")) {
+	              	if(cat.contains(comm.geti18n(request, "dialog.req.denture")+" - Full")) {
 	              		cnt = fu1;
 	              	}
-	              	if(cat.contains("의치 - Partial")) {
+	              	if(cat.contains(comm.geti18n(request, "dialog.req.denture")+" - Partial")) {
 	              		cnt = fu2;
 	              	}
-	              	if(cat.contains("교정")) {
+	              	if(cat.contains(comm.geti18n(request, "main.aligner"))) {
 	              		cnt = fk;
 	              	}
 	              	if(cat.contains("트레이")) {

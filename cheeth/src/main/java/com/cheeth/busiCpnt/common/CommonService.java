@@ -60,9 +60,16 @@ public class CommonService extends AbstractService {
 
     return list;
   }
-  
+
   public String geti18n(HttpServletRequest request, String property) throws Exception {
 	String msg = messagesource.getMessage(property, null, localeResolver.resolveLocale(request));
+	if(msg == null)
+		msg = "";
+	return msg;
+  }
+  
+  public String geti18nParam(HttpServletRequest request, String property, String[] param) throws Exception {
+	String msg = messagesource.getMessage(property, param, localeResolver.resolveLocale(request));
 	if(msg == null)
 		msg = "";
 	return msg;

@@ -30,7 +30,7 @@
          , A.INTRO
          , A.SERVICE_DESC
          , A.PROFILE_FILE_CD
-         , ( SELECT CODE_NM
+         , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
               WHERE GROUP_CD = 'AREA_CD'
                 AND CODE_CD = A.AREA_CD ) AS AREA_NM

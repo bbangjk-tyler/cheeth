@@ -36,7 +36,9 @@ public class ReviewController extends BaseController {
   public Map<?, ?> getSuppInfo(HttpServletRequest request) throws Exception {
     
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
-    
+
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
     Map<?, ?> data = service.map("getData01", parameter);
     
     return data;
@@ -49,6 +51,8 @@ public class ReviewController extends BaseController {
     
     ModelAndView mv = new ModelAndView("page/review/client_review");
     if(isSession()) {
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       mv.addObject("PAGE", ObjectUtils.isEmpty(parameter.get("PAGE")) ? "1" : parameter.get("PAGE")); // 현재 페이지
       Map<String, Object> data = service.getData01(parameter);
       mv.addObject("DATA", data);
@@ -66,6 +70,8 @@ public class ReviewController extends BaseController {
     
     ModelAndView mv = new ModelAndView("page/review/my_review");
     if(isSession()) {
+	    String lang = request.getSession().getAttribute("language").toString();
+	    parameter.put("LANG", lang);
       mv.addObject("PAGE", ObjectUtils.isEmpty(parameter.get("PAGE")) ? "1" : parameter.get("PAGE")); // 현재 페이지
       Map<String, Object> data = service.getData02(parameter);
       mv.addObject("DATA", data);

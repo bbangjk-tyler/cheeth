@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
-   alert('로그인 후 이용가능 합니다.');
+  alert(getI8nMsg("alert.plzlogin"));
    location.href = '/api/login/view';
 </script>
 </c:if>
@@ -18,6 +19,7 @@
 	var eqEstimatorViewModal;
 	var cadEstimatorViewModal;
 	var matchingModal;
+	var lang = localStorage.getItem('lang');
 
   function fnView() {
     var estimatorNo = arguments[0];
@@ -76,7 +78,7 @@
   
 	<div class="equipment_estimator_header">
   	<p class="equipment_estimator_header_typo">
-    	견적·의뢰내역
+    	<spring:message code="req.reqHis" text="견적·의뢰내역" />
     </p>
   </div>
 	
@@ -84,7 +86,7 @@
         <div class="side_menu">
             <div class="side_menu_title">
                 <p class="side_menu_title_typo">
-                    전체보기
+                    <spring:message code="main.seeAll" text="전체보기" />
                 </p>
             </div>
                         <c:if test="${sessionInfo.user.USER_TYPE_CD eq 2}">
@@ -97,41 +99,41 @@
           <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="side_menu_list">
 		  </c:if>
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo_blue">견적·의뢰내역</p>
+				      <p class="side_menu_list_typo_blue"><spring:message code="req.reqHis" text="견적·의뢰내역" /></p>
 				    </a>
 				    <a href="/${api}/tribute/request_basket" class="side_menu_list">
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo">의뢰서 바구니</p>
+				      <p class="side_menu_list_typo"><spring:message code="req.myReq" text="의뢰서 바구니" /></p>
 				    </a>
 				    <a href="/${api}/mypage/equipment_estimator_my_page_progress" class="side_menu_list">
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo">진행내역</p>
+				      <p class="side_menu_list_typo"><spring:message code="req.progD" text="진행내역" /></p>
 				    </a>
 				    <c:choose>
 				      <c:when test="${sessionInfo.user.USER_TYPE_CD eq 1 or sessionInfo.user.USER_TYPE_CD eq 2}">
 				        <a href="/${api}/mypage/profile_management" class="side_menu_list">
 				          <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				          <p class="side_menu_list_typo">프로필 관리</p>
+				          <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
 				        </a>
 				      </c:when>
 				      <c:when test="${sessionInfo.user.USER_TYPE_CD eq 3}">
 				        <a href="/${api}/mypage/profile_management_cheesigner_show" class="side_menu_list">
 				          <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				          <p class="side_menu_list_typo">프로필 관리</p>
+				          <p class="side_menu_list_typo"><spring:message code="req.myProf" text="프로필 관리" /></p>
 				        </a>
 				      </c:when>
 				    </c:choose>
 				    <a href="/${api}/review/client_review" class="side_menu_list">
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo">후기관리</p>
+				      <p class="side_menu_list_typo"><spring:message code="req.myReview" text="후기관리" /></p>
 				    </a>
 				    <a href="/${api}/mypage/my_page_edit_info" class="side_menu_list">
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo">내정보 수정</p>
+				      <p class="side_menu_list_typo"><spring:message code="req.manInfo" text="내정보 수정" /></p>
 				    </a>
 				    <a href="javascript:fnLogOut();" class="side_menu_list">
 				      <img class="side_menu_list_point" src="/public/assets/images/side_menu_list_point.svg"/>
-				      <p class="side_menu_list_typo">로그아웃</p>
+				      <p class="side_menu_list_typo"><spring:message code="logout" text="로그아웃" /></p>
 				    </a>
         </div>
         <div class="equipment_estimator_main_container">
@@ -141,11 +143,11 @@
                 </a>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo">마이페이지</p>
+                    <p class="equipment_estimator_connection_location_typo"><spring:message code="req.myPage" text="마이페이지" /></p>
                 </div>
                 <img class="equipment_estimator_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
                 <div class="equipment_estimator_connection_location">
-                    <p class="equipment_estimator_connection_location_typo_bold">견적·의뢰내역 전체보기</p>
+                    <p class="equipment_estimator_connection_location_typo_bold"><spring:message code="equ.allReqH" text="견적·의뢰내역 전체보기" /></p>
                 </div>
             </div>
             <div class="equipment_estimator_my_page_request_history_wrapper">
@@ -153,17 +155,17 @@
 
                     <a href="/${api}/mypage/equipment_estimator_my_page_cad" class="equipment_estimator_my_page_request_history_chip">
                         <p class="equipment_estimator_my_page_request_history_chip_typo">
-                            CAD 견적함
+                            <spring:message code="equ.cadQuoB" text="CAD 견적함" />
                         </p>
                     </a>
                     <a href="/${api}/mypage/equipment_estimator_my_page_sent" class="equipment_estimator_my_page_request_history_chip">
                         <p class="equipment_estimator_my_page_request_history_chip_selected_typo">
-                            내가 보낸 견적
+                            <spring:message code="equ.sentQuo" text="내가 보낸 견적" />
                         </p>
                     </a>
                                         <a href="/${api}/mypage/equipment_estimator_my_page_equipment" class="equipment_estimator_my_page_request_history_chip">
                         <p class="equipment_estimator_my_page_request_history_chip_typo">
-                            장비 견적함
+                            <spring:message code="equ.equQuoB" text="장비 견적함" />
                         </p>
                     </a>
                 </div>
@@ -174,27 +176,27 @@
                         </div>
                         <div class="equipment_estimator_my_page_request_history_datatype equipment_estimator_my_page_context">
                             <p class="equipment_estimator_my_page_request_history_datatype_typo">
-                                의뢰내용
+                                <spring:message code="equ.reqCont" text="의뢰내용" />
                             </p>
                         </div>
                         <div class="equipment_estimator_my_page_request_history_datatype equipment_estimator_my_page_count">
                             <p class="equipment_estimator_my_page_request_history_datatype_typo">
-                                견적수
+                                <spring:message code="equ.numQuo" text="견적수" />
                             </p>
                         </div>
                         <div class="equipment_estimator_my_page_request_history_datatype equipment_estimator_my_page_date_requested">
                             <p class="equipment_estimator_my_page_request_history_datatype_typo">
-                                의뢰일
+                                <spring:message code="equ.reqDate" text="의뢰일" />
                             </p>
                         </div>
                         <div class="equipment_estimator_my_page_request_history_datatype equipment_estimator_my_page_date_expiry">
                             <p class="equipment_estimator_my_page_request_history_datatype_typo">
-                                만료일
+                                <spring:message code="equ.expriDate" text="만료일" />
                             </p>
                         </div>
                         <div class="equipment_estimator_my_page_request_history_datatype equipment_estimator_my_page_estimator_read">
                             <p class="equipment_estimator_my_page_request_history_datatype_typo">
-                                견적서보기
+                                <spring:message code="equ.viewQuo" text="견적서보기" />
                             </p>
                         </div>
                     </div>
@@ -235,7 +237,7 @@
                           <div class="equipment_estimator_my_page_request_history_list_item equipment_estimator_my_page_estimator_read">
                             <a href="javascript:fnViewEstimators('${item.REQ_TYPE}', '${item.REQ_NO}');" class="equipment_estimator_my_page_estimator_read_button">
                               <p class="equipment_estimator_my_page_estimator_read_button_typo">
-                                보기
+                                <spring:message code="view" text="보기" />
                               </p>
                             </a>
                           </div>
@@ -253,7 +255,7 @@
 											    	<div class="matching_container">
 												        <div class="matching_header">
 												            <p class="matching_header_typo">
-												                매칭하기
+												                <spring:message code="match" text="매칭하기" />
 												            </p>
 												            <a href="#estimatorViewModal" class="dialog_close_button_wrapper" data-bs-toggle="modal">
 												                <img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
@@ -262,18 +264,18 @@
 												        <div class="matching_body">
 												            <div class="matching_body_typo_wrapper">
 												                <p class="matching_body_typo">
-												                    매칭하시겠습니까?
+												                    <spring:message code="equ.msq.match" text="매칭하시겠습니까?" />
 												                </p>
 												            </div>
 												            <div class="matching_button_container">
 												                <a href="javascript:fnCancelMatching()" class="matching_button_white">
 												                    <div class="matching_button_white_typo">
-												                        아니오
+												                        <spring:message code="no" text="아니오" />
 												                    </div>
 												                </a>
 												                <a href="javascript:fnMatching()" class="matching_button_blue">
 												                    <div class="matching_button_blue_typo">
-												                        네
+												                        <spring:message code="yes" text="네" />
 												                    </div>
 												                </a>
 												            </div>

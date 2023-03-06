@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,8 @@ import com.cheeth.comAbrt.service.AbstractService;
 public class CheesignerService extends AbstractService {
   
   protected Logger logger = LogManager.getLogger(CheesignerService.class);
-  public Map<String, Object> getData07(Map<String, Object> parameter) throws Exception {
+  
+public Map<String, Object> getData07(Map<String, Object> parameter) throws Exception {
 	    
 	    Map<String, Object> rtnMap = new HashMap<String, Object>();
 	    
@@ -27,12 +30,11 @@ public class CheesignerService extends AbstractService {
 	    
 	    Map<?,?> data03 = map("getData09", parameter); // 거래정보
 	    rtnMap.put("DATA_03", data03);
-	    
 	    parameter.put("GROUP_CD", "CAREER_CD");
-	    rtnMap.put("CAREER_CD_LIST", list("common", "getCode", parameter)); // 경력코드
+	    rtnMap.put("CAREER_CD_LIST", list("common", "getCodeLang", parameter)); // 경력코드
 	    
 	    parameter.put("GROUP_CD", "PROJECT_CD");
-	    rtnMap.put("PROJECT_CD_LIST", list("common", "getCode", parameter)); // 프로젝트 코드
+	    rtnMap.put("PROJECT_CD_LIST", list("common", "getCodeLang", parameter)); // 프로젝트 코드
 	    
 	    return rtnMap;
 	  }

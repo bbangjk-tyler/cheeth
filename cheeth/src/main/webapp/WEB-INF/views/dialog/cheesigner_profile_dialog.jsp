@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 	                    <div class="profile_management_profile_edit_button_wrapper">
                     <a href="/api/mypage/profile_management_cheesigner" class="profile_management_profile_edit_button">
@@ -24,20 +25,20 @@
                             <div class="profile_management_profile_info_typo_container">
                                 <p class="profile_management_profile_info_name">${DATA.DATA_01.USER_NICK_NAME}</p>
                                 <div class="profile_management_profile_info_sub_info_container">
-                                    <p class="profile_management_profile_info_sub_info_title">회원구분</p>
+                                    <p class="profile_management_profile_info_sub_info_title"><spring:message code="tesign.memb" text="회원구분" /></p>
                                     <p class="profile_management_profile_info_sub_info_context">${DATA.DATA_01.USER_TYPE_NM}</p>
                                     <p class="profile_management_profile_info_sub_info_divider">|</p>
-                                    <p class="profile_management_profile_info_sub_info_title">세금계산서 발행가능 유무</p>
+                                    <p class="profile_management_profile_info_sub_info_title"><spring:message code="tesign.taxAvail" text="세금계산서 발행가능 유무" /></p>
                                      <p class="profile_management_profile_info_sub_info_context">
                                     <c:choose>
                                     <c:when test="${empty DATA.DATA_02.TAX_BILL_YN}">
-                                    	무
+                                    	<spring:message code="disabled" text="무" />
                                     </c:when>
                                     <c:when test="${DATA.DATA_02.TAX_BILL_YN eq 'Y'}">
-                                    	유
+                                    	<spring:message code="enabled" text="유" />
                                     </c:when>
                                     <c:when test="${DATA.DATA_02.TAX_BILL_YN eq 'N'}">
-                                    	무
+                                    	<spring:message code="disabled" text="무" />
                                     </c:when>
                                     </c:choose>
                                     	</p>
@@ -52,7 +53,7 @@
                     </div>
                     <div class="profile_management_profile_item etc_info">
                         <div class="profile_management_profile_etc_info_success_rate">
-                            <p class="profile_management_profile_etc_info_title">거래성공률</p>
+                            <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.successR" text="거래성공률" /></p>
                             <div class="profile_management_profile_etc_info_context_container">
                                 <img class="profile_management_profile_satisfaction_img" src="/public/assets/images/satisfaction_very_good.svg"/>
                                 <p class="profile_management_profile_etc_info_context">${DATA.DATA_03.COMPLETE_RATIO}</p>
@@ -60,7 +61,7 @@
                             </div>
                         </div>
                         <div class="profile_management_profile_etc_info_satisfaction">
-                            <p class="profile_management_profile_etc_info_title">만족도</p>
+                            <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.satisf" text="만족도" /></p>
                             <div class="profile_management_profile_etc_info_context_container">
                                 <img class="profile_management_profile_satisfaction_img" src="/public/assets/images/satisfaction_good.svg"/>
                                 <p class="profile_management_profile_etc_info_context">${DATA.DATA_03.SCORE_AVG}</p>
@@ -68,14 +69,14 @@
                             </div>
                         </div>
                         <div class="profile_management_profile_etc_info_total_project">
-                            <p class="profile_management_profile_etc_info_title">거래 총 프로젝트 수</p>
+                            <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.totalP" text="거래 총 프로젝트 수" /></p>
                             <div class="profile_management_profile_etc_info_context_container">
                                 <p class="profile_management_profile_etc_info_context">${DATA.DATA_03.COMPLETE_CNT}</p>
                                 <p class="profile_management_profile_etc_info_context_unit ">건</p>
                             </div>
                         </div>
                         <div class="profile_management_profile_etc_info_total_price">
-                            <p class="profile_management_profile_etc_info_title">거래 총 금액</p>
+                            <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.totalA" text="거래 총 금액" /></p>
                             <div class="profile_management_profile_etc_info_context_container">
                                 <p class="profile_management_profile_etc_info_context">${DATA.DATA_03.COMPLETE_AMOUNT}</p>
                                 <p class="profile_management_profile_etc_info_context_unit ">원</p>
@@ -96,34 +97,34 @@
                         <img class="dotted_divider" src="/public/assets/images/dotted_divider.svg"/>
                     </div>
                     <div class="profile_management_profile_item self_intro">
-                        <p class="profile_management_profile_item_title">자기소개</p>
+                        <p class="profile_management_profile_item_title"><spring:message code="tesign.introYrs" text="자기소개" /></p>
                         <p class="profile_management_profile_self_intro_context">${DATA.DATA_02.INTRO_CONTENT}</p>
                     </div>
                     <div class="main_container_divider"></div>
                     <div class="profile_management_profile_item career">
-                        <p class="profile_management_profile_item_title">경력</p>
+                        <p class="profile_management_profile_item_title"><spring:message code="tesign.career" text="경력" /></p>
                         <div class="profile_management_profile_career_container">
                             <div class="profile_management_profile_career <c:if test="${DATA.DATA_02.CAREER_CD eq 'C001'}">selected</c:if>">
                                 <img class="profile_management_profile_career_img" src="/public/assets/images/career_year_under_three.svg"/>
-                                <p class="profile_management_profile_career_typo">경력 3년이내</p>
+                                <p class="profile_management_profile_career_typo"><spring:message code="tesign.3exper" text="경력 3년이내" /></p>
                             </div>
                             <div class="profile_management_profile_career <c:if test="${DATA.DATA_02.CAREER_CD eq 'C002'}">selected</c:if>">
                                 <img class="profile_management_profile_career_img" src="/public/assets/images/career_year_three_to_five.svg"/>
-                                <p class="profile_management_profile_career_typo">3~5년</p>
+                                <p class="profile_management_profile_career_typo"><spring:message code="tesign.35exper" text="3~5년" /></p>
                             </div>
                             <div class="profile_management_profile_career <c:if test="${DATA.DATA_02.CAREER_CD eq 'C003'}">selected</c:if>">
                                 <img class="profile_management_profile_career_img" src="/public/assets/images/career_year_five_to_ten.svg"/>
-                                <p class="profile_management_profile_career_typo">5~10년</p>
+                                <p class="profile_management_profile_career_typo"><spring:message code="tesign.510exper" text="5~10년" /></p>
                             </div>
                             <div class="profile_management_profile_career <c:if test="${DATA.DATA_02.CAREER_CD eq 'C004'}">selected</c:if>">
                                 <img class="profile_management_profile_career_img" src="/public/assets/images/career_year_over_ten.svg"/>
-                                <p class="profile_management_profile_career_typo">10년 이상</p>
+                                <p class="profile_management_profile_career_typo"><spring:message code="tesign.10exper" text="10년 이상" /></p>
                             </div>
                         </div>
                     </div>
                     <div class="main_container_divider"></div>
                     <div class="profile_management_profile_item design_field">
-                        <p class="profile_management_profile_item_title">디자인 활동 분야</p>
+                        <p class="profile_management_profile_item_title"><spring:message code="tesign.designF" text="디자인 활동 분야" /></p>
                         <div class="profile_management_profile_design_field_container">
 
 	            <c:forEach var="item" items="${DATA.PROJECT_CD_LIST}" varStatus="status">
@@ -139,7 +140,7 @@
 							<div class="profile-swiper" id="profileSwiper1">
 
 								<div class="profile-swiper-head">
-									<p class="profile_management_profile_item_title">뽐내기 사진</p>
+									<p class="profile_management_profile_item_title"><spring:message code="tesign.showingPhoto" text="뽐내기 사진" /></p>
 									<div class="swiper-button-wrap">
 										<div class="swiper-button"><div class="swiper-button-prev"></div></div>
 										<div class="swiper-button"><div class="swiper-button-next"></div></div>
@@ -170,7 +171,7 @@
 							<div class="profile-swiper" id="profileSwiper2">
 
 								<div class="profile-swiper-head">
-									<p class="profile_management_profile_item_title">고객리뷰</p>
+									<p class="profile_management_profile_item_title"><spring:message code="tesign.custRev" text="고객리뷰" /></p>
 									<div class="swiper-button-wrap">
 										<div class="swiper-button"><div class="swiper-button-prev"></div></div>
 										<div class="swiper-button"><div class="swiper-button-next"></div></div>
@@ -182,7 +183,7 @@
 									<c:choose>
 									<c:when test="${empty LIST}">
 										<div style="width: 100%;text-align: center;">
-											아직 리뷰가 없습니다.
+											<spring:message code="tesign.noReview" text="아직 리뷰가 없습니다." />
 										</div>
 									</c:when>
 									<c:otherwise>
