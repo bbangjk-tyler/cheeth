@@ -572,7 +572,7 @@
           <a href="javascript:void(0);" class="send_note_attatch_button" onclick="fnAddFile();">
             <p class="send_note_attatch_button_typo"><spring:message code="talk.attathF" text="파일첨부" /></p>
           </a>
-          <font style="margin-left:10px;display: block;font-size:10px;">※ 파일 최대 용량 500MB<br>(zip 형식의 압축파일을 권장합니다.) </font>
+          <font style="margin-left:10px;display: block;font-size:10px;">※ <spring:message code="talk.fileMaxCapa" text="파일 최대 용량 500MB" /> (<spring:message code="talk.zip" text="zip 형식의 압축파일을 권장합니다." />) </font>
         </div>
         <div class="send_note_attatchment_container hidden"></div>
         <div class="main_container_divider without_margin"></div>

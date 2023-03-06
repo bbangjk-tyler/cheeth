@@ -30,19 +30,19 @@
   <div class="footer_info_container container">
     <div class="footer_info_left_container">
       <p class="footer_info_left_typo">
-        <spring:message code="footer.repres" text="치예랑 대표" /> : 남원욱 &nbsp;&nbsp; 
-        <spring:message code="footer.address" text="주소" /> : 서울시 중구 퇴계로248, 207호 &nbsp;&nbsp; 
+        <spring:message code="footer.repres" text="치예랑 대표" /> : <spring:message code="footer.nww" text="남원욱" /> &nbsp;&nbsp; 
+        <spring:message code="address" text="주소" /> : <spring:message code="footer.address" text="서울시 중구 퇴계로248, 207호" /> &nbsp;&nbsp; 
         E-mail : dentnerkorea@gmail.com &nbsp;&nbsp;
         <spring:message code="businum" text="사업자번호" /> : 243-14-01127
       </p>
       <p class="footer_info_left_typo">
         <spring:message code="footer.mail" text="통신판매 신고" /> : 제 2022-서울중구-0812호 &nbsp;&nbsp; 
         <spring:message code="footer.medical" text="의료기기판매업 신고" /> : 제3291호 &nbsp;&nbsp; 
-        <spring:message code="footer.personal" text="개인정보 관리책임자" /> : 남원욱
+        <spring:message code="footer.personal" text="개인정보 관리책임자" /> : <spring:message code="footer.nww" text="남원욱" />
       </p>
       <div class="footer_info_left_copyright_wrapper">
         <p class="footer_info_left_typo">
-          COPYRIGHT © 치예랑 ALL RIGHTS RESERVED.
+          COPYRIGHT © <spring:message code="footer.dentner" text="치예랑" /> ALL RIGHTS RESERVED.
         </p>
       </div>
     </div>

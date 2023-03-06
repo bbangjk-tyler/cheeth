@@ -22,14 +22,14 @@
 </c:if> --%>
 <script>
 	function confirmModal() {
-	  if (window.confirm("\n 해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?")) {
+	  if (window.confirm(getI8nMsg("alert.confirm.moveToEnter"))) {//해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?
 	    location.href = ('/api/mypage/my_page_edit_info');
 	  } else {
 		history.back();	  
 	  }
 	}
 	function TsaveConfirmModal(){
-		if (window.confirm("\n 작성 중이던 의뢰서가 있습니다. \n 불러오시겠습니까?")) {
+		if (window.confirm(getI8nMsg("alert.confirm.importReq"))) {//"\n 작성 중이던 의뢰서가 있습니다. \n 불러오시겠습니까?"
 		    location.href = ('/api/tribute/tribute_request?groupCd=${TSaveCode}');
 		  } 
 	}
@@ -2301,8 +2301,8 @@
 								src="/public/assets/images/tribute_request_dialog_close_button.svg" />
 							</a>
 						</div>
-						<div class="dialog_tribute_request_body">
-							<font style="margin-left: 10px; color: #444; font-size: 14px;">※파일 최대 용량 <span style="color: #005fa8;">500MB</span> (zip 형식의 압축파일을 권장합니다.)
+						<div class="dialog_tribute_request_body"><spring:message code="talk.fileMaxCapa" text="파일 최대 용량 500MB" />
+							<font style="margin-left: 10px; color: #444; font-size: 14px;">※<spring:message code="talk.fileMaxCapa1" text="파일 최대 용량" /> <span style="color: #005fa8;">500MB</span> (<spring:message code="talk.zip" text="zip 형식의 압축파일을 권장합니다." />)
 							</font>
 							<div class="dialog_tribute_request_table"
 								style="margin-top: 10px">

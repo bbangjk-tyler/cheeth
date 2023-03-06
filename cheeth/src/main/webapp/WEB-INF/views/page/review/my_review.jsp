@@ -202,7 +202,7 @@
                 <div class="review_management_customer_review_writer_info_divider"></div>
                 <p class="review_management_customer_review_writer_name">${item.CREATE_NICK_NAME}</p>
                 <div class="review_management_customer_review_writer_info_divider"></div>
-                <p class="review_management_customer_review_date_wrote"><spring:message code="rev.createD" text="작성일" /> ${item.CREATE_DATE}</p>
+                <p class="review_management_customer_review_date_wrote"><spring:message code="equ.preparDt" text="작성일" /> ${item.CREATE_DATE}</p>
                 <c:if test="${item.CREATE_DATE ne item.UPDATE_DATE}">
                   <div class="review_management_customer_review_writer_info_divider"></div>
                   <p class="review_management_customer_review_date_wrote"><spring:message code="rev.updateD" text="수정일" /> ${item.UPDATE_DATE}</p>
@@ -234,7 +234,7 @@
             <div class="review_management_customer_review_view_reply_top_container">
               <div class="review_management_customer_review_view_reply_writer_info">
                 <p class="review_management_customer_review_view_reply_name">${item.REPLY_NICK_NAME}</p>
-                <p class="review_management_customer_review_date_wrote"><spring:message code="rev.createD" text="작성일" /> ${item.REPLY_CREATE_DATE}</p>
+                <p class="review_management_customer_review_date_wrote"><spring:message code="equ.preparDt" text="작성일" /> ${item.REPLY_CREATE_DATE}</p>
                 <c:if test="${item.REPLY_CREATE_DATE ne item.REPLY_UPDATE_DATE}">
                   <div class="review_management_customer_review_writer_info_divider"></div>
                   <p class="review_management_customer_review_date_wrote"><spring:message code="rev.updateD" text="수정일" /> ${item.REPLY_UPDATE_DATE}</p>

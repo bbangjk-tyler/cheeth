@@ -312,7 +312,7 @@
         <div class="cad_estimator_dialog_item">
 					<div class="dialog_item_title cad_title">
 						<p class="dialog_item_title_typo">
-							납품가능시간
+							<spring:message code="proj.delivTm" text="납품가능시간" />
 						</p>
 					</div>
 					<div class="dialog_item_context_container">
@@ -374,7 +374,7 @@
 				<div class="cad_estimator_dialog_item">
 					<div class="dialog_item_title cad_title">
 						<p class="dialog_item_title_typo">
-							<spring:message code="" text="구동가능한 CAD S/W" />
+							<spring:message code="proj.availaCADSW" text="구동가능한 CAD S/W" />
 						</p>
 					</div>
 					<div class="dialog_item_context_container without_padding">

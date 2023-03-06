@@ -296,7 +296,7 @@
             var html = '';
             html += '<div class="project_request_writing_info_item">';
             html += '  <div class="project_request_request">';
-            html += '    <p class="project_request_request_typo_title">의뢰서' + (index + 1) + '</p>';
+            html += '    <p class="project_request_request_typo_title"><spring:message code="proj.request" text="의뢰서" />' + (index + 1) + '</p>';
             html += '    <p class="project_request_request_typo_title">' + rtnArray[0]['PANT_NM'] + '</p>';
             html += '    <p class="project_request_request_typo_context">';
             rtnArray.map(m => {
@@ -436,10 +436,10 @@
   $(document).ready(function() {
     
     fnSetReqInfo();
-    
+    var lang = localStorage.getItem("lang");
     const datepickerEl = document.querySelector('#datepickerInput');
     const datepicker = new Datepicker(datepickerEl, {
-      language : 'ko',
+      language : lang,
       format : 'yyyy-mm-dd',
       autohide : true
     });
@@ -643,7 +643,7 @@
           <div class="dropbox_project_request_quote_type">
             <div class="dropbox_select_button_large">
               <div id="PUBLIC_CD_DIV_1" class="dropbox_select_button_typo_container" onclick="fnSelect_2();" style="cursor: pointer;">
-                <p class="dropbox_select_button_typo"><spring:message code="" text="지정 견적 / 공개 견적" /></p>
+                <p class="dropbox_select_button_typo"><spring:message code="proj.desigOpen" text="지정 견적 / 공개 견적" /></p>
                 <img class="project_request_select_button_arrow" src="/public/assets/images/info_select_button_arrow.svg"/>
               </div>
             </div>
@@ -671,7 +671,8 @@
         <div class="project_request_writing_info_main_container">
           <div class="project_request_writing_info_intro">
             <p class="project_request_writing_info_intro_typo">
-              <strong>[필독]</strong> 게시글 제목에 의뢰하시는 보철물 종류와 개수를 쓰시면 정확한 견적에 도움이 됩니다.<br/>예) 크라운3 커스텀어버트 3 / 상악 프레임
+              <strong><spring:message code="proj.mustRead" text="[필독]" /></strong> 
+              <spring:message code="proj.mustR1" text="게시글 제목에 의뢰하시는 보철물 종류와 개수를 쓰시면 정확한 견적에 도움이 됩니다." /><br/><spring:message code="proj.mustRex" text="예) 크라운3 커스텀어버트 3 / 상악 프레임" />
             </p>
           </div>
           <div class="project_request_writing_info_item_container">
@@ -779,7 +780,7 @@
     <div class="address_list_body">
       <div class="address_list_total_trader">
         <div class="address_list_total_trader_typo_container">
-          <p class="address_list_total_trader_title"><spring:message code="" text="전체 거래자" /></p>
+          <p class="address_list_total_trader_title"><spring:message code="proj.allParty" text="전체 거래자" /></p>
           <p class="address_list_total_trader_context">${USER_CNT}</p>
         </div>
       </div>
@@ -811,7 +812,7 @@
       </div>
       <div class="address_list_receiver">
         <div class="address_list_receiver_typo_container">
-          <p class="address_list_receiver_title"><spring:message code="" text="받는사람" /></p>
+          <p class="address_list_receiver_title"><spring:message code="talk.receiver" text="받는사람" /></p>
           <p class="address_list_receiver_context">0</p>
         </div>
         <div class="address_list_receiver_name_container"></div>

@@ -575,9 +575,9 @@ function keyupAccounNm() {
 					<p class="sign_up_info_item_button_typo">본인인증</p>
 				</button>
 			</div>
-			<div class="sign_up_info_item">
-				<p class="sign_up_info_item_typo">계좌번호</p>
-				<input class="sign_up_info_item_blank valid-account required" placeholder='"-"를 제외하고 입력하시기 바랍니다.' type="number" name="ACCOUNT_NO" id="ACCOUNT_NO" data-field="계좌번호" value="${DATA.ACCOUNT_NO}" required/>
+			<div class="sign_up_info_item"><spring:message code="join.acntWithout" text='"-"를 제외하고 입력하시기 바랍니다.' />
+				<p class="sign_up_info_item_typo"><spring:message code="join.acntno" text="계좌번호" /></p>
+				<input class="sign_up_info_item_blank valid-account required" placeholder='<spring:message code="join.acntWithout" text='"-"를 제외하고 입력하시기 바랍니다.' />' type="number" name="ACCOUNT_NO" id="ACCOUNT_NO" data-field="계좌번호" value="${DATA.ACCOUNT_NO}" required/>
 			</div>
 			
 		</div>

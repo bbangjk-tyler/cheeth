@@ -5,7 +5,7 @@
 
 	                    <div class="profile_management_profile_edit_button_wrapper">
                     <a href="/api/mypage/profile_management_cheesigner" class="profile_management_profile_edit_button">
-                        <p class="profile_management_profile_edit_button_typo">프로필 수정하기</p>
+                        <p class="profile_management_profile_edit_button_typo"><spring:message code="prof.editP" text="프로필 수정하기" /></p>
                     </a>
                 </div>
 	    <div class="connection_location_divider"></div>

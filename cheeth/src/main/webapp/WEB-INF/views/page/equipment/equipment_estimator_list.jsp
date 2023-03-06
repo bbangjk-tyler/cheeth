@@ -22,7 +22,7 @@
 
 <script>
 function confirmModal() {
-	  if (window.confirm("\n 해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?")) {
+	  if (window.confirm(getI8nMsg("alert.confirm.moveToEnter"))) {
 	    location.href = ('/api/mypage/my_page_edit_info');
 	  } else {
 		  

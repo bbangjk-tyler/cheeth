@@ -604,9 +604,9 @@ function fnSetEstimator() {
 	      <div class="electronic_contract_container">
 	          <div class="electronic_contract_condition">
 	            <div class="electronic_contract_condition_typo_container">
-	              <p class="electronic_contract_condition_typo">용역 일반 계약서 동의</p>
+	              <p class="electronic_contract_condition_typo"><spring:message code="proj.genSerCon" text="용역 일반 계약서 동의" /></p>
 	              <!-- 수정필요 -->
-	              <a href="javascript:window.open('https://www.dentner.co.kr/static/용역 계약서.pdf')" class="electronic_contract_condition_typo short_cut">바로가기</a>
+	              <a href="javascript:window.open('https://www.dentner.co.kr/static/용역 계약서.pdf')" class="electronic_contract_condition_typo short_cut"><spring:message code="see" text="바로가기" /></a>
 	            </div>
 	            <label class="checkbox_large">
                 <input type="checkbox" id="AGREEMENT_YN_1" name="AGREEMENT_YN_1" value="${DATA.AGREEMENT_YN_1}" onchange="fnChangeCheck(this);">
@@ -614,7 +614,7 @@ function fnSetEstimator() {
 	          </div>
 	          <div class="electronic_contract_condition">
 	            <div class="electronic_contract_condition_typo_container">
-	              <p class="electronic_contract_condition_typo">Remake는 7일 이내에 같은 스캔파일인 무료로 가능하며, 그 외의 내용은 상호협의 하에 해결한다.<br/>공급자의 태만과 불성실한 태도로 발생한 문제는 용역 일반계약서 제 7조 3항에 따른다.</p>
+	              <p class="electronic_contract_condition_typo"><spring:message code="proj.remake" text="remake" /></p>
 	            </div>
 	            <label class="checkbox_large">
                 <input type="checkbox" id="AGREEMENT_YN_2" name="AGREEMENT_YN_2" value="${DATA.AGREEMENT_YN_2}" onchange="fnChangeCheck(this);">
@@ -623,8 +623,8 @@ function fnSetEstimator() {
 	        <div class="electronic_contract_condition">
 	          <div class="electronic_contract_condition_typo_container">
 	          <!-- 수정필요 -->
-	            <p class="electronic_contract_condition_typo">전자견적서 이행</p>
-	            <a href="javascript:fnViewEstimators();" class="electronic_contract_condition_typo short_cut">바로가기</a>
+	            <p class="electronic_contract_condition_typo"><spring:message code="proj.electQuot" text="전자견적서 이행" /></p>
+	            <a href="javascript:fnViewEstimators();" class="electronic_contract_condition_typo short_cut"><spring:message code="see" text="바로가기" /></a>
 	          </div>
 	          <label class="checkbox_large">
               <input type="checkbox" id="AGREEMENT_YN_3" name="AGREEMENT_YN_3" value="${DATA.AGREEMENT_YN_3}" onchange="fnChangeCheck(this);">
@@ -659,7 +659,7 @@ function fnSetEstimator() {
 	      </div>
 	      <div class="main_container_divider divider_without_margin"></div>
 	      <div class="accept_all">
-	        <p class="accept_all_typo">전체 동의하기</p>
+	        <p class="accept_all_typo"><spring:message code="proj.allAgree" text="전체 동의하기" /></p>
 	        <label class="checkbox_large">
             <input type="checkbox" id="ALL_CHECKBOX" onchange="fnAllCheck(this);">
           </label>
@@ -667,7 +667,7 @@ function fnSetEstimator() {
 	    </div>
 	    <div class="main_container_divider"></div>
 	    <div class="special_contract">
-	      <p class="special_contract_title" style="float:left">특수 계약조건</p>
+	      <p class="special_contract_title" style="float:left"><spring:message code="proj.sepcCondit" text="특수 계약조건" /></p>
 	      <div>
 	      <img id="question" src="/public/assets/images/question.png" style="height:15px;width:15px;">
 	      <img id="tooltip" src="/public/assets/images/tooltip.png" style="position:absolute;margin-left:110px;margin-top: -53px;display:none">
@@ -699,16 +699,16 @@ function fnSetEstimator() {
 		</div>
         <c:choose>
             <c:when test="${CNT02 gt 0 and (DATA.PROGRESS_CD eq 'PC002' or DATA.PROGRESS_CD eq 'PC004')}"> <!-- 의뢰자 기준 치자이너가 승인, 수정 요청 한 경우 -->
-				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
+				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="<spring:message code="proj.writeOthReq" text="의뢰자와 치자이너 서로의 요청사항을 써주세요" />" disabled>${DATA.SPECIAL_CONDITION}</textarea>
             </c:when>
             <c:when test="${CNT01 gt 0 and (DATA.PROGRESS_CD eq 'PC001' or DATA.PROGRESS_CD eq 'PC003')}"> <!-- 치자이너 기준 의뢰자가 승인, 수정 요청 한 경우 -->
-				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
+				<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="<spring:message code="proj.writeOthReq" text="의뢰자와 치자이너 서로의 요청사항을 써주세요" />" disabled>${DATA.SPECIAL_CONDITION}</textarea>
             </c:when>
             <c:when test="${DATA.PROGRESS_CD eq 'PC005'}">
-            	<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요" disabled>${DATA.SPECIAL_CONDITION}</textarea>
+            	<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="<spring:message code="proj.writeOthReq" text="의뢰자와 치자이너 서로의 요청사항을 써주세요" />" disabled>${DATA.SPECIAL_CONDITION}</textarea>
             </c:when>
             <c:otherwise>
-            	<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="의뢰자와 치자이너 서로의 요청사항을 써주세요">${DATA.SPECIAL_CONDITION}</textarea>
+            	<textarea class="special_contract_context" id="SPECIAL_CONDITION" name="SPECIAL_CONDITION" maxlength="1300" onchange="fnSpChange(this);" placeholder="<spring:message code="proj.writeOthReq" text="의뢰자와 치자이너 서로의 요청사항을 써주세요" />">${DATA.SPECIAL_CONDITION}</textarea>
             </c:otherwise>
        </c:choose>
      
@@ -735,18 +735,18 @@ function fnSetEstimator() {
           </c:choose>
       </c:if>
 	    <div class="caution">
-        <p class="caution_typo">※ 덴트너는 통신판매중개자로 서로의 원활한 거래를 위해 전자계약서비스를 제공해드릴 뿐, 거래 내용에 대해 어떠한 의무와 책임도 부담하지 않습니다.</p>
+        <p class="caution_typo">※ <spring:message code="proj.comment" text="덴트너는 통신판매중개자로 서로의 원활한 거래를 위해 전자계약서비스를 제공해드릴 뿐, 거래 내용에 대해 어떠한 의무와 책임도 부담하지 않습니다." /></p>
       </div>
 	    <div class="electronic_contract_button_wrapper">
 	      <div class="electronic_contract_button_container left">
 	        <c:if test="${CNT01 gt 0 and (DATA.PROGRESS_CD eq 'PC002'or DATA.PROGRESS_CD eq 'PC004')}">
             <button type="button" class="electronic_contract_button white" onclick="fnModifyRequest();">
-              <p class="electronic_contract_button_typo white_typo">수정요청</p>
+              <p class="electronic_contract_button_typo white_typo"><spring:message code="proj.modifyReq" text="수정요청" /></p>
             </button>
           </c:if>
 	        <c:if test="${CNT02 gt 0 and (DATA.PROGRESS_CD eq 'PC001'or DATA.PROGRESS_CD eq 'PC003')}">
             <button type="button" class="electronic_contract_button white" onclick="fnModifyRequest();">
-              <p class="electronic_contract_button_typo white_typo">수정요청</p>
+              <p class="electronic_contract_button_typo white_typo"><spring:message code="proj.modifyReq" text="수정요청" /></p>
             </button>
           </c:if>
         </div>
@@ -756,26 +756,26 @@ function fnSetEstimator() {
           </c:when>
             <c:when test="${empty DATA.CONTRACT_NO}"> <!-- 최초 -->
               <button type="button" class="electronic_contract_button white" onclick="fnCancel();">
-                <p class="electronic_contract_button_typo white_typo">계약취소</p>
+                <p class="electronic_contract_button_typo white_typo"><spring:message code="proj.contCancel" text="계약취소" /></p>
               </button>
               <button type="button" class="electronic_contract_button dark_blue without_margin_right" onclick="fnApprovalRequest();">
-                <p class="electronic_contract_button_typo dark_blue">승인요청</p>
+                <p class="electronic_contract_button_typo dark_blue"><spring:message code="proj.approvalReq" text="승인요청" /></p>
               </button>
             </c:when>
             <c:when test="${CNT01 gt 0 and (DATA.PROGRESS_CD eq 'PC002' or DATA.PROGRESS_CD eq 'PC004')}"> <!-- 의뢰자 기준 치자이너가 승인, 수정 요청 한 경우 -->
               <button type="button" class="electronic_contract_button white" onclick="fnCancel();">
-                <p class="electronic_contract_button_typo white_typo">계약취소</p>
+                <p class="electronic_contract_button_typo white_typo"><spring:message code="proj.contCancel" text="계약취소" /></p>
               </button>
               <button type="button" class="electronic_contract_button dark_blue without_margin_right" onclick="fnApproval();">
-                <p class="electronic_contract_button_typo dark_blue">승인</p>
+                <p class="electronic_contract_button_typo dark_blue"><spring:message code="proj.approval" text="승인" /></p>
               </button>
             </c:when>
             <c:when test="${CNT02 gt 0 and (DATA.PROGRESS_CD eq 'PC001' or DATA.PROGRESS_CD eq 'PC003')}"> <!-- 치자이너 기준 의뢰자가 승인, 수정 요청 한 경우 -->
               <button type="button" class="electronic_contract_button white" onclick="fnCancel();">
-                <p class="electronic_contract_button_typo white_typo">계약취소</p>
+                <p class="electronic_contract_button_typo white_typo"><spring:message code="proj.contCancel" text="계약취소" /></p>
               </button>
               <button type="button" class="electronic_contract_button dark_blue without_margin_right" onclick="fnApproval();">
-                <p class="electronic_contract_button_typo dark_blue">승인</p>
+                <p class="electronic_contract_button_typo dark_blue"><spring:message code="proj.approval" text="승인" /></p>
               </button>
             </c:when>
           </c:choose>
@@ -801,7 +801,7 @@ function fnSetEstimator() {
 						  <div class="cad_container">
 				        <div class="dialog_header">
 				         	<p class="dialog_header_typo">
-				          	CAD 견적서 보기
+				          	<spring:message code="equ.viewCAD" text="CAD 견적서 보기" />
 				          </p>
 				          <a href="javascript:void(0)" data-bs-dismiss="modal" aria-label="Close">
 				          	<img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
@@ -810,7 +810,7 @@ function fnSetEstimator() {
 				        <div class="cad_estimator_dialog_item">
 									<div class="dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											납품가능시간
+											<spring:message code="proj.delivTm" text="납품가능시간" />
 										</p>
 									</div>
 									<div class="dialog_item_context_container">
@@ -822,7 +822,7 @@ function fnSetEstimator() {
 				        <div class="cad_estimator_dialog_item_column">
 									<div class="dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											금액
+											<spring:message code="amount" text="금액" />
 										</p>
 									</div>
 				          <div class="cad_estimaotor_dialog_item_context_container_price_area">
@@ -838,13 +838,13 @@ function fnSetEstimator() {
 											<div class="prosthetics_type_data_type_container">
 												<div class="prosthetics_type_data_type">
 													<p class="prosthetics_type_data_type_typo">
-														보철종류
+														<spring:message code="req.prosthT" text="보철종류" />
 													</p>
 												</div>
 												<div class="prosthetics_type_data_type_divider"></div>
 												<div class="prosthetics_type_data_type">
 													<p class="prosthetics_type_data_type_typo">
-														개수
+														<spring:message code="req.quant" text="개수" />
 													</p>
 												</div>
 											</div>
@@ -857,7 +857,7 @@ function fnSetEstimator() {
 										<div class="cad_estimator_dialog_item_context_wrapper"></div>
 										<div class="cad_estimator_total_price_wrapper">
 											<div class="dialog_item_context_typo_container total_price_area">
-												<p class="dialog_item_context_typo total_price">총 금액</p>
+												<p class="dialog_item_context_typo total_price"><spring:message code="equ.totA" text="총 금액" /></p>
 												<p id="totalPriceNum" class="dialog_item_context_typo price_num">
 													2,500,000
 												</p>
@@ -872,7 +872,7 @@ function fnSetEstimator() {
 				        <div class="cad_estimator_dialog_item">
 									<div class="dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											구동가능한 CAD S/W
+											<spring:message code="proj.availaCADSW" text="구동가능한 CAD S/W" />
 										</p>
 									</div>
 									<div class="dialog_item_context_container without_padding">
@@ -885,7 +885,7 @@ function fnSetEstimator() {
 				        <div class="cad_estimator_dialog_item">
 									<div class="cad_estimator_dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											사진 업로드
+											<spring:message code="equ.upload" text="사진 업로드" />
 										</p>
 									</div>
 									<div class="cad_estimator_pic_upload_wrapper">

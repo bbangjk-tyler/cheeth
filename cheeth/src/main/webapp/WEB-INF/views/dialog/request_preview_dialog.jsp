@@ -461,7 +461,7 @@
 									</div>
 									<div id="p_pro_meth_container" class="tribute_request_preview_info">
 									  <div class="tribute_request_preview_info_title">
-									  	<p class="tribute_request_preview_info_title_typo"><spring:message code="" text="가공방법" /></p>
+									  	<p class="tribute_request_preview_info_title_typo"><spring:message code="req.procMeth" text="가공방법" /></p>
 									  </div> 
 									  <div class="tribute_request_preview_info_context">
 									    <p class="tribute_request_preview_info_context_typo"></p>

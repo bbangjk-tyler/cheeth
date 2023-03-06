@@ -531,9 +531,9 @@
                         </div>
                         <div class="equipment_estimator_writing_info_item">
                             <p class="equipment_estimator_writing_info_item_typo">
-                                <spring:message code="" text="장비 이름" />
+                                <spring:message code="equ.equ" text="장비 이름" />
                             </p>
-                            <input class="equipment_estimator_writing_info_item_blank required" id="EQ_NM" name="EQ_NM" title="장비" placeholder="<spring:message code="" text="장비명을 입력해 주세요" />" value="${DATA.EQ_NM}"/>
+                            <input class="equipment_estimator_writing_info_item_blank required" id="EQ_NM" name="EQ_NM" title="장비" placeholder="<spring:message code="equ.enter.equip" text="장비명을 입력해 주세요" />" value="${DATA.EQ_NM}"/>
                         </div>
                         <div class="equipment_estimator_writing_info_item">
                             <p class="equipment_estimator_writing_info_item_typo">
@@ -655,8 +655,8 @@
 						            </div>
 						            <div class="qna_pic_attachment_body">
 						                <p class="qna_pic_attachment_title"><spring:message code="equ.upload" text="사진 업로드" /></p>
-						                <p class="qna_pic_attachment_sub_title">최대 10장까지 업로드 가능합니다.</p>
-						                <font style="margin-left:10px;display: block;margin-bottom: 20px;margin-top: -10px;">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font>
+						                <p class="qna_pic_attachment_sub_title"><spring:message code="talk.fileUpload" text="최대 10장까지 업로드 가능합니다." /></p>
+						                <font style="margin-left:10px;display: block;margin-bottom: 20px;margin-top: -10px;">※ <spring:message code="talk.fileMaxCapa" text="파일 최대 용량 500MB" /> (<spring:message code="talk.zip" text="zip 형식의 압축파일을 권장합니다." />) </font>
 						                <div class="qna_pic_attatchment_pic_upload_container">
 						                  <div class="qna_pic_attatchment_main_pic_upload_wrapper">
 						                    <img class="qna_pic_attatchment_main_pic_upload" id="mainPicImage" src="/public/assets/images/profile_image.svg"/>

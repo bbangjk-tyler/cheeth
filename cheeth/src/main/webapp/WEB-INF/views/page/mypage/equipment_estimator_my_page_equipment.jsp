@@ -392,7 +392,7 @@
 											        <div class="dialog_item">
 											            <div class="dialog_item_title">
 											                <p class="dialog_item_title_typo">
-											                    <spring:message code="" text="납품가능시간" />
+											                    <spring:message code="proj.delivTm" text="납품가능시간" />
 											                </p>
 											            </div>
 											            <div class="dialog_item_context_container">

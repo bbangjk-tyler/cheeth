@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:if test="${empty sessionInfo.user}">
   <script>
@@ -297,13 +298,13 @@
 </script>
 
 <div class="processing_center_header">
-  <p class="processing_center_header_typo">가공센터</p>
+  <p class="processing_center_header_typo"><spring:message code="proc.center" text="가공센터" /></p>
 </div>
 
 <div class="processing_center_body">
   <div class="side_menu">
     <div class="side_menu_title" style="cursor: pointer;" onclick="fnAllView();">
-      <p class="side_menu_title_typo">전체보기</p>
+      <p class="side_menu_title_typo"><spring:message code="main.seeAll" text="전체보기" /></p>
     </div>
     <c:forEach var="item" items="${AREA_CD_LIST}" varStatus="status">
       <a href="/${api}/processing/processing_center?AREA_CD=${item.CODE_CD}" class="side_menu_list">
@@ -319,11 +320,11 @@
       </a>
       <img class="processing_center_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="processing_center_connection_location">
-        <p class="processing_center_connection_location_typo">가공센터</p>
+        <p class="processing_center_connection_location_typo"><spring:message code="proc.center" text="가공센터" /></p>
       </div>
       <img class="processing_center_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="processing_center_connection_location">
-        <p class="processing_center_connection_location_typo">가공센터 전체보기</p>
+        <p class="processing_center_connection_location_typo"><spring:message code="proc.allCenter" text="가공센터 전체보기" /></p>
       </div>
       <img class="processing_center_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="processing_center_connection_location">
@@ -441,23 +442,23 @@
     </form:form>
     <div class="processing_center_profile_button_container">
       <a href="javascript:fnCancel()" class="processing_center_profile_cancel_button">
-        <p class="processing_center_profile_cancel_button_typo">목록</p>
+        <p class="processing_center_profile_cancel_button_typo"><spring:message code="list" text="목록" /></p>
       </a>
       <c:if test="${not empty sessionInfo.user and DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
         <a href="javascript:fnDelete()" class="processing_center_profile_cancel_button">
-          <p class="processing_center_profile_cancel_button_typo">삭제</p>
+          <p class="processing_center_profile_cancel_button_typo"><spring:message code="delete" text="삭제" /></p>
         </a>
       </c:if>
       <c:if test="${not empty sessionInfo.user}">
         <c:choose>
           <c:when test="${empty DATA.PROG_NO}">
             <a href="javascript:fnSave();" class="processing_center_profile_writing_button">
-              <p class="processing_center_profile_writing_button_typo">등록</p>
+              <p class="processing_center_profile_writing_button_typo"><spring:message code="save" text="등록" /></p>
             </a>
           </c:when>
           <c:when test="${DATA.CREATE_ID eq sessionInfo.user.USER_ID}">
             <a href="javascript:fnSave();" class="processing_center_profile_writing_button">
-              <p class="processing_center_profile_writing_button_typo">수정 </p>
+              <p class="processing_center_profile_writing_button_typo"><spring:message code="edit" text="수정" /></p>
             </a>
           </c:when>
         </c:choose>

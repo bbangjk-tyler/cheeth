@@ -70,7 +70,7 @@
 </script>
 
 <div class="processing_center_header">
-  <p class="processing_center_header_typo">가공센터</p>
+  <p class="processing_center_header_typo"><spring:message code="proc.center" text="가공센터" /></p>
 </div>
 
 <div class="processing_center_body">
@@ -93,11 +93,11 @@
       </a>
       <img class="processing_center_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="processing_center_connection_location">
-        <p class="processing_center_connection_location_typo">가공센터</p>
+        <p class="processing_center_connection_location_typo"><spring:message code="proc.center" text="가공센터" /></p>
       </div>
       <img class="processing_center_connection_location_arrow" src="/public/assets/images/connection_location_arrow.svg"/>
       <div class="processing_center_connection_location">
-        <p class="processing_center_connection_location_typo_bold">가공센터 전체보기</p>
+        <p class="processing_center_connection_location_typo_bold"><spring:message code="proc.allCenter" text="가공센터 전체보기" /></p>
       </div>
     </div>
     <div class="processing_center_filter_container">

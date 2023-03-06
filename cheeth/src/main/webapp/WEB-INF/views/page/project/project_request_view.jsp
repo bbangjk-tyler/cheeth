@@ -517,7 +517,7 @@ $(document).ready(function(){
 				pant_name += "*";
 			}
 			reqHtml += '<div class="electronic_estimator_dialog_request">';
-			reqHtml += '  <p class="electronic_estimator_dialog_request_title">의뢰서' + (index + 1) + '</p>';
+			reqHtml += '  <p class="electronic_estimator_dialog_request_title"><spring:message code="proj.request" text="의뢰서" />' + (index + 1) + '</p>';
 			reqHtml += '	<p class="electronic_estimator_dialog_request_name">' + pant_name + '</p>';
 			reqHtml += '	<p class="electronic_estimator_dialog_request_context">' + suppStr + '</p>';
 			reqHtml += '</div>';
@@ -1031,7 +1031,7 @@ $(document).ready(function(){
 				      </div>
 				      <div class="project_request_reading_info_etc">
 				        <p class="project_request_reading_info_etc_typo">
-				          <spring:message code="proj.reqDate" text="작성일" /> : ${DATA.CREATE_DATE}
+				          <spring:message code="equ.preparDt" text="작성일" /> : ${DATA.CREATE_DATE}
 				        </p>
 				      </div>
 				      <div class="project_request_reading_info_etc">
@@ -1613,7 +1613,7 @@ $(document).ready(function(){
 						  <div class="cad_container">
 				        <div class="dialog_header">
 				         	<p class="dialog_header_typo">
-				          	CAD 견적서 보기
+				          	<spring:message code="equ.viewCAD" text="CAD 견적서 보기" />
 				          </p>
 				          <a href="javascript:void(0)" data-bs-dismiss="modal" aria-label="Close">
 				          	<img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
@@ -1622,7 +1622,7 @@ $(document).ready(function(){
 				        <div class="cad_estimator_dialog_item">
 									<div class="dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											납품가능시간
+											<spring:message code="proj.delivTm" text="납품가능시간" />
 										</p>
 									</div>
 									<div class="dialog_item_context_container">
@@ -1634,7 +1634,7 @@ $(document).ready(function(){
 				        <div class="cad_estimator_dialog_item_column">
 									<div class="dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											금액
+											<spring:message code="amount" text="금액" />
 										</p>
 									</div>
 				          <div class="cad_estimaotor_dialog_item_context_container_price_area">
@@ -1650,13 +1650,13 @@ $(document).ready(function(){
 											<div class="prosthetics_type_data_type_container">
 												<div class="prosthetics_type_data_type">
 													<p class="prosthetics_type_data_type_typo">
-														보철종류
+														<spring:message code="req.prosthT" text="보철종류" />
 													</p>
 												</div>
 												<div class="prosthetics_type_data_type_divider"></div>
 												<div class="prosthetics_type_data_type">
 													<p class="prosthetics_type_data_type_typo">
-														개수
+														<spring:message code="req.quant" text="개수" />
 													</p>
 												</div>
 											</div>
@@ -1669,7 +1669,7 @@ $(document).ready(function(){
 										<div class="cad_estimator_dialog_item_context_wrapper"></div>
 										<div class="cad_estimator_total_price_wrapper">
 											<div class="dialog_item_context_typo_container total_price_area">
-												<p class="dialog_item_context_typo total_price">총 금액</p>
+												<p class="dialog_item_context_typo total_price"><spring:message code="equ.totA" text="총 금액" /></p>
 												<p id="totalPriceNum" class="dialog_item_context_typo price_num">
 													2,500,000
 												</p>
@@ -1684,7 +1684,7 @@ $(document).ready(function(){
 				        <div class="cad_estimator_dialog_item">
 									<div class="dialog_item_title cad_title">
 										<p class="dialog_item_title_typo">
-											구동가능한 CAD S/W
+											<spring:message code="proj.availaCADSW" text="구동가능한 CAD S/W" />
 										</p>
 									</div>
 									<div class="dialog_item_context_container without_padding">

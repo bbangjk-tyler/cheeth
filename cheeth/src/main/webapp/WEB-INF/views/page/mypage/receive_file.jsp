@@ -71,7 +71,7 @@ if(request.getParameter("reviewbool") != null){
               html += `<div class="receive_estimator_request_container">`;
               html += `<div class="receive_estimator_request">`;
               html += `<p class="receive_estimator_request_name">` + rtnArray[0]['PANT_NM'] + `</p>`;
-              html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button">의뢰서 보기</a>`;
+              html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button"><spring:message code="dialog.req.previReq" text="의뢰서 보기" /></a>`;
               html += `<p class="receive_estimator_request_context">`;
               rtnArray.map(m => {
                 html += m.SUPP_NM + ' ' + m.CNT + '개, ';

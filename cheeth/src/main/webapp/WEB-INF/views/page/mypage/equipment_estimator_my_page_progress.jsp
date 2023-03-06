@@ -565,7 +565,7 @@
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
                       <div class="dropbox_my_page_progress_pop_up_body">
                         <div class="dropbox_my_page_progress_pop_up_typo_container">
-                          <p class="dropbox_my_page_progress_pop_up_typo"><spring:message code="" text="의뢰서 수령" /></p>
+                          <p class="dropbox_my_page_progress_pop_up_typo"><spring:message code="equ.receiReq" text="의뢰서 수령" /></p>
                         </div>
                       </div>
                     </div>
@@ -592,7 +592,7 @@
                       <div class="dropbox_my_page_progress_pop_up_top"></div>
                       <div class="dropbox_my_page_progress_pop_up_body" onclick="javascript:paysetting(this);fnPayment(${item.WR_NO});" style="cursor: pointer;">
                         <div class="dropbox_my_page_progress_pop_up_typo_container">
-                          <p class="dropbox_my_page_progress_pop_up_typo"><spring:message code="" text="입금확인" /></p>
+                          <p class="dropbox_my_page_progress_pop_up_typo"><spring:message code="equ.confDeposit" text="입금확인" /></p>
                         </div>
                       </div>
                     </div>

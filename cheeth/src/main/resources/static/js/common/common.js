@@ -1,4 +1,3 @@
-
 function isObjectType() {
   var args = arguments[0];
   return Object.prototype.toString.call(args).slice(8, -1);
@@ -724,4 +723,49 @@ function getI8nMsg(){
 		msg = arguments[1];
 	}
 	return msg;
+}
+
+function fnDateFormat(){
+	var gubun = arguments[1]; // Y:년, M:월, D:일, H:시, MI:분
+	var date = arguments[0]; //값
+	var dateText = ""; //return값
+	var lang = navigator.language;
+	if(lang == "en"){
+		if(gubun=="Y"){
+			gubun = ".";
+		} else if(gubun=="M"){
+			var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+			gubun = month[gubun -1];
+		} else if(gubun=="D"){
+			var dateGubun = date.substring(1, 2);
+			console.log(date,dateGubun);
+			if(dateGubun=="1" && date != "11"){
+				gubun = "st";
+			} else if(dateGubun=="2" && date != "12"){
+				gubun = "nd";
+			} else if(dateGubun=="3" && date != "13"){
+				gubun = "rd"
+			} else {
+				gubun = "th";
+			}
+		} else if(gubun=="H"){
+			gubun = ":";
+		} else {
+			gubun = "";
+		}
+	} else {
+		if(gubun=="Y"){
+			gubun = "년";
+		} else if(gubun == "M"){
+			gubun = "월";
+		} else if(gubun=="D"){
+			gubun = "일";
+		} else if(gubun=="H"){
+			gubun = "시 ";
+		} else {
+			gubun = "분";
+		}
+	}
+	dateText = date + gubun;
+	return dateText;
 }

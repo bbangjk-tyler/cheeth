@@ -180,7 +180,7 @@ if(request.getParameter("alreadychk") !=null){
             html += `<div class="receive_estimator_request_container">`;
             html += `<div class="receive_estimator_request">`;
             html += `<p class="receive_estimator_request_name">` + rtnArray[0]['PANT_NM'] + `</p>`;
-            html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button">의뢰서 보기</a>`;
+            html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button"><spring:message code="dialog.req.previReq" text="의뢰서 보기" /></a>`;
             html += `<p class="receive_estimator_request_context">`;
             rtnArray.map(m => {
              html += m.SUPP_NM + ' ' + m.CNT + '개, ';
@@ -273,7 +273,7 @@ if(request.getParameter("alreadychk") !=null){
 	  <div class="receive_estimator_main_container">
 	    <div class="receive_estimator_item">
 	      <p class="receive_estimator_title">의뢰서</p>
-	      <font style="margin-left:10px;float:right;display: block;">※ 파일 최대 용량 500MB (zip 형식의 압축파일을 권장합니다.) </font><br style="clear:both">
+	      <font style="margin-left:10px;float:right;display: block;">※ <spring:message code="talk.fileMaxCapa" text="파일 최대 용량 500MB" /> (<spring:message code="talk.zip" text="zip 형식의 압축파일을 권장합니다." />) </font><br style="clear:both">
 	      <div class="receive_estimator_context">
 	        <div class="receive_estimator_request_wrapper"></div>
 	      </div>
@@ -308,7 +308,7 @@ if(request.getParameter("alreadychk") !=null){
 	          <p class="cad_completed_info_item_typo" id="banknm">${DATA_02.BANK_NM}</p>
 	        </div>
 	        <div class="cad_completed_info_item">
-	          <p class="cad_completed_info_item_typo">계좌번호</p>
+	          <p class="cad_completed_info_item_typo"><spring:message code="join.acntno" text="계좌번호" /></p>
 	          <p class="cad_completed_info_item_typo">${DATA_02.ACCOUNT_NO}</p>
 	        </div>
 	        <div class="cad_completed_info_item without_margin">

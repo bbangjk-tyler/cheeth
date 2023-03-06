@@ -23,7 +23,7 @@
 <script>
 var lang = localStorage.getItem("lang");
 function confirmModal() {
-	  if (window.confirm("\n 해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?")) {
+	  if (window.confirm(getI8nMsg("alert.confirm.moveToEnter"))) {
 	    location.href = ('/api/mypage/my_page_edit_info');
 	  } else {
 		  
@@ -217,7 +217,7 @@ function confirmModal() {
 	          <p class="project_list_data_type_numb_typo"><spring:message code="proj.quot" text="견적수" /></p>
 	        </div>
 	        <div class="project_list_data_type project_list_date_created">
-	          <p class="project_list_data_type_date_created_typo"><spring:message code="proj.reqDate" text="작성일" /></p>
+	          <p class="project_list_data_type_date_created_typo"><spring:message code="equ.preparDt" text="작성일" /></p>
 	        </div>
 	        <div class="project_list_data_type project_list_date_expiry">
 	          <p class="project_list_data_type_date_expiry_typo"><spring:message code="proj.estimReq" text="견적요청 만료시간" /></p>

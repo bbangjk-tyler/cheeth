@@ -96,7 +96,7 @@
             html += `<div class="receive_estimator_request_container">`;
             html += `<div class="receive_estimator_request">`;
             html += `<p class="receive_estimator_request_name">` + rtnArray[0]['PANT_NM'] + `</p>`;
-            html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button">의뢰서 보기</a>`;
+            html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button"><spring:message code="dialog.req.previReq" text="의뢰서 보기" /></a>`;
             html += `<p class="receive_estimator_request_context">`;
             rtnArray.map(m => {
              html += m.SUPP_NM + ' ' + m.CNT + '개, ';
@@ -106,8 +106,8 @@
             html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + `개</p>`;
             html += `</div>`;
             if(isNotEmpty(rtnArray[0]['WR_FILE_CD'])) {
-                html += `<button type="button" class="receive_estimator_attatchment_download_button" onclick="javascript:alert('결제완료와 입금확인 후에 파일 다운로드가 가능합니다.');">`;
-                html += `<p class="receive_estimator_attatchment_download_button_typo">첨부파일 다운로드</p>`;
+                html += `<button type="button" class="receive_estimator_attatchment_download_button" onclick="javascript:alert(getI8nMsg('alert.downAfpay'));">`;
+                html += `<p class="receive_estimator_attatchment_download_button_typo"><spring:message code="prof.downAttach" text="첨부파일 다운로드" /></p>`;
                 html += `</button>`;
               }
             html += `</div>`;
@@ -219,7 +219,7 @@
 	          <p class="cad_completed_info_item_typo">${DATA_02.BANK_NM}</p>
 	        </div>
 	        <div class="cad_completed_info_item">
-	          <p class="cad_completed_info_item_typo">계좌번호</p>
+	          <p class="cad_completed_info_item_typo"><spring:message code="join.acntno" text="계좌번호" /></p>
 	          <p class="cad_completed_info_item_typo">${DATA_02.ACCOUNT_NO}</p>
 	        </div>
 	        <div class="cad_completed_info_item without_margin">

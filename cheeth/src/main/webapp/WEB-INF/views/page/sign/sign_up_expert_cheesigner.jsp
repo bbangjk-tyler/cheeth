@@ -108,7 +108,7 @@
     }
   }
   function confirmModal() {
-	  if (window.confirm("\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 가입을 진행하시겠습니까?")) {
+	  if (window.confirm(getI8nMsg("alert.confirm.signUp"))) {//"\n 추가정보 미입력 시 서비스에 제한이 있을 수 있습니다.\n 추가정보는 프로필 관리에서 수정이 가능합니다. \n \n 가입을 진행하시겠습니까?"
 		  var formData = new FormData(document.getElementById('sign_up_form'));
 		 	for(var key of formData.keys()) {
 		 		formData.set(key, JSON.stringify(formData.get(key)));
@@ -591,8 +591,8 @@
 				</button>
 			</div>
 			<div class="sign_up_info_item">
-				<p class="sign_up_info_item_typo">계좌번호</p>
-				<input class="sign_up_info_item_blank valid-account required" placeholder='"-"를 제외하고 입력하시기 바랍니다.' type="number" name="ACCOUNT_NO" id="ACCOUNT_NO" data-field="계좌번호" required/>
+				<p class="sign_up_info_item_typo"><spring:message code="join.acntno" text="계좌번호" /></p>
+				<input class="sign_up_info_item_blank valid-account required" placeholder='<spring:message code="join.acntWithout" text='"-"를 제외하고 입력하시기 바랍니다.' />' type="number" name="ACCOUNT_NO" id="ACCOUNT_NO" data-field="계좌번호" required/>
 			</div>
 			
 		</div>

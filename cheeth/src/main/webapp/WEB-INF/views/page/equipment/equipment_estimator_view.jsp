@@ -25,7 +25,7 @@
 
 <script>
 	function confirmModal() {
-	  if (window.confirm("\n 해당 서비스를 이용하려면 추가정보 입력이 필요합니다. \n \n입력창으로 가시겠습니까?")) {
+	  if (window.confirm(getI8nMsg("alert.confirm.moveToEnter"))) {
 	    location.href = ('/api/mypage/my_page_edit_info');
 	  } else {
 		  
@@ -635,7 +635,7 @@
                         </div>
                         <div class="equipment_estimator_view_info_etc">
                             <p class="equipment_estimator_view_info_etc_typo">
-                                <spring:message code="" text="작성일" /> : ${DATA.CREATE_DATE}
+                                <spring:message code="equ.preparDt" text="작성일" /> : ${DATA.CREATE_DATE}
                             </p>
                         </div>
                         <div class="equipment_estimator_view_info_etc">
@@ -663,7 +663,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    <spring:message code="" text="장비이름" />
+                                    <spring:message code="equ.equ" text="장비이름" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -703,7 +703,7 @@
                         <div class="equipment_estimator_view_info_item">
                             <div class="equipment_estimator_view_info_item_title">
                                 <p class="equipment_estimator_view_info_item_title_typo">
-                                    <spring:message code="" text="작성일" />
+                                    <spring:message code="equ.preparDt" text="작성일" />
                                 </p>
                             </div>
                             <div class="equipment_estimator_view_info_item_context">
@@ -797,7 +797,7 @@
 										  <div class="send_estimator_container">
 									        <div class="dialog_header">
 									            <p class="dialog_header_typo">
-									            	<spring:message code="" text="장비 견적서 보내기" />
+									            	<spring:message code="equ.sendEquQuo" text="장비 견적서 보내기" />
 									            </p>
 									            <a href="javascript:void(0)" class="dialog_close_button_wrapper" data-bs-dismiss="modal" aria-label="Close">
 									            	<img class="dialog_close_button" src="/public/assets/images/dialog_close_button.svg"/>
@@ -806,7 +806,7 @@
 									        <div class="send_estimator_dialog_item">
 									            <div class="send_estimator_dialog_item_title wide">
 									                <p class="dialog_item_title_typo">
-									                    <spring:message code="" text="납품가능시간" />
+									                    <spring:message code="proj.delivTm" text="납품가능시간" />
 									                </p>
 									                <p class="send_estimator_dialog_item_sub_title">
 									                    납품까지 소요시간이 아닌 예상 날짜와 시간을 입력하세요
@@ -1041,10 +1041,10 @@
 									        <div class="send_estimator_dialog_item_column">
 									          <div class="send_estimator_dialog_item_title">
 									            <p class="dialog_item_title_typo">
-									            	사진 업로드
+									            	<spring:message code="equ.upload" text="사진 업로드" />
 									            </p>
 									            <p class="send_estimator_dialog_item_sub_title">
-									            	최대 10장까지 업로드 가능합니다.
+									            	<spring:message code="talk.fileUpload" text="최대 10장까지 업로드 가능합니다." />
 									            </p>
 									          </div>
 									          <div class="send_estimator_pic_upload_wrapper">
@@ -1054,7 +1054,7 @@
 									              </div>
 									            </div>
 									            <button id="imaageUploadTypo" class="send_estimator_upload_button" type="button">
-									            	<p class="send_estimator_upload_button_typo">이미지 업로드</p>
+									            	<p class="send_estimator_upload_button_typo"><spring:message code="equ.upload" text="이미지 업로드" /></p>
 									            </button>
 									            <input type="file" name="IMG_FILE" id="IMG_FILE" onchange="previewImage();" style="display: none;"/>
 									          </div>

@@ -544,7 +544,7 @@
 											        <div class="cad_estimator_dialog_item">
 																<div class="dialog_item_title cad_title">
 																	<p class="dialog_item_title_typo">
-																		<spring:message code="" text="납품가능시간" />
+																		<spring:message code="proj.delivTm" text="납품가능시간" />
 																	</p>
 																</div>
 																<div class="dialog_item_context_container">
@@ -606,7 +606,7 @@
 											        <div class="cad_estimator_dialog_item">
 																<div class="dialog_item_title cad_title">
 																	<p class="dialog_item_title_typo">
-																		<spring:message code="" text="구동가능한 CAD S/W" />
+																		<spring:message code="proj.availaCADSW" text="구동가능한 CAD S/W" />
 																	</p>
 																</div>
 																<div class="dialog_item_context_container without_padding">
@@ -657,7 +657,7 @@
 																		<div class="cad_estimator_profile_name">
 																			<p class="cad_estimator_profile_name_typo" id="nick_p_1">중랑구 핫도그</p>
 																			<p class="cad_estimator_dialog_item_sub_title_typo" id="texbool">
-																			    <spring:message code="" text="세금 계산서 발행 가능" />
+																			    <spring:message code="equ.taxInvCan" text="세금 계산서 발행 가능" />
 																			</p>
 																		</div>
 																		<div class="cad_estimator_profile_info_container">
@@ -701,7 +701,7 @@
 											        </div>
 											        <div id="btnWrapper2" class="button_container" style="display: none;">
                                 <a href="javascript:void(0);" class="button_blue">
-                                  <p class="button_blue_typo"><spring:message code="" text="전자계약" /></p>
+                                  <p class="button_blue_typo"><spring:message code="econtact" text="전자계약" /></p>
                                 </a>
 											        </div>
 											    	</div>

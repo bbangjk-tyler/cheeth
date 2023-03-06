@@ -500,7 +500,7 @@
               <c:if test="${empty LIST}">
               	<div class="list_divider"></div>
               	<div class="request_basket_list">
-              		<div><p>등록된 의뢰서가 없습니다.</p></div>
+              		<div><p><spring:message code="req.noReq" text="등록된 의뢰서가 없습니다." /></p></div>
               	</div>
               </c:if>
               <div class="list_divider"></div>
@@ -676,7 +676,7 @@
                 <p class="request_basket_title"><spring:message code="proj.request" text="의뢰서" /></p>
                 <div class="request_basket_context">
                     <p class="request_basket_context_typo">
-                    	선택된 의뢰서가 없습니다.
+                    	<spring:message code="req.noselectReq" text="선택된 의뢰서가 없습니다." />
                     </p>
                     <div class="request_basket_request_container">
                     </div>
