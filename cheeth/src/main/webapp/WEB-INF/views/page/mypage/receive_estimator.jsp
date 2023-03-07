@@ -105,11 +105,11 @@ if(request.getParameter("alreadychk") != null){
             html += `<a href="javascript:fnRequestView('\${groupCd}');" class="receive_estimator_request_view_request_button"><spring:message code="dialog.req.previReq" text="의뢰서 보기" /></a>`;
             html += `<p class="receive_estimator_request_context">`;
             rtnArray.map(m => {
-             html += m.SUPP_NM + ' ' + m.CNT + '개, ';
+             html += m.SUPP_NM + ' ' + m.CNT + getI8nMsg('unit') + ', ';
             });
             html = html.substring(0, html.lastIndexOf(','));
             html += `</p>`;
-            html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + `개</p>`;
+            html += `<p class="receive_estimator_request_count">` + rtnArray[0]['TOTAL_CNT'] + getI8nMsg('unit') + `</p>`;
             html += `</div>`;
             html += `<button class="receive_estimator_attatchment_download_button" onclick="fnOpenFileModal('` + rtnArray[0]['FILE_CD'] + `');">`;
             html += `<p class="receive_estimator_attatchment_download_button_typo"><spring:message code="prof.downAttach" text="첨부파일 다운로드" /></p>`;

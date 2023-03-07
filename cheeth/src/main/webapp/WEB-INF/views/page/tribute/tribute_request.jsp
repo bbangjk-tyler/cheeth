@@ -2018,8 +2018,7 @@
 					id="PANT_NM" onkeyup="fnSetPantNm(this);" placeholder="<spring:message code="req.enter.patientNm" text="환자명을 입력하세요." />" />
 				<button id="EventePopupBTN" type="button" class="btn btn-primary"
 					style="color: #fff !important; font-size: 13px; font-weight: 800; position: absolute; margin-left: 402px; margin-top: 6px;"
-					data-bs-toggle="modal" data-bs-target="#exampleModal">작성
-					tip</button>
+					data-bs-toggle="modal" data-bs-target="#exampleModal"><spring:message code="req.tip" text="작성tip" /></button>
 			</div>
 			<div class="teeth_model_wrapper" onclick="CategoryChkBtn()">
 				<div id="top_div"
@@ -2742,7 +2741,7 @@
 								<div class="dialog_tribute_request_frequently_used_word_body">
 									<input
 										class="dialog_tribute_request_frequently_used_word_direct_input"
-										name="WORD_TXT" id="WORD_TXT" placeholder="<spring:message code="req.enter.patientNm2" text="자주 쓰는 말 입력" />" />
+										name="WORD_TXT" id="WORD_TXT" placeholder="<spring:message code="req.enter.enterFrequenW" text="자주 쓰는 말 입력" />" />
 									<div
 										class="dialog_tribute_request_frequently_used_word_button_wrapper">
 										<button type="button"

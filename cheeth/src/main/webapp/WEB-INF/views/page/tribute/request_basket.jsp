@@ -157,14 +157,14 @@
 		        	
 		        	if(!duplicateChkSuppArr.includes(m.SUPP_CD_1)) {
 			        	duplicateChkSuppArr.push(m.SUPP_CD_1);
-			        	html += m.SUPP_NM_1 + ' ' + m.SUPP_GROUP_CNT + '개, ';
+			        	html += m.SUPP_NM_1 + ' ' + m.SUPP_GROUP_CNT + getI8nMsg('unit') + ', ';//개
 		        	}
 		        	
 		        });
 	        
 	        html = html.substring(0, html.lastIndexOf(','));
 	        html += '	</p>';
-	        html += '	<p class="request_basket_request_count">' + (isEmpty(totalCnt) ? rtnArray[0]['TOTAL_CNT'] : totalCnt) + '개</p>';
+	        html += '	<p class="request_basket_request_count">' + (isEmpty(totalCnt) ? rtnArray[0]['TOTAL_CNT'] : totalCnt) + getI8nMsg('unit') + '</p>';
 	        html += ` <img class="request_basket_request_close_button" src="/public/assets/images/request_close_button.svg" style="cursor: pointer;" id="` + groupCd + `" onclick="removeReqEl('` + groupCd + `');"/>`;
 	        html += '</div>';
 			    $('.request_basket_request_container').append(html);

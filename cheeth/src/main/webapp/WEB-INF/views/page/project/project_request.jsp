@@ -300,7 +300,7 @@
             html += '    <p class="project_request_request_typo_title">' + rtnArray[0]['PANT_NM'] + '</p>';
             html += '    <p class="project_request_request_typo_context">';
             rtnArray.map(m => {
-              html += m.SUPP_NM + ' ' + m.CNT + '개, ';
+              html += m.SUPP_NM + ' ' + m.CNT + getI8nMsg('unit') +', ';
             });
             html = html.substring(0, html.lastIndexOf(','));
             html += '    </p>';

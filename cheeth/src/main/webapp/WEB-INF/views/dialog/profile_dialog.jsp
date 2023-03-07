@@ -226,7 +226,7 @@
               <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.totalA" text="거래 총 금액" /></p>
               <div class="profile_management_profile_etc_info_context_container">
                 <p id="PROFILE_COMPLETE_AMOUNT" class="profile_management_profile_etc_info_context">0</p>
-                <p class="profile_management_profile_etc_info_context_unit ">원</p>
+                <p class="profile_management_profile_etc_info_context_unit "><spring:message code="won" text="원" /></p>
               </div>
             </div>
           </div>

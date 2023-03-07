@@ -239,8 +239,12 @@
     if(is) {
       var callback = '<%= callback %>';
       if(isNotEmpty(callback)) {
-    	  var date = fnDateFormat(yyyy,"Y") + ' ' + fnDateFormat(mm,"M") + ' ' + fnDateFormat(dd,"D") + ' ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
-        //var date = yyyy + '년 ' + mm + '월 ' + dd + '일 ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
+    	  var lang = localStorage.getItem('lang');
+    	  if(lang=="ko"){
+    		  var date = yyyy + '년 ' + mm + '월 ' + dd + '일 ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
+    	  } else {
+    		  var date = getI8nMsg(fnDateFormat(mm,"M")) + " " + dd +  " " + yyyy + ", " + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
+    	  }
     	  eval(callback + `(` + (yyyy + mm + dd + ttmm) + `,` + `'` + date + `'` + `)` );
     	  
     	  if(fnIsCheckDate(yyyy + mm + dd)){

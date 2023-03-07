@@ -93,7 +93,7 @@
 			suppNmArr = req['SUPP_NM_STR'].split(',');
 			
 			var suppStr = suppNmArr.map((nm, i) => {
-				return nm + ' ' + cntArr[i] + '개';
+				return nm + ' ' + cntArr[i] + getI8nMsg('unit');
 			}).join(', ');
 			
 			var PANT_NM_str = req.PANT_NM.substring(0, 1);
@@ -194,7 +194,7 @@
 			suppDtlHtml += '			<p class="operator">=</p>';
 			suppDtlHtml += '			<div class="dialog_item_context_typo_container price_area">';
 			suppDtlHtml += '				<p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
-			suppDtlHtml += '				<p class="dialog_item_context_typo">원</p>';
+			suppDtlHtml += '				<p class="dialog_item_context_typo">'+getI8nMsg('won')+'</p>';
 			suppDtlHtml += '			</div>';
 			suppDtlHtml += '		</div>';
 			suppDtlHtml += '	</div>';
@@ -364,7 +364,7 @@
 									2,500,000
 								</p>
 								<p class="dialog_item_context_typo">
-									원
+									<spring:message code="won" text="원" />
 								</p>
 							</div>
 						</div>

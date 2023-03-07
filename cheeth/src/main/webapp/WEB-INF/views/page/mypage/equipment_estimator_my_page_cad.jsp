@@ -118,7 +118,7 @@
 			suppNmArr = req['SUPP_NM_STR'].split(',');
 			
 			var suppStr = suppNmArr.map((nm, i) => {
-				return nm + ' ' + cntArr[i] + '개';
+				return nm + ' ' + cntArr[i] + getI8nMsg('unit');
 			}).join(', ');
 			
 			reqHtml += '<div class="cad_estimator_dialog_request">';

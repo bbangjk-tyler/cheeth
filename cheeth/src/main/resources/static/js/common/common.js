@@ -726,41 +726,17 @@ function getI8nMsg(){
 }
 
 function fnDateFormat(){
-	var gubun = arguments[1]; // Y:년, M:월, D:일, H:시, MI:분
+	var gubun = arguments[1]; // Y:년, M:월, D:일
 	var date = arguments[0]; //값
-	var yearChk = "Y";
-	if(arguments.length=="3"){
-		yearChk = arguments[2]; //Y: 년도뒤에 "."표기, N:"" ex) Y:0000. Jun 1st, N:0000 Jun 1st
-	}
 	var dateText = ""; //return값
 	var lang = localStorage.getItem('lang');//navigator.language;
 	if(lang == "en"){
-		if(gubun=="Y"){
-			if(yearChk == "Y"){
-				gubun = ".";
-			} else {
-				gubun = "";	
-			}
-		} else if(gubun=="M"){
+		if(gubun=="M"){
 			var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 			gubun = month[date -1];
 			date  = "";
-		} else if(gubun=="D"){
-			date = date + "";
-			var dateGubun = date.substring(1, 2);
-			if(dateGubun=="1" && date != "11"){
-				gubun = "st";
-			} else if(dateGubun=="2" && date != "12"){
-				gubun = "nd";
-			} else if(dateGubun=="3" && date != "13"){
-				gubun = "rd"
-			} else {
-				gubun = "th";
-			}
-		} else if(gubun=="H"){
-			gubun = ":";
 		} else {
-			gubun = "";
+			gubun = "";	
 		}
 	} else {
 		if(gubun=="Y"){

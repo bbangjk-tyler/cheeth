@@ -112,7 +112,7 @@ if(request.getParameter("nm") !=null){
 			suppNmArr = req['SUPP_NM_STR'].split(',');
 			
 			var suppStr = suppNmArr.map((nm, i) => {
-				return nm + ' ' + cntArr[i] + '개';
+				return nm + ' ' + cntArr[i] + getI8nMsg('unit');
 			}).join(', ');
 			
 			reqHtml += '<div class="cad_estimator_dialog_request">';
@@ -215,7 +215,7 @@ function fnSetEstimator() {
 			suppDtlHtml += '			<p class="operator">=</p>';
 			suppDtlHtml += '			<div class="dialog_item_context_typo_container price_area">';
 			suppDtlHtml += '				<p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
-			suppDtlHtml += '				<p class="dialog_item_context_typo">원</p>';
+			suppDtlHtml += '				<p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
 			suppDtlHtml += '			</div>';
 			suppDtlHtml += '		</div>';
 			suppDtlHtml += '	</div>';
