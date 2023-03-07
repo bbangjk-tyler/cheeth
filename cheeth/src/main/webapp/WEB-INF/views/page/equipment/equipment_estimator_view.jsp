@@ -156,7 +156,7 @@
     html += '      <p class="operator">=</p>';
     html += '      <div class="dialog_item_context_typo_container price_area">';
     html += '        <p class="dialog_item_context_typo price_num">0</p>';
-    html += '        <p class="dialog_item_context_typo">원</p>';
+    html += '        <p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
     html += '      </div>';
     html += '      <button type="button" onclick="fnDeleteMatchingDtl(this);" style="background: transparent;">';
     html += '      	<img class="price_close_button" src="/public/assets/images/dialog_blue_close_button.svg"/>';
@@ -432,7 +432,7 @@
       suppDtlHtml += '  <p class="operator">=</p>';
       suppDtlHtml += '  <div class="dialog_item_context_typo_container price_area">';
       suppDtlHtml += '    <p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
-      suppDtlHtml += '    <p class="dialog_item_context_typo">원</p>';
+      suppDtlHtml += '    <p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
       suppDtlHtml += '  </div>';
       suppDtlHtml += '</div>';
 		});
@@ -1002,7 +1002,7 @@
 									                  <p class="operator">=</p>
 									                  <div class="dialog_item_context_typo_container price_area">
 									                    <p class="dialog_item_context_typo price_num">0</p>
-									                    <p class="dialog_item_context_typo">원</p>
+									                    <p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>
 									                  </div>
 									                  <!-- <button type="button" onclick="fnDeleteMatchingDtl(this);" style="background: transparent;">
 									                  	<img class="price_close_button" src="/public/assets/images/dialog_blue_close_button.svg"/>

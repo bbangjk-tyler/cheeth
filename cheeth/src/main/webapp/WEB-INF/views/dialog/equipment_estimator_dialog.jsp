@@ -83,7 +83,7 @@
 	    suppDtlHtml += '  <p class="operator">=</p>';
 	    suppDtlHtml += '  <div class="dialog_item_context_typo_container price_area">';
 	    suppDtlHtml += '    <p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
-	    suppDtlHtml += '    <p class="dialog_item_context_typo">원</p>';
+	    suppDtlHtml += '    <p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
 	    suppDtlHtml += '  </div>';
 	    suppDtlHtml += '</div>';
 		});

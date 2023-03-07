@@ -383,14 +383,14 @@ if(request.getParameter("alreadychk") !=null){
 	          <p class="cad_completed_price_title">견적금액</p>
 	          <div class="cad_completed_price_context">
 	            <p class="cad_completed_price_num"></p>
-	            <p class="cad_completed_price_unit">원</p>
+	            <p class="cad_completed_price_unit"><spring:message code="won" text="원" /></p>
 	          </div>
 	        </div>
 	        <div class="cad_completed_price">
 	          <p class="cad_completed_price_title">최종금액</p>
 	          <div class="cad_completed_price_context">
 	            <input type="text" id="LAST_AMOUNT" name="LAST_AMOUNT" maxlength="10" value="${DATA_02.LAST_AMOUNT}">
-	            <p class="cad_completed_price_unit">원</p>
+	            <p class="cad_completed_price_unit"><spring:message code="won" text="원" /></p>
 	          </div>
 	        </div>
 	      </div>

@@ -234,7 +234,7 @@
 			suppDtlHtml += '			<p class="operator">=</p>';
 			suppDtlHtml += '			<div class="dialog_item_context_typo_container price_area">';
 			suppDtlHtml += '				<p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
-			suppDtlHtml += '				<p class="dialog_item_context_typo">원</p>';
+			suppDtlHtml += '				<p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
 			suppDtlHtml += '			</div>';
 			suppDtlHtml += '		</div>';
 			suppDtlHtml += '	</div>';
@@ -280,7 +280,7 @@
 	      
 	      $('#successrate').html(currEstimator.COMPLETE_RATIO + ' %'); // 거래 성공률
 	      $('#stafyrate').html(currEstimator.SCORE_AVG + ' / 10'); // 만족도
-	      $('#amountCash').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' 원'); // 거래 총 금액
+	      $('#amountCash').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' ' + getI8nMsg('won')); // 거래 총 금액
 	      
   }
   
@@ -596,7 +596,7 @@
 																				2,500,000
 																			</p>
 																			<p class="dialog_item_context_typo">
-																				원
+																				<spring:message code="won" text="원" />
 																			</p>
 																		</div>
 																	</div>

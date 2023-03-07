@@ -235,14 +235,14 @@
 	          <p class="cad_completed_price_title">견적금액</p>
 	          <div class="cad_completed_price_context">
 	            <p class="cad_completed_price_num c1"></p>
-	            <p class="cad_completed_price_unit">원</p>
+	            <p class="cad_completed_price_unit"><spring:message code="won" text="원" /></p>
 	          </div>
 	        </div>
 	        <div class="cad_completed_price">
 	          <p class="cad_completed_price_title">최종금액</p>
 	          <div class="cad_completed_price_context">
               <p class="cad_completed_price_num c2"></p>
-              <p class="cad_completed_price_unit">원</p>
+              <p class="cad_completed_price_unit"><spring:message code="won" text="원" /></p>
             </div>
 	        </div>
 	      </div>

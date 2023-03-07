@@ -255,7 +255,7 @@ function fnSetEstimator() {
   
   $('#p_info_3').html(currEstimator.COMPLETE_RATIO + ' %'); // 거래 성공률
   $('#p_info_4').html(currEstimator.SCORE_AVG + ' / 10'); // 만족도
-  $('#p_info_5').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' 원'); // 거래 총 금액
+  $('#p_info_5').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' ' + getI8nMsg('won')); // 거래 총 금액
 }
   function fnApproval() {
     var estimatorNo = '${ESTIMATOR_NO}';
@@ -862,7 +862,7 @@ function fnSetEstimator() {
 													2,500,000
 												</p>
 												<p class="dialog_item_context_typo">
-													원
+													<spring:message code="won" text="원" />
 												</p>
 											</div>
 										</div>

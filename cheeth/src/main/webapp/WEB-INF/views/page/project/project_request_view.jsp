@@ -548,7 +548,7 @@ $(document).ready(function(){
 	    suppDtlHtml += '      <p class="operator">=</p>';
 	    suppDtlHtml += '      <div class="dialog_item_context_typo_container price_area">';
 	    suppDtlHtml += '        <p class="dialog_item_context_typo price_num"></p>';
-	    suppDtlHtml += '        <p class="dialog_item_context_typo">원</p>';
+	    suppDtlHtml += '        <p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
 	    suppDtlHtml += '      </div>';
 	    suppDtlHtml += '    </div>';
 	    suppDtlHtml += '  </div>';
@@ -709,7 +709,7 @@ $(document).ready(function(){
 			suppDtlHtml += '			<p class="operator">=</p>';
 			suppDtlHtml += '			<div class="dialog_item_context_typo_container price_area">';
 			suppDtlHtml += '				<p class="dialog_item_context_typo price_num">' + m.SUM_AMOUNT + '</p>';
-			suppDtlHtml += '				<p class="dialog_item_context_typo">원</p>';
+			suppDtlHtml += '				<p class="dialog_item_context_typo"><spring:message code="won" text="원" /></p>';
 			suppDtlHtml += '			</div>';
 			suppDtlHtml += '		</div>';
 			suppDtlHtml += '	</div>';
@@ -753,7 +753,7 @@ $(document).ready(function(){
     
     $('#p_info_3').html(currEstimator.COMPLETE_RATIO + ' %'); // 거래 성공률
     $('#p_info_4').html(currEstimator.SCORE_AVG + ' / 10'); // 만족도
-    $('#p_info_5').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' 원'); // 거래 총 금액
+    $('#p_info_5').html(addComma(currEstimator.COMPLETE_AMOUNT) + ' ' + getI8nMsg('won')); // 거래 총 금액
   }
   
   function fnDeleteEstimator() {
@@ -1431,7 +1431,7 @@ $(document).ready(function(){
 			                    <div class="dialog_item_context_typo_container total_price_area">
 			                        <p class="dialog_item_context_typo total_price">총 금액</p>
 			                        <p class="dialog_item_context_typo price_num"></p>
-			                        <p class="dialog_item_context_typo"> 원</p>
+			                        <p class="dialog_item_context_typo"> <spring:message code="won" text="원" /></p>
 			                    </div>
 			                </div>
 			            </div>
@@ -1674,7 +1674,7 @@ $(document).ready(function(){
 													2,500,000
 												</p>
 												<p class="dialog_item_context_typo">
-													원
+													<spring:message code="won" text="원" />
 												</p>
 											</div>
 										</div>
