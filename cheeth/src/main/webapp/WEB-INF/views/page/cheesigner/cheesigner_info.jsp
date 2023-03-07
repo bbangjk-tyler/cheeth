@@ -132,7 +132,7 @@
                             <p class="profile_management_profile_etc_info_title"><spring:message code="tesign.totalP" text="거래 총 프로젝트 수" /></p>
                             <div class="profile_management_profile_etc_info_context_container">
                                 <p class="profile_management_profile_etc_info_context">${DATA.DATA_03.COMPLETE_CNT}</p>
-                                <p class="profile_management_profile_etc_info_context_unit ">건</p>
+                                <p class="profile_management_profile_etc_info_context_unit "><spring:message code="case" text="건" /></p>
                             </div>
                         </div>
                         <div class="profile_management_profile_etc_info_total_price">
