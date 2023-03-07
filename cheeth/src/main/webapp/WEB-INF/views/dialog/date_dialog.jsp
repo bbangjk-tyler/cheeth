@@ -39,7 +39,7 @@
     }
     ccyear = code;
 	  var today = new Date();
-  	  var year3 = today.getFullYear() + "년";
+  	  var year3 = fnDateFormat(today.getFullYear(),"Y","N");//today.getFullYear() + "년";
   	  var month = ('0' + (today.getMonth() + 1)).slice(-2);
   	  var day = ('0' + today.getDate()).slice(-2);
   	  console.log("codeNm :: " + codeNm);
@@ -117,14 +117,14 @@
           if(i < 9) {
         	i *= 1;
             var code = ('0' + (i+1));
-            var codeNm = ('0' + (i+1)) + '일';
+            var codeNm = fnDateFormat(code,"D");//('0' + (i+1)) + '일';
             html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
-            html += `<p class="dropbox_select_button_item_typo">` + ('0' + (i+1)) + '일' + `</p>`;
+            html += `<p class="dropbox_select_button_item_typo">` + codeNm+ `</p>`;//('0' + (i+1)) + '일' + `</p>`;
           } else {
             var code = (i+1);
-            var codeNm = (i+1) + '일';
+            var codeNm = fnDateFormat(code,"D");//(i+1) + '일';
         	  html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
-            html += `<p class="dropbox_select_button_item_typo">` + (i+1) + '일' + `</p>`;
+            html += `<p class="dropbox_select_button_item_typo">` + codeNm+ `</p>`;//(i+1) + '일' + `</p>`;
           }
           html += `</div>`;
         }
@@ -154,10 +154,10 @@
       $('#DIALOG_DD').val(code);
     }
     var today = new Date();
-	var year3 = today.getFullYear() + "년";
+	var year3 = fnDateFormat(today.getFullYear(),"Y","N");//today.getFullYear() + "년";
 	var month = ('0' + (today.getMonth() + 1)).slice(-2);
     var day = ('0' + today.getDate()).slice(-2);
-    var dayNM = day+"일"
+    var dayNM = fnDateFormat(day,"D");//day+"일"
     var hours = today.getHours();
     var minutes = today.getMinutes();
     console.log("dayNM :: " + dayNM);
@@ -213,7 +213,7 @@
   
   function fnDateDialogSearch() {
     $.ajax({
-      url: '/' + API + '/common/getCode',
+      url: '/' + API + '/common/getCodeLang',
       type: 'GET',
       data: { GROUP_CD: 'YYYY_CD' },
       cache: false,
@@ -239,7 +239,8 @@
     if(is) {
       var callback = '<%= callback %>';
       if(isNotEmpty(callback)) {
-        var date = yyyy + '년 ' + mm + '월 ' + dd + '일 ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
+    	  var date = fnDateFormat(yyyy,"Y") + ' ' + fnDateFormat(mm,"M") + ' ' + fnDateFormat(dd,"D") + ' ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
+        //var date = yyyy + '년 ' + mm + '월 ' + dd + '일 ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
     	  eval(callback + `(` + (yyyy + mm + dd + ttmm) + `,` + `'` + date + `'` + `)` );
     	  
     	  if(fnIsCheckDate(yyyy + mm + dd)){
@@ -288,21 +289,21 @@
 		  
 	  
 	  var today = new Date();
-		var year3 = today.getFullYear() + "년";
-		var month = ('0' + (today.getMonth() + 1)).slice(-2) + "월";
+		var year3 = fnDateFormat(today.getFullYear(),"Y");//today.getFullYear() + "년";
+		var month = fnDateFormat(('0' + (today.getMonth() + 1)).slice(-2),"M");// + "월";
 	  var day = ('0' + today.getDate()).slice(-2);
-	  var dayNM = day+"일"
+	  var dayNM = fnDateFormat(day,"D");//day+"일"
 	  var hours = today.getHours();
 	  var minutes = today.getMinutes();
       var yaer = today.getFullYear();
       code = ('0' + (today.getMonth() + 1)).slice(-2);
 		if(ttyear != ""){
 			yaer = ttyear;
-			year3 = ttyear+"년";
+			year3 = fnDateFormat(ttyear,"Y");//ttyear+"년";
 			
-			month = ttmonth+"월";
+			month = fnDateFormat(ttmonth,"M");//ttmonth+"월";
 			code = ttmonth;
-			dayNM = ttday + "일";
+			dayNM = fnDateFormat(ttday,"D");//ttday + "일";
 			day = ttday;
 			hours = ttHour;
 			minutes = ttMinute;
@@ -363,14 +364,14 @@
           if(i < 9) {
         	i *= 1;
             var code = ('0' + (i+1));
-            var codeNm = ('0' + (i+1)) + '일';
+            var codeNm = fnDateFormat(code,"D");//('0' + (i+1)) + '일';
             html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
-            html += `<p class="dropbox_select_button_item_typo">` + ('0' + (i+1)) + '일' + `</p>`;
+            html += `<p class="dropbox_select_button_item_typo">` + codeNm + `</p>`;//('0' + (i+1)) + '일' + `</p>`;
           } else {
             var code = (i+1);
-            var codeNm = (i+1) + '일';
+            var codeNm = fnDateFormat(code,"D");//(i+1) + '일';
         	  html += `<div class="dropbox_select_button_item_small" onclick="fnDateDialogSelect_3('` + code +`', '` + codeNm + `')">`;
-            html += `<p class="dropbox_select_button_item_typo">` + (i+1) + '일' + `</p>`;
+            html += `<p class="dropbox_select_button_item_typo">` + codeNm + `</p>`;//(i+1) + '일' + `</p>`;
           }
           html += `</div>`;
         }
@@ -411,41 +412,41 @@
             </div>
           </div>
           <div id="MM_DIV_2" class="dropbox_select_button_item_container_month hidden" style="cursor: pointer;">
-            <div class="dropbox_select_button_item_small" id="Month_1" onclick="fnDateDialogSelect_2('01', '01월')">
-              <p class="dropbox_select_button_item_typo">01월</p>
+            <div class="dropbox_select_button_item_small" id="Month_1" onclick="fnDateDialogSelect_2('01', getI8nMsg('Jan'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Jan" text="01월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_2" onclick="fnDateDialogSelect_2('02', '02월')">
-              <p class="dropbox_select_button_item_typo">02월</p>
+            <div class="dropbox_select_button_item_small" id="Month_2" onclick="fnDateDialogSelect_2('02', getI8nMsg('Feb'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Feb" text="02월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_3" onclick="fnDateDialogSelect_2('03', '03월')">
-              <p class="dropbox_select_button_item_typo">03월</p>
+            <div class="dropbox_select_button_item_small" id="Month_3" onclick="fnDateDialogSelect_2('03', getI8nMsg('Mar'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Mar" text="03월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_4" onclick="fnDateDialogSelect_2('04', '04월')">
-              <p class="dropbox_select_button_item_typo">04월</p>
+            <div class="dropbox_select_button_item_small" id="Month_4" onclick="fnDateDialogSelect_2('04', getI8nMsg('Apr'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Apr" text="04월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_5" onclick="fnDateDialogSelect_2('05', '05월')">
-              <p class="dropbox_select_button_item_typo">05월</p>
+            <div class="dropbox_select_button_item_small" id="Month_5" onclick="fnDateDialogSelect_2('05', getI8nMsg('May'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="May" text="05월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_6" onclick="fnDateDialogSelect_2('06', '06월')">
-              <p class="dropbox_select_button_item_typo">06월</p>
+            <div class="dropbox_select_button_item_small" id="Month_6" onclick="fnDateDialogSelect_2('06', getI8nMsg('Jun'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Jun" text="06월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_7" onclick="fnDateDialogSelect_2('07', '07월')">
-              <p class="dropbox_select_button_item_typo">07월</p>
+            <div class="dropbox_select_button_item_small" id="Month_7" onclick="fnDateDialogSelect_2('07', getI8nMsg('Jul'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Jul" text="07월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_8" onclick="fnDateDialogSelect_2('08', '08월')">
-              <p class="dropbox_select_button_item_typo">08월</p>
+            <div class="dropbox_select_button_item_small" id="Month_8" onclick="fnDateDialogSelect_2('08', getI8nMsg('Aug'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Aug" text="08월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_9" onclick="fnDateDialogSelect_2('09', '09월')">
-              <p class="dropbox_select_button_item_typo">09월</p>
+            <div class="dropbox_select_button_item_small" id="Month_9" onclick="fnDateDialogSelect_2('09', getI8nMsg('Sep'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Sep" text="09월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_10" onclick="fnDateDialogSelect_2('10', '10월')">
-              <p class="dropbox_select_button_item_typo">10월</p>
+            <div class="dropbox_select_button_item_small" id="Month_10" onclick="fnDateDialogSelect_2('10', getI8nMsg('Oct'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Oct" text="10월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_11" onclick="fnDateDialogSelect_2('11', '11월')">
-              <p class="dropbox_select_button_item_typo">11월</p>
+            <div class="dropbox_select_button_item_small" id="Month_11" onclick="fnDateDialogSelect_2('11', getI8nMsg('Nov'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Nov" text="11월" /></p>
             </div>
-            <div class="dropbox_select_button_item_small" id="Month_12" onclick="fnDateDialogSelect_2('12', '12월')">
-              <p class="dropbox_select_button_item_typo">12월</p>
+            <div class="dropbox_select_button_item_small" id="Month_12" onclick="fnDateDialogSelect_2('12', getI8nMsg('Dec'))">
+              <p class="dropbox_select_button_item_typo"><spring:message code="Dec" text="12월" /></p>
             </div>
           </div>
       </div>

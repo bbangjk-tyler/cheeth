@@ -765,13 +765,13 @@ function keyupAccounNm() {
 					          <div id="COMP_GROUP_CD_DIV_2" class="dropbox_select_button_item_container hidden" style="cursor: pointer;">
 					          	<c:if test="${DATA.USER_TYPE_CD eq 1}">
 						            <div class="dropbox_select_button_item">
-						              <p class="dropbox_select_button_item_typo" onclick="fnSelect('A001', '의료기기판매업')">의료기기판매업</p>
+						              <p class="dropbox_select_button_item_typo" onclick="fnSelect('A001', getI8nMsg('join.mediSalebiz'))"><spring:message code="join.mediSalebiz" text="의료기기판매업" /></p>
 						            </div>
 						            <div class="dropbox_select_button_item">
-						              <p class="dropbox_select_button_item_typo" onclick="fnSelect('A002', '의료기기제조업')">의료기기제조업</p>
+						              <p class="dropbox_select_button_item_typo" onclick="fnSelect('A002', getI8nMsg('join.mediManufu'))"><spring:message code="join.mediManufu" text="의료기기제조업" /></p>
 						            </div>
 						            <div class="dropbox_select_button_item">
-						              <p class="dropbox_select_button_item_typo" onclick="fnSelect('A003', '기타(직접입력)')">기타(직접입력)</p>
+						              <p class="dropbox_select_button_item_typo" onclick="fnSelect('A003', getI8nMsg('join.mediEtc'))"><spring:message code="join.mediEtc" text="기타(직접입력)" /></p>
 						            </div>
 					          	</c:if>
 					          	<c:if test="${DATA.USER_TYPE_CD ne 1}">

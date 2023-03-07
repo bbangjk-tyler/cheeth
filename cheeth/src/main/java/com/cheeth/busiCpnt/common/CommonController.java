@@ -57,6 +57,9 @@ public class CommonController extends BaseController {
   @GetMapping(value="/getCodeLang", produces=MediaType.APPLICATION_JSON_VALUE)
   public List<?> getCodeLang(HttpServletRequest request) throws Exception {
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+    String lang = request.getSession().getAttribute("language").toString();
+    parameter.put("LANG", lang);
+    
     List<?> list = service.getListLang(parameter);
 
     return list;

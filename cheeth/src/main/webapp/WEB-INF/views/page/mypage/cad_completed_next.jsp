@@ -46,7 +46,7 @@
      cache: false,
      async: false,
      success: function(data) {
-    	 alert("결제를 완료하셨습니까? \n 치자이너 회원님의 입금확인 후에 완성된 캐드파일을 다운로드 하실 수 있습니다.");
+    	 alert(getI8nMsg("alert.completedPay"));//"결제를 완료하셨습니까? \n 치자이너 회원님의 입금확인 후에 완성된 캐드파일을 다운로드 하실 수 있습니다."
     	 message07();
        if(data.cnt === 0) {
     	   alert(getI8nMsg("alert.updateFail"));//업데이트 실패하였습니다.

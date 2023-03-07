@@ -537,7 +537,7 @@
                         </div>
                         <div class="equipment_estimator_writing_info_item">
                             <p class="equipment_estimator_writing_info_item_typo">
-                                <spring:message code="" text="원하는 납품 날짜" />
+                                <spring:message code="equ.desireDeliDt" text="원하는 납품 날짜" />
                             </p>
                             <div class="equipment_estimator_writing_info_select_button_container">
 							                <div class="dropbox_project_request_calendar">
@@ -730,6 +730,7 @@
 						            </div>
 						        	</div>
 										</div>
+										
 									</div>
 								</div>
             </div>  

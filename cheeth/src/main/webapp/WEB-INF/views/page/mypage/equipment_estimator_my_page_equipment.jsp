@@ -459,7 +459,7 @@
 											        <div id="cheesignerInfoWrapper" class="dialog_item" style="display: none;">
 										            <div class="dialog_item_title">
 										                <p class="dialog_item_title_typo">
-										                    <spring:message code="" text="견적자 정보" />
+										                    <spring:message code="equ.quotInfo" text="견적자 정보" />
 										                </p>
 										            </div>
 										            <div class="dialog_item_context_container">
