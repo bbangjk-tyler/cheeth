@@ -548,7 +548,7 @@
 					   		#{item}
 					   	</foreach>
 					 ) B
-     GROUP BY B.SUPP_CD_1, B.SUPP_CD_2, B.SUPP_CD_3, B.SUPP_CD_4
+     GROUP BY B.SUPP_CD_1, B.SUPP_CD_2, B.SUPP_CD_3, B.SUPP_CD_4, B.SUPP_NM_1, B.SUPP_NM_2, B.SUPP_NM_3, B.SUPP_NM_4
  
     UNION ALL
  
@@ -588,7 +588,7 @@
 					   		#{item}
 					   	</foreach>
 					 ) B
-     GROUP BY B.SUPP_NM_1, B.SUPP_NM_2, B.SUPP_NM_3, B.SUPP_NM_4
+     GROUP BY B.SUPP_CD_1, B.SUPP_CD_2, B.SUPP_CD_3, B.SUPP_CD_4, B.SUPP_NM_1, B.SUPP_NM_2, B.SUPP_NM_3, B.SUPP_NM_4
   </select>
   
   <delete id="delete02" parameterType="map">

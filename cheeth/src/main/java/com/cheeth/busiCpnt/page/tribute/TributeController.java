@@ -224,7 +224,8 @@ public class TributeController extends BaseController {
     	 
         Map<String, Object> parameter2 = ParameterUtil.getParameterMap(request);
         String GROUP_CD = obj.get("GROUP_CD").toString();
-        parameter2.put("GROUP_CD", GROUP_CD);
+        parameter2.put("GROUP_CD", lang);
+        parameter2.put("LANG", GROUP_CD);
         List<Map<String, Object>> list2 = (List<Map<String, Object>>) service.list("getReqInfoList", parameter2);
         int sumctn = 0;  
 //        for(Map<String, Object> obj2 : list2) {     
@@ -314,6 +315,8 @@ public class TributeController extends BaseController {
   public List<Map<String, Object>> getReqInfo(HttpServletRequest request) throws Exception {
     
     Map<String, Object> parameter = ParameterUtil.getParameterMap(request);
+	String lang = request.getSession().getAttribute("language").toString();
+	parameter.put("LANG", lang);
     
     List<Map<String, Object>> list = (List<Map<String, Object>>) service.list("getReqInfoList", parameter);
     int sumctn = 0;
@@ -434,11 +437,13 @@ public class TributeController extends BaseController {
         String cat = "";
         if(GROUP_CD_STR.contains("|")) {
            String str[] = GROUP_CD_STR.split("\\|");
+	       	String lang = request.getSession().getAttribute("language").toString();
            
            for(int j=0; j<str.length;j++) {
                Map<String, Object> parameter2 = ParameterUtil.getParameterMap(request);
                String GROUP_CD = str[j];
-               parameter2.put("GROUP_CD", GROUP_CD);        	   
+               parameter2.put("GROUP_CD", GROUP_CD);        	
+               parameter2.put("LANG", lang);   
                List<Map<String, Object>> list2 = (List<Map<String, Object>>) service.list("getReqInfoList", parameter2);
                for(Map<String, Object> obj2 : list2) {
                	
@@ -516,6 +521,8 @@ public class TributeController extends BaseController {
        			obj.put("CNT", cnt);
         }else {
             Map<String, Object> parameter2 = ParameterUtil.getParameterMap(request);
+	       	String lang = request.getSession().getAttribute("language").toString();
+	       	parameter2.put("LANG", lang);
             parameter2.put("GROUP_CD", GROUP_CD_STR);        	   
             List<Map<String, Object>> list2 = (List<Map<String, Object>>) service.list("getReqInfoList", parameter2);
             for(Map<String, Object> obj2 : list2) {

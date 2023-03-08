@@ -189,11 +189,13 @@
            ) AS PUBLIC_NM
          , A.TITLE
          , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y%m%d%H%i') AS PROJECT_EXP_DATE
-         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS PROJECT_EXP_DATE2
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, if(#{LANG}='en', CONCAT(DATE_FORMAT(A.PROJECT_EXP_DATE,'%Y-%m-%d %h:%i'), " ", IF(DATE_FORMAT(A.PROJECT_EXP_DATE,'%H') > 12,"PM", "AM")) , '%Y년 %m월 %d일 %H시 %i분')) AS PROJECT_EXP_DATE2
          , A.DELIVERY_EXP_DATE
          , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y-%m-%d') AS DELIVERY_EXP_DATE2
-         , IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간') AS DELIVERY_EXP_DATE3
-         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_EXP_DATE4
+         , if(#{LANG}='en', IFNULL(CONCAT(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%h:%i'), " ",IF(DATE_FORMAT(A.DELIVERY_EXP_DATE,'%H') > 12,"PM", "AM")), 'time'),
+         					IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간')) AS DELIVERY_EXP_DATE3
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, if(#{LANG}='en', CONCAT(DATE_FORMAT(A.DELIVERY_EXP_DATE,'%Y-%m-%d %h:%i'), " ", IF(DATE_FORMAT(A.DELIVERY_EXP_DATE,'%H') > 12,"PM", "AM")) , 
+   															'%Y년 %m월 %d일 %H시 %i분')) AS DELIVERY_EXP_DATE4
          , A.PREFER_CD_1
          , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
@@ -233,7 +235,7 @@
               WHERE PROJECT_NO = A.PROJECT_NO 
            ) AS REQS
          , A.CREATE_ID
-         , DATE_FORMAT(A.CREATE_DATE, '%Y년 %m월 %d일 %H시 %i분') AS CREATE_DATE
+         , DATE_FORMAT(A.CREATE_DATE, if(#{LANG}='en', CONCAT(DATE_FORMAT(A.CREATE_DATE,'%Y-%m-%d %h:%i'), " ", IF(DATE_FORMAT(A.CREATE_DATE,'%H') > 12,"PM", "AM")) , '%Y년 %m월 %d일 %H시 %i분')) AS CREATE_DATE
          , A.UPDATE_ID
          , A.UPDATE_DATE
          , ( SELECT GROUP_CONCAT(SB.USER_NICK_NAME SEPARATOR ',')
@@ -265,11 +267,13 @@
            ) AS PUBLIC_NM
          , A.TITLE
          , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y%m%d%H%i') AS PROJECT_EXP_DATE
-         , DATE_FORMAT(A.PROJECT_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS PROJECT_EXP_DATE2
+         , DATE_FORMAT(A.PROJECT_EXP_DATE, if(#{LANG}='en', CONCAT(DATE_FORMAT(A.PROJECT_EXP_DATE,'%Y-%m-%d %h:%i'), " ", IF(DATE_FORMAT(A.PROJECT_EXP_DATE,'%H') > 12,"PM", "AM")) , '%Y년 %m월 %d일 %H시 %i분')) AS PROJECT_EXP_DATE2
          , A.DELIVERY_EXP_DATE
          , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y-%m-%d') AS DELIVERY_EXP_DATE2
-         , IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간') AS DELIVERY_EXP_DATE3
-         , DATE_FORMAT(A.DELIVERY_EXP_DATE, '%Y년 %m월 %d일 %H시 %i분') AS DELIVERY_EXP_DATE4
+         , if(#{LANG}='en', IFNULL(CONCAT(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%h:%i'), " ",IF(DATE_FORMAT(A.DELIVERY_EXP_DATE,'%H') > 12,"PM", "AM")), 'time'),
+         					IFNULL(DATE_FORMAT(A.DELIVERY_EXP_DATE, '%H:%i'), '시간')) AS DELIVERY_EXP_DATE3
+         , DATE_FORMAT(A.DELIVERY_EXP_DATE, if(#{LANG}='en', CONCAT(DATE_FORMAT(A.DELIVERY_EXP_DATE,'%Y-%m-%d %h:%i'), " ", IF(DATE_FORMAT(A.DELIVERY_EXP_DATE,'%H') > 12,"PM", "AM")) , 
+   															'%Y년 %m월 %d일 %H시 %i분')) AS DELIVERY_EXP_DATE4
          , A.PREFER_CD_1
          , ( SELECT if(#{LANG}='en',CODE_NM_EN,CODE_NM)
                FROM TB_CODE
@@ -313,7 +317,7 @@
                FROM TB_USER_INFO
               WHERE USER_ID = A.CREATE_ID
            ) AS CREATE_NICK_NAME
-         , DATE_FORMAT(A.CREATE_DATE, '%Y년 %m월 %d일 %H시 %i분') AS CREATE_DATE
+         , DATE_FORMAT(A.CREATE_DATE, if(#{LANG}='en', CONCAT(DATE_FORMAT(A.CREATE_DATE,'%Y-%m-%d %h:%i'), " ", IF(DATE_FORMAT(A.CREATE_DATE,'%H') > 12,"PM", "AM")) , '%Y년 %m월 %d일 %H시 %i분')) AS CREATE_DATE
          , A.UPDATE_ID
          , A.UPDATE_DATE
          , ( SELECT GROUP_CONCAT(USER_ID SEPARATOR ',')
@@ -589,10 +593,10 @@
 						           FROM TB_TRIBUTE A
 						          WHERE A.GROUP_CD IN (SELECT GROUP_CD FROM TB_PROJECT_DTL P WHERE PROJECT_NO = #{PROJECT_NO} GROUP BY P.GROUP_CD)
 						        ) B
-						  GROUP BY B.GROUP_CD, B.SUPP_CD
+						  GROUP BY B.GROUP_CD, B.SUPP_CD, B.RQST_NO, B.PANT_NM, B.TOTAL_CNT, B.SUPP_NM
 					 ) C
-     GROUP BY C.GROUP_CD
-     ORDER BY C.GROUP_CD, C.RQST_NO, C.SUPP_CD
+     GROUP BY C.GROUP_CD, C.PANT_NM, C.TOTAL_CNT
+     ORDER BY C.GROUP_CD
   ]]>
   </select>
     <select id="getReqInfoList" parameterType="map" resultType="hashmap">
@@ -1033,7 +1037,7 @@
                FROM TB_TRIBUTE A
               WHERE A.GROUP_CD = #{GROUP_CD}
            ) B
-     GROUP BY B.SUPP_CD
+     GROUP BY B.SUPP_CD, B.RQST_NO, B.GROUP_CD, B.PANT_NM, B.TOTAL_CNT, B.SUPP_NM
   ]]>  
   </select>
   

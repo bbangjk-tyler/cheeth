@@ -243,7 +243,20 @@
     	  if(lang=="ko"){
     		  var date = yyyy + '년 ' + mm + '월 ' + dd + '일 ' + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
     	  } else {
-    		  var date = getI8nMsg(fnDateFormat(mm,"M")) + " " + dd +  " " + yyyy + ", " + ttmm.substring(0,2) + '시 ' + ttmm.substring(2,4) + '분';
+    		  var apm = "";
+    		  var tt = "";
+    		  if(ttmm.substring(0,2) > '12'){
+    			  apm = "PM";
+    			  tt = ttmm.substring(0,2) - 12 + "";
+    			  if(tt.length == 1){
+    				  tt = "0" + tt;
+    			  }
+    		  } else {
+    			  apm = "AM";
+    			  tt = ttmm.substring(0,2);
+    		  }
+    		  
+    		  var date = getI8nMsg(fnDateFormat(mm,"M")) + " " + dd +  " " + yyyy + ", " + tt + ':' + ttmm.substring(2,4) + ' ' + apm;
     	  }
     	  eval(callback + `(` + (yyyy + mm + dd + ttmm) + `,` + `'` + date + `'` + `)` );
     	  

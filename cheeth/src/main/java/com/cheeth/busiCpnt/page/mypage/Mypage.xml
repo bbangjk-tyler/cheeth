@@ -938,7 +938,7 @@
                FROM TB_TRIBUTE A
               WHERE A.GROUP_CD = #{GROUP_CD}
            ) B
-     GROUP BY B.SUPP_CD
+     GROUP BY B.SUPP_CD, B.RQST_NO, B.GROUP_CD, B.PANT_NM, B.TOTAL_CNT, B.SUPP_NM
   ]]>  
   </select>
   
