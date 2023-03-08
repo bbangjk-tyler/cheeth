@@ -411,7 +411,7 @@ function fnGetSuppCd() {
     { SUPP_CD: 'SP107', SUPP_NM: getI8nMsg('main.aligner', '교정'), LVL: 1, P_SUPP_CD: '' },
     { SUPP_CD: 'SP108', SUPP_NM: getI8nMsg('tray', '트레이'), LVL: 1, P_SUPP_CD: '' },
     { SUPP_CD: 'SP109', SUPP_NM: getI8nMsg('main.etc', '기타'), LVL: 1, P_SUPP_CD: '' },
-    { SUPP_CD: 'SP201', SUPP_NM: getI8nMsg('main.etc', '지르코니아'), LVL: 2, P_SUPP_CD: 'SP101' },
+    { SUPP_CD: 'SP201', SUPP_NM: getI8nMsg('zirconia', '지르코니아'), LVL: 2, P_SUPP_CD: 'SP101' },
     { SUPP_CD: 'SP202', SUPP_NM: 'Metal', LVL: 2, P_SUPP_CD: 'SP101' },
     { SUPP_CD: 'SP203', SUPP_NM: 'Temp Cr.', LVL: 2, P_SUPP_CD: 'SP101' },
     { SUPP_CD: 'SP204', SUPP_NM: 'Full', LVL: 2, P_SUPP_CD: 'SP103' },
