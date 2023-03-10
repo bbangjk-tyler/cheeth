@@ -215,7 +215,7 @@ public class CommonController extends BaseController {
 		        parameter.put("SEND_ID", "덴트너");
 		        //parameter.put("RECEIVE_ID", receiveId);
 		        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-		        String CONTENT = "결제요청이 왔습니다.";
+		        String CONTENT = service.geti18n(request, "sms.sim.reqPayment");//"결제요청이 왔습니다.";
 		        parameter.put("CONTENT", CONTENT);
 		        parameter.put("CREATE_ID", "덴트너");
 		        parameter.put("UPDATE_ID", "덴트너");
@@ -259,7 +259,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "입금확인이 완료되었습니다. 파일을 확인해주세요.";
+	        String CONTENT = service.geti18n(request, "sms.sim.depositCompli");//"입금확인이 완료되었습니다. 파일을 확인해주세요.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -298,7 +298,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "특수계약 요청을 하였습니다.";
+	        String CONTENT = service.geti18n(request, "sms.sim.reqSpe");//"특수계약 요청을 하였습니다.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -341,7 +341,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "전자계약이 승인되었습니다.";
+	        String CONTENT = service.geti18n(request, "sms.sim.econtApprov");//"전자계약이 승인되었습니다.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -387,7 +387,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "전자계약 승인 요청이 왔습니다.";
+	        String CONTENT = service.geti18n(request, "sms.sim.econtApproReq");//"전자계약 승인 요청이 왔습니다.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -427,7 +427,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "전자계약 수정요청이 왔습니다.";
+	        String CONTENT = service.geti18n(request, "sms.sim.econtModiReq");//"전자계약 수정요청이 왔습니다.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -465,7 +465,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "지정견적 요청이 왔습니다.";
+	        String CONTENT = service.geti18n(request, "sms.sim.reqQuote");//"지정견적 요청이 왔습니다.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -502,7 +502,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "의뢰인이 전자계약 작성을 요청했습니다.";
+	        String CONTENT = service.geti18n(request, "sms.sim.cCreateEcont");//"의뢰인이 전자계약 작성을 요청했습니다.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -542,7 +542,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "의뢰인이 입금 확인을 요청합니다. 확인 후 '진행내역'에서 입금 확인 버튼을 눌러주세요.";
+	        String CONTENT = service.geti18n(request, "sms.sim.cReqDepos");//"의뢰인이 입금 확인을 요청합니다. 확인 후 '진행내역'에서 입금 확인 버튼을 눌러주세요.";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -582,7 +582,7 @@ public class CommonController extends BaseController {
 	        parameter.put("SEND_ID", "덴트너");
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "상대방이 계약 취소요청을 하였습니다.(제목: " + TITLE +")     '마이페이지 > 진행내역'에서 확인 가능합니다. ";
+	        String CONTENT = service.geti18nParam(request, "sms.sim.otherCancelReqT",param);//"상대방이 계약 취소요청을 하였습니다.(제목: " + TITLE +")     '마이페이지 > 진행내역'에서 확인 가능합니다. ";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
@@ -622,7 +622,8 @@ public class CommonController extends BaseController {
 
 	        //parameter.put("RECEIVE_ID", receiveId);
 	        //String CONTENT = "<a class=\"note_box_list_context\" href=\"javascript:location.href='https://dentner.co.kr/api/project/project_request_view?PROJECT_NO=" + projectNo + "'\">귀하에게 견적 문의가 들어왔습니다.</a>";
-	        String CONTENT = "상대방이 계약 취소요청을 하였습니다. 마이페이지>진행내역에서 보실 수 있습니다. (제목: " + parameter.get("TITLE").toString() + ")";
+	        String[] param = new String[] {parameter.get("TITLE").toString()};
+	        String CONTENT = service.geti18nParam(request, "sms.sim.otherCancelReqT", param);//"상대방이 계약 취소요청을 하였습니다. 마이페이지>진행내역에서 보실 수 있습니다. (제목: " + parameter.get("TITLE").toString() + ")";
 	        parameter.put("CONTENT", CONTENT);
 	        parameter.put("CREATE_ID", "덴트너");
 	        parameter.put("UPDATE_ID", "덴트너");
